@@ -1,0 +1,46 @@
+{
+  "language": "Language",
+  "uz": "Uz",
+  "ru": "Ru",
+  "en": "En",
+  "about": "About",
+  "payment_and_delivery": "Payment and delivery",
+  "quality_assurance": "Quality assurance",
+  "contact": "Contact",
+  "basket": "Basket",
+  "login": "Log in",
+  "navbar": {
+    "address": "Enter shipping address",
+    "show": "Show",
+    "search": "Flowers and bouquets",
+    "all": "All",
+    "bouquets": "Bouquets",
+    "present": "Present",
+    "the_brides_bouquet": "The bride's bouquet",
+    "compositions": "Compositions",
+    "top10": "Top 10",
+    "presents": "Today's",
+    "watched": "Watched",
+    "orders": "My orders",
+    "favorites": "Favorites"
+  },
+  "home": {
+    "whom": "To whom",
+    "occasion": "Occasion",
+    "color": "Color",
+    "price": "Price",
+    "bright_bouquets": "Bright bouquets",
+    "roses": "Pink O'Hara roses",
+    "maxrove": "Macrovye eustoma",
+    "show_more": "Show more",
+    "sum": "sum"
+  },
+  "contacts": {
+    "home": "Home",
+    "contact": "Contact",
+    "description": "We work 24 hours a day, seven days a week",
+    "address": "Legal address",
+    "phone": "Phone number",
+    "email": "Email address"
+  }
+}

@@ -1,0 +1,98 @@
+@import "./_colors.scss";
+
+.el-dropdown-menu {
+    padding: 0 !important;
+}
+
+.el-dropdown-menu__item {
+    color: $C07 !important;
+}
+
+.el-popper__arrow {
+    display: none !important;
+}
+
+.el-dropdown *,
+.el-popper {
+    outline: none !important;
+    border: none !important;
+}
+
+.el-popper {
+    border-radius: 6px !important;
+    overflow: hidden !important;
+}
+
+.el-dialog__header {
+    display: none !important;
+}
+
+.el-dialog__body {
+    padding: 8px 0 !important;
+}
+
+.filter_dropdown {
+    padding: 20px !important;
+}
+
+.el-dropdown {
+    [aria-expanded="true"] {
+        .arrow {
+            background: transparent !important;
+        }
+    }
+
+}
+
+
+.filter_btn {
+    [aria-expanded="true"] {
+        background: $CBC !important;
+    }
+}
+
+.pagination_dropdown .el-dropdown-menu__item {
+    font-weight: 500 !important;
+    height: 44px !important;
+    font-size: 12px !important;
+    color: $C07 !important;
+}
+
+.navigation_dropdown .el-dropdown-menu__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500 !important;
+    height: 44px !important;
+    font-size: 12px !important;
+    color: $C07 !important;
+}
+
+.community_dropdown .el-dropdown-menu__item {
+    font-weight: 500 !important;
+    height: 44px !important;
+    font-size: 12px !important;
+    color: $C07 !important;
+}
+
+// tabs
+.el-tabs__active-bar {
+    height: 2px !important;
+}
+
+.el-tabs__nav-wrap::after {
+    height: 1px !important;
+    background: $CBC !important;
+}
+
+.el-tabs__item.is-active {
+    color: $C2A !important;
+}
+
+.el-tabs__item {
+    padding: 0 !important;
+}
+
+.el-tabs__nav {
+    gap: 32px !important;
+}

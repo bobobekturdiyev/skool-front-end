@@ -1,0 +1,356 @@
+{
+  "language": "Til",
+  "uz": "Uz",
+  "ru": "Ru",
+  "en": "In",
+  "title_login": "Mening buyurtmalarim, bildirishnomalar, qoldirilgan sharhlar va profil ko'rish uchun tizimga kiring. Bu odatda bir necha daqiqa vaqt oladi halos.",
+  "welcome": "Xush kelibsiz!",
+  "easy_use_app": "Ilovadan oson foydalaning",
+  "download": "Yuklab olish",
+  "profile": "Profil",
+  "about": "Haqida",
+  "payment_and_delivery": "To'lov va yetkazib berish",
+  "quality_assurance": "Kafolatlangan sifat",
+  "contact": "Bog'lanish",
+  "basket": "Savatcha",
+  "login": "Kirish",
+  "main": "Asosiy",
+  "in_florify": "Florify-da",
+  "reyting": "Reytinglar",
+  "rate": "Reyting",
+  "category": "Kategoriyalar",
+  "id": "Id",
+  "free": "tekin",
+  "no_reyting": "Hozircha reytinglar yoʻq",
+  "salesman": "Sotuvchi",
+  "price": "Narxi",
+  "quantity": "Miqdori",
+  "ad_to_cart": "Savatga qo'shish",
+  "buy_a_click": "1 marta bosishda xarid qiling",
+  "delivery_comments": "ta toshkentda tovarlarni yetkazib berish bo'yicha fikr-mulohazalar",
+  "other_products": "Ushbu do'kondan boshqa mahsulotlar",
+  "watched_products": "Ko'rilgan mahsulotlar",
+  "add_to_favorites": "Sevimlilarga",
+  "with_app": "Ilova orqali buyurtma bering",
+  "privacy_policy": "Maxfiylik siyosati",
+  "temrs": "Foydalanuvchi roziligi",
+  "services": "Xizmatlar",
+  "questions": "Savollar",
+  "cooperation_page": "Hamkorlik",
+  "contact_us": "Biz bilan bog'lanish",
+  "get_order": "Buyurtma berish",
+  "order_description": "Tugmani bosish orqali siz xizmat ko'rsatish shartlari va shaxsiy ma'lumotlarni qayta ishlash siyosatiga rozilik bildirasiz",
+  "popular": "Mashhurlari",
+  "show_all": "Barcha natijalarni ko'rsatish",
+  "city": "Shahar",
+  "private_info": "Shaxsiy ma'lumotlar",
+  "get_help": "Qo'llab-quvvatlash xizmati",
+  "save": "Saqlash",
+  "logout": "Hisobdan chiqish",
+  "download_app": "Florify ilovasini yuklab oling",
+  "bonus_app": "Ko'proq bonuslar, qulayroq va osonroq.",
+  "status_done": "Xaridorga berilgan",
+  "refuse": "Rad etilgan",
+  "my_comment": "Mening sharhim",
+  "all_rate": "Umumiy reyting",
+  "comment_product": "Izoh",
+  "set_comment": "Sharh yozing",
+  "send": "Jo'natish",
+  "lang": "Til",
+  "info": "Ma'lumot",
+  "contact_with_us": "Biz bilan bog'lanish",
+  "questions_and_answers": "Savollar va javoblar",
+  "payment": "To'lov",
+  "discount": "Chegirma",
+  "cooperation_lang": "Hamkorlik",
+  "delivery_lang": "Yetkazib berish",
+  "our_clients": "Korporativ mijozlarga",
+  "register": {
+    "enter_phone": "Telefon raqamingizni kiriting",
+    "get_your_code": "Mobil telefon raqamingizni kiriting va siz kiritish uchun kod bilan SMS olasiz",
+    "phone_number": "Telefon raqami",
+    "get_code": "Kod bilan SMS oling",
+    "agreement": "Avtotizatsiyadan o'tish orqali siz shaxsiy ma'lumotlarni qayta ishlash siyosatiga rozilik bildirasiz",
+    "sent_code": ["Tasdiqlash kodi", "raqamiga yuborilgan"],
+    "verify_code": "Kodni tasdiqlash"
+  },
+  "navbar": {
+    "address": "Manzilni kiriting",
+    "show": "Ko'rsatish",
+    "search": "Gullar va guldastalar",
+    "all": "Hammasi",
+    "bouquets": "Guldastalar",
+    "present": "Hozirgi",
+    "the_brides_bouquet": "Kelinlar guldastalari",
+    "compositions": "Kompozitsiyalar",
+    "top10": "TOP 10",
+    "presents": "Bugungilar",
+    "watched": "Ko'rilganlar",
+    "orders": "Buyurtmalar",
+    "favorites": "Sevimlilar",
+    "all_orders": "Barcha buyurtmalar"
+  },
+  "home": {
+    "whom": "Kimga",
+    "occasion": "Voqealar",
+    "color": "Ranglar",
+    "price": "Narxlar",
+    "description1": "Bugungi to'planganlar. Guldastalar yetkazib berishga tayyor.",
+    "bright_bouquets": "Yorqin guldastalar",
+    "roses": "Pushti O'Hara atirgullari",
+    "maxrove": "Makrovye eustoma",
+    "show_more": "Ko'proq ko'rish",
+    "sum": "so'm"
+  },
+  "contacts": {
+    "home": "Asosiy",
+    "contact": "Bog'lanish",
+    "description": "Biz 24/7 ishlaymiz",
+    "address": "Manzil",
+    "phone": "Telefon raqami",
+    "email": "Elektron pochta"
+  },
+  "order": {
+    "order": "Buyurtmani rasmiylashtirish",
+    "whom": "Guldastani kim oladi?",
+    "another": "Boshqa odam",
+    "myself": "O'zim",
+    "your_contact": "Sizning kontaktlaringiz",
+    "surname": "Familiyangiz",
+    "name": "Ismingiz",
+    "enter_surname": "Familiyangizni kiriting",
+    "enter_name": "Ismingizni kiriting",
+    "plase_enter_surname": "Iltimos, familiyangizni kiriting",
+    "curyer_info": "Siz qoldirgan telefon raqamga buyurtmangiz holati haqida xabar yuboramiz. Yetkazib berish vaqtini tasdiqlash uchun kuryer siz bilan bog'lanadi.",
+    "receiver_phone": "Qabul qiluvchining kontaktlari",
+    "phone_number": "Telefon raqami",
+    "address": "Yetkazib berish manzili",
+    "enter_address": "Ko'cha va uy raqami",
+    "please_enter_address": "Iltimos, qabul qiluvchining manzilini ko'rsating",
+    "office": "Kvartira/ofis",
+    "office_number": "Kirish",
+    "floor": "Qavat",
+    "comment_curyer": "Kuryer uchun sharh",
+    "comment_description": "Masalan, buyurtmani qayerga yetkazib berish kerakligi, eng yaqin manzil yoki belgi",
+    "delivery_time": "Yetkazib berish sanasi va vaqti",
+    "payment_type": "To'lov usuli",
+    "free_convert": "Bepul otkritka",
+    "onlayn": "Onlayn karta orqali",
+    "offline1": "Qabul qilgandan so'ng",
+    "offline2": "Naqd pul yoki karta",
+    "order_list": "Buyurtma ro'yxati",
+    "delivery": "Yetkazib berish",
+    "free": "Tekinga",
+    "total": "Umumiy qiymati",
+    "warning": "Tugmani bosish orqali siz xizmat ko'rsatish shartlari va shaxsiy ma'lumotlarni qayta ishlash siyosatiga rozilik bildirasiz",
+    "convert_text": "Otkritka matni",
+    "convert_placeholder": "Do'stim ...",
+    "price": "Buyurtma narxi",
+    "date": "Buyurtma sanasi",
+    "delivery_date": "Yetkazib berish",
+    "check": "Elektron chek",
+    "product": "mahsulot",
+    "comment_product": "Fikr qoldiring"
+  },
+  "_about": {
+    "title1": "Kompaniya haqida",
+    "about1": "Florify.uz xalqaro kompaniya bo'lib 2023 yildan buyon gullar yetkazib berish xizmati bilan shug‘ullanadi. Bugungi kunda bizning tarmog'imiz butun Rossiya bo'ylab 700 dan ortiq gul salonlarini va qo'shni va xorijiy mamlakatlarda 1000 dan ortiq salonlarni birlashtiradi. Bizning tajribamiz davomida dunyoning 150 ta davlatidan 1 500 000 dan ortiq kishi bizning mijozlarimizga aylandiМеждународная компания Florify.uz осуществляет доставку цветов с 2023 года. Сегодня наша сеть объединяет более 700 цветочных салонов по России и 1000 салонов в ближних и зарубежных странах. За время работы нашими клиентами стали более 1 500 000 людей из 150 стран мира.",
+    "title2": "Butun dunyo bo'ylab gullarni yetkazib berish",
+    "about2": "2023-yilda kuryerlarimiz tomonidan o'z egalariga 200 000 dan ortiq gullar yetkazib berildi. Siz o'zingizning sevimli guldastangizni veb-saytimiz, ijtimoiy tarmoqlar yoki quyidagi raqam orqali buyurtma berishingiz mumkin: +998 (88) 111 02 11, +998 (95) 888 58 58",
+    "title3": "Bizning assortimentimiz: gullar...",
+    "about3": "Bizning assortimentimizda turli xil gullar mavjud bo'lib, ular orasida siz o'zingizning didingizga mos keladiganini topasiz.  Bizda tayyor variantlarning keng assortimenti mavjud yoki biz siz uchun o'zingiznikini yig'amiz! Shuningdek, biz sizga har qanday interyerning floristik dizayni va kompaniyaning gul uslubini ishlab chiqishda yordam beramiz.",
+    "title4": "To'liq maxfiylik",
+    "about4": "Siz Florify.uz xalqaro kompaniyasiga murojaat qilib buyurtma va Internet to'lovlari to'g'risidagi ma'lumotlarning mutloq xavfsizligi va maxfiyligiga amin bo'lishingiz mumkin. Biz PCI DSS to'lov kartalari ma'lumotlarini himoya qilish standartiga muvofiq sertifikatlangan birinchi onlayn-do'konmiz."
+  },
+  "delivery": {
+    "title1": "Buyurtma va to'lov",
+    "about1": "Hatto masofada bo'lganingizda ham yaqinlaringizni xursand qiling! Biz sizning har bir topshirig'ingizni bajarish uchun qo'limizdan kelganini qilamiz. Guldastalarni sayyoramizning eng burchaklariga ham yetkazib beramiz! Buyurtmalar o'z manziliga vertolyotda uchib, paromda suzib, qor avtomobilida ham yetkazib berilgan.",
+    "title2": "Yetkazib berish xizmati",
+    "about2": [
+      "Tez, bepul va eng muhimi, sifatli!",
+      "Bizda buyurtma kuni 9-21 soatda bepul yetkazib berish mavjud. (mahalliy vaqt bilan). Boshqa vaqtda yetkazib berish uchun qo'shimcha to'lov talab qilinadi.",
+      "O'zbekiston bo'ylab soat 14:00 gacha(mahalliy vaqt bilan) yetkazib berishga buyurtma berganingizda, buyurtmangiz o'sha kuni yetkazib beriladi. Boshqa mamlakatlarga-soat 12: 00 gacha.",
+      "Katta vaqt farqi bo'lgan mamlakatlarga kundan-kunga gullarni yetkazib berish, guldastaning tarkibi o'zgarishi mumkin.",
+      "Agar guldastani yetkazib berish manzili mehmonxona bo'lsa, biz faqat qabulxonaga yetkazib berishni kafolatlashimiz mumkin. Buyurtmani muvaffaqiyatli yetkazib berish uchun qabul qiluvchi yashaydigan xonaning raqami va uning telefon raqamiga sovg'a haqida xabar berish kerak."
+    ],
+    "title3": "E'tibor bering",
+    "about3": [
+      "28-31 dekabr, 13-14 fevral, 6-7-8 mart — buyurtmalar soni bir necha baravar ko'payadigan kunlar. Oldindan berilgan bayramlar uchun barcha buyurtmalar belgilangan vaqtda amalga oshiriladi.",
+      "Shu kunlarda biz buyurtmalarni aniq vaqtda yetkazib berishni va'da qilmasdan qabul qilamiz."
+    ],
+    "title4": "Maxfiylik",
+    "about4": [
+      "Siz taqdim etgan barcha ma'lumotlar qat'iy maxfiy bo'lib, uchinchi shaxslarga berilmaydi.",
+      "Istalgan vaqtda siz arizangizning holatini shaxsiy kabinetingizdan yoki \"buyurtma holati\" havolasi orqali aniqlab olishingiz mumkin. Aslini olib qaraganda yetkazib berish davomida, biz sizga elektron pochta yoki SMS orqali xabar yuboramiz."
+    ],
+    "title5": "To'lov",
+    "about5": "Buyurtmani o'zingiz uchun qulay tarzda ro'yxatdan o'tkazgandan so'ng darhol to'lang. Bundan tashqari, agar siz buyurtmani keyinroq to'lashga qaror qilsangiz, biz kerakli havolalar bilan tasdiqlash xatini yuboramiz."
+  },
+  "quality": {
+    "title1": "Sifat kafolati",
+    "about1": "Baxtli mijozlar kompaniya muvaffaqiyatining kalitidir. Bizdan gullarga buyurtma berish sizga qulay va foydali bo'lishi uchun biz barcha imkoniyatni yaratdik. Biz bilamizki, guldastalar bilan birgalikda siz o'zingizning mehribon va yorqin his-tuyg'ularingizni yetkazasiz, shuning uchun biz gullarni qabul qiluvchiga ushbu sovg'ani uzoq va iliq eslab qolish uchun qo'limizdan kelganini qilishimizga kafolat beramiz.",
+    "title2": "Kafolatlangan mukammal sifat",
+    "about2": "Biz kuryerlarning ishini(muntazam sinov buyurtmalari) va barcha mahsulotlarimiz sifatini doimiy ravishda kuzatib boramiz. Biz uchun asosiy narsa — biz taqdim etayotgan tovarlar va xizmatlarning barcha talablariga javob beradigan darajadagi benuqson sifatdir.",
+    "title3": "Sizning istagingizdagi buyurtmani yetkazib beramiz",
+    "about3": [
+      "Bizning tarmog'imiz ishtirokchilari bizdan guldastalar va kompozitsiyalarning bosma kataloglarini olishadi. Sizning tanlagan  buyurtmangiz floristga guldasta tasviri, katalogdagi raqami, har bir gulning tavsifi bilan birga beriladi.",
+      "Qabul qiluvchiga buyurtma, ya'ni to'liq mos keladigan guldastani yetkazib berish biz uchun juda muhimdir."
+    ],
+    "title4": "Barcha mijozlarimiz uchun qulay narx",
+    "about4": [
+      "Biz sizning e'tiboringizga turli xil narx nuqtalarida guldastalar va gullarni taqdim etamiz, shunda siz har doim kerakli narsani tanlashingiz mumkin.",
+      "Eng tanish bo'lgan gullarni yaxshilab va  ekzotik gullarni soddalashtirgan holda go'zallik yaratamiz. Doimiy yuqori sifatli, oqilona narx siyosati bizning ustuvor vazifamizdir."
+    ],
+    "title5": "Qisqa vaqtda yetkazib beramiz",
+    "about5": "Buyurtmangiz o'z vaqtida manziliga yetib borishini kafolatlaymiz.",
+    "title6": "Istagingizdagi guldasta ideali",
+    "about6": "Biz uchun asosiy narsa shundaki, bizning xizmatlarimizdan foydalanadigan odamlar qoniqishadi. Agar siz yetkazib berilgan guldastadan qoniqmasangiz, yetkazib berilgan kundan boshlab 24 soat ichida biz bilan bog'lanish huquqiga egasiz va biz sizning noroziligingiz sabablarini aniqlamagah holda guldastani yangisiga almashtiramiz."
+  },
+  "cooperation": [
+    [
+      "Florist hamkorlik shartnomasi",
+      [
+        "Ushbu Florist hamkorlik shartnomasi (“Shartnoma”), bundan keyin Florist “Kompaniya” deb yuritiladi, va ushbu Shartnoma Toshkent shahrida gullar va sovg'alarni yetkazib berish xizmatlarini ko'rsatish bo'yicha Kompaniya va Florist o'rtasida hamkorlikni yo'lga qo'yish shartlarini belgilaydi."
+      ]
+    ],
+    [
+      "1. Hamkorlik doirasi",
+      [
+        "Florist Kompaniyaning Toshkent shahridagi veb-sayti va ilovasi orqali olingan gullar va sovg'a buyurtmalarini bajarish uchun sherik sifatida Kompaniya bilan hamkorlik qilishga tayyor. Florist ushbu Shartnomada belgilangan shartlarga muvofiq yuqori sifatli mahsulotlarning keng assortimentini va o'z vaqtida yetkazib berish xizmatlarini taklif qiladi."
+      ]
+    ],
+    [
+      "2. Floristning majburiyatlari",
+      [
+        "2.1. Buyurtmani bajarish: Florist kompaniyadan olingan barcha buyurtmalarni aniq va samarali bajarishi kerak. Buyurtmalar buyurtma tafsilotlarida ko'rsatilgan xususiyatlarga rioya etilgan holda, eng yaxshi holatda yetkazib berilishi kerak. Saytga post joylanayotganda, bizning platformaga oid boʻlmagan post qoʻyish taqiqlanadi.",
+        "2.2. O'z vaqtida yetkazib berish: Florist barcha buyurtmalarni vaqtida va belgilangan muddatda yetkazib berishga harakat qiladi. Har qanday kutilmagan kechikishlar bo'lsa, Florist darhol Kompaniyani xabardor qilishi va yetkazib berishning taxminiy vaqtini taqdim qilishi kerak.",
+        "2.2. O'z vaqtida yetkazib berish: Florist barcha buyurtmalarni vaqtida va belgilangan muddatda yetkazib berishga harakat qiladi. Har qanday kutilmagan kechikishlar bo'lsa, Florist darhol Kompaniyani xabardor qilishi va yetkazib berishning taxminiy vaqtini taqdim qilishi kerak.",
+        "2.4. Buyurtmaning ko'rinishi: Florist yetkazib berish paytida yangiligi va ko'rinishini saqlab qolish uchun mahsulotni qadoqlash va mijozlarga taqdim etishda juda ehtiyot bo'lishi kerak. Har qanday zarar yoki kamchiliklardan qochish kerak."
+      ]
+    ],
+    [
+      "3. Kompensatsiya va to'lov",
+      [
+        "3.2. To'lov shartlari: Kompaniya Floristga bajarilgan buyurtmalar uchun to'lovni buyurtma tugagan kundan boshlab 3 ish kuni ichida o'tkazadi. To'lov kelishilgan narxdagi shartlariga muvofiq elektron shaklda amalga oshiriladi.",
+        "3.2. To'lov shartlari: Kompaniya Floristga bajarilgan buyurtmalar uchun to'lovni buyurtma tugagan kundan boshlab 3 ish kuni ichida o'tkazadi. To'lov kelishilgan narxdagi shartlariga muvofiq elektron shaklda amalga oshiriladi."
+      ]
+    ],
+    [
+      "4. Aloqa va yangilanishlar",
+      [
+        "4.1. Buyurtmalarni yangilash: Florist kompaniyaga buyurtma holati, yetkazib berishni tasdiqlash va buyurtmani bajarish paytida yuzaga kelishi mumkin bo'lgan har qanday kechikishlar yoki muammolar haqida muntazam yangilanishlarni taqdim etishi kerak.",
+        "4.2. Sifat kafolati: Kompaniya Floristning mahsulotlarini sifat standartlariga muvofiqligini ta'minlash uchun tekshirish huquqini o'zida saqlab qoladi."
+      ]
+    ],
+    [
+      "5. To'lovlarni qaytarish va mijozlarning shikoyatlari",
+      [
+        "5.1. To'lovlarni qaytarish: \nAgar mijoz buyurtma qilgan mahsulot yetkazib berilgandan keyin buyurtmaga o'zgartirish kiritilgan bo'lsa yoki umuman boshqa mahsulot yetkazilgan bo'lsa, florist bu muammoni o'z zimmasiga olishi kerak. Agar mijoz toʻlangan pulning qaytarilishini xohlasa, florist hisobidan pulni florify orqali qaytariladi.",
+        "5.2. Mijozlarning shikoyatlari: Florist mahsulot sifati, yetkazib berish yoki tashqi ko'rinishi bilan bog'liq har qanday mijozlarning shikoyatlarini professional va zudlik bilan ko'rib chiqishi kerak. Shikoyatlarni hal qilish bo'yicha ko'rilgan chora-tadbirlar to'g'risida kompaniya xabardor qilinishi kerak."
+      ]
+    ],
+    [
+      "6. Tugatish",
+      [
+        "6.1. To'xtatish to'g'risidagi bildirishnoma: Tomonlardan har biri boshqa tomonni 10 kun oldin yozma ravishda xabardor qilish orqali ushbu Shartnomani bekor qilishi mumkin.",
+        "6.2. Muvaffaqiyatsiz buyurtmalar: To'xtatilgan taqdirda, Florist barcha to'liq buyurtmalarni kelishilgan holda tugatish sanasigacha bajarishi kerak.",
+        "Quyida imzo chekish orqali ikkala tomon ham ushbu Floristik hamkorlik shartnomasida belgilangan shartlar va talablarga roziligini va yetkazib berishni oʻz zimmasiga oladi."
+      ]
+    ]
+  ],
+  "_cooperation": [
+    "Kompaniya",
+    "Florist",
+    "O’zbekiston Respublikasi, Toshkent shahri, Mirobod hududi, N. Nazarbayeva 193 ko’chasi,",
+    "LES OFFICE, indeks: 050013",
+    "ТОО \"Florify.uz (Florify.uz)\"",
+    "(imzo)"
+  ],
+  "terms_of_use": [
+    "Foydalanuvchi shartnomasi",
+    [
+      "1. Buyurtma berish",
+      [
+        "1.1. Buyurtma foydalanuvchi tomonidan xizmatning funktsional imkoniyatlaridan foydalangan holda mustaqil ravishda tuziladi (sayt Florify.uz yoki maxsus dastur).",
+        "1.2. Xizmatdan foydalangan holda, buyurtma berishda foydalanuvchi Sotuvchi(Florify.uz) bilan oldi-sotdi shartnomalarini tuzadi, undan tovar sotib oladi va yetkazib berishga buyurtma beradi. Foydalanuvchiga quyidagi axborot va maslahat xizmatlarini taqdim etadi:",
+        "* mahsulotni tanlash;",
+        "* tovarlarni sotish shartnomasini va sotuvchi bilan tovarlarni yetkazib berish shartnomasini tuzing;",
+        "* buyurtmani to'lash;",
+        "* buyurtmani bajarish holati to'g'risida bildirishnomalarni oling;",
+        "* buyurtmani o'zgartirish yoki bekor qilish.",
+        "1.3. Buyurtmani rasmiylashtirishda foydalanuvchi sotuvchi tovarlarni uchinchi shaxsga yetkazib berishni ishonib topshirishga haqli, shu bilan birga uning bajarilishi uchun javobgar bo'ladi.",
+        "1.4. Buyurtma berish vaqtida foydalanuvchi xizmatda joylashtirilgan quyidagi ma'lumotlar bilan tanishishi shart:",
+        "* tovarlarning asosiy iste'mol xususiyatlari/xizmatlar ko'rsatish shartlari to'g'risida;",
+        "* sotuvchining to'liq firma nomi va sotuvchining manzili to'g'risida;",
+        "* tovarlarni ishlab chiqarish joyi to'g'risida;",
+        "* narx (agar mavjud bo'lsa, QQS va boshqa soliq to'lovlarini o'z ichiga olgan holda) va tovarlarni sotib olish shartlari, to'lov tartibi to'g'risida;",
+        "* mahsulotga belgilangan xizmat muddati, yaroqlilik muddati va kafolat muddati to'g'risida (agar mavjud bo'lsa).",
+        "1.5. Servisda ko’rsatilgan tovarlarning mavjudligi to'g'risidagi ma'lumotlar foydalanuvchi tomonidan buyurtma berishda aniqlanadi va xizmatning texnik xususiyatlari tufayli buyurtma berish vaqtida o'zgarishi mumkin.",
+        "1.6. Buyurtma berishda foydalanuvchi buyurtmani bajarish uchun zarur bo'lgan barcha ma'lumotlarni, shu jumladan quyidagilarni (va ular bilan cheklanmagan holda)ko'rsatishi shart:",
+        "* xizmat tomonidan taqdim etilgan hajmda ularning joriy aloqa ma'lumotlari va tovarlarni qabul qiluvchining joriy ma'lumotlari;",
+        "* tovarlarni yetkazib berish manzili, sanasi va vaqti. Agar mahsulot foydalanuvchi tomonidan qabul qilinmasa va buyurtma berish paytida manzil va yetkazib berish muddati noma'lum bo'lsa, foydalanuvchi qabul qiluvchining aloqa telefon raqamini ko'rsatishi shart. Unga ko'ra sotuvchi yetkazib berish manzili va vaqtini aniqlab berishi mumkin.",
+        "1.7. Foydalanuvchi tomonidan ushbu shartlar bo'limining 1.6-bandida ko'rsatilgan noto'g'ri ma'lumotlarni kiritish buyurtmani bekor qilish uchun asosdir.",
+        "1.8. Kompaniya foydalanuvchi tomonidan amalga oshirilgan buyurtmalar qayta-qayta bekor qilingan va/yoki tovarlardan takroriy voz kechgan taqdirda, shuningdek ushbu shartlar buzilgan taqdirda Foydalanuvchiga buyurtmani amalga oshirish imkoniyatini cheklashga haqlidir. Xizmatdan foydalanish uchun cheklov muddati belgilanadi Florify.uz ",
+        "1.9. Buyurtmani tasdiqlash foydalanuvchi tomonidan amalga oshirilgan to'lovdir. Buyurtma sotuvchi tomonidan faqat foydalanuvchi to'lov majburiyatini bajargandan so'ng amalga oshiriladi.",
+        "1.10. Foydalanuvchi buyurtmani to'lash orqali tasdiqlaydi:",
+        "* shartnoma unga to'liq yetkazilganligi va 1.4-bandda ko'rsatilgan ma'lumotlarni tushunganligi;",
+        "* tovarlarni sotish va yetkazib berishning barcha muhim shartlariga rozilik.",
+        "1.12. Buyurtma to'langandan va buyurtma to'g'risidagi ma'lumotni sotuvchiga yuborgandan so'ng, foydalanuvchi xizmat orqali buyurtmani o'zgartira olmaydi. Agar siz buyurtmani o'zgartirmoqchi bo'lsangiz: foydalanuvchi xizmatda ko'rsatilgan aloqa ma'lumotlari bo'yicha sotuvchi bilan bog'lanish huquqiga ega. Shu bilan birga, buyurtma tarkibi, yetkazib berish sanasi, vaqti yoki manzili, qabul qiluvchining nomi, ilova/ sovg'a kartalariga o'zgartirishlar kiritish bilan bog'liq o'zgarishlar – xizmatdagi buyurtma \"yig'ilgan\"/ \"y002etkazib berishdan oldin fotosurat\" holatiga o'tkazilgunga qadar ruxsat etiladi."
+      ],
+      [
+        "2. Buyurtma narxi. To'lov tartibi",
+        [
+          "2.1. Buyurtmani to'lash paytida mumkin bo'lgan to'lov usullari xizmatda ko'rsatiladi. Foydalanuvchi kelishilgan to’lov turi orqali to’lovni amalga oshiradi",
+          "2.2. Click/Payme ilovalari yoki bank kartasi yordamida to'lov Kompaniyaning joriy hisob raqamiga amalga oshiriladi. Buyurtma to’lovi sotuvchining topshirig' iga binoan to 'lovlarni qabul qilish bo' yicha vakolatli operator yoki elektron pul mablag 'lari operatorini jalb qilgan holda amal qiladi. Foydalanuvchining to'lov majburiyati foydalanuvchiga xizmat ko'rsatuvchi kredit tashkiloti tomonidan uning bajarilishini tasdiqlagan paytdan boshlab bajarilgan hisoblanadi. Sotuvchi tanlangan to'lov usuli bilan bog'liq har qanday qo'shimcha foydalanuvchi xarajatlari uchun javobgar emas. Florify.uz Foydalanuvchining bank ma'lumotlarini saqlamaydi va unga kirish huquqiga ega emas. To'lovni amalga oshirish uchun zarur bo'lgan ma'lumotlar shifrlangan token shaklida saqlanadi, u vakolatli to'lovlarni qabul qilish operatoriga yoki elektron pul mablag'lari operatoriga o'tkaziladi.",
+          "2.3. To’lov uchun hisob-faktura sotuvchi tomonidan mamlakat qonunchiligiga muvofiq mustaqil ravishda taqdim etiladi va buyurtma yetkazib berish vaqtida Foydalanuvchiga beriladi (Agar qabul qiluvchi Foydalanuvchining o'zi bo'lsa) yoki Foydalanuvchining tegishli so'rovi bilan ro'yxatdan o'tish paytida ko'rsatilgan Foydalanuvchining elektron pochtasiga yuborilishi mumkin. Hisob-fakturani rasmiylashtirish uchun to'lov paytida foydalanuvchi ushbu ma'lumotlarning to'g'riligi uchun javobgardir. Agar foydalanuvchi noto'g'ri ma'lumotlarni taqdim etsa, sotuvchi yangi hisob-faktura rasmiylashtirishi shart emas.",
+          "2.4. Foydalanuvchi buyurtmani to'lashda yoki pul mablag'larini qaytarish uchun Florify.uz tomoniga taqdim etgan shaxsiy ma'lumotlar o'tkazilishi mumkinligiga ya’ni tegishli operatsiyalarni amalga oshirishda ishtirok etadigan kredit tashkilotlariga ma’lumotlar berilishiga roziligini tasdiqlaydi. "
+        ]
+      ],
+      [
+        "3. Yetkazib berish",
+        [
+          "3.1. Har bir buyurtma uchun tovarlarni yetkazib berish muddati va narxi buyurtma berish vaqtida aniqlanadi.",
+          "3.2. Agar foydalanuvchi to'lov vaqtida yetkazib berish manzilini ko'rsatmagan bo'lsa, sotuvchi yoki kompaniya yetkazib berish manzilini aniqlashtirish uchun foydalanuvchi/qabul qiluvchi bilan bog'lanadi. Yetkazib berish manzili aniqlangandan so'ng, sotuvchi buyurtma berish vaqtida ko'rsatilgan yetkazib berish narxini o'zgartirishga haqlidir. Yangi yetkazib berish narxi sotuvchi tomonidan foydalanuvchi bilan to'g'ridan-to'g'ri kelishib olinadi. Agar foydalanuvchi yetkazib berish narxiga rozi bo'lmasa, foydalanuvchi/sotuvchi buyurtmani rad etishga haqlidir. Sotuvchi tovarlarni faqat ro'yxatdan o'tgan mamlakat ichida yetkazib beradi. Sotuvchi yetkazib berish maydonini mustaqil ravishda cheklash huquqiga ega. Belgilangan yetkazib berish manzili bo'yicha tovarlarni yetkazib berish imkoniyati buyurtma berish vaqtida servisda ko'rsatiladi.",
+          "Buyurtmani rad etish ushbu shartlar bo'limining 4-bandida nazarda tutilgan tartibda amalga oshiriladi.",
+          "3.3. Agar tovarlarni yetkazib berish shartnomada belgilangan muddatlarda amalga oshirilgan bo'lsa, lekin tovarlar sotuvchiga bog'liq bo'lmagan sabablarga ko'ra Foydalanuvchiga/qabul qiluvchiga yetkazilmagan bo'lsa, sotuvchi quyidagi huquqlarga ega:",
+          "* buyurtmani qayta bajarishdan bosh tortish huquqiga ega. Bunday holda, foydalanuvchidan/qabul qiluvchidan sotuvchiga tovarlarni yetkazib berish bilan bog'liq xarajatlar bundan mustasno, to'langan pul Foydalanuvchiga qaytariladi. Xarajatlar miqdori buyurtma berish vaqtida ko'rsatilgan tovarlarni yetkazib berish qiymati bilan belgilanadi. Bundan tashqari, buyurtmani bajarish bilan bog'liq boshqa xarajatlar foydalanuvchidan undirilishi mumkin.",
+          "* tovarlarni yetkazib berish xizmatlari narxini foydalanuvchi tomonidan qayta to'lash sharti bilan foydalanuvchi bilan kelishilgan yangi muddatlarda tovarlarni qayta yetkazib berishni amalga oshiradi.",
+          "3.4. Tovarning tasodifan nobud bo'lishi yoki tasodifan shikastlanishi xavfi tovar topshirilgan vaqtda Foydalanuvchiga/qabul qiluvchiga o'tadi.",
+          "3.5. Mahsulotni olgandan so'ng, foydalanuvchi/qabul qiluvchi mahsulotni tekshirishi va buyurtmaga muvofiqligini tekshirishi shart.",
+          "3.6. Mahsulotga nisbatan da'volar mavjud bo'lgan taqdirda, foydalanuvchi/qabul qiluvchi 4.3-bandda belgilangan tartibda uni olgandan keyin tovardan voz kechishga haqlidir. Yoki ushbu shartlar bo'limining 5-bandida nazarda tutilgan tartibda tovarlarni qabul qilgan holda da’vo foydalanuvchi tomonidan ochilishi mumkin."
+        ]
+      ],
+      [
+        "4. Buyurtmani bekor qilish. Tovarlarni rad etish. Tovarlarni qaytarish",
+        [
+          "4.1. Sotuvchi buyurtmani rad etish huquqiga ega:",
+          "* omborda tovarlar bo'lmagan taqdirda yoki Foydalanuvchiga yetkazib beriladigan tovarlar sifatsiz bo'lsa;",
+          "* Agar foydalanuvchi shartlarga muvofiq buyurtmani rad etsa;",
+          "* Agar foydalanuvchi / qabul qiluvchi tovarni olishdan bosh tortsa;",
+          "* Agar buyurtma qiymati texnik nosozlik tufayli noto'g'ri ko'rsatilgan bo'lsa/sotuvchi foydalanuvchi bilan bog'lana olmasa / foydalanuvchi buyurtmaning yangi narxiga, shu jumladan yetkazib berish narxiga rozi bo’lmasa yoki boshqa sabablarga ko'ra;",
+          "* Shartlarda nazarda tutilgan  yoki sotuvchi buyurtmani bajara olmaydigan boshqa hollarda.",
+          "4.2. Foydalanuvchi buyurtmani rad etish huquqiga ega:",
+          "* Har qanday sababga ko'ra, xizmatdagi buyurtmani \"yig'ilgan\"/ \"yetkazib berishdan oldin fotosurat\"holatiga o'tkazishdan oldin foydalanuvchi xizmatning funktsional imkoniyatlaridan foydalangan holda butun buyurtmani rad qilishi mumkin. Foydalanuvchi buyurtmaning bir qismini faqat xizmatni qo'llab-quvvatlash xizmatiga murojaat qilish orqali rad qilishi mumkin;",
+          "* buyurtmani \"yig'ilgan\"/ \"yetkazib berishdan oldin fotosurat\" holatiga o'tkazgandan so'ng, buyurtmani bekor qilish mumkin emas. Bunday holda, foydalanuvchi ushbu shartlar bo'limining 4.3 - bandiga amal qiladi.",
+          "4.3. Foydalanuvchi/qabul qiluvchining mahsulotdan voz kechishi:",
+          "* Tovarlarni qabul qilishda Foydalanuvchiga barcha tovarlardan yoki tovarlarning bir qismidan voz kechish imkoniyati beriladi. Rad etish xizmatni qo'llab-quvvatlash xizmatiga murojaat qilish orqali amalga oshiriladi;",
+          "* Tovarlarni qabul qilishda qabul qiluvchiga faqat barcha tovarlardan voz kechish imkoniyati beriladi. Bunday holda, sotuvchi keyingi harakatlarni aniqlashtirish uchun foydalanuvchi bilan bog'lanadi. Agar sotuvchi 10 (o'n) daqiqa ichida foydalanuvchi bilan bog'lana olmasa, kamida 3 (uch) qo'ng'iroqni amalga oshirsa, sotuvchi buyurtmani bajarishdan bosh tortishga haqlidir. Bunday holda, to'langan pul Foydalanuvchiga qaytariladi, tovarlarni qabul qiluvchidan sotuvchiga yetkazib berish bilan bog'liq xarajatlar bundan mustasno. Xarajatlar miqdori buyurtma berish vaqtida ko'rsatilgan tovarlarni yetkazib berish qiymati bilan belgilanadi. Bundan tashqari, foydalanuvchidan buyurtmani bajarish bilan bog'liq boshqa xarajatlar undirilishi mumkin, ularni undirish amaldagi qonunchiligida nazarda tutilgan;",
+          "* Agar foydalanuvchi/qabul qiluvchi buyurtma tarkibidagi barcha tovarlardan voz kechgan bo'lsa va bunday rad etish tovarning sifatsizligi bilan bog'liq bo'lmasa, Foydalanuvchiga to'langan naqd pul qaytariladi, tovarni foydalanuvchi / qabul qiluvchidan sotuvchiga yetkazib berish bilan bog'liq xarajatlar bundan mustasno. Xarajatlar miqdori buyurtma berish vaqtida ko'rsatilgan tovarlarni yetkazib berish qiymati bilan belgilanadi. Bundan tashqari, foydalanuvchidan buyurtmani bajarish bilan bog'liq boshqa xarajatlar undirilishi mumkin, ularni undirish amaldagi qonunchiligida nazarda tutilgan;",
+          "4.4. Foydalanuvchining Tovarni Qaytarishi:",
+          "* Agar uning  sifati saqlanib qolsa, tegishli sifatli tovarlarni qaytarish mumkin;",
+          "* Mahsulotni qaytarishni istagan foydalanuvchi ushbu talab bilan ushbu shartlar bo'limining 5-bandida belgilangan tartibda ishlaydi;",
+          "* Tovarlarni qaytarish foydalanuvchi tomonidan sotuvchiga xizmatda ko'rsatilgan tafsilotlar bo'yicha amalga oshiriladi. Foydalanuvchiga tovarlarni yetkazib berish narxi qaytarilmaydi. Bundan tashqari, foydalanuvchidan buyurtmani bajarish bilan bog'liq boshqa xarajatlar undirilishi mumkin, ularni undirish amaldagi qonun hujjatlarida nazarda tutilgan.",
+          "4.5. Pulni qaytarish foydalanuvchi/qabul qiluvchining buyurtma bekor qilganidan keyin 10 (o'n) kun ichida amalga oshiriladi. Pul  buyurtma uchun to'lov amalga oshirilgan bank kartasiga qaytariladi."
+        ]
+      ],
+      [
+        "5. Foydalanuvchi da'volarini qo'llab-quvvatlash",
+        [
+          "5.2. Sotuvchi buyurtmani bajargan kundan boshlab 3 (uch) kun ichida foydalanuvchi xizmat orqali sotuvchi bilan har qanday da'voni hal qilish imkoniyatiga ega. Belgilangan muddat tugagandan so'ng, foydalanuvchi barcha da'volarni jalb qilmasdan to'g'ridan-to'g'ri sotuvchi bilan hal qiladi Florify.uz, Agar sotuvchi mamlakatning amaldagi qonunchiligida boshqacha tartib nazarda tutilmagan bo'lsa.",
+          "5.3. Ushbu bo'limning qoidalariga qaramay, foydalanuvchi sotuvchi mamlakatning amaldagi qonunchiligida nazarda tutilgan da'volarni hal qilishning boshqa usullaridan foydalanish huquqiga ega.",
+          "5.1. Xizmatdan foydalangan holda foydalanuvchi va sotuvchi o'rtasida tuzilgan shartnomani bajarish, shuningdek iste'molchilarning boshqa huquqlariga rioya qilish uchun sotuvchi javobgar bo'ladi, Agar sotuvchi mamlakatining amaldagi qonunchiligida boshqacha qoida nazarda tutilmagan bo'lsa."
+        ]
+      ]
+    ]
+  ]
+}

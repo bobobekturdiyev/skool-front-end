@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "./_colors.scss";
+@import "./element_plus.scss";
+
+
+html,
+body {
+    background: #F0F5FA;
+
+    ::-webkit-scrollbar {
+        width: 0;
+    }
+}
+
+input {
+    height: 40px;
+    width: 100%;
+    box-shadow: none !important;
+    border: 1px $CE0 solid !important;
+    border-radius: 4px !important;
+    padding: 12px !important;
+    outline: none !important;
+
+    ::placeholder {
+        color: $CA1;
+    }
+}
+
+button {
+    height: 40px;
+}
+
+.b_none {
+    border: none !important;
+}
+
+.full_flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.c_pointer {
+    cursor: pointer;
+}
+
+input[type='radio'] {
+    border-radius: 50% !important;
+    padding: 6px !important;
+    border: 4px solid transparent !important;
+    outline: 1px solid $CE0 !important;
+    cursor: pointer;
+}
+
+input[type=radio]:checked {
+    background: $C2A !important;
+    padding: 6px !important;
+    border: 4px solid white !important;
+    outline: 1px solid $C2A !important;
+    cursor: pointer;
+}
+
+label {
+    cursor: pointer;
+}
+
+.r_16 {
+    border-radius: 16px;
+}
+
+.r_8 {
+    border-radius: 8px;
+}
+
+.hide_show:hover {
+    .show_blue {
+        display: none;
+    }
+
+    .show_black {
+        display: block;
+    }
+
+    color: $C07;
+    background: $CBC;
+    cursor: pointer;
+}
