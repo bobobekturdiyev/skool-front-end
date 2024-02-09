@@ -4,10 +4,10 @@ export default defineNuxtConfig({
     head: {
       title: "skool",
       link: [
-        // {
-        //   rel: "icon",
-        //   href: "/logo.svg",
-        // },
+        {
+          rel: "icon",
+          href: "/icon.svg",
+        },
       ],
       meta: [
         // {
@@ -21,6 +21,10 @@ export default defineNuxtConfig({
     public: {
       baseURL: process.env.BASE_URL,
     },
+  },
+  plugins: [{ src: "~/plugins/aos", mode: "client", ssr: false }],
+  imports: {
+    autoImport: true,
   },
   css: ["~/assets/scss/main.scss"],
   postcss: {

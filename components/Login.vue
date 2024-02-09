@@ -8,7 +8,7 @@
       <input type="email" placeholder="Email" />
       <input type="password" placeholder="Password" />
       <p class="_c2a text-start font-medium">Forgot password?</p>
-      <button class="b_ce0 _ca1 font-semibold w-full rounded-[4px]">
+      <button @click="login" class="b_ce0 _ca1 font-semibold w-full rounded-[4px]">
         LOG IN
       </button>
     </form>
@@ -28,6 +28,10 @@ import { useAuthStore } from "@/store";
 
 const router = useRouter();
 const useAuth = useAuthStore();
+
+function login() {
+  localStorage.setItem("token", "token");
+}
 
 function register() {
   if (router.currentRoute.value.name == "login") {

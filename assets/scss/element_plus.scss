@@ -8,7 +8,7 @@
     color: $C07 !important;
 }
 
-.el-popper__arrow {
+.el-popper__arrow, .el-progress__text {
     display: none !important;
 }
 
@@ -29,6 +29,23 @@
 
 .el-dialog__body {
     padding: 8px 0 !important;
+    position: static !important;
+}
+
+.community_page .el-dialog {
+    width: 80% !important;
+    height: 80% !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: static !important;
+}
+
+@media (max-width: 767px) {
+    .el-dialog {
+        width: 100% !important;
+        height: fit-content !important;
+    }
 }
 
 .filter_dropdown {
@@ -87,6 +104,7 @@
 
 .el-tabs__item.is-active {
     color: $C2A !important;
+    font-weight: 700;
 }
 
 .el-tabs__item {
@@ -95,4 +113,13 @@
 
 .el-tabs__nav {
     gap: 32px !important;
+}
+
+.class_progress .el-progress-bar__inner {
+    background: $C2A !important;
+}
+
+.class_progress .el-progress-bar__outer {
+    height: 3px !important;
+    background: $CE0 !important;
 }

@@ -8,11 +8,7 @@ export const useLoadingStore = defineStore("loading", () => {
   const store = reactive({
     loadingTypes: [],
     page: 1,
-    limit: 8,
-    isOpen: false,
     isLogin: false,
-    salesman_id: "",
-    name: "",
   });
 
   function addLoading(type) {

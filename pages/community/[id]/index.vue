@@ -1,25 +1,48 @@
 <template>
-  <main class="flex gap-6">
-    <section
-      class="min-w-[70%] bg-white px-7 py-6 r_16 overflow-hidden"
-    >
+  <main class="flex gap-6 community_page">
+    <section class="min-w-[70%] bg-white px-7 py-6 r_16 overflow-hidden">
       <h1 class="font-semibold text-2xl mb-6">Xayot Sharapov</h1>
-      <img
-        class="h-[290px] w-full object-cover r_16"
-        src="@/assets/image/picture.png"
-        alt=""
-      />
+      <div class="w-full overflow-hidden r_16">
+        <div
+          @click="store.slideModal = true"
+          class="mainSlider cursor-pointer duration-500 h-[290px] flex items-center w-full r_16"
+        >
+          <img
+            class="h-full w-full min-w-[100%] object-cover"
+            src="@/assets/image/picture.png"
+            alt=""
+          />
+          <div class="relative h-full border min-w-[100%]">
+            <video
+              class="w-full h-full cursor-pointer object-cover rounded-xl"
+              src="@/assets/image/math.mp4"
+            ></video>
+            <div
+              class="absolute top-0 w-full h-full cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex"
+            >
+              <img src="@/assets/svg/video_btn.svg" alt="" />
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="flex gap-4 mt-4 mb-6">
         <img
+          @click="store.slideStep = 0"
           class="w-[90px] cursor-pointer h-[90px] object-cover rounded-xl"
           src="@/assets/image/picture.png"
           alt=""
         />
-        <img
-          class="w-[90px] cursor-pointer h-[90px] object-cover rounded-xl"
-          src="@/assets/image/picture.png"
-          alt=""
-        />
+        <div @click="store.slideStep = 1" class="relative">
+          <video
+            class="w-[90px] h-[90px] cursor-pointer object-cover rounded-xl"
+            src="@/assets/image/math.mp4"
+          ></video>
+          <div
+            class="absolute top-0 w-[90px] h-[90px] cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex"
+          >
+            <img src="@/assets/svg/video_btn.svg" alt="" />
+          </div>
+        </div>
       </div>
       <div class="flex gap-4 text-sm font-medium h-9">
         <p class="full_flex px-3 gap-1 h-full rounded-lg bg-[#F2F2F2]">
@@ -100,18 +123,137 @@
               <p class="_ca1">Admins</p>
             </div>
           </div>
-          <button @click="$router.push('/classroom')"
+          <button
+            @click="$router.push('/classroom')"
             class="b_cbc rounded-lg w-full font-semibold text-sm uppercase"
           >
             join group
           </button>
         </div>
       </div>
-      <div class="full_flex mt-8 gap-2 leading-[18px]"><p>Powered by</p> <img class="h-3 mt-0.5" src="/logo.svg" alt="" /></div>
+      <div class="full_flex mt-8 gap-2 leading-[18px]">
+        <p>Powered by</p>
+        <img class="h-3 mt-0.5" src="/logo.svg" alt="" />
+      </div>
     </section>
+
+    <el-dialog
+      v-model="store.slideModal"
+      class="!p-0 !bg-transparent w-full !shadow-none bg-black bg-opacity-10"
+      align-center
+    >
+      <div
+        class="min-w-[80vw] md:min-h-[80vh] full_flex overflow-hidden md:max-h-[80vh] md:max-w-[80vw]"
+      >
+        <div
+          class="mainSlider2 bg-black bg-opacity-10 duration-500 flex items-center w-full"
+        >
+          <div class="full_flex min-w-[100%]">
+            <img
+              class="h-full w-full object-contain md:max-h-[80vh] md:max-w-[80vw]"
+              src="@/assets/image/picture.png"
+              alt=""
+            />
+          </div>
+          <div class="full_flex min-w-[100%]">
+            <div class="h-full w-full">
+              <video
+                id="math_video"
+                controls
+                class="cursor-pointer r_16 w-full h-full object-contain md:max-h-[80vh] md:max-w-[80vw]"
+                src="@/assets/image/math.mp4"
+              ></video>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- buttons -->
+      <button
+        @click="store.slideStep2 = 1"
+        class="bg-black bg-opacity-20 backdrop-blur-lg absolute sm:right-5 right-3 top-0 bottom-0 my-auto full_flex rounded-full w-12 h-12 border border-white"
+      >
+        <img src="@/assets/svg/slide_arrow.svg" alt="" />
+      </button>
+      <button
+        @click="store.slideStep2 = 0"
+        class="bg-black bg-opacity-20 backdrop-blur-lg absolute sm:left-5 left-3 top-0 bottom-0 my-auto full_flex rotate-180 rounded-full w-12 h-12 border border-white"
+      >
+        <img src="@/assets/svg/slide_arrow.svg" alt="" />
+      </button>
+      <button
+        @click="store.slideModal = false"
+        class="bg-black bg-opacity-20 backdrop-blur-lg absolute sm:right-5 right-3 sm:top-5 top-3 my-auto full_flex rotate-180 rounded-full w-12 h-12 border border-white"
+      >
+        <img src="@/assets/svg/slide_x.svg" alt="" />
+      </button>
+    </el-dialog>
   </main>
 </template>
 
-<script setup></script>
+<script setup>
+const store = reactive({
+  slideStep: 0,
+  slideStep2: 0,
+  slideModal: false,
+});
+
+watch(
+  () => store.slideModal,
+  () => {
+    store.slideStep2 = store.slideStep;
+
+    const video = document.getElementById("math_video");
+    try {
+      video.pause();
+    } catch (error) {}
+  }
+);
+
+watch(
+  () => store.slideStep,
+  () => {
+    try {
+      store.slideStep2 = store.slideStep;
+      const image = document.querySelector(".mainSlider");
+      image.style.transform = `translateX(-${store.slideStep * 100}%)`;
+    } catch (error) {}
+  }
+);
+
+watch(
+  () => store.slideStep2,
+  () => {
+    const video = document.getElementById("math_video");
+    try {
+      video.pause();
+    } catch (error) {}
+    try {
+      const image = document.querySelector(".mainSlider2");
+      image.style.transform = `translateX(-${store.slideStep2 * 100}%)`;
+    } catch (error) {}
+  }
+);
+
+onMounted(() => {
+  document.addEventListener("keydown", function (event) {
+    // Check if Ctrl key is pressed and the key pressed along with it
+    console.log(event.key);
+    if (!store.slideModal) {
+      if (event.key == "ArrowRight") {
+        store.slideStep = 1;
+      } else if (event.key == "ArrowLeft") {
+        store.slideStep = 0;
+      }
+    }else {
+      if (event.key == "ArrowRight") {
+        store.slideStep2 = 1;
+      } else if (event.key == "ArrowLeft") {
+        store.slideStep2 = 0;
+      }
+    }
+  });
+});
+</script>
 
 <style lang="scss" scoped></style>

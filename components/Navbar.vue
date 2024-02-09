@@ -27,12 +27,16 @@
               />
             </div>
             <el-dropdown-item>
-              <img src="@/assets/svg/create_community.svg" alt="" />
-              Create a community
+              <div class="flex items-center gap-3">
+                <img src="@/assets/svg/create_community.svg" alt="" />
+                <p>{{ $t("nav.create_community") }}</p>
+              </div>
             </el-dropdown-item>
             <el-dropdown-item>
-              <img src="@/assets/svg/discover.svg" alt="" />
-              Discover communities
+              <div class="flex items-center gap-3">
+                <img src="@/assets/svg/discover.svg" alt="" />
+                <p>{{ $t("nav.discover") }}</p>
+              </div>
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -63,18 +67,29 @@
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-        <div class="flex gap-2">
+        <div v-show="isLoading.store.isLogin" class="flex items-center gap-7">
+          <img src="@/assets/svg/nav/message.svg" alt="" />
+          <img src="@/assets/svg/nav/notification.svg" alt="" />
+          <router-link to="/profile">
+            <img
+              class="h-10 w-10 object-cover"
+              src="@/assets/image/user.svg"
+              alt=""
+            />
+          </router-link>
+        </div>
+        <div v-show="!isLoading.store.isLogin" class="flex gap-2">
           <button
             @click="useAuth.modal.register = true"
-            class="border border-[#BCDEFF] _c2a font-semibold px-6 rounded-[6px]"
+            class="border border-[#BCDEFF] _c2a font-semibold uppercase px-6 rounded-[6px]"
           >
-            SIGN UP
+            {{ $t("nav.register") }}
           </button>
           <button
             @click="useAuth.modal.login = true"
-            class="border border-[#BCDEFF] _c2a font-semibold px-6 rounded-[6px]"
+            class="border border-[#BCDEFF] _c2a font-semibold uppercase px-6 rounded-[6px]"
           >
-            LOG IN
+            {{ $t("nav.login") }}
           </button>
         </div>
       </div>
@@ -103,9 +118,10 @@
 </template>
 
 <script setup>
-import { useAuthStore } from "@/store";
+import { useAuthStore, useLoadingStore } from "@/store";
 
 const useAuth = useAuthStore();
+const isLoading = useLoadingStore();
 </script>
 
 <style lang="scss" scoped>

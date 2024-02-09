@@ -1,5 +1,5 @@
 <template>
-  <div v-for="i in 6" class="w-full bg-white r_16 overflow-hidden">
+  <div v-for="i in 6" @click="$router.push(`/community/${i}`)" data-aos="zoom-in" class="w-full cursor-pointer bg-white r_16 overflow-hidden">
     <div class="relative">
       <p
         class="full_flex text-xs pb-0.5 font-medium absolute w-[30px] h-[30px] bg-white rounded-lg m-3"
@@ -10,7 +10,7 @@
     </div>
     <div class="p-4">
       <div class="flex items-center gap-4">
-        <img src="@/assets/image/user.svg" alt="" />
+        <img class="h-10 w-10 rounded-full object-cover" src="@/assets/image/user.svg" alt="" />
         <h1 class="font-semibold text-lg">Xayot Sharapov</h1>
       </div>
       <p class="mt-4 mb-7">

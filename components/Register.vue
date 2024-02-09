@@ -5,11 +5,11 @@
     </router-link>
     <h1 class="_c07 text-2xl font-semibold">Create your Skool account</h1>
     <form class="space-y-5">
-      <input type="text" placeholder="First name" />
-      <input type="text" placeholder="Last name" />
-      <input type="email" placeholder="Email" />
-      <input type="password" placeholder="Password" />
-      <button class="b_ce0 _ca1 font-semibold w-full rounded-[4px]">
+      <input type="text" placeholder="First name" required />
+      <input type="text" placeholder="Last name" required />
+      <input type="email" placeholder="Email"  required/>
+      <input type="password" placeholder="Password" required />
+      <button @click="register" class="b_ce0 _ca1 font-semibold w-full rounded-[4px]">
         Sign up
       </button>
     </form>
@@ -32,6 +32,10 @@ import { useAuthStore } from "@/store";
 
 const router = useRouter();
 const useAuth = useAuthStore();
+
+function register() {
+  localStorage.setItem("token", "token");
+}
 
 function login() {
   if (router.currentRoute.value.name == "register") {

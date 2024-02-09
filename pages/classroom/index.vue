@@ -5,7 +5,7 @@
       class="demo-tabs"
       @tab-click="handleClick"
     >
-      <el-tab-pane class="flex gap-6" label="Community" name="first">
+      <el-tab-pane class="flex gap-6 mt-[18px]" label="Community" name="first">
         <div class="overflow-hidden min-w-[70%] space-y-8">
           <section>
             <div
@@ -29,10 +29,10 @@
                 :class="store.is_show ? 'flex-wrap' : ''"
                 class="relative flex gap-3 overflow-hidden items-center"
               >
-                <button class="py-2 px-3 rounded-full b_cbc">All</button>
+                <button class="py-2 px-3 rounded-full b_cbc hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700">All</button>
                 <button
                   v-for="i in 16"
-                  class="flex items-center gap-1 py-2 px-3 rounded-full bg-white"
+                  class="flex items-center hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full bg-white"
                 >
                   How I use Skool
                 </button>
@@ -45,7 +45,7 @@
                 <button
                   @click="store.is_show = false"
                   v-if="store.is_show"
-                  class="py-2 px-3 rounded-full min-w-fit bg-white"
+                  class="py-2 px-3 hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 rounded-full min-w-fit bg-white"
                 >
                   Less...
                 </button>
@@ -53,7 +53,7 @@
               <button
                 @click="store.is_show = true"
                 v-if="!store.is_show"
-                class="py-2 px-3 rounded-full min-w-fit bg-white"
+                class="py-2 px-3 hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 rounded-full min-w-fit bg-white"
               >
                 More...
               </button>
@@ -152,6 +152,7 @@
           <section class="space-y-5">
             <article
               v-for="i in 4"
+              data-aos="zoom-in"
               class="relative flex r_16 overflow-hidden bg-white"
             >
               <!-- hide -->
@@ -258,8 +259,8 @@
                 </div>
               </div>
             </article>
-            <Pagination_card />
-        </section>
+            <Pagination_card class="pt-3" />
+          </section>
         </div>
         <div class="w-full">
           <!-- info card -->
@@ -368,7 +369,13 @@
           </section>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="Classroom" name="second">Classroom</el-tab-pane>
+      <el-tab-pane class="mt-[18px]" label="Classroom" name="second">
+        <!-- cards -->
+        <section class="grid grid-cols-3 gap-6 justify-between my-8 mt-[18px]">
+          <ClassCard />
+        </section>
+        <Pagination_card />
+      </el-tab-pane>
       <el-tab-pane label="Calendar" name="third">Calendar</el-tab-pane>
       <el-tab-pane label="Members" name="fourth">Members</el-tab-pane>
       <el-tab-pane label="Leaderboards" name="fifth">Leaderboards</el-tab-pane>

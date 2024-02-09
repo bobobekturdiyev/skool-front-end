@@ -32,10 +32,16 @@
           :class="store.is_show ? 'flex-wrap' : ''"
           class="relative flex gap-3 overflow-hidden items-center"
         >
-          <button class="py-2 px-3 rounded-full b_cbc">All</button>
+          <button
+            data-aos="zoom-in"
+            class="py-2 px-3 rounded-full b_cbc hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
+          >
+            All
+          </button>
           <button
             v-for="i in 16"
-            class="flex items-center gap-1 py-2 px-3 rounded-full bg-white"
+            data-aos="zoom-in"
+            class="flex items-center hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full bg-white"
           >
             <span>🍎</span> Health & Fitness
           </button>
@@ -48,7 +54,7 @@
           <button
             @click="store.is_show = false"
             v-if="store.is_show"
-            class="py-2 px-3 rounded-full min-w-fit bg-white"
+            class="py-2 px-3 rounded-full min-w-fit bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
           >
             Less...
           </button>
@@ -56,7 +62,7 @@
         <button
           @click="store.is_show = true"
           v-if="!store.is_show"
-          class="py-2 px-3 rounded-full min-w-fit bg-white"
+          class="py-2 px-3 rounded-full min-w-fit bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
         >
           More...
         </button>
