@@ -70,7 +70,7 @@
         <div v-show="isLoading.store.isLogin" class="flex items-center gap-7">
           <img src="@/assets/svg/nav/message.svg" alt="" />
           <img src="@/assets/svg/nav/notification.svg" alt="" />
-          <router-link to="/profile">
+          <router-link to="/">
             <img
               class="h-10 w-10 object-cover"
               src="@/assets/image/user.svg"
