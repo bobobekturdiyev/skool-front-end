@@ -1,58 +1,67 @@
 <template>
   <main>
-   <section v-if="isLoading.isLoadingType('getByUsername')"
-   class="flex sm:flex-row flex-col-reverse gap-6 community_page">
-   <div class="bg-gray-600 r_16 h-[700px] w-full"></div>
-   <div class="bg-gray-600 r_16 h-[429px] min-w-[200px] md:min-w-[280px]"></div>
-   </section>
-    <div
-    v-else
-      v-for="i in useGroup.store.group_by_username"
-      class="flex sm:flex-row flex-col-reverse gap-6 community_page"
-    >
-        <section
-      class="w-full bg-white md:px-7 md:py-6 p-3 r_16 overflow-hidden"
-    >
-      <h1 class="font-semibold md:text-2xl text-lg mb-6">{{ i.name }}</h1>
+    
+    <section v-if="isLoading.isLoadingType('getByUsername')"
+    class="flex sm:flex-row flex-col-reverse gap-6 community_page">
+    <div class="bg-gray-600 r_16 h-[700px] w-full"></div>
+    <div class="bg-gray-600 r_16 h-[429px] min-w-[200px] md:min-w-[280px]"></div>
+  </section>
+  <div
+  v-else
+  v-for="i in useGroup.store.group_by_username"
+  class="flex sm:flex-row flex-col-reverse gap-6 community_page"
+  >
+  <section
+  class="w-full bg-white md:px-7 md:py-6 p-3 r_16 overflow-hidden"
+  >
+  <h1 class="font-semibold md:text-2xl text-lg mb-6">{{ i.name }}</h1>
       <div class="w-full overflow-hidden r_16">
         <div
           @click="store.slideModal = true"
           class="mainSlider cursor-pointer duration-500 lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] flex items-center w-full r_16"
         >
-          <img
+        <div class="min-w-full" v-for="(post, index) in i.posts">
+          <div v-if="post.media_files[0]?.type == 'image'"
             class="h-full w-full min-w-[100%] object-cover"
-            src="@/assets/image/picture.png"
-            alt=""
-          />
-          <div class="relative h-full border min-w-[100%]">
-            <video
-              class="w-full h-full cursor-pointer object-cover rounded-xl"
-              src="@/assets/image/math.mp4"
-            ></video>
+          >
+            <img
+          @click="store.slideStep = index"
+          :src="post?.media_files[0]?.url"
+        />
+          </div>
+          <div v-else @click="store.slideStep = index" class="relative">
+            <iframe
+              class="min-w-full h-full cursor-pointer object-cover rounded-xl"
+              :src="post?.media_files[0]?.url"
+              ></iframe>
             <div
-              class="absolute top-0 w-full h-full cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex"
+              class="absolute top-0 min-w-full h-full cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex"
             >
               <img src="@/assets/svg/video_btn.svg" alt="" />
             </div>
           </div>
         </div>
+        </div>
       </div>
-      <div class="flex gap-4 mt-4 md:mb-6 mb-4">
-        <img
-          @click="store.slideStep = 0"
-          class="md:w-[90px] md:h-[90px] w-[56px] h-[56px] cursor-pointer object-cover rounded-xl"
-          src="@/assets/image/picture.png"
-          alt=""
+      <div class="flex gap-4 mt-4 md:mb-6 mb-4 overflow-hidden overflow-x-auto">
+        <div v-for="(post, index) in i.posts">
+          <div v-if="post.media_files[0]?.type == 'image'">
+            <img
+          @click="store.slideStep = index"
+          class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px] h-[56px] cursor-pointer object-cover rounded-xl"
+          :src="post?.media_files[0]?.url"
         />
-        <div @click="store.slideStep = 1" class="relative">
-          <video
-            class="md:w-[90px] md:h-[90px] w-[56px] h-[56px] cursor-pointer object-cover rounded-xl"
-            src="@/assets/image/math.mp4"
-          ></video>
-          <div
-            class="absolute top-0 md:w-[90px] md:h-[90px] w-[56px] h-[56px] cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex"
-          >
-            <img src="@/assets/svg/video_btn.svg" alt="" />
+          </div>
+          <div v-else @click="store.slideStep = index" class="relative">
+            <iframe
+              class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px] cursor-pointer object-cover rounded-xl"
+              :src="post?.media_files[0]?.url"
+              ></iframe>
+            <div
+              class="absolute top-0 md:w-[90px] md:h-[90px] w-[56px] h-[56px] cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex"
+            >
+              <img src="@/assets/svg/video_btn.svg" alt="" />
+            </div>
           </div>
         </div>
       </div>

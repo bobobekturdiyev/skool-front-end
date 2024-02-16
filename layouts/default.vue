@@ -1,5 +1,6 @@
 <template>
   <header class="md:pb-[60px] pb-2">
+     <NuxtLoadingIndicator />
     <div class="h-[64px] mb-10">
       <Navbar />
     </div>
