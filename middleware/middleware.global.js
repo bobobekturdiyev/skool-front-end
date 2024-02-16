@@ -9,21 +9,23 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       if (token) {
         isLoading.store.isLogin = true;
 
-        // const parts = token.split(".");
-        // const exp = parts[1];
-        // const decodedPayload = JSON.parse(atob(exp));
-        // console.log(decodedPayload);
-        // isLoading.store.salesman_id = decodedPayload.id;
+        const parts = token.split(".");
+        const exp = parts[1];
+        const decodedPayload = JSON.parse(atob(exp));
+        console.log(decodedPayload);
+        isLoading.store.salesman_id = decodedPayload.id;
         // useAuth.getUser();
-        // const experition = decodedPayload.exp;
-        // const now = +Date.now().toString().slice(0, 10);
-        // if (now >= experition) {
-        //   isLoading.store.isLogin = false;
-        //   localStorage.removeItem("token");
-        // } else {
-        //   isLoading.store.isLogin = true;
-        // }
-      } else if (localStorage.hasOwnProperty("user_id")) {
+        const experition = decodedPayload.exp;
+        const now = +Date.now().toString().slice(0, 10);
+        console.log(experition);
+        console.log(now);
+        if (now >= experition) {
+          isLoading.store.isLogin = false;
+          localStorage.removeItem("token");
+        } else {
+          isLoading.store.isLogin = true;
+        }
+      } else {
         isLoading.store.isLogin = false;
       }
     }

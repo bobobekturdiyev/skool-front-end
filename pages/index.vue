@@ -1,8 +1,10 @@
 <template>
   <main>
     <section>
-      <div class="space-y-5 text-center mt-[72px] font-semibold text-xl">
-        <h1 class="text-[45px]">Discover communities</h1>
+      <div
+        class="md:space-y-5 space-y-3 text-center md:mt-[72px] mt-8 font-semibold text-xl"
+      >
+        <h1 class="md:text-[45px] text-2xl">Discover communities</h1>
         <p>
           or
           <span class="_c2a cursor-pointer hover:opacity-70"
@@ -10,15 +12,17 @@
           >
         </p>
       </div>
-      <div class="relative w-[616px] mx-auto mt-8 mb-[52px]">
+      <div class="relative md:w-[616px] mx-auto mt-8 md:mb-[52px] mb-6">
         <img
-          class="my-[18px] w-5 h-5 left-5 absolute"
+          class="md:my-[18px] my-[14px] w-5 h-5 left-5 absolute"
           src="@/assets/svg/search.svg"
           alt=""
         />
         <input
+          @input="handleSearch"
+          v-model="useGroup.store.filter.search"
           autofocus
-          class="h-[56px] !pl-[60px] b_none font-medium w-full !rounded-lg"
+          class="md:h-[56px] h-12 !pl-[60px] b_none font-medium w-full !rounded-lg"
           type="text"
           placeholder="Search all reports"
         />
@@ -26,149 +30,315 @@
     </section>
 
     <!-- category -->
-    <section class="text-sm whitespace-nowrap">
-      <div class="flex items-start gap-3">
+    <section class="md:text-sm text-xs whitespace-nowrap">
+      <div class="flex items-start justify-between gap-3">
         <div
           :class="store.is_show ? 'flex-wrap' : ''"
-          class="relative flex gap-3 overflow-hidden items-center"
+          class="relative flex gap-3 md:h-auto category_wrap h-[80px] overflow-hidden"
         >
           <button
+            @click="handleCategory('all')"
             data-aos="zoom-in"
-            class="py-2 px-3 rounded-full b_cbc hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
+            :class="useGroup.store.filter.category_id ? 'bg-white' : 'b_cbc'"
+            class="py-2 px-3 rounded-full md:h-9 h-8 hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
           >
             All
           </button>
           <button
-            v-for="i in 16"
+            v-if="isLoading.isLoadingType('groupCategories')"
+            v-for="i in 10"
+            class="flex items-center md:h-9 h-8 w-28 animate-pulse hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full bg-gray-900"
+          ></button>
+          <button
+            v-else-if="useCategory.store.categories"
+            @click="handleCategory(i.id)"
+            v-for="i in useCategory.store.categories"
             data-aos="zoom-in"
-            class="flex items-center hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full bg-white"
+            :class="
+              useGroup.store.filter.category_id == i.id ? 'b_cbc' : 'bg-white'
+            "
+            class="flex items-center md:h-9 h-8 min-w-fit hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full"
           >
-            <span>🍎</span> Health & Fitness
+            <img
+              class="w-[14px] h-[21px] object-contain"
+              :src="i.icon"
+              alt=""
+            />{{ i.name }}
           </button>
           <img
-            v-if="!store.is_show"
-            class="absolute right-0"
+            v-if="!store.is_show && useCategory.store.categories"
+            class="absolute md:block hidden -right-[2px]"
             src="@/assets/svg/shadow_hidden.svg"
             alt=""
           />
           <button
             @click="store.is_show = false"
-            v-if="store.is_show"
-            class="py-2 px-3 rounded-full min-w-fit bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
+            v-if="store.is_show && useCategory.store.categories"
+            class="py-2 px-3 md:h-9 h-8 md:block hidden rounded-full min-w-fit bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
           >
             Less...
           </button>
         </div>
         <button
+          v-if="!store.is_show && useCategory.store.categories"
           @click="store.is_show = true"
-          v-if="!store.is_show"
-          class="py-2 px-3 rounded-full min-w-fit bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
+          class="py-2 px-3 md:h-9 h-8 md:block hidden rounded-full min-w-fit bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
         >
           More...
         </button>
-        <el-dropdown
-          placement="bottom-start"
-          trigger="click"
-          :hide-on-click="false"
-          class="min-w-fit filter_btn"
-        >
-          <button
-            class="flex items-center gap-1 py-2 px-3 rounded-full bg-white"
+        <div class="min-w-fit text-end">
+          <el-dropdown
+            placement="bottom-start"
+            trigger="click"
+            :hide-on-click="false"
+            class="min-w-fit filter_btn"
           >
-            <img src="@/assets/svg/filter.svg" alt="" />
-            Filter
+            <button
+              class="flex items-center gap-1 py-2 px-3 md:h-9 h-8 rounded-full bg-white"
+            >
+              <img
+                class="md:h-5 md:w-5 h-4 w-4"
+                src="@/assets/svg/filter.svg"
+                alt=""
+              />
+              <p class="sm:block hidden">Filter</p>
+            </button>
+            <template #dropdown>
+              <el-dropdown-menu
+                class="flex min-w-[328px] filter_dropdown dropdown_shadow 2xl:!-ml-[60px]"
+              >
+                <div class="w-[150px] border-r border-[#E0E0E0]">
+                  <h1 class="text-sm font-medium px-8 mb-2">Type</h1>
+                  <el-dropdown-item
+                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
+                  >
+                    <input
+                      @change="onFilterType"
+                      id="type_all"
+                      class="rounded-full"
+                      type="radio"
+                      name="type"
+                    />
+                    <label for="type_all">All</label>
+                  </el-dropdown-item>
+                  <el-dropdown-item
+                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
+                  >
+                    <input
+                      @change="onFilterType"
+                      id="public"
+                      class="rounded-full"
+                      type="radio"
+                      name="type"
+                    />
+                    <label for="public">Public</label>
+                  </el-dropdown-item>
+                  <el-dropdown-item
+                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
+                  >
+                    <input
+                      @change="onFilterType"
+                      id="private"
+                      class="rounded-full"
+                      type="radio"
+                      name="type"
+                    />
+                    <label for="private">Private</label>
+                  </el-dropdown-item>
+                </div>
+                <div class="w-[150px]">
+                  <h1 class="text-sm font-medium px-8 mb-2">Price</h1>
+                  <el-dropdown-item
+                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
+                  >
+                    <input
+                      @change="onFilterPrice"
+                      id="price_all"
+                      class="rounded-full"
+                      type="radio"
+                      name="price"
+                    />
+                    <label for="price_all">All</label>
+                  </el-dropdown-item>
+                  <el-dropdown-item
+                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
+                  >
+                    <input
+                      @change="onFilterPrice"
+                      id="free"
+                      class="rounded-full"
+                      type="radio"
+                      name="price"
+                    />
+                    <label for="free">Free</label>
+                  </el-dropdown-item>
+                  <el-dropdown-item
+                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
+                  >
+                    <input
+                      @change="onFilterPrice"
+                      id="paid"
+                      class="rounded-full"
+                      type="radio"
+                      name="price"
+                    />
+                    <label for="paid">Paid</label>
+                  </el-dropdown-item>
+                </div>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+          <button
+            v-if="useCategory.store.categories"
+            @click="store.drawer = true"
+            class="py-2 px-3 md:h-9 h-8 mt-3 ml-auto md:hidden block rounded-full min-w-fit bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
+          >
+            More...
           </button>
-          <template #dropdown>
-            <el-dropdown-menu class="flex min-w-[328px] filter_dropdown">
-              <div class="w-[150px] border-r border-[#E0E0E0]">
-                <h1 class="text-sm font-medium px-8 mb-2">Type</h1>
-                <el-dropdown-item
-                  class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                >
-                  <input
-                    id="type_all"
-                    class="rounded-full"
-                    type="radio"
-                    name="type"
-                  />
-                  <label for="type_all">All</label>
-                </el-dropdown-item>
-                <el-dropdown-item
-                  class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                >
-                  <input
-                    id="type_public"
-                    class="rounded-full"
-                    type="radio"
-                    name="type"
-                  />
-                  <label for="type_public">Public</label>
-                </el-dropdown-item>
-                <el-dropdown-item
-                  class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                >
-                  <input
-                    id="type_private"
-                    class="rounded-full"
-                    type="radio"
-                    name="type"
-                  />
-                  <label for="type_private">Private</label>
-                </el-dropdown-item>
-              </div>
-              <div class="w-[150px]">
-                <h1 class="text-sm font-medium px-8 mb-2">Price</h1>
-                <el-dropdown-item
-                  class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                >
-                  <input
-                    id="price_all"
-                    class="rounded-full"
-                    type="radio"
-                    name="price"
-                  />
-                  <label for="price_all">All</label>
-                </el-dropdown-item>
-                <el-dropdown-item
-                  class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                >
-                  <input
-                    id="price_public"
-                    class="rounded-full"
-                    type="radio"
-                    name="price"
-                  />
-                  <label for="price_public">Public</label>
-                </el-dropdown-item>
-                <el-dropdown-item
-                  class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                >
-                  <input
-                    id="price_private"
-                    class="rounded-full"
-                    type="radio"
-                    name="price"
-                  />
-                  <label for="price_private">Private</label>
-                </el-dropdown-item>
-              </div>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+        </div>
       </div>
     </section>
 
     <!-- cards -->
-    <section class="grid grid-cols-3 gap-6 justify-between mt-7">
+    <section
+      class="grid md:grid-cols-3 grid-cols-2 md:gap-6 gap-5 justify-between md:mt-7 mt-6"
+    >
       <Card />
     </section>
+
+    <el-drawer
+      v-model="store.drawer"
+      height="400"
+      direction="btt"
+      class="!w-full !h-[400px] !rounded-t-[16px] overflow-hidden"
+    >
+      <div
+        class="flex items-center justify-between sticky -top-[21px] bg-white z-20 pt-6 -mt-[21px] pb-6"
+      >
+        <h1 class="font-semibold">Choose category</h1>
+        <img
+          class="cursor-pointer"
+          @click="store.drawer = false"
+          src="@/assets/svg/close_drawer.svg"
+          alt=""
+        />
+      </div>
+      <div class="flex gap-3 whitespace-nowrap flex-wrap items-center">
+        <button
+          @click="handleCategory('all')"
+          :class="useGroup.store.filter.category_id ? 'bg-[#F0F5FA]' : 'b_cbc'"
+          class="px-3 rounded-full md:h-9 h-8 hover:bg-[#F0F5FA] hover:bg-opacity-30 duration-700"
+        >
+          All
+        </button>
+        <button
+          @click="handleCategory(i.id)"
+          store.drawer="false"
+          v-for="i in useCategory.store.categories"
+          :class="
+            useGroup.store.filter.category_id == i.id ? 'b_cbc' : 'bg-[#F0F5FA]'
+          "
+          class="flex items-center md:h-9 h-8 hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full"
+        >
+          <img
+            class="w-[14px] h-[21px] object-contain"
+            :src="i.icon"
+            alt=""
+          />{{ i.name }}
+        </button>
+      </div>
+    </el-drawer>
   </main>
 </template>
 
 <script setup>
+import { useLoadingStore, useCategoryStore, useGroupStore } from "@/store";
+
+const isLoading = useLoadingStore();
+const useCategory = useCategoryStore();
+const useGroup = useGroupStore();
+const router = useRouter();
+
+isLoading.addLoading("groupCategories");
+isLoading.store.page_name = "group";
+
 const store = reactive({
   is_show: false,
+  drawer: false,
+});
+
+function handleSearch() {
+  isLoading.changeQuery("search", useGroup.store.filter.search);
+}
+
+function handleCategory(id) {
+  store.drawer = false;
+  if (id == "all") {
+    useGroup.store.filter.category_id = null;
+    isLoading.changeQuery("category_id", "");
+  } else {
+    useGroup.store.filter.group_id = id;
+    isLoading.changeQuery("category_id", id);
+  }
+}
+
+function onFilterPrice(e) {
+  if (e.target.id == "price_all") {
+    useGroup.store.filter.price = "all";
+  } else {
+    useGroup.store.filter.price = e.target.id;
+  }
+  isLoading.changeQuery("price", useGroup.store.filter.price);
+}
+
+function onFilterType(e) {
+  if (e.target.id == "type_all") {
+    useGroup.store.filter.type = "all";
+  } else {
+    useGroup.store.filter.type = e.target.id;
+  }
+  isLoading.changeQuery("type", useGroup.store.filter.type);
+}
+
+function watchQuery() {
+  const currentQueries = { ...router.currentRoute.value.query };
+  for (let i in currentQueries) {
+    if (currentQueries[i]) {
+      useGroup.store.filter[i] = currentQueries[i];
+    }
+  }
+  useGroup.filterGroups();
+}
+
+watch(
+  () => router.currentRoute.value,
+  () => {
+    watchQuery();
+  }
+);
+
+onBeforeMount(() => {
+  useCategory.getCategories();
+  isLoading.changeQuery();
+  watchQuery();
+  window.addEventListener("resize", () => {
+    if (window.innerWidth < 768) {
+      store.is_show = true;
+    } else {
+      store.drawer = false;
+    }
+  });
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+/*.grid {
+  grid-template-columns: repeat(auto-fill, 331px);
+} */
+
+@media (max-width: 768px) {
+  .category_wrap {
+    flex-wrap: wrap !important;
+  }
+}
+</style>

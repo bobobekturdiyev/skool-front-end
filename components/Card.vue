@@ -1,31 +1,84 @@
 <template>
-  <div v-for="i in 6" @click="$router.push(`/community/${i}`)" data-aos="zoom-in" class="w-full cursor-pointer bg-white r_16 overflow-hidden">
+  <div
+    v-if="isLoading.isLoadingType('groupGroups')"
+    v-for="i in 15"
+    class="w-full cursor-pointer bg_loading animate-pulse md:rounded-2xl rounded-xl overflow-hidden"
+  >
+    <div>
+      <p
+        class="full_flex md:text-xs text-[8px] pb-0.5 font-medium absolute md:w-[30px] md:h-[30px] w-5 h-5 bg_loading md:rounded-lg rounded-[4px] m-3"
+      ></p>
+      <div
+        class="card bg-gray-900 w-full object-cover md:h-[180px] sm:h-[140px] h-[120px]"
+      ></div>
+    </div>
+    <div class="md:p-4 h-[180px] p-3">
+      <div class="flex items-center md:gap-4 gap-2">
+        <p class="md:h-10 md:w-10 h-5 w-5 rounded-full bg-gray-900"></p>
+        <h1
+          class="font-semibold md:text-lg text-sm w-[80%] h-6 rounded bg-gray-900"
+        ></h1>
+      </div>
+      <div class="h-[150px]"></div>
+    </div>
+  </div>
+  <div
+    v-else
+    v-for="i in useGroup.store.groups"
+    @click="$router.push(`/${i.username}/about`)"
+    data-aos="zoom-in"
+    class="w-full cursor-pointer bg-white md:rounded-2xl rounded-xl overflow-hidden"
+  >
     <div class="relative">
       <p
-        class="full_flex text-xs pb-0.5 font-medium absolute w-[30px] h-[30px] bg-white rounded-lg m-3"
+        class="full_flex md:text-xs text-[8px] pb-0.5 font-medium absolute md:w-[30px] md:h-[30px] w-5 h-5 bg-white md:rounded-lg rounded-[4px] m-3"
       >
-        #{{i}}
+        #{{ i.id }}
       </p>
-      <img class="w-full object-cover" src="@/assets/image/picture.png" alt="" />
+      <img
+        class="card w-full object-cover md:h-[180px] sm:h-[140px] h-[120px]"
+        :src="i.image"
+        alt=""
+      />
     </div>
-    <div class="p-4">
-      <div class="flex items-center gap-4">
-        <img class="h-10 w-10 rounded-full object-cover" src="@/assets/image/user.svg" alt="" />
-        <h1 class="font-semibold text-lg">Xayot Sharapov</h1>
+    <div class="md:p-4 p-3">
+      <div class="flex items-center md:gap-4 gap-2">
+        <img
+          v-if="i.image"
+          class="md:h-10 md:w-10 h-5 w-5 rounded-full bg_loading object-cover"
+          :src="i.image"
+          alt=""
+        />
+        <p v-else class="md:h-10 md:w-10 h-5 w-5 rounded-full bg_loading"></p>
+        <h1 class="font-semibold md:text-lg text-sm truncate">
+          {{ i.name }}
+        </h1>
       </div>
-      <p class="mt-4 mb-7">
-        Millionlab pullar ishlab topmoqchi bo’lsangiz millionlab insonlarni
-        hayotini o’zgartiring.
+      <p class="md:mt-4 mt-3 md:mb-7 mb-3 lg:text-[16px] text-sm line-clamp-2">
+        {{ i.description }}
       </p>
-      <div class="flex items-center gap-2 _c07 font-bold text-sm">
-        <p class="px-2 py-1 r_8 bg-[#F2F2F2]">Private</p>
-        <p class="px-2 py-1 r_8 bg-[#F2F2F2]">226k Members</p>
-        <p class="px-2 py-1 r_8 bg-[#F2F2F2]">Paid</p>
+      <div
+        class="flex flex-wrap items-center whitespace-nowrap gap-2 _c07 font-bold md:text-sm text-[10px]"
+      >
+        <p class="px-2 py-1 r_8 bg-[#F2F2F2]">
+          {{ i.group_type == "private" ? "Private" : "Public" }}
+        </p>
+        <p class="md:block hidden px-2 py-1 r_8 bg-[#F2F2F2]">226k Members</p>
+        <p class="px-2 py-1 r_8 bg-[#F2F2F2]">
+          {{ i.group_price == "free" ? "Free" : "Paid" }}
+        </p>
+        <p class="md:hidden block px-2 py-1 r_8 bg-[#F2F2F2]">226k Members</p>
       </div>
     </div>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { useLoadingStore, useGroupStore } from "@/store";
+
+const isLoading = useLoadingStore();
+const useGroup = useGroupStore();
+isLoading.addLoading("groupGroups");
+</script>
 
 <style lang="scss" scoped></style>

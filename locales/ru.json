@@ -1,8 +1,6 @@
 {
   "nav": {
-    "uz_uz": "UZ - O'zbek (lotin)",
-    "uz_ru": "УЗ - Ўзбек (кирилл)",
-    "ru": "РУ - Русский",
+    "uz": "ru",
     "register": "Регистрация",
     "login": "Вход",
     "create_community": "Создать сообщество",

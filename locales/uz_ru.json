@@ -1,10 +1,8 @@
 {
     "nav": {
-      "uz_uz": "UZ - O'zbek (lotin)",
-      "uz_ru": "УЗ - Ўзбек (кирилл)",
-      "ru": "РУ - Русский",
-      "register": "SIGN UP",
-      "login": "LOG IN",
+      "uz": "uz_ru",
+      "register": "Рўйҳатдан ўтиш",
+      "login": "Кириш",
       "create_community": "Жамоа яратиш",
       "discover": "Жамоаларни кашф этиш"
     }

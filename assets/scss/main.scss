@@ -6,6 +6,34 @@
 @import "./element_plus.scss";
 
 
+@font-face {
+    font-family: 'InterBold';
+    src: url('@/assets/fonts/InterBold.ttf') format('ttf');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'InterSemiBold';
+    src: url('@/assets/fonts/InterSemiBold.ttf') format('ttf');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'InterMedium';
+    src: url('@/assets/fonts/InterMedium.ttf') format('ttf');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'InterRegular';
+    src: url('@/assets/fonts/InterRegular.ttf') format('ttf');
+    font-weight: 400;
+    font-style: normal;
+}
+
 html,
 body {
     background: #F0F5FA;
@@ -13,6 +41,24 @@ body {
     ::-webkit-scrollbar {
         width: 0;
     }
+}
+
+html *,
+body *,
+pre {
+    font-family: InterRegular;
+}
+
+.font-medium {
+    font-family: InterMedium;
+}
+
+.font-semibold {
+    font-family: InterSemiBold;
+}
+
+.font-bold {
+    font-family: InterBold;
 }
 
 input {
@@ -90,6 +136,26 @@ label {
 }
 
 .class_btn:hover {
-    background: $CBC;    
+    background: $CBC;
     color: $C07;
+}
+
+.dropdown_shadow {
+    box-shadow: 0px 2px 19px 4px #00000017 !important;
+}
+
+.classroom_info .el-progress-bar__outer {
+    background: white !important;
+}
+
+@media (max-width: 500px) {
+    .card {
+        height: 100px;
+    }
+}
+
+@media (max-width: 440px) {
+    .card {
+        height: 88px;
+    }
 }

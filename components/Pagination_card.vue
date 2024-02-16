@@ -1,34 +1,90 @@
 <template>
-  <footer
-    class="flex items-center justify-between"
-  >
+  <footer class="flex items-center justify-between">
     <div class="flex items-center gap-[14px]">
-      <p class="flex items-center c_pointer text-sm gap-2">
+      <p
+        @click="changePage('dec')"
+        :class="
+          isLoading.store.pagination.current_page == 1
+            ? 'pointer-events-none opacity-40'
+            : ''
+        "
+        class="flex items-center c_pointer text-sm gap-2"
+      >
         <img src="@/assets/svg/page_arrow.svg" alt="" />
         Prev
       </p>
-      <div class="flex text-xs font-medium">
-        <p
-          v-for="i in 4"
-          class="full_flex cursor-pointer b_cbc rounded-xl h-12 w-12"
-        >
-          {{ i }}
-        </p>
-        <p class="full_flex h-12 w-12">...</p>
-        <p class="full_flex h-12 w-12 cursor-pointer">25</p>
-      </div>
-      <p class="flex items-center c_pointer text-sm gap-2">
+      <el-pagination
+        v-model:current-page="isLoading.store.pagination.current_page"
+        :page-size="15"
+        :small="small"
+        :disabled="disabled"
+        :background="background"
+        layout="total, prev, pager, next"
+        :total="isLoading.store.pagination.total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        class="el-pagination"
+      />
+      <p
+        @click="changePage('inc')"
+        :class="
+          isLoading.store.pagination.current_page ==
+          isLoading.store.pagination.last_page
+            ? 'pointer-events-none opacity-40'
+            : ''
+        "
+        class="flex items-center c_pointer text-sm gap-2"
+      >
         Next
         <img class="rotate-180" src="@/assets/svg/page_arrow.svg" alt="" />
       </p>
     </div>
     <div>
-      <p>1-15 of 25</p>
+      <p>
+        {{ isLoading.store.pagination.from }}-{{
+          isLoading.store.pagination.to
+        }}
+        of {{ isLoading.store.pagination.total }}
+      </p>
     </div>
   </footer>
 </template>
 
-<script setup></script>
+<script setup>
+import { useLoadingStore, useClassroomStore } from "@/store";
+
+const isLoading = useLoadingStore();
+const useClassroom = useClassroomStore();
+
+function changePage(type) {
+  if (type == "dec") {
+    if (isLoading.store.pagination.current_page == 1) {
+      return;
+    }
+    isLoading.store.pagination.current_page -= 1;
+  } else if (type == "inc") {
+    if (
+      isLoading.store.pagination.current_page ==
+      isLoading.store.pagination.last_page
+    ) {
+      return;
+    } else {
+      isLoading.store.pagination.current_page += 1;
+    }
+  } else {
+    isLoading.store.pagination.current_page = type;
+  }
+
+  isLoading.changeQuery("page", isLoading.store.pagination.current_page);
+  if (isLoading.store.page_name == "classroom") {
+    useClassroom.get_classroom();
+  }
+}
+
+const handleCurrentChange = (val) => {
+  changePage(val)
+}
+</script>
 
 <style lang="scss" scoped>
 .ul li {

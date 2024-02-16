@@ -2,13 +2,15 @@
 
 .el-dropdown-menu {
     padding: 0 !important;
+    border-radius: 6px !important;
 }
 
 .el-dropdown-menu__item {
     color: $C07 !important;
 }
 
-.el-popper__arrow, .el-progress__text {
+.el-popper__arrow,
+.el-progress__text {
     display: none !important;
 }
 
@@ -18,12 +20,25 @@
     border: none !important;
 }
 
-.el-popper {
-    border-radius: 6px !important;
-    overflow: hidden !important;
+.el-dropdown__popper.el-popper {
+    background: transparent !important;
+    box-shadow: none !important;
 }
 
-.el-dialog__header {
+.el-popper {
+    border-radius: 6px !important;
+
+    * {
+        overflow: visible !important;
+    }
+}
+
+.el-scrollbar__wrap--hidden-default {
+    overflow: visible !important;
+}
+
+.el-dialog__header,
+.el-drawer__header {
     display: none !important;
 }
 
@@ -42,7 +57,7 @@
 }
 
 @media (max-width: 767px) {
-    .el-dialog {
+    .community_page .el-dialog {
         width: 100% !important;
         height: fit-content !important;
     }
@@ -92,6 +107,27 @@
     color: $C07 !important;
 }
 
+.logged_menu_dropdown .el-dropdown-menu__item {
+    display: flex;
+    gap: 12px;
+    font-weight: 500 !important;
+    height: 40px !important;
+    font-size: 12px !important;
+    color: $C07 !important;
+}
+
+.current_lang {
+    display: none !important;
+}
+
+.menu_dropdown .el-dropdown-menu__item {
+    font-weight: 500 !important;
+    height: 39px !important;
+    font-size: 12px !important;
+    color: $C2A !important;
+}
+
+
 // tabs
 .el-tabs__active-bar {
     height: 2px !important;
@@ -122,4 +158,26 @@
 .class_progress .el-progress-bar__outer {
     height: 3px !important;
     background: $CE0 !important;
+}
+
+// pagintation
+.el-pagination {
+    .el-pager li {
+        height: 48px !important;
+        width: 48px !important;
+        border-radius: 12px !important;
+        background: transparent !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+    
+    li.is-active {
+        background: $CBC !important;
+        color: black !important;
+        font-weight: 600 !important;
+    }
+    
+    .el-pagination__total, .btn-prev, .btn-next {
+        display: none !important;
+    }
 }

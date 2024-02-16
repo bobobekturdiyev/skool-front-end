@@ -1,1 +1,0 @@
-import{_ as t}from"./Register.6054dc13.js";import{v as o,z as n,t as c}from"./entry.14f562b9.js";import"./logo.ddf07e57.js";const r={class:"flex items-center justify-center overflow-hidden overflow-y-auto bg-black bg-opacity-60 min-h-screen max-h-screen"},l={__name:"index",setup(s){return(a,_)=>{const e=t;return c(),o("main",r,[n(e)])}}};export{l as default};

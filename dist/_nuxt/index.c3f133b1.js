@@ -1,1 +1,0 @@
-import{_ as o}from"./Login.7faa0460.js";import{v as t,z as n,t as c}from"./entry.14f562b9.js";import"./logo.ddf07e57.js";const r={class:"flex items-center justify-center overflow-hidden overflow-y-auto bg-black bg-opacity-60 min-h-screen max-h-screen"},l={__name:"index",setup(s){return(a,_)=>{const e=o;return c(),t("main",r,[n(e)])}}};export{l as default};
