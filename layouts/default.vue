@@ -5,7 +5,7 @@
       <Navbar />
     </div>
     <div
-      class="md:pb-8 pb-6 mx-auto xl:px-[200px] lg::px-[100px] md:px-[50px] sm:px-[50px] px-5 max-w-[1536px]"
+      class="md:pb-8 pb-6 mx-auto xl:px-[200px] lg:px-[100px] md:px-[50px] sm:px-[50px] px-5 max-w-[1536px]"
     >
       <slot />
     </div>

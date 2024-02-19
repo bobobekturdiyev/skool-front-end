@@ -1,7 +1,7 @@
 <template>
-  <main class="flex gap-6 mt-[18px]">
-    <div class="overflow-hidden min-w-[70%] space-y-8">
-      <section>
+  <main class="flex md:flex-row flex-col-reverse md:gap-6 mt-[18px]">
+    <div class="overflow-hidden w-full md:space-y-8 space-y-6">
+      <section class="md:block hidden">
         <div class="flex items-center px-5 bg-white r_16 h-[72px] gap-[14px]">
           <img
             class="h-10 w-10 object-cover"
@@ -9,9 +9,95 @@
             alt=""
           />
           <input
+            @focus="store.writingModal = true"
             class="!border-0 placeholder-black text-xl font-semibold"
             placeholder="Write something..."
           />
+        </div>
+
+        <div
+          v-if="store.writingModal"
+          @click="store.writingModal = false"
+          class="fixed top-0 bg-black bg-opacity-50 min-h-screen w-full z-50 left-0"
+        ></div>
+        <div
+          v-if="store.writingModal"
+          class="b_cf0f relative z-50 r_16 overflow-hidden md:-mt-[72px]"
+        >
+          <div class="flex items-center gap-3 b_cf0f h-[52px] px-5">
+            <img
+              class="h-5 w-5 object-cover"
+              src="@/assets/image/user.svg"
+              alt=""
+            />
+            <p class="text-sm flex gap-1">
+              <span class="font-semibold">Xayot Sharapov</span>
+              <span class="_ca1">posting in</span>
+              <span class="font-semibold _c2a">Skool community</span>
+            </p>
+          </div>
+          <form class="p-5 space-y-5 bg-white">
+            <input class="h-10 !rounded-none" type="text" placeholder="Title" />
+            <textarea
+              id="write_message"
+              class="h-[120px] w-full !rounded-none"
+              placeholder="Write something..."
+            ></textarea>
+          </form>
+          <div class="flex items-center justify-between p-5 pt-0 bg-white">
+            <div class="textarea_icon flex items-center">
+              <div class="icon full_flex h-10 w-10">
+                <img src="@/assets/svg/textarea/upload.svg" alt="" />
+              </div>
+              <div class="icon full_flex h-10 w-10">
+                <img src="@/assets/svg/textarea/link.svg" alt="" />
+              </div>
+              <div class="icon full_flex h-10 w-10">
+                <img src="@/assets/svg/textarea/video.svg" alt="" />
+              </div>
+              <div class="icon full_flex h-10 w-10">
+                <img src="@/assets/svg/textarea/poll.svg" alt="" />
+              </div>
+              <div class="icon full_flex h-10 w-10">
+                <img src="@/assets/svg/textarea/emoji.svg" alt="" />
+              </div>
+              <div class="icon full_flex h-10 w-10">
+                <img src="@/assets/svg/textarea/gif.svg" alt="" />
+              </div>
+              <el-dropdown
+                placement="bottom-end"
+                class="dropdown"
+                trigger="click"
+              >
+                <div class="flex items-center gap-1 mx-4 font-medium text-sm">
+                  <p>Select category</p>
+                  <img src="@/assets/svg/textarea/select_arrow.svg" alt="" />
+                </div>
+                <template #dropdown>
+                  <el-dropdown-menu
+                    class="min-w-[200px] !mt-3 !-mr-7 dropdown_shadow"
+                  >
+                    <div
+                      v-for="i in text_dropdown"
+                      class="flex flex-col justify-center px-5 hover:bg-[#F2F2F2] cursor-pointer space-y-1 h-[63px]"
+                    >
+                      <h1 class="font-semibold">{{ i[0] }}</h1>
+                      <p class="text-xs">{{ i[1] }}</p>
+                    </div>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </div>
+            <div class="flex gap-3 font-semibold">
+              <button
+                @click="store.writingModal = false"
+                class="uppercase h-10 px-6 rounded-lg _ca1"
+              >
+                cancel
+              </button>
+              <button class="uppercase h-10 px-6 b_ce0 rounded-lg">Post</button>
+            </div>
+          </div>
         </div>
       </section>
       <!-- category -->
@@ -147,15 +233,15 @@
       </section>
 
       <!-- cards -->
-      <section class="space-y-5">
+      <section class="md:space-y-5 space-y-4">
         <article
           v-for="i in 4"
           data-aos="zoom-in"
-          class="relative flex r_16 overflow-hidden bg-white"
+          class="relative md:flex r_16 overflow-hidden bg-white"
         >
           <!-- hide -->
           <div
-            class="full_flex gap-1 _c2a absolute right-0 top-0 h-9 w-[88px] border-l border-b border-[#BCDEFF] hide_show rounded-bl-2xl"
+            class="md:!flex !hidden full_flex gap-1 _c2a absolute right-0 top-0 h-9 w-[88px] border-l border-b border-[#BCDEFF] hide_show rounded-bl-2xl"
           >
             <img class="show_blue" src="@/assets/svg/show.svg" alt="" />
             <img
@@ -165,7 +251,9 @@
             />
             <p class="pb-0.5">Hide</p>
           </div>
-          <div class="full_flex flex-col b_cbc gap-1 min-w-[30px]">
+          <div
+            class="md:!flex !hidden full_flex flex-col b_cbc gap-1 min-w-[30px]"
+          >
             <img class="h-[42px]" src="@/assets/svg/pinned_text.svg" alt="" />
             <img
               class="w-4 h-4"
@@ -173,7 +261,21 @@
               alt=""
             />
           </div>
-          <div class="flex items-end gap-14 p-4">
+          <div
+            class="md:hidden flex justify-between items-center pl-4 h-[35px] border-b border-[#F0F5FA] w-full"
+          >
+            <img class="show_blue" src="@/assets/svg/pinned_blue.svg" alt="" />
+            <div class="full_flex gap-1 _c2a h-9 w-[88px] hide_show">
+              <img class="show_blue" src="@/assets/svg/show.svg" alt="" />
+              <img
+                class="show_black hidden"
+                src="@/assets/svg/show_black.svg"
+                alt=""
+              />
+              <p class="pb-0.5">Hide</p>
+            </div>
+          </div>
+          <div class="flex items-end md:gap-14 gap-3 p-4">
             <div>
               <div class="flex items-center gap-4">
                 <div class="relative max-w-fit">
@@ -201,24 +303,37 @@
                   </p>
                 </div>
               </div>
-              <h2 class="mb-2 mt-4 text-xl font-semibold">
+              <h2
+                class="md:mb-2 mb-4 md:mt-4 mt-6 md:text-xl text-md font-semibold md:w-full w-[120%]"
+              >
                 Introducing "The Skool Games"
               </h2>
-              <p class="text-sm line-clamp-2">
+              <p class="md:text-sm text-xs line-clamp-2 md:w-full w-[120%]">
                 There's two sides to building a business online: Tools and
                 Training on how to use those tools. The problem with training is
                 opinions. There are so many opinions, they
               </p>
-              <div class="flex items-center mt-4 mb-3 gap-4">
+              <div class="flex items-center mt-4 md:mb-3 mb-4 gap-4">
                 <div
                   class="b_cbc px-2 h-[26px] rounded-[4px] full_flex gap-1 text-xs"
                 >
-                  <img src="@/assets/svg/poll.svg" alt="" />
-                  <p class="pb-0.5">Poll</p>
+                  <img
+                    class="md:block hidden"
+                    src="@/assets/svg/poll.svg"
+                    alt=""
+                  />
+                  <img
+                    class="md:hidden block"
+                    src="@/assets/svg/poll_md.svg"
+                    alt=""
+                  />
+                  <p class="">Poll</p>
                 </div>
-                <p class="text-xs font-semibold _c2a">9 members have voted</p>
+                <p class="text-xs font-semibold md:_c2a _c07">
+                  9 members have voted
+                </p>
               </div>
-              <div class="flex items-center _c59 gap-4">
+              <div class="flex items-center _c59 gap-4 md:text-md text-sm">
                 <p class="full_flex gap-1">
                   <img src="@/assets/svg/community/like.svg" alt="" /> 355
                 </p>
@@ -229,20 +344,22 @@
                 <div class="flex -space-x-[5px]">
                   <img
                     v-for="(i, index) in 7"
-                    class="h-[26px] w-[26px] object-cover"
+                    class="h-[26px] w-[26px] md:block hidden object-cover"
                     src="@/assets/image/user.svg"
                     alt=""
                     :style="`z-index: ${7 - index}`"
                   />
                 </div>
-                <p class="_c2a text-sm font-semibold">New comment 10h ago</p>
+                <p class="_c2a md:text-sm text-xs font-semibold">
+                  New comment 10h ago
+                </p>
               </div>
             </div>
             <div
-              class="rounded-tl-xl -mr-4 -mb-4 h-[134px] border min-w-fit max-w-[400px] overflow-hidden"
+              class="rounded-tl-xl -mr-4 -mb-4 min-w-fit max-w-[400px] overflow-hidden"
             >
               <img
-                class="min-h-[138px] max-w-[400px] object-contain"
+                class="md:max-w-[400px] max-h-[75px] max-w-fit object-contain"
                 src="@/assets/image/photo.svg"
                 alt=""
               />
@@ -252,12 +369,12 @@
         <Pagination_card class="pt-3" />
       </section>
     </div>
-    <div class="w-full">
+    <div class="lg:min-w-[280px]">
       <!-- info card -->
       <section>
         <div class="rounded-2xl overflow-hidden bg-white">
           <img
-            class="w-full h-[150px] object-cover"
+            class="w-full md:max-h-[150px] object-cover"
             src="@/assets/image/picture.png"
             alt=""
           />
@@ -350,24 +467,135 @@
             >See all leaderboards</router-link
           >
         </div>
-        <div class="full_flex mt-8 gap-2 leading-[18px]">
+        <div class="full_flex md:mt-8 mt-4 gap-2 leading-[18px]">
           <p>Powered by</p>
           <img class="h-3 mt-0.5" src="/logo.svg" alt="" />
         </div>
       </section>
     </div>
+    <section class="md:hidden block mb-6">
+      <div class="flex items-center px-5 bg-white r_16 h-[52px] gap-[14px]">
+        <img
+          class="h-7 w-7 object-cover"
+          src="@/assets/image/user.svg"
+          alt=""
+        />
+        <input
+          class="!border-0 placeholder-black font-semibold"
+          placeholder="Write something..."
+        />
+      </div>
+    </section>
+
+    <!-- card info -->
+    <el-dialog
+      v-model="store.card_info"
+      width="780"
+      align-center
+      class="bg-opacity-50 !rounded-lg p-5"
+    >
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="relative max-w-fit">
+            <img src="@/assets/image/user.svg" alt="" />
+            <div class="full_flex absolute -bottom-[2px] -right-[5px] z-10">
+              <div class="relative">
+                <img src="@/assets/svg/community/user_messages.svg" alt="" />
+                <p
+                  class="absolute full_flex bottom-0 w-5 h-5 pb-0.5 text-[10px] text-white font-medium"
+                >
+                  1
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="space-y-[2px]">
+            <h1 class="font-semibold">Cameron Williamson</h1>
+            <p class="text-xs">
+              19d ago in <span class="_c59">Announcements</span>
+            </p>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button class="border border-[#BCDEFF] r_8 px-3 h-9">
+            Watch (134)
+          </button>
+          <button class="full_flex border border-[#BCDEFF] r_8 w-9 h-9">
+            <img src="@/assets/svg/three_dot.svg" alt="" />
+          </button>
+        </div>
+      </div>
+      <h2 class="mb-4 md:mt-8 mt-6 md:text-2xl text-lg font-semibold md:w-full">
+        Introducing "The Skool Games"
+      </h2>
+      <pre
+        class="text-sm line-clamp-[11] float-left w-full whitespace-pre-line"
+      >
+There's two sides to building a business online: Tools and Training on how to use those tools.
+
+The problem with training is opinions. There are so many opinions, they contradict each-other, and it's hard 
+to know what to do. If only there was a way to see what's working now in realtime...
+
+Introducing The Skool Games — a fun way to build your own business with other people — where the training comes 
+from the winners fresh every month. 
+
+Here's how it works: 
+
+Skool group owners that want to play can join
+Skool group owners that want to play can join
+Skool group owners that want to play can join
+      </pre>
+      <button class="text-sm _c2a float-left">See more</button>
+    </el-dialog>
   </main>
 </template>
 
 <script setup>
-
 definePageMeta({
-    layout: "community",
-})
+  layout: "community",
+});
 
 const store = reactive({
   is_show: false,
+  writingModal: false,
+  card_info: true,
 });
+
+const text_dropdown = [
+  ["Product Feedback", "Share your general feedback about Skool here"],
+  ["Product Question", "Ask a question about the product, or search above"],
+  [
+    "Feature Requests",
+    "Want a feature Skool doesn't have? Ask for it, or search above",
+  ],
+  ["Bug Reports", "Found a bug? Report it here and we'll fix it"],
+];
+
+watch(
+  () => store.writingModal,
+  () => {
+    if (store.writingModal) {
+      document.querySelector("body").classList.add("overflow-hidden");
+    } else {
+      document.querySelector("body").classList.remove("overflow-hidden");
+    }
+  }
+);
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.textarea_icon {
+  .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+    &:hover {
+      background: #f2f2f2;
+      border-radius: 8px;
+    }
+  }
+}
+</style>

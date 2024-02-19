@@ -5,6 +5,7 @@ $C2A: #2A85FF;
 $CF2: #F2F2F2;
 $CBC: #BCDEFF;
 $C59: #59ACFF;
+$CF0F: #F0F5FA;
 
 ._ca1 {
     color: $CA1;
@@ -28,6 +29,14 @@ $C59: #59ACFF;
 
 ._c59 {
     color: $C59;
+}
+
+._cf0f {
+    color: $CF0F;
+}
+
+.b_cf0f {
+    background: $CF0F;
 }
 
 .b_ca1 {
@@ -56,7 +65,7 @@ $C59: #59ACFF;
 
 .b_c59 {
     background: $C59;
-} 
+}
 
 .bg_loading {
     background: $CF2;

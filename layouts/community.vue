@@ -5,7 +5,7 @@
       <Navbar />
     </div>
     <div
-      class="pb-[40px] mx-auto lg:px-[200px] md:px-[100px] sm:px-[50px] px-[10px] max-w-[1536px]"
+      class="pb-[40px] mx-auto xl:px-[200px] lg:px-[100px] md:px-[50px] sm:px-[50px] px-5 max-w-[1536px]"
     >
       <div>
         <Community_tabs />

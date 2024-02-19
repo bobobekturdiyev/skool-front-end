@@ -1,6 +1,5 @@
 <template>
   <main>
-    
     <section v-if="isLoading.isLoadingType('getByUsername')"
     class="flex sm:flex-row flex-col-reverse gap-6 community_page">
     <div class="bg-gray-600 r_16 h-[700px] w-full"></div>

@@ -1,7 +1,7 @@
 <template>
   <nav class="fixed top-0 w-full z-50 bg-white">
     <div
-      class="flex justify-between items-center h-[64px] mx-auto xl:px-[200px] lg::px-[100px] md:px-[50px] sm:px-[50px] px-5 max-w-[1536px]"
+      class="flex justify-between items-center h-[64px] mx-auto xl:px-[200px] lg:px-[100px] md:px-[50px] sm:px-[50px] px-5 max-w-[1536px]"
     >
       <div class="flex items-center gap-5 cursor-pointer">
         <router-link to="/">

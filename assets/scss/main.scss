@@ -61,7 +61,8 @@ pre {
     font-family: InterBold;
 }
 
-input {
+input,
+textarea {
     height: 40px;
     width: 100%;
     box-shadow: none !important;
@@ -69,6 +70,7 @@ input {
     border-radius: 4px !important;
     padding: 12px !important;
     outline: none !important;
+    resize: none;
 
     ::placeholder {
         color: $CA1;
