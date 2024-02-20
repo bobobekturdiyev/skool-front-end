@@ -150,6 +150,21 @@ label {
     background: white !important;
 }
 
+.overflow_hidden {
+    overflow: hidden !important;
+}
+
+.comment_menu {
+    border: 1px solid $CBC !important;
+}
+
+.tblr {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
 @media (max-width: 500px) {
     .card {
         height: 100px;

@@ -9,6 +9,10 @@
     color: $C07 !important;
 }
 
+.user_img img {
+    overflow: hidden !important;
+}
+
 .el-popper__arrow,
 .el-progress__text {
     display: none !important;
@@ -170,14 +174,16 @@
         font-size: 14px !important;
         font-weight: 500 !important;
     }
-    
+
     li.is-active {
         background: $CBC !important;
         color: black !important;
         font-weight: 600 !important;
     }
-    
-    .el-pagination__total, .btn-prev, .btn-next {
+
+    .el-pagination__total,
+    .btn-prev,
+    .btn-next {
         display: none !important;
     }
 }

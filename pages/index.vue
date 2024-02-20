@@ -1,6 +1,6 @@
 <template>
   <main>
-    <section>
+    <section class="md:static sticky -top-6 z-20">
       <div
         class="md:space-y-5 space-y-3 text-center md:mt-[72px] mt-8 font-semibold text-xl"
       >
@@ -12,7 +12,7 @@
           >
         </p>
       </div>
-      <div class="relative md:w-[616px] mx-auto mt-8 md:mb-[52px] mb-6">
+      <div class="xl:relative !sticky top-40 md:w-[616px] mx-auto mt-8 md:mb-[52px] mb-6">
         <img
           class="md:my-[18px] my-[14px] w-5 h-5 left-5 absolute"
           src="@/assets/svg/search.svg"

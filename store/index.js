@@ -4,5 +4,14 @@ import { useCategoryStore } from "./categories";
 import { useGroupStore } from "./group";
 import { useClassroomStore } from "./classroom";
 import { useEventStore } from "./event";
+import { usePostStore } from "./post";
 
-export { useLoadingStore, useAuthStore, useCategoryStore, useGroupStore, useClassroomStore, useEventStore };
+export {
+  useLoadingStore,
+  useAuthStore,
+  useCategoryStore,
+  useGroupStore,
+  useClassroomStore,
+  useEventStore,
+  usePostStore,
+};

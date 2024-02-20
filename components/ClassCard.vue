@@ -32,7 +32,8 @@
         <el-progress class="class_progress" :percentage="45" />
         <p class="text-xs mt-2">45% complete</p>
       </div>
-      <router-link :to="`/${$router.currentRoute.value.params.community}/classroom/${i.slug}`"
+      <router-link
+        :to="`/${$router.currentRoute.value.params.community}/classroom/${i.slug}`"
       >
         <button
           class="full_flex w-full border-t class_btn duration-700 border-[#BCDEFF] h-[50px] _c59 font-medium uppercase"
@@ -40,6 +41,29 @@
           open
         </button></router-link
       >
+    </div>
+    <div
+      class="grid relative border-2 text-[#59ACFF] full_flex flex-col gap-[10px] font-semibold border_dashed r_16"
+    >
+      <svg
+        class="absolute top-0 right-0 h-full min-w-full"
+        viewBox="0 0 330 403"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect
+          class="w-full "
+          x="1"
+          y="1"
+          height="401"
+          rx="15"
+          stroke="#BCDEFF"
+          stroke-width="2"
+          stroke-dasharray="12 12"
+        />
+      </svg>
+      <img src="@/assets/svg/add_course.svg" alt="" />
+      <p>Add new cource</p>
     </div>
   </div>
 </template>

@@ -232,10 +232,10 @@
         </div>
       </section>
 
-      <!-- cards -->
+      <!-- posts -->
       <section class="md:space-y-5 space-y-4">
         <article
-          v-for="i in 4"
+          v-for="i in usePost.store.posts"
           data-aos="zoom-in"
           class="relative md:flex r_16 overflow-hidden bg-white"
         >
@@ -252,6 +252,7 @@
             <p class="pb-0.5">Hide</p>
           </div>
           <div
+            v-if="i.group_pinned"
             class="md:!flex !hidden full_flex flex-col b_cbc gap-1 min-w-[30px]"
           >
             <img class="h-[42px]" src="@/assets/svg/pinned_text.svg" alt="" />
@@ -262,6 +263,7 @@
             />
           </div>
           <div
+            v-if="i.group_pinned"
             class="md:hidden flex justify-between items-center pl-4 h-[35px] border-b border-[#F0F5FA] w-full"
           >
             <img class="show_blue" src="@/assets/svg/pinned_blue.svg" alt="" />
@@ -278,40 +280,140 @@
           <div class="flex items-end md:gap-14 gap-3 p-4">
             <div>
               <div class="flex items-center gap-4">
-                <div class="relative max-w-fit">
-                  <img src="@/assets/image/user.svg" alt="" />
-                  <div
-                    class="full_flex absolute -bottom-[2px] -right-[5px] z-10"
-                  >
-                    <div class="relative">
-                      <img
-                        src="@/assets/svg/community/user_messages.svg"
-                        alt=""
-                      />
-                      <p
-                        class="absolute full_flex bottom-0 w-5 h-5 pb-0.5 text-[10px] text-white font-medium"
-                      >
-                        1
-                      </p>
+                <el-dropdown placement="top-start" class="dropdown">
+                  <div class="relative max-w-fit">
+                    <img
+                      class="h-10 w-10 object-cover rounded-full"
+                      :src="i.user_id?.image"
+                      alt=""
+                    />
+                    <div
+                      class="full_flex absolute -bottom-[2px] -right-[5px] z-10"
+                    >
+                      <div class="relative">
+                        <img
+                          src="@/assets/svg/community/user_messages.svg"
+                          alt=""
+                        />
+                        <p
+                          class="absolute full_flex bottom-0 w-5 h-5 pb-0.5 text-[10px] text-white font-medium"
+                        >
+                          1
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                  <template #dropdown>
+                    <el-dropdown-menu
+                      class="!static min-w-[440px] max-w-[440px] !-ml-1 dropdown_shadow"
+                    >
+                      <div class="flex">
+                        <div
+                          class="border-r border-[#F2F2F2] min-w-[192px] p-4 space-y-3"
+                        >
+                          <div class="relative user_img max-w-fit">
+                            <img
+                              class="h-[160px] w-[160px] object-cover rounded-full"
+                              :src="i.user_id?.image"
+                              alt=""
+                            />
+                            <div
+                              class="full_flex absolute -bottom-[2px] -right-[5px] z-10"
+                            >
+                              <div class="relative">
+                                <img
+                                  class="h-10 w-10"
+                                  src="@/assets/svg/community/user_messages.svg"
+                                  alt=""
+                                />
+                                <p
+                                  class="absolute full_flex bottom-0 w-10 h-10 pb-2 text-[22px] text-white font-medium"
+                                >
+                                  1
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <p
+                            class="full_flex max-w-fit mx-auto text-xs font-semibold h-8 px-[10px] bg-[#D9ECFF] _c2a rounded-full"
+                          >
+                            Level 2 - Contributer
+                          </p>
+                          <div class="full_flex gap-1 text-xs">
+                            <span class="_c2a font-semibold">40</span> points to
+                            level up
+                            <img src="@/assets/svg/level_up.svg" alt="" />
+                          </div>
+                        </div>
+                        <div>
+                          <div
+                            class="space-y-4 px-5 py-5 v border-b border-[#F2F2F2]"
+                          >
+                            <h1 class="font-semibold text-xl leading-6">
+                              Gerry Gonzalez
+                            </h1>
+                            <ul class="space-y-2">
+                              <li
+                                class="flex items-center gap-2 leading-[14px] _ca1"
+                              >
+                                <img src="@/assets/svg/clock.svg" alt="" />
+                                <p>Active 19d ago</p>
+                              </li>
+                              <li class="flex items-center gap-2 _ca1">
+                                <img src="@/assets/svg/location.svg" alt="" />
+                                <p>San Jose, Costa Rica</p>
+                              </li>
+                            </ul>
+                            <p
+                              class="line-clamp-3 overflow_hidden leading-[18px] text-[16px]"
+                            >
+                              We the descendants of old, chained up and confined
+                              within bars, are free spirited and apple apple
+                            </p>
+                          </div>
+                          <div
+                            class="space-y-2 leading-[14px] p-4 font-semibold"
+                          >
+                            <p>2 Memberships</p>
+                            <p>Creator of 2 groups</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="grid grid-cols-3 gap-3 border-t border-[#F2F2F2] p-4 font-semibold text-sm w-full"
+                      >
+                        <button class="uppercase border border-[#BCDEFF] r_8">
+                          profile
+                        </button>
+                        <button class="uppercase border border-[#BCDEFF] r_8">
+                          follow
+                        </button>
+                        <button
+                          class="full_flex gap-[10px] uppercase b_ce0 _ca1 r_8"
+                        >
+                          chat
+                          <img src="@/assets/svg/chat_x.svg" alt="" />
+                        </button>
+                      </div>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
                 <div class="space-y-[2px]">
-                  <h1 class="font-semibold">Cameron Williamson</h1>
+                  <h1 class="font-semibold">
+                    {{ i.user_id?.name }} {{ i.user_id?.surname }}
+                  </h1>
                   <p class="text-xs">
                     19d ago in <span class="_c59">Announcements</span>
                   </p>
                 </div>
               </div>
               <h2
-                class="md:mb-2 mb-4 md:mt-4 mt-6 md:text-xl text-md font-semibold md:w-full w-[120%]"
+                class="md:mb-2 mb-4 md:mt-4 mt-6 truncate md:text-xl text-md font-semibold md:w-full w-[120%]"
               >
-                Introducing "The Skool Games"
+                {{ i.title }}
               </h2>
               <p class="md:text-sm text-xs line-clamp-2 md:w-full w-[120%]">
-                There's two sides to building a business online: Tools and
-                Training on how to use those tools. The problem with training is
-                opinions. There are so many opinions, they
+                {{ i.description }}
               </p>
               <div class="flex items-center mt-4 md:mb-3 mb-4 gap-4">
                 <div
@@ -337,11 +439,11 @@
                 <p class="full_flex gap-1">
                   <img src="@/assets/svg/community/like.svg" alt="" /> 355
                 </p>
-                <p class="full_flex gap-1">
+                <p @click="store.card_info = true" class="full_flex gap-1 cursor-pointer">
                   <img src="@/assets/svg/community/message.svg" alt="" />
                   609
                 </p>
-                <div class="flex -space-x-[5px]">
+                <div @click="store.card_info = true" class="flex -space-x-[5px] cursor-pointer">
                   <img
                     v-for="(i, index) in 7"
                     class="h-[26px] w-[26px] md:block hidden object-cover"
@@ -350,7 +452,7 @@
                     :style="`z-index: ${7 - index}`"
                   />
                 </div>
-                <p class="_c2a md:text-sm text-xs font-semibold">
+                <p @click="store.card_info = true" class="_c2a md:text-sm text-xs font-semibold cursor-pointer">
                   New comment 10h ago
                 </p>
               </div>
@@ -492,7 +594,7 @@
       v-model="store.card_info"
       width="780"
       align-center
-      class="bg-opacity-50 !rounded-lg p-5"
+      class="bg-opacity-50 !rounded-lg p-5 overflow-hidden"
     >
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
@@ -520,9 +622,23 @@
           <button class="border border-[#BCDEFF] r_8 px-3 h-9">
             Watch (134)
           </button>
-          <button class="full_flex border border-[#BCDEFF] r_8 w-9 h-9">
-            <img src="@/assets/svg/three_dot.svg" alt="" />
-          </button>
+          <el-dropdown placement="bottom-end" class="dropdown" trigger="click">
+            <button class="full_flex comment_menu r_8 w-9 h-9">
+              <img src="@/assets/svg/three_dot.svg" alt="" />
+            </button>
+            <template #dropdown>
+              <el-dropdown-menu class="min-w-[140px] dropdown_shadow">
+                <el-dropdown-item @click="copyLink" class="!text-xs font-medium h-10 px-3"
+                  >Copy link</el-dropdown-item
+                >
+                <el-dropdown-item
+                  @click="store.reportAdmin = true"
+                  class="!text-xs font-medium h-10 px-3"
+                  >Report to admins</el-dropdown-item
+                >
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </div>
       </div>
       <h2 class="mb-4 md:mt-8 mt-6 md:text-2xl text-lg font-semibold md:w-full">
@@ -545,7 +661,248 @@ Skool group owners that want to play can join
 Skool group owners that want to play can join
 Skool group owners that want to play can join
       </pre>
-      <button class="text-sm _c2a float-left">See more</button>
+      <button class="text-sm _c2a h-4">See more</button>
+      <div class="w-full mt-4 mb-5">
+        <img
+          class="max-h-[210px] rounded-[12px]"
+          src="@/assets/image/picture.png"
+          alt=""
+        />
+      </div>
+      <div class="flex items-center _c59 gap-4 text-sm">
+        <p
+          class="full_flex border border-[#F0F5FA] r_8 p-[6px] leading-[21px] h-8 gap-1"
+        >
+          <img src="@/assets/svg/community/like.svg" alt="" /> Like
+          <span class="_cf0f pb-0.5">|</span> 355
+        </p>
+        <p class="full_flex h-8 gap-1">
+          <img src="@/assets/svg/community/message.svg" alt="" />
+          609 comments
+        </p>
+      </div>
+      <!-- comment -->
+      <section class="mt-4">
+        <div
+          class="flex items-start gap-4 border-y border-[#F0F5FA] w-full -mx-5 p-5"
+        >
+          <div class="relative max-w-fit">
+            <img
+              class="h-10 w-10 object-cover"
+              src="@/assets/image/user.svg"
+              alt=""
+            />
+            <div class="full_flex absolute -bottom-[2px] -right-[5px] z-10">
+              <div class="relative">
+                <img src="@/assets/svg/community/user_messages.svg" alt="" />
+                <p
+                  class="absolute full_flex bottom-0 w-5 h-5 pb-0.5 text-[10px] text-white font-medium"
+                >
+                  1
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="w-full">
+            <div class="space-y-[2px] h-10">
+              <h1 class="font-semibold text-[16px]">Cameron Williamson</h1>
+              <p class="text-xs _ca1">19d ago</p>
+            </div>
+            <div class="space-y-3 mt-3">
+              <div class="space-y-3">
+                <p class="text-sm leading-4 text-black">Nice🔥🔥</p>
+                <div class="relative max-w-fit">
+                  <img
+                    class="max-h-20 r_8"
+                    src="@/assets/image/photo.svg"
+                    alt=""
+                  />
+                  <img
+                    class="absolute z-10 tblr m-auto"
+                    src="@/assets/svg/gif.svg"
+                    alt=""
+                  />
+                </div>
+              </div>
+              <div class="flex items-center gap-3 h-[18px] text-xs">
+                <p class="full_flex gap-1 _c2a">
+                  <img src="@/assets/svg/like_active.svg" alt="" />14
+                </p>
+                <button class="_ca1 font-semibold">Reply</button>
+              </div>
+            </div>
+            <div class="flex items-start w-full gap-4 mt-5">
+              <div class="relative max-w-fit">
+                <img
+                  class="h-6 w-6 object-cover"
+                  src="@/assets/image/user.svg"
+                  alt=""
+                />
+                <div class="full_flex absolute -bottom-[2px] -right-[5px] z-10">
+                  <div class="relative">
+                    <img
+                      class="h-3 w-3"
+                      src="@/assets/svg/community/user_messages.svg"
+                      alt=""
+                    />
+                    <p
+                      class="absolute full_flex bottom-0 h-3 w-3 pb-0.5 text-[8px] text-white font-medium"
+                    >
+                      1
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="w-full">
+                <div class="space-y-[1px] h-10">
+                  <h1 class="font-semibold text-[16px] leading-4">
+                    Cameron Williamson
+                  </h1>
+                  <p class="text-xs _ca1 leading-[14px]">19d ago</p>
+                </div>
+                <div class="space-y-3 mt-4">
+                  <p class="text-sm leading-4 text-black">
+                    <a
+                      class="_c2a border-b border-[#2A85FF]"
+                      href="/@gerry_gonzalez"
+                      >@Gerry Gonzalez</a
+                    >
+                    Continue making progress
+                  </p>
+                  <div class="flex items-center gap-3 h-[18px] text-xs">
+                    <p class="full_flex gap-1 _ca1">
+                      <img src="@/assets/svg/like_grey.svg" alt="" />14
+                    </p>
+                    <button class="_ca1 font-semibold">Reply</button>
+                  </div>
+                  <div class="flex pt-1 gap-[14px]">
+                    <img
+                      class="h-6 w-6 mt-1 object-cover"
+                      src="@/assets/image/user.svg"
+                      alt=""
+                    />
+                    <div class="w-full">
+                      <input
+                        class="text-sm h-10 r_8"
+                        placeholder="@Andrew Kirby"
+                      />
+                      <div class="flex items-center justify-between py-3">
+                        <div class="textarea_icon flex items-center">
+                          <div class="icon full_flex h-10 w-10">
+                            <img
+                              src="@/assets/svg/textarea/upload_black.svg"
+                              alt=""
+                            />
+                          </div>
+                          <div class="icon full_flex h-10 w-10">
+                            <img
+                              src="@/assets/svg/textarea/link_black.svg"
+                              alt=""
+                            />
+                          </div>
+                          <div class="icon full_flex h-10 w-10">
+                            <img
+                              src="@/assets/svg/textarea/video_black.svg"
+                              alt=""
+                            />
+                          </div>
+                          <div class="icon full_flex h-10 w-10">
+                            <img
+                              src="@/assets/svg/textarea/emoji_black.svg"
+                              alt=""
+                            />
+                          </div>
+                          <div class="icon full_flex h-10 w-10">
+                            <img
+                              src="@/assets/svg/textarea/gif_black.svg"
+                              alt=""
+                            />
+                          </div>
+                        </div>
+                        <div class="flex gap-3 font-semibold">
+                          <button
+                            @click="store.writingModal = false"
+                            class="uppercase h-10 px-6 rounded-lg _ca1"
+                          >
+                            cancel
+                          </button>
+                          <button class="uppercase h-10 px-6 b_ce0 rounded-lg">
+                            Post
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- writing input -->
+      <div class="b_cf0f relative z-50 -mx-5 -mb-7 overflow-hidden">
+        <div class="flex items-center px-5 h-[72px] gap-[14px]">
+          <img
+            class="h-10 w-10 object-cover"
+            src="@/assets/image/user.svg"
+            alt=""
+          />
+          <input class="text-sm !border-0" placeholder="Your comment" />
+        </div>
+        <div class="flex items-center justify-between p-5 pt-0">
+          <div class="textarea_icon flex items-center">
+            <div class="icon full_flex h-10 w-10">
+              <img src="@/assets/svg/textarea/upload_black.svg" alt="" />
+            </div>
+            <div class="icon full_flex h-10 w-10">
+              <img src="@/assets/svg/textarea/link_black.svg" alt="" />
+            </div>
+            <div class="icon full_flex h-10 w-10">
+              <img src="@/assets/svg/textarea/video_black.svg" alt="" />
+            </div>
+            <div class="icon full_flex h-10 w-10">
+              <img src="@/assets/svg/textarea/emoji_black.svg" alt="" />
+            </div>
+            <div class="icon full_flex h-10 w-10">
+              <img src="@/assets/svg/textarea/gif_black.svg" alt="" />
+            </div>
+          </div>
+          <div class="flex gap-3 font-semibold">
+            <button
+              @click="store.writingModal = false"
+              class="uppercase h-10 px-6 rounded-lg _ca1"
+            >
+              cancel
+            </button>
+            <button class="uppercase h-10 px-6 b_ce0 rounded-lg">Post</button>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
+
+    <!-- Report to group admins -->
+    <el-dialog
+      v-model="store.reportAdmin"
+      width="400"
+      align-center
+      class="!rounded-xl overflow-hidden px-6 py-7"
+    >
+      <div class="space-y-7">
+        <h1 class="text-2xl font-semibold">Report to group admins</h1>
+        <p class="text-lg">
+          Are you sure you want to report this to group admins?
+        </p>
+        <div class="flex justify-end gap-3 text-sm font-semibold">
+          <button
+            @click="store.reportAdmin = false"
+            class="uppercase h-10 px-6 rounded-lg _ca1"
+          >
+            cancel
+          </button>
+          <button @click="reposrtToAdmins" class="uppercase h-10 px-6 b_cbc _c07 rounded-lg">yes</button>
+        </div>
+      </div>
     </el-dialog>
   </main>
 </template>
@@ -555,11 +912,31 @@ definePageMeta({
   layout: "community",
 });
 
+import { usePostStore } from "@/store";
+import { useNotification } from "@/composables/notifications";
+
+const usePost = usePostStore();
+const { showMessage } = useNotification();
+usePost.get_posts();
 const store = reactive({
   is_show: false,
   writingModal: false,
-  card_info: true,
+  card_info: false,
+  reportAdmin: false,
 });
+
+function copyLink() {
+  var copyText = "http://localhost:4000/allan55";
+
+  navigator.clipboard.writeText(copyText);
+  showMessage("Link copied to clipboard");
+  store.reportAdmin = false;
+}
+
+function reposrtToAdmins() {
+  showMessage("Reported to group admins.");
+  store.reportAdmin = false;
+}
 
 const text_dropdown = [
   ["Product Feedback", "Share your general feedback about Skool here"],
