@@ -35,6 +35,8 @@
     "pinia": "^2.1.6",
     "sass": "^1.63.6",
     "vue": "^3.3.4",
+    "vue-advanced-cropper": "^2.8.8",
+    "vue-picture-cropper": "^0.7.0",
     "vue-webrtc": "^3.0.1"
   }
 }
