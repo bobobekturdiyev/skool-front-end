@@ -47,6 +47,15 @@ export const useLoadingStore = defineStore("loading", () => {
     return unformattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
   }
 
+  function isURL(str) {
+    try {
+      new URL(str);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   function changeQuery(type, query) {
     if (store.page_name == "group" && type != "page") {
       router.currentRoute.value.query.page = 1;
@@ -77,5 +86,6 @@ export const useLoadingStore = defineStore("loading", () => {
     isLoadingType,
     priceFormatter,
     changeQuery,
+    isURL,
   };
 });

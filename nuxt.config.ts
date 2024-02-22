@@ -9,6 +9,12 @@ export default defineNuxtConfig({
           href: "/icon.svg",
         },
       ],
+      script: [
+        {
+          src: "https://www.youtube.com/iframe_api",
+          async: true,
+        },
+      ],
       meta: [
         // {
         //   name: "theme-color",
@@ -33,6 +39,9 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  tiptap: {
+    prefix: "Tiptap", //prefix for Tiptap imports, composables not included
+  },
   // router: {
   //   extendRoutes(routes, resolve) {
   //     routes.push({
@@ -42,5 +51,10 @@ export default defineNuxtConfig({
   //     })
   //   }
   // },
-  modules: ["@pinia/nuxt", "@element-plus/nuxt", "nuxt-swiper"],
+  modules: [
+    "@pinia/nuxt",
+    "@element-plus/nuxt",
+    "nuxt-swiper",
+    "nuxt-tiptap-editor",
+  ],
 });

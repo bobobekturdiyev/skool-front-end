@@ -95,6 +95,13 @@ button {
     cursor: pointer;
 }
 
+.tiptap {
+    height: 160px;
+    border-top: 1px solid #E0E0E0;
+    outline: none !important;
+    padding: 16px;
+}
+
 input[type='radio'] {
     border-radius: 50% !important;
     padding: 6px !important;

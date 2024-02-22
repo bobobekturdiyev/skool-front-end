@@ -34,7 +34,7 @@
               >
                 <el-dropdown-item>Edit course</el-dropdown-item>
                 <el-dropdown-item>Add set</el-dropdown-item>
-                <el-dropdown-item>Add modul</el-dropdown-item>
+                <el-dropdown-item>Add module</el-dropdown-item>
                 <el-dropdown-item>Delete course</el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -202,7 +202,13 @@
         </div>
         <div class="flex items-center justify-between pb-12">
           <div class="flex items-center gap-6">
-            <p class="text-[16px] font-medium">Published</p>
+            <p
+              v-if="useClassroom.create.published"
+              class="text-[16px] font-medium"
+            >
+              Published
+            </p>
+            <p v-else class="text-[16px] font-medium">Draft</p>
             <el-switch v-model="useClassroom.create.published" class="ml-2" />
           </div>
           <div class="flex gap-3 text-sm font-semibold">

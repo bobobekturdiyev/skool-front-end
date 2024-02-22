@@ -10,6 +10,7 @@ export const useClassroomStore = defineStore("classroom", () => {
 
   const store = reactive({
     classrooms: [],
+    modules: [],
     add_course: false,
     cropperPreview: false,
   });
@@ -26,9 +27,14 @@ export const useClassroomStore = defineStore("classroom", () => {
   
   const module = reactive({
     name: "",
-    position: 4,
     video: "",
     video_content: "",
+    published: true,
+  });
+
+  const set = reactive({
+    name: "",
+    position: 1,
     published: true,
   });
 
@@ -106,6 +112,32 @@ export const useClassroomStore = defineStore("classroom", () => {
       });
   }
 
+  function get_module() {
+    const module_slug = router.currentRoute.value.params.id;
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("getModules");
+
+    axios
+      .get(
+        baseUrl +
+          `get-course/${module_slug}?page=${isLoading.store.pagination.current_page}`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        store.modules = res.data?.data;
+        isLoading.removeLoading("getModules");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("getModules");
+      });
+  }
+
   function get_classroom() {
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
@@ -136,5 +168,14 @@ export const useClassroomStore = defineStore("classroom", () => {
       });
   }
 
-  return { store, create, module, get_classroom, create_course, create_module };
+  return {
+    store,
+    create,
+    module,
+    set,
+    get_classroom,
+    create_course,
+    create_module,
+    get_module,
+  };
 });
