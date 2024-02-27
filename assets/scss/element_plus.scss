@@ -73,9 +73,33 @@
     }
 }
 
+.el-select-dropdown__wrap {
+    overflow: hidden !important;
+    overflow-y: auto !important;
+}
+
 .el-scrollbar__wrap {
     // overflow: hidden !important;
     // overflow-y: auto !important;
+}
+
+.el-input__prefix,
+.clear-icon {
+    display: none !important;
+}
+
+.el-checkbox__input.is-checked+.el-checkbox__label {
+    color: $C07 !important;
+}
+
+.el-input__wrapper {
+    padding: 12px 0 !important;
+    height: 40px !important;
+
+    input {
+        border: none !important;
+        color: $C07 !important;
+    }
 }
 
 .el-icon {

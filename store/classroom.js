@@ -8,11 +8,25 @@ export const useClassroomStore = defineStore("classroom", () => {
   const baseUrl = runtime.public.baseURL;
   const router = useRouter();
 
+  const local_store = reactive({
+    activeName: 1,
+    edit_card: false,
+    addVideoModal: false,
+    is_url: false,
+    videoLink: "",
+    moduleActiveId: "",
+    moduleIndex: "",
+    setIndex: "",
+  });
+
   const store = reactive({
     classrooms: [],
     modules: [],
     add_course: false,
     cropperPreview: false,
+    setModal: false,
+    setEdit: false,
+    set_id: "",
   });
 
   const create = reactive({
@@ -30,13 +44,21 @@ export const useClassroomStore = defineStore("classroom", () => {
     video: "",
     video_content: "",
     published: true,
+    set_id: "",
   });
 
   const set = reactive({
     name: "",
-    position: 1,
+    position: "",
     published: true,
   });
+
+  function clearSet() {
+    set.name = "";
+    set.position = "";
+    set.published = true;
+    store.setModal = false;
+  }
 
   function clearCreate() {
     for (let i of Object.keys(create)) {
@@ -85,7 +107,56 @@ export const useClassroomStore = defineStore("classroom", () => {
       });
   }
 
-  function create_module() {
+  function create_set() {
+    if (store.setEdit) {
+      return update_set();
+    }
+    const slug = router.currentRoute.value.params.id;
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("createSet");
+
+    axios
+      .post(baseUrl + `add-set/${slug}`, set, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        clearSet();
+        get_module();
+        isLoading.removeLoading("createSet");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("createSet");
+      });
+  }
+
+  function update_set() {
+    const slug = router.currentRoute.value.params.id;
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("createSet");
+
+    axios
+      .put(baseUrl + `update-set/${slug}`, {...set, set_id: store.set_id}, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        clearSet();
+        get_module();
+        isLoading.removeLoading("createSet");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("createSet");
+      });
+  }
+
+  function create_module(type) {
     const formData = new FormData();
     for (let i of Object.keys(module)) {
       console.log(i);
@@ -96,7 +167,7 @@ export const useClassroomStore = defineStore("classroom", () => {
     isLoading.addLoading("createModule");
 
     axios
-      .post(baseUrl + `add-module/${course_name}`, formData, {
+      .post(baseUrl + `add-module/`, formData, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -104,7 +175,12 @@ export const useClassroomStore = defineStore("classroom", () => {
       .then((res) => {
         console.log(res);
         clearModule();
+        get_module();
         isLoading.removeLoading("createModule");
+        if (type == 'new_module'){
+          local_store.moduleActiveId = res.data.data.id
+          module.name = res.data.data?.name;
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -169,6 +245,7 @@ export const useClassroomStore = defineStore("classroom", () => {
   }
 
   return {
+    local_store,
     store,
     create,
     module,
@@ -177,5 +254,6 @@ export const useClassroomStore = defineStore("classroom", () => {
     create_course,
     create_module,
     get_module,
+    create_set,
   };
 });

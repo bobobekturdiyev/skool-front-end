@@ -12,7 +12,17 @@ export const useEventStore = defineStore("event", () => {
     events: [],
     start_date: "",
     end_date: "",
+    add_event: false,
   });
+
+  const create = reactive({
+    title: "",
+    date: "",
+    description: "",
+    recurring: false,
+    access: "all",
+    level: "",
+  })
 
   function get_event() {
     const group_username = router.currentRoute.value.params.community;
@@ -51,5 +61,5 @@ export const useEventStore = defineStore("event", () => {
       });
   }
 
-  return { store, get_event };
+  return { store, create, get_event };
 });

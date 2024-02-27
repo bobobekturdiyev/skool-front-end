@@ -276,10 +276,6 @@ const access_list = [
   },
 ];
 
-{
-  {
-  }
-}
 watch(
   () => useClassroom.create.access,
   () => {
