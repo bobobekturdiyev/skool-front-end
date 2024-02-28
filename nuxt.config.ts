@@ -14,6 +14,9 @@ export default defineNuxtConfig({
           src: "https://www.youtube.com/iframe_api",
           async: true,
         },
+        {
+          src: "https://cdn.jsdelivr.net/npm/cropperjs@1.5.11/dist/cropper.min.js",
+        }
       ],
       meta: [
         // {
@@ -28,20 +31,23 @@ export default defineNuxtConfig({
       baseURL: process.env.BASE_URL,
     },
   },
-  plugins: [{ src: "~/plugins/aos", mode: "client", ssr: false }],
+  plugins: [{ src: "~/plugins/aos", mode: "client", ssr: false }, { src: '~/plugins/vuejs-clipper.js', mode: 'client' }],
   imports: {
     autoImport: true,
   },
-  css: ["~/assets/scss/main.scss"],
+  css: [
+    "~/assets/scss/main.scss",
+    "primevue/resources/themes/aura-light-green/theme.css",
+  ],
   postcss: {
     plugins: {
       tailwindcss: {},
       autoprefixer: {},
     },
   },
-  tiptap: {
-    prefix: "Tiptap", //prefix for Tiptap imports, composables not included
-  },
+  // tiptap: {
+  //   prefix: "Tiptap", //prefix for Tiptap imports, composables not included
+  // },
   // router: {
   //   extendRoutes(routes, resolve) {
   //     routes.push({
@@ -55,6 +61,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@element-plus/nuxt",
     "nuxt-swiper",
-    "nuxt-tiptap-editor",
+    "nuxt-primevue",
+    // "nuxt-tiptap-editor",
   ],
 });

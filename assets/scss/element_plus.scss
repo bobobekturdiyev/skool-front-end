@@ -249,3 +249,25 @@
         display: none !important;
     }
 }
+
+.members_checkbox {
+    .el-checkbox__inner {
+        height: 16px !important;
+        width: 16px !important;
+    }
+    .el-checkbox__label {
+        padding-left: 12px !important;
+        color: $C07 !important;
+        font-size: 12px;
+    }
+}
+
+.el-select__input {
+    width: 100% !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+.el-select__wrapper {
+    height: 40px !important;
+}

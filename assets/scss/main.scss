@@ -183,3 +183,60 @@ label {
         height: 88px;
     }
 }
+
+// .editor
+
+.editor {
+    .h1 {
+        background-image: url('@/assets/svg/editor/h1.svg') !important;
+    }
+
+    .h2 {
+        background-image: url('@/assets/svg/editor/h2.svg') !important;
+    }
+
+    .ql-bold {
+        background-image: url('@/assets/svg/editor/bold.svg') !important;
+    }
+
+    .ql-italic {
+        background-image: url('@/assets/svg/editor/italic.svg') !important;
+    }
+    .ql-strike {
+        background-image: url('@/assets/svg/editor/strikethrough.svg') !important;
+    }
+    .ql-code {
+        background-image: url('@/assets/svg/editor/code.svg') !important;
+    }
+    #ql-ul {
+        background-image: url('@/assets/svg/editor/ul.svg') !important;
+    }
+
+    #ql-ol {
+        background-image: url('@/assets/svg/editor/ol.svg') !important;
+    }
+    .ql-blockquote {
+        background-image: url('@/assets/svg/editor/blockquote.svg') !important;
+    }
+    .ql-code-block {
+        background-image: url('@/assets/svg/editor/codeblock.svg') !important;
+    }
+    .ql-image {
+        background-image: url('@/assets/svg/editor/upload.svg') !important;
+    }
+
+    .ql-link {
+        background-image: url('@/assets/svg/editor/link.svg') !important;
+    }
+
+    .h1,
+    .h2,
+    .ql-bold, .ql-italic, .ql-strike, .ql-code, #ql-ul, #ql-ol, .ql-blockquote, .ql-code-block, .ql-image, .ql-link {
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+
+        svg {
+            opacity: 0;
+        }
+    }
+}

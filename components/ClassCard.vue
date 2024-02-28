@@ -248,8 +248,6 @@
 </template>
 
 <script setup>
-import { Cropper } from "vue-advanced-cropper";
-import "vue-advanced-cropper/dist/style.css";
 import { useLoadingStore, useClassroomStore } from "@/store";
 
 const useClassroom = useClassroomStore();
