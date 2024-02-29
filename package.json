@@ -30,7 +30,6 @@
     "aos": "^2.3.4",
     "axios": "^1.5.1",
     "calendar": "^0.1.1",
-    "cropperjs": "^1.6.1",
     "devalue": "^4.3.2",
     "flowbite": "^1.8.1",
     "moment-timezone": "^0.5.45",
@@ -43,9 +42,6 @@
     "sharp": "^0.33.2",
     "timezone-support": "^3.1.0",
     "vue": "^3.4.19",
-    "vue-advanced-cropper": "^2.8.8",
-    "vue-cropperjs": "^5.0.0",
-    "vue-youtube-iframe-api": "^0.1.2",
-    "vuejs-clipper": "^4.1.0"
+    "vue-youtube-iframe-api": "^0.1.2"
   }
 }

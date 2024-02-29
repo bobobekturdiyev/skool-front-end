@@ -169,20 +169,17 @@
           </el-select>
         </div>
         <div class="flex gap-4">
-          <label
-            v-if="!useClassroom.store.cropperPreview"
-            for="add_photo"
-            class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm h-[188px] w-[366px]"
-          >
+          <label v-if="!isLoading.store.croppedImage" for="add_photo"
+            class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm h-[188px] w-[366px]">
             <img src="@/assets/svg/add_photo.svg" alt="" />
             <p>Add a photo</p>
           </label>
-          <img
-            v-else
-            class="h-[188px] w-[366px] rounded-xl object-cover"
-            :src="useClassroom.store.cropperPreview"
-            alt=""
-          />
+          <label class="relative imagelabel" v-else for="add_photo">
+            <button @click="deleteImage" type="button" class="absolute deleteimage !hidden top-2 right-2 rounded-full w-7 h-7 full_flex border p-2">
+              <img src="@/assets/svg/x.svg" alt="">
+            </button>
+            <img class="h-[188px] w-[366px] overflow-hidden rounded-xl object-cover" :src="isLoading.store.croppedImage" alt="" />
+          </label>
           <div class="py-5">
             <p class="text-xl font-medium">Cover</p>
             <p class="_ca1 text-xs font-medium mt-1 mb-5">1460x752 px</p>
@@ -235,16 +232,14 @@
       </form>
     </el-dialog>
 
-    <!-- cropper -->
-    <!-- <el-dialog
-      v-model="useClassroom.store.cropperPreview"
-      width="400"
-      align-center
-      class="bg-opacity-50 !rounded-lg"
-    >
-      <img :src="useClassroom.store.cropperPreview" />
-    </el-dialog> -->
   </section>
+  
+  <!-- cropper image -->
+  <el-dialog v-model="isLoading.store.cropModal" v-if="isLoading.store.cropModal" width="780" align-center
+    class="bg-opacity-50 p-6 !w-[400px] !rounded-lg">
+    <cropper-image />
+    <p class="_c07 text-center mt-4">Or, <label class="_c2a" for="add_photo">upload a different photo</label></p>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -297,15 +292,31 @@ function handleInput(type) {
 }
 
 function handleAddedPhoto(e) {
+  isLoading.store.cropModal = false;
   const file = e.target.files[0];
-  useClassroom.create.image = file;
-  useClassroom.store.cropperPreview = URL.createObjectURL(file);
+  isLoading.store.previewImage = URL.createObjectURL(file);
   document.getElementById("add_photo").value = "";
+  setTimeout(() => {
+    isLoading.store.cropModal = true
+  }, 100);
+}
+
+function deleteImage() {
+  useClassroom.create.image = "";
+  isLoading.store.croppedImage = "";
 }
 
 function handleSubmit() {
   useClassroom.create_course();
 }
+
+
+watch(() => isLoading.store.croppedImage, () => {
+  if (isLoading.store.croppedImage) {
+    useClassroom.create.image = isLoading.store.croppedFile;
+    isLoading.store.previewImage = "";
+  }
+})
 
 onBeforeMount(() => {
   useClassroom.get_classroom();

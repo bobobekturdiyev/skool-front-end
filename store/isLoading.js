@@ -21,6 +21,10 @@ export const useLoadingStore = defineStore("loading", () => {
       from: "",
       to: "",
     },
+    previewImage: "",
+    croppedImage: "",
+    croppedFile: "",
+    cropModal: false,
   });
 
   function addLoading(type) {

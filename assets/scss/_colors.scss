@@ -7,7 +7,12 @@ $CBC: #BCDEFF;
 $C59: #59ACFF;
 $CF0F: #F0F5FA;
 $CD9: #D9ECFF;
+$C00: #000000;
+$C6F: #6FCF97;
 
+._c00 {
+    color: $C00;
+}
 ._ca1 {
     color: $CA1;
 }
@@ -80,6 +85,18 @@ $CD9: #D9ECFF;
     background: $C59;
 }
 
+.b_c6f {
+    background: $C6F;
+}
+
 .bg_loading {
     background: $CF2;
+}
+
+.border_ce0 {
+    border: 1px solid $CE0;
+}
+
+.border_cbc {
+    border: 1px solid $CBC;
 }

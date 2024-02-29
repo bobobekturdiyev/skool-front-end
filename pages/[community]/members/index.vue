@@ -70,7 +70,7 @@
             <img src="@/assets/svg/export.svg" alt="" />
             <span>Export</span>
           </button>
-          <button
+          <button @click="isLoading.store.inviteModal = true"
             class="gap-1 uppercase py-2 px-6 r_8 b_cbc _c07 bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700">
             invite
           </button>
@@ -373,6 +373,11 @@
         </div>
       </div>
     </section>
+
+    <!-- cropper image -->
+    <el-dialog v-model="isLoading.store.inviteModal" width="1036px" align-center class="bg-opacity-50 !p-0 !rounded-lg members_dialog overflow-hidden">
+      <MembersModal />
+    </el-dialog>
   </main>
 </template>
 

@@ -41,10 +41,14 @@ export const useEventStore = defineStore("event", () => {
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("getEvents");
+    const start_date = new Date(store.start_date).getTime()
+    const end_date = new Date(store.end_date).getTime()
+    console.log(store.start_date, '---------------')
+    console.log(store.end_date, '----------------')
     axios
       .get(
         baseUrl +
-        `get-event/${group_username}/${store.start_date}/${store.end_date}`,
+        `get-event/${group_username}/${start_date}/${end_date}`,
         {
           headers: {
             Authorization: "Bearer " + token,
@@ -54,10 +58,6 @@ export const useEventStore = defineStore("event", () => {
       .then((res) => {
         console.log(res);
         store.events = res.data?.data?.data;
-        console.log(
-          store.events,
-          "--------------------event --------------------"
-        );
         isLoading.removeLoading("getEvents");
       })
       .catch((err) => {
@@ -73,9 +73,8 @@ export const useEventStore = defineStore("event", () => {
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("addEvents");
-
-    console.log(create) 
-
+    create.date = new Date(create.date).setHours(0, 0, 0);
+    create.date = new Date(create.date).getTime();
     const formData = new FormData();
     for (let i of Object.keys(create)) {
       console.log(create[i])

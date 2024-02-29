@@ -8,6 +8,10 @@ export default defineNuxtConfig({
           rel: "icon",
           href: "/icon.svg",
         },
+        {
+          rel: "stylesheet",
+          href: "https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.css",
+        },
       ],
       script: [
         {
@@ -15,7 +19,7 @@ export default defineNuxtConfig({
           async: true,
         },
         {
-          src: "https://cdn.jsdelivr.net/npm/cropperjs@1.5.11/dist/cropper.min.js",
+          src: "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js",
         }
       ],
       meta: [

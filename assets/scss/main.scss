@@ -202,12 +202,15 @@ label {
     .ql-italic {
         background-image: url('@/assets/svg/editor/italic.svg') !important;
     }
+
     .ql-strike {
         background-image: url('@/assets/svg/editor/strikethrough.svg') !important;
     }
+
     .ql-code {
         background-image: url('@/assets/svg/editor/code.svg') !important;
     }
+
     #ql-ul {
         background-image: url('@/assets/svg/editor/ul.svg') !important;
     }
@@ -215,12 +218,15 @@ label {
     #ql-ol {
         background-image: url('@/assets/svg/editor/ol.svg') !important;
     }
+
     .ql-blockquote {
         background-image: url('@/assets/svg/editor/blockquote.svg') !important;
     }
+
     .ql-code-block {
         background-image: url('@/assets/svg/editor/codeblock.svg') !important;
     }
+
     .ql-image {
         background-image: url('@/assets/svg/editor/upload.svg') !important;
     }
@@ -231,7 +237,16 @@ label {
 
     .h1,
     .h2,
-    .ql-bold, .ql-italic, .ql-strike, .ql-code, #ql-ul, #ql-ol, .ql-blockquote, .ql-code-block, .ql-image, .ql-link {
+    .ql-bold,
+    .ql-italic,
+    .ql-strike,
+    .ql-code,
+    #ql-ul,
+    #ql-ol,
+    .ql-blockquote,
+    .ql-code-block,
+    .ql-image,
+    .ql-link {
         background-repeat: no-repeat !important;
         background-position: center !important;
 
@@ -239,4 +254,42 @@ label {
             opacity: 0;
         }
     }
+}
+
+.cropper-bg {
+    background: #0000004D !important;
+    height: 200px !important;
+    border-radius: 8px !important;
+    overflow: hidden;
+}
+
+// .cropper-container * {
+//     height: 200px !important;
+// }
+
+.cropper-crop-box {
+    transform: none !important;
+}
+
+.cropper-canvas {
+    display: none !important;
+}
+
+.cropper-canvas,
+.cropper-crop-box,
+.cropper-drag-box,
+.cropper-modal,
+.cropper-wrap-box {
+    // bottom: auto !important;
+    margin: auto !important;
+}
+
+.imagelabel:hover {
+    .deleteimage {
+        display: block !important;
+    }
+}
+
+.text-md {
+    font-size: 16px;
 }

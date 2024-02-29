@@ -1,80 +1,71 @@
 <template>
-    <div>
-        <input type="file" name="image" id="image" @change="readURL" />
-
-        <div class="image_container">
-            <img id="blah" :src="url" alt="your image" />
-        </div>
-
-        <!-- // Cropped image to display (only if u want) -->
-        <div id="cropped_result"></div>
-        <!-- // Will trigger crop event -->
-        <button id="crop_button">Crop</button>
+    <div v-if="isLoading.store.cropModal" class="max-w-[400px]">
+        <h1 class="font-semibold text-2xl _c07 mb-7">Crop new cover photo</h1>
+        <img id="image" :src="isLoading.store.previewImage" alt="">
+        <br>
+        <button @click="cropperImage" class="uppercase h-10 px-6 rounded-lg w-full b_cbc _c07">
+            Save
+        </button>
     </div>
 </template>
 
 <script setup>
-import VueCropper from 'vue-cropperjs';
-const url =ref("#");
-function readURL(e) {
-    const input = e.target;
-    console.log(input)
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        console.log(e.target.result)
-        reader.onload = function (e) {
-            url.value = e.target.result;
-            // document.getElementById('blah').attr('src', e.target.result)
-        };
-        reader.readAsDataURL(input.files[0]);
-        setTimeout(initCropper, 1000);
+import { useLoadingStore } from '@/store';
+
+const isLoading = useLoadingStore();
+const store = reactive({
+    cropper: "",
+})
+function cropperImage() {
+    // Get cropped canvas data
+    var canvas = store.cropper.getCroppedCanvas();
+
+    // Convert canvas to data URL
+    var dataURL = canvas.toDataURL();
+
+    isLoading.store.croppedImage = dataURL;
+    isLoading.store.croppedFile = base64ToFile(dataURL, "upload")
+    isLoading.store.cropModal = false;
+}
+
+function base64ToFile(base64Url, filename) {
+    // Convert base64 to bytes
+    const byteCharacters = atob(base64Url.split(',')[1]);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
+    const byteArray = new Uint8Array(byteNumbers);
+
+    // Create Blob from bytes
+    const blob = new Blob([byteArray], { type: 'image/jpeg' });
+
+    // Create File from Blob
+    return new File([blob], filename, { type: 'image/jpeg' });
 }
-function initCropper() {
-    console.log("Came here")
-    var image = document.getElementById('blah');
-    var cropper = new Cropper(image, {
-        aspectRatio: 16 / 9,
-        crop: function (e) {
-            console.log(e.detail.x);
-            console.log(e.detail.y);
-        }
+
+function cropperWrap() {
+    var image = document.getElementById('image');
+    store.cropper = new Cropper(image, {
+        // aspectRatio: 1 / 1, // Aspect ratio for the crop box
+        height: "10px",
+        // viewMode: "400px", // Display mode (0: none, 1: fit, 2: fill, 3: contain, 4: cover)
+        crop: function (event) {
+            // Callback function triggered after cropping
+            console.log(event.detail.x);
+            console.log(event.detail.y);
+            console.log(event.detail.width);
+            console.log(event.detail.height);
+            console.log(event.detail.rotate);
+            console.log(event.detail.scaleX);
+            console.log(event.detail.scaleY);
+        },
     });
-
-    // On crop button clicked
-    document.getElementById('crop_button').addEventListener('click', function () {
-        var imgurl = cropper.getCroppedCanvas().toDataURL();
-        var img = document.createElement("img");
-        img.src = imgurl;
-        document.getElementById("cropped_result").appendChild(img);
-
-        /* ---------------- SEND IMAGE TO THE SERVER-------------------------
-    
-                    cropper.getCroppedCanvas().toBlob(function (blob) {
-                          var formData = new FormData();
-                          formData.append('croppedImage', blob);
-                          // Use `jQuery.ajax` method
-                          $.ajax('/path/to/upload', {
-                            method: "POST",
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            success: function () {
-                              console.log('Upload success');
-                            },
-                            error: function () {
-                              console.log('Upload error');
-                            }
-                          });
-                    });
-                ----------------------------------------------------*/
-    })
 }
+
+onMounted(() => {
+    cropperWrap();
+})
 </script>
 
-<style lang="scss" scoped>
-.image_container {
-    max-width: 800px;
-    max-height: 450px;
-}
-</style>
+<style lang="scss" scoped></style>

@@ -10,7 +10,18 @@ export const useMemberStore = defineStore("members", () => {
 
   const store = reactive({
     members: [],
+    inviteModal: false,
   });
+
+  const general = reactive({
+    name: "",
+    url: "",
+    description: "",
+    Initials: "",
+    color: "",
+    type: "",
+  })
+
   function getMembers() {
       const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
@@ -32,5 +43,5 @@ export const useMemberStore = defineStore("members", () => {
       });
   }
 
-  return { store, getMembers };
+  return { store, general, getMembers };
 });
