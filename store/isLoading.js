@@ -12,6 +12,7 @@ export const useLoadingStore = defineStore("loading", () => {
     isLogin: false,
     email: "",
     page_name: "",
+    pagination_type: 15,
     pagination: {
       current_page: router.currentRoute.value.query.page
         ? router.currentRoute.value.query.page

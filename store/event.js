@@ -16,6 +16,12 @@ export const useEventStore = defineStore("event", () => {
     recurring: false,
     cropperPreview: "",
     eventModal: false,
+    editEventModal: false,
+    eventId: "",
+    calendar: "",
+    data_events: [],
+    table_events: [],
+    month: "",
   });
 
   const create = reactive({
@@ -31,7 +37,7 @@ export const useEventStore = defineStore("event", () => {
     access: "all",
     access_value: "",
     repeat: "",
-    repeat_number: "",
+    repeat_number: '',
     repeat_on: "",
     repeat_end: "",
     remind: false,
@@ -45,6 +51,9 @@ export const useEventStore = defineStore("event", () => {
     const end_date = new Date(store.end_date).getTime()
     console.log(store.start_date, '---------------')
     console.log(store.end_date, '----------------')
+    store.data_events = [];
+    store.table_events = [];
+    let t;
     axios
       .get(
         baseUrl +
@@ -57,8 +66,40 @@ export const useEventStore = defineStore("event", () => {
       )
       .then((res) => {
         console.log(res);
+        let is_true;
+        let dates;
         store.events = res.data?.data?.data;
         isLoading.removeLoading("getEvents");
+        for (let month of store.calendar) {
+          for (let date of month) {
+            console.log(t)
+            is_true = false
+            t = 0;
+            for (let event of store.events) {
+              const newDate = new Date(+event.date);
+              if (newDate.getMonth() == date[0] && newDate.getDate() == date[1]) {
+                for (let dates of event.data) {
+                  if (t == 0) {
+                    store.data_events.push([dates]);
+                  } else {
+                    store.data_events[store.data_events.length - 1].push(dates);
+                  }
+                  t++;
+                }
+                is_true = true;
+              }
+              if (newDate.getMonth() == store.month && newDate.getDate() == date[1]) {
+                for (let dates of event.data) {
+                  store.table_events.push(dates);
+                }
+              }
+            }
+            if (!is_true) {
+              store.data_events.push([]);
+            }
+          }
+        }
+        console.log(store.table_events);
       })
       .catch((err) => {
         if (err.response?.data?.message == "Events not found") {
@@ -70,18 +111,26 @@ export const useEventStore = defineStore("event", () => {
   }
 
   function add_event() {
+    if (store.editEventModal) {
+      return edit_event();
+    }
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("addEvents");
-    create.date = new Date(create.date).setHours(0, 0, 0);
-    create.date = new Date(create.date).getTime();
+    create.date = new Date(new Date(create.date)?.setHours(0, 0, 0))?.getTime();
     const formData = new FormData();
     for (let i of Object.keys(create)) {
-      console.log(create[i])
       if (i == 'location') {
         formData.append('location', create.location.label)
       } else {
-        formData.append(i, create[i]);
+        if (i == 'repeat_number') {
+          if (create.repeat_number) {
+            formData.append(i, create[i]);
+          }
+        }
+        else {
+          formData.append(i, create[i]);
+        }
       }
     }
 
@@ -103,17 +152,84 @@ export const useEventStore = defineStore("event", () => {
         console.log(res);
         store.add_event = false;
         isLoading.removeLoading("addEvents");
+        get_event();
       })
       .catch((err) => {
-        if (err.response?.data?.message == "Events not found") {
-          store.events = [];
-        }
         console.log(err);
         isLoading.removeLoading("addEvents");
       });
   }
 
+  function edit_event() {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("addEvents");
+    create.date = new Date(create.date)?.setHours(0, 0, 0);
+    create.date = new Date(create.date)?.getTime();
+    const formData = new FormData();
+    for (let i of Object.keys(create)) {
+      if (i == 'location') {
+        formData.append('location', create.location.label)
+      } else {
+        if (i == 'repeat_number') {
+          if (create.repeat_number) {
+            formData.append(i, create[i]);
+          }
+        } else {
+          formData.append(i, create[i]);
+        }
+      }
+    }
 
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
 
-  return { store, create, get_event, add_event };
+    axios
+      .put(
+        baseUrl +
+        `update-event/${store.eventId}`, formData,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        store.add_event = false;
+        isLoading.removeLoading("addEvents");
+        get_event();
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("addEvents");
+      });
+  }
+
+  function delete_event() {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("deleteEvent");
+    axios
+      .delete(
+        baseUrl +
+        `delete-event/${store.eventId}`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        store.add_event = false;
+        isLoading.removeLoading("deleteEvent");
+        get_event();
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("deleteEvent");
+      });
+  }
+
+  return { store, create, get_event, add_event, edit_event, delete_event };
 });

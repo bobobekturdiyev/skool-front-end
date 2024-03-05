@@ -15,7 +15,7 @@
       </p>
       <el-pagination
         v-model:current-page="isLoading.store.pagination.current_page"
-        :page-size="15"
+        :page-size="isLoading.store.pagination_type"
         :small="small"
         :disabled="disabled"
         :background="background"
@@ -51,10 +51,11 @@
 </template>
 
 <script setup>
-import { useLoadingStore, useClassroomStore } from "@/store";
+import { useLoadingStore, useClassroomStore, useEventStore } from "@/store";
 
 const isLoading = useLoadingStore();
 const useClassroom = useClassroomStore();
+const useEvent = useEventStore();
 
 function changePage(type) {
   if (type == "dec") {

@@ -27,7 +27,8 @@
             </aside>
             <div class="w-full h-[calc(100vh_-120px)] overflow-hidden">
                 <div class="mainSlider h-[calc(100vh_-120px)] duration-700">
-                    <section class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                    <section
+                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
                         <h1 class="_c00 font-semibold text-xl">🎉 Happy Monday, Xayot</h1>
                         <p class="my-10 font-medium">Subscriptions</p>
                         <div class="flex gap-8">
@@ -41,7 +42,8 @@
                             </div>
                         </div>
                     </section>
-                    <section class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                    <section
+                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
                         <h1 class="_c00 font-semibold text-xl mb-10">Payouts</h1>
                         <div class="flex gap-8">
                             <div class="full_flex flex-col space-y-3 h-20 border_cbc r_8 min-w-[150px]">
@@ -50,21 +52,24 @@
                             </div>
                             <div class="flex justify-center flex-col space-y-2">
                                 <h2 class="font-semibold leading-4">Next payout will be $0 in 2 days</h2>
-                                <div class="flex gap-1 leading-4">$0 is pending<img src="@/assets/svg/members/pending.svg"
-                                        alt=""></div>
+                                <div class="flex gap-1 leading-4">$0 is pending<img
+                                        src="@/assets/svg/members/pending.svg" alt=""></div>
                             </div>
                         </div>
                         <h2 class="font-semibold mt-7">Payout history</h2>
                         <hr class="w-full my-4" />
                         <p>No payout history.</p>
                     </section>
-                    <section class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                    <section
+                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
                         <h1 class="text-xl font-semibold _c00">Share your group link</h1>
-                        <p class="my-5">This will take people to your group’s About page where they can purchase or request
+                        <p class="my-5">This will take people to your group’s About page where they can purchase or
+                            request
                             membership.
                         </p>
                         <div class="flex gap-3">
-                            <p class="flex items-center w-full h-10 rounded-[4px] px-3 border_ce0 _c2a font-medium text-sm">
+                            <p
+                                class="flex items-center w-full h-10 rounded-[4px] px-3 border_ce0 _c2a font-medium text-sm">
                                 https://www.skool.com/digital-marketer-3698/about</p>
                             <button class="b_cbc px-6 uppercase font-semibold r_8">copy</button>
                         </div>
@@ -75,12 +80,14 @@
                             <input type="email" placeholder="Email adress">
                             <button class="b_cbc px-6 uppercase font-semibold r_8">send</button>
                         </div>
-                        <p class="mt-3 mb-10">This member will have access to <span class="_c2a">(5/6 courses).</span></p>
+                        <p class="mt-3 mb-10">This member will have access to <span class="_c2a">(5/6 courses).</span>
+                        </p>
 
                         <div class="space-y-6">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-3">
-                                    <p class="full_flex h-10 w-10 r_8 b_cd9"><img src="@/assets/svg/members/csv.svg" alt="">
+                                    <p class="full_flex h-10 w-10 r_8 b_cd9"><img src="@/assets/svg/members/csv.svg"
+                                            alt="">
                                     </p>
                                     <div class="space-y-1">
                                         <h2 class="text-md font-semibold">Import .CSV file</h2>
@@ -107,7 +114,8 @@
                             </div>
                         </div>
                     </section>
-                    <section class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                    <section
+                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
                         <div class="flex gap-10">
                             <div class="flex gap-5">
                                 <p class="h-[60px] w-[60px] b_cf2 r_8"></p>
@@ -155,8 +163,8 @@
                                 <div class="space-y-2">
                                     <label for="initials" class="_ca1 text-xs">Initials</label>
                                     <div>
-                                        <input type="text" class="_ca1" id="initials" v-model="useMembers.general.Initials"
-                                            placeholder="Title" required />
+                                        <input type="text" class="_ca1" id="initials"
+                                            v-model="useMembers.general.Initials" placeholder="Title" required />
                                     </div>
                                 </div>
                                 <div class="flex gap-3 items-end">
@@ -166,8 +174,8 @@
                                         <div>
                                             <el-select class="block w-full mt-2" v-model="useMembers.general.color"
                                                 placeholder="Select">
-                                                <el-option v-for="item in access_list" :key="item.value" :label="item.label"
-                                                    :value="item.value" :disabled="item.disabled">
+                                                <el-option v-for="item in access_list" :key="item.value"
+                                                    :label="item.label" :value="item.value" :disabled="item.disabled">
                                                     <div class="flex items-center gap-2">
                                                         {{ item.label }}
                                                         <img v-if="useMembers.general.color == item.value"
@@ -180,21 +188,28 @@
                                 </div>
                             </div>
                             <div class="grid grid-cols-2 gap-5">
-                                <label @click="useMembers.general.type = 'private'" class="space-y-3 r_8 p-5 cursor-pointer" :class="useMembers.general.type == 'private'?'border_cbc b_cf0f':'border_ce0'">
+                                <label @click="useMembers.general.type = 'private'"
+                                    class="space-y-3 r_8 p-5 cursor-pointer"
+                                    :class="useMembers.general.type == 'private' ? 'border_cbc b_cf0f' : 'border_ce0'">
                                     <div class="flex items-center gap-3">
-                                        <input v-model="useMembers.general.type" :checked="useMembers.general.type == 'private' ? true : false" id="private"
+                                        <input v-model="useMembers.general.type"
+                                            :checked="useMembers.general.type == 'private' ? true : false" id="private"
                                             class="rounded-full" type="radio" name="type" />
                                         <div class="full_flex gap-1">
                                             <img src="@/assets/svg/members/private.svg" alt="">
                                             Private
                                         </div>
                                     </div>
-                                    <p>Only members can see who's in the group and what they post. Content is hidden from
+                                    <p>Only members can see who's in the group and what they post. Content is hidden
+                                        from
                                         search engines.</p>
                                 </label>
-                                <label @click="useMembers.general.type = 'public'" class="space-y-3 r_8 p-5 cursor-pointer" :class="useMembers.general.type == 'private'?'border_ce0':'border_cbc b_cf0f'">
+                                <label @click="useMembers.general.type = 'public'"
+                                    class="space-y-3 r_8 p-5 cursor-pointer"
+                                    :class="useMembers.general.type == 'private' ? 'border_ce0' : 'border_cbc b_cf0f'">
                                     <div class="flex items-center gap-3">
-                                        <input v-model="useMembers.general.type " :checked="useMembers.general.type == 'public' ? true : false" id="public"
+                                        <input v-model="useMembers.general.type"
+                                            :checked="useMembers.general.type == 'public' ? true : false" id="public"
                                             class="rounded-full" type="radio" name="type" />
                                         <div class="full_flex gap-1">
                                             <img src="@/assets/svg/members/public.svg" alt="">
@@ -208,9 +223,11 @@
                         </div>
                         <button class="_ca1 b_ce0 px-6 r_8 mt-6">UPDATE SETTINGS</button>
                     </section>
-                    <section class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                    <section
+                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
                         <h1 class="_c00 font-semibold text-xl">Subscriptions</h1>
-                        <p class="mt-5 mb-8 font-medium">Make money by charging a monthly subscription for access to your
+                        <p class="mt-5 mb-8 font-medium">Make money by charging a monthly subscription for access to
+                            your
                             community.</p>
                         <div class="flex items-center justify-between border_cbc r_8 h-[52px] px-3">
                             <div class="flex items-center gap-10">
@@ -224,6 +241,151 @@
                             <button><img class="rotate-90" src="@/assets/svg/three_dot.svg" alt="" /></button>
                         </div>
                         <button class="px-6 b_cbc uppercase mt-7 r_8 font-semibold">add price</button>
+                    </section>
+                    <section
+                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                        <div class="flex items-center justify-between">
+                            <h1 class="font-semibold text-xl">Categories</h1>
+                            <button class="uppercase font-semibold text-sm b_cbc _c07 px-6 r_8">add category</button>
+                        </div>
+                        <div class="flex items-center justify-between mt-9">
+                            <div class="space-y-2">
+                                <p class="font-semibold">General discussion (1)</p>
+                                <p class="text-xs">Discuss anything here</p>
+                            </div>
+                            <div class="flex gap-3">
+                                <button class="full_flex gap-1 border border_cbc r_8 _c2a px-3 h-9">
+                                    <img src="@/assets/svg/edit.svg" alt="">
+                                    <p>Edit</p>
+                                </button>
+                                <button class="full_flex border border_cbc r_8 w-9 h-9">
+                                    <img src="@/assets/svg/three_dot_blue.svg" alt="">
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                    <section
+                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                    </section>
+                    <section
+                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                    </section>
+                    <section v-if="!store.editGamification"
+                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                        <h1 class="font-semibold text-xl">Gamification</h1>
+                        <p class="mt-5 mb-7">Make your group fun! Personalize your group by naming your levels.
+                            Incentivize engagement by
+                            unlocking courses when members reach a higher level.</p>
+                        <div class="space-y-7">
+                            <div v-for="i in 10" class="flex items-center justify-between mt-9">
+                                <div class="space-y-1">
+                                    <p class="font-semibold">Level 1 - STARTER</p>
+                                    <p class="text-xs">100% of members - No courses unlock</p>
+                                </div>
+                                <button @click="store.editGamification = true"
+                                    class="full_flex gap-1 border border_cbc r_8 _c2a px-3 h-9">
+                                    <img src="@/assets/svg/edit.svg" alt="">
+                                    <p>Edit</p>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                    <section v-else
+                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                        <h1 class="text-xl font-semibold">Edit level</h1>
+                        <div>
+                            <label for="name" class="_ca1 mb-2 block mt-7">Name</label>
+                            <div class="flex items-center px-3 whitespace-nowrap border_ce0 h-10 rounded-[4px]">
+                                <p class="_ca1">Level 1</p>
+                                <p class="h-5 ml-2 w-0 !border-r-0 border_ce0"></p>
+                                <input class="!px-2 h-9 !border-0" type="text">
+                            </div>
+                            <p class="_ca1 text-end mt-1 mb-3">7/20</p>
+                            <div>
+                                <button class="_c07 font-semibold b_cbc px-6 r_8 mt-6 uppercase">Save</button>
+                                <button @click="store.editGamification = false"
+                                    class="_ca1 font-semibold px-6 r_8 mt-6 uppercase">cancel</button>
+                            </div>
+                            <p class="font-semibold mt-8 mb-4">No courses unlock at this level.</p>
+                            <p class="_c07">You can unlock courses for members at different levels from the course
+                                settings menu.</p>
+                        </div>
+                    </section>
+                    <section
+                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                    </section>
+                    <section v-if="store.addLink"
+                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                        <h1 class="text-xl font-semibold">Add link</h1>
+                        <div class="space-y-5">
+                            <div>
+                                <label for="name" class="_ca1 mb-2 block mt-7">Label</label>
+                                <input class="" type="text">
+                                <p class="_ca1 text-end mt-1">0/34</p>
+                            </div>
+                            <div>
+                                <input type="text" placeholder="URL">
+                            </div>
+                            <div>
+                                <label for="name" class="_ca1 mb-2 block">Privacy</label>
+                                <el-select class="block w-full mt-2" v-model="useMembers.general.color"
+                                    placeholder="Select">
+                                    <el-option v-for="item in access_list" :key="item.value" :label="item.label"
+                                        :value="item.value" :disabled="item.disabled">
+                                        <div class="flex items-center gap-2">
+                                            {{ item.label }}
+                                            <img v-if="useMembers.general.color == item.value"
+                                                src="@/assets/svg/checked.svg" alt="" />
+                                        </div>
+                                    </el-option>
+                                </el-select>
+                            </div>
+                            <div>
+                                <button class="_ca1 font-semibold b_ce0 px-6 r_8 mt-6 uppercase">Save</button>
+                                <button @click="store.addLink = false"
+                                    class="_ca1 font-semibold px-6 r_8 mt-6 uppercase">cancel</button>
+                            </div>
+                        </div>
+                    </section>
+                    <section v-else
+                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                        <div class="flex items-center justify-between">
+                            <h1 class="font-semibold text-xl">Links</h1>
+                            <button @click="store.addLink = true"
+                                class="uppercase font-semibold text-sm b_cbc _c07 px-6 r_8">add link</button>
+                        </div>
+                        <p class="mt-5">Share important resources with your members by adding links.</p>
+                    </section>
+                    <section
+                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                        <h1 class="font-semibold text-xl">Update payment info</h1>
+                        <div>
+                            <label for="name" class="_ca1 mb-2 block mt-10">Card number</label>
+                            <div class="flex items-center">
+                                <input class="w-[300px]" type="text" name="credit-number"
+                                    placeholder="0000 0000 0000 0000">
+                                <div class="flex items-center gap-2 -ml-[108px]">
+                                    <img src="@/assets/svg/billing/electron.svg" alt="">
+                                    <img src="@/assets/svg/billing/maestro.svg" alt="">
+                                    <img src="@/assets/svg/billing/mastercard.svg" alt="">
+                                </div>
+                            </div>
+                            <div class="flex gap-5 mt-4">
+                                <div>
+                                    <label for="name" class="_ca1 mb-2 block">Exp. date</label>
+                                    <input class="w-[100px]" type="text" name="credit-expires" placeholder="MM/YY">
+                                </div>
+                                <div>
+                                    <label for="name" class="_ca1 mb-2 block">CVV</label>
+                                    <input class="w-[100px]" type="number" name="credit-cvc" placeholder="123">
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <button class="_ca1 font-semibold b_ce0 px-6 r_8 uppercase">UPDATE</button>
+                                <button @click="store.addLink = false"
+                                    class="_ca1 font-semibold px-6 r_8 uppercase">cancel</button>
+                            </div>
+                        </div>
                     </section>
                 </div>
             </div>
@@ -241,20 +403,18 @@ const isLoading = useLoadingStore();
 
 const store = reactive({
     slideStep: 0,
+    editGamification: false,
+    addLink: false,
 })
 
 const access_list = [
     {
-        label: "All members have access",
-        value: "all",
+        label: "Private (only members can see)",
+        value: "private",
     },
     {
-        label: "Only some members have access",
-        value: "some",
-    },
-    {
-        label: "Members of a certain level",
-        value: "certain",
+        label: "Public (everybody can see)",
+        value: "public",
     },
 ];
 
