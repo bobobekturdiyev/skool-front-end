@@ -98,7 +98,7 @@
           <div @click="openEventData(e)"
             class="flex gap-5 items-center bg-white rounded-[12px] cursor-pointer overflow-hidden"
             v-for="(e, index) in useEvent.store.table_events" v-show="checkDates(e.date)"
-            :class="isLoading.store.pagination.to >= index + 1 && isLoading.store.pagination.from <= index + 1?'':'hidden'">
+            :class="isLoading.store.pagination.to >= index + 1 && isLoading.store.pagination.from <= index + 1 ? '' : 'hidden'">
             <img v-if="e.image" class="h-[140px] w-[260px] object-cover" :src="e.image" alt="" />
             <div v-else class="h-[140px] w-[260px] b_cf2 full_flex">
               <img src="@/assets/svg/calendar/calendar_img.svg" alt="" />
@@ -652,12 +652,7 @@ watch(() => useEvent.store.add_event, () => {
 
 watch(() => store.table, () => {
   if (store.table) {
-    isLoading.store.pagination_type = 4
-    isLoading.store.pagination.current_page = 1;
-    isLoading.store.pagination.from = (isLoading.store.pagination.current_page - 1) * 4 + 1;
-    isLoading.store.pagination.to = isLoading.store.pagination.current_page * 4;
-    isLoading.store.pagination.total = useEvent.store.table_events?.length;
-    isLoading.store.pagination.last_page = Math.ceil(isLoading.store.pagination.total / 4);
+    useEvent.setPagination();
   }
 })
 

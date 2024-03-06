@@ -255,6 +255,7 @@
         height: 16px !important;
         width: 16px !important;
     }
+
     .el-checkbox__label {
         padding-left: 12px !important;
         color: $C07 !important;
@@ -276,3 +277,73 @@
     padding: 0 !important;
 }
 
+.el-progress-circle {
+    width: 168px !important;
+    height: 168px !important;
+
+    svg {
+        .el-progress-circle__path {
+            stroke: $C2A !important;
+        }
+
+        .el-progress-circle__track {
+            stroke: #F0F5FA !important;
+        }
+    }
+}
+
+.messages {
+    max-height: 80vh !important;
+    overflow: hidden !important;
+    overflow-y: auto !important;
+
+    .el-dropdown-menu__item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-size: 16px !important;
+        height: 64px !important;
+        padding: 0 16px !important;
+        background: $CF0F !important;
+    }
+
+    .el-dropdown-menu__item:hover {
+        background: $CF2 !important;
+    }
+}
+
+.el-dropdown-menu__item2 {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 16px !important;
+    height: 64px !important;
+    padding: 0 16px !important;
+    background: #FFFFFF !important;
+    line-height: 22px;
+}
+
+.messages {
+    width: 500px !important;
+
+    * {
+        overflow: hidden !important;
+    }
+}
+
+.el-popper.is-dark {
+    background: #2D2B2B !important;
+    color: #FFFFFF !important;
+    font-size: 12px !important;
+}
+
+.el-scrollbar__bar {
+    height: 0 !important;
+}
+
+.chatModal {
+    padding: 0 0 !important;
+    .el-dialog__body {
+        padding: 0 0 !important;
+    }
+}

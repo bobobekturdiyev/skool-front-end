@@ -293,3 +293,27 @@ label {
 .text-md {
     font-size: 16px;
 }
+
+.animate-left {
+    animation: animate-left 0.6s ease-out;
+}
+
+@keyframes animate-left {
+    from {
+        transform: translateX(-100%);
+    } to {
+        transform: translateX(0);
+    }
+}
+
+.animate-right {
+    animation: animate-right 0.6s ease-out;
+}
+
+@keyframes animate-right {
+    from {
+        transform: translateX(100%);
+    } to {
+        transform: translateX(0);
+    }
+}

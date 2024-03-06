@@ -105,3 +105,9 @@ $CEB: #EB5757;
 .border_cbc {
     border: 1px solid $CBC;
 }
+
+.bg_white {
+    .el-dropdown-menu__item {
+        background: #FFFFFF !important;
+    }
+}

@@ -269,9 +269,45 @@
                     </section>
                     <section
                         class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                        <h1 class="font-semibold text-xl leading-6 px-[120px] text-center">In the past 30 days, your
+                            group stayed at 1 members and 1 members (100%) were active.</h1>
+                        <div class="space-y-9 mt-10">
+                            <div class="space-y-[30px]">
+                                <h1 class="font-semibold">Total members</h1>
+                                <div>
+                                    developing ...
+                                </div>
+                            </div>
+                            <div class="space-y-[30px]">
+                                <div class="flex items-center justify-between">
+                                    <h1 class="font-semibold">Active members</h1>
+                                    <el-dropdown placement="bottom-end" class="dropdown">
+                                        <div class="full_flex gap-1 _c2a text-xs font-semibold">
+                                            <p class="text-xs">Monthly active</p>
+                                            <img src="@/assets/svg/chat/select_arrow.svg" alt="">
+                                        </div>
+                                        <template #dropdown>
+                                            <el-dropdown-menu class="community_dropdown min-w-[200px] dropdown_shadow">
+                                                <el-dropdown-item>First</el-dropdown-item>
+                                                <el-dropdown-item>Last</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </template>
+                                    </el-dropdown>
+                                </div>
+                                <div>
+                                    developing ...
+                                </div>
+                            </div>
+                            <div class="space-y-[30px]">
+                                <h1 class="font-semibold">Daily activity</h1>
+                                <div>
+                                    developing ...
+                                </div>
+                            </div>
+                        </div>
                     </section>
                     <section v-if="!store.editGamification"
-                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                        class="h-[calc(100vh_-120px)] animate-left overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
                         <h1 class="font-semibold text-xl">Gamification</h1>
                         <p class="mt-5 mb-7">Make your group fun! Personalize your group by naming your levels.
                             Incentivize engagement by
@@ -291,7 +327,7 @@
                         </div>
                     </section>
                     <section v-else
-                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                        class="h-[calc(100vh_-120px)] animate-right overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
                         <h1 class="text-xl font-semibold">Edit level</h1>
                         <div>
                             <label for="name" class="_ca1 mb-2 block mt-7">Name</label>
@@ -313,9 +349,48 @@
                     </section>
                     <section
                         class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                        <h1 class="font-semibold text-xl">Discovery</h1>
+                        <p class="mt-5">Get discovered by millions of active users.</p>
+                        <div class="flex gap-5 my-5">
+                            <button class="space-x-3 border_cbc px-6 _c2a r_8 text-md"><span
+                                    class="_ca1 font-medium">Showing in
+                                    discovery</span><span class="_ceb font-semibold uppercase">No</span></button>
+                            <button class="space-x-3 border_cbc px-6 _c2a r_8 text-md"><span
+                                    class="_ca1 font-medium">Rank</span><span
+                                    class="_ceb font-semibold uppercase">None</span></button>
+                            <button class="space-x-3 border_cbc px-6 _c2a r_8 text-md"><span
+                                    class="_ca1 font-medium">Category</span><span
+                                    class="_ceb font-semibold uppercase">None</span></button>
+                        </div>
+                        <div class="leading-4 space-y-4">
+                            <p>
+                                <span class="font-[700]">Showing in discovery</span> — Your group needs to meet a
+                                minimum threshold of members, posts,
+                                and activity to show in discovery. You also need a good group description, about page
+                                description, group cover image, and some photos/videos on your about page.
+                            </p>
+                            <p>
+                                <span class="font-[700]">Discovery rank</span> — Groups are ranked by engagement using
+                                an algorithm that looks at member growth, member activity, posts, comments, and likes.
+                                The more engaged your group is, the higher your rank.
+                            </p>
+                            <p>
+                                If your category is wrong, please contact support.
+                            </p>
+                        </div>
                     </section>
-                    <section v-if="store.addLink"
-                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                    <section v-if="!store.addLink"
+                        class="h-[calc(100vh_-120px)] animate-left overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                        <div class="flex items-center justify-between">
+                            <h1 class="font-semibold text-xl">Links</h1>
+                            <button @click="store.addLink = true"
+                                class="uppercase font-semibold text-sm b_cbc _c07 px-6 r_8">add
+                                link</button>
+                        </div>
+                        <p class="mt-5">Share important resources with your members by adding links.</p>
+                    </section>
+                    <section v-else
+                        class="h-[calc(100vh_-120px)] animate-right overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
                         <h1 class="text-xl font-semibold">Add link</h1>
                         <div class="space-y-5">
                             <div>
@@ -347,17 +422,33 @@
                             </div>
                         </div>
                     </section>
-                    <section v-else
-                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
-                        <div class="flex items-center justify-between">
-                            <h1 class="font-semibold text-xl">Links</h1>
-                            <button @click="store.addLink = true"
-                                class="uppercase font-semibold text-sm b_cbc _c07 px-6 r_8">add link</button>
+                    <section v-if="!store.updatePayment"
+                        class="h-[calc(100vh_-120px)] animate-left overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                        <h1 class="font-semibold text-xl">Billing</h1>
+                        <div class="flex gap-[60px] mt-7 mb-10">
+                            <button @click="store.updatePayment = true"
+                                class="border_cbc px-6 _c2a r_8 uppercase">UPDATE PAYMENT
+                                INFO</button>
+                            <button class="px-3 _c2a r_8">Invoice history</button>
                         </div>
-                        <p class="mt-5">Share important resources with your members by adding links.</p>
+                        <h1 class="font-semibold _C00 mb-2">Referrals</h1>
+                        <p class="mb-7">If somebody creates a group from your group, we’ll automatically pay you 40%
+                            every month. This way Skool becomes an income stream, not a cost. Earnings will go to this
+                            admin:</p>
+                        <div class="flex items-center gap-4">
+                            <img class="h-10 w-10 rounded-full object-cover" src="@/assets/image/user.svg" alt="">
+                            <p class="text-md font-semibold">Xayot Sharapov</p>
+                            <p class="_c2a">(Change)</p>
+                        </div>
+                        <h1 class="font-semibold _C00 mb-2 mt-7">Xayot's referral link</h1>
+                        <div class="flex gap-3">
+                            <input type="text" value="https://www.skool.com/digital-marketer-3698/about">
+                            <button class="b_cbc px-6 uppercase font-semibold r_8">copy</button>
+                        </div>
+                        <button class="border_cbc mt-5 px-6 _c2a r_8 uppercase">SEE YOUR REFERRALS</button>
                     </section>
-                    <section
-                        class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
+                    <section v-else
+                        class="h-[calc(100vh_-120px)] animate-right overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
                         <h1 class="font-semibold text-xl">Update payment info</h1>
                         <div>
                             <label for="name" class="_ca1 mb-2 block mt-10">Card number</label>
@@ -382,7 +473,7 @@
                             </div>
                             <div class="mt-4">
                                 <button class="_ca1 font-semibold b_ce0 px-6 r_8 uppercase">UPDATE</button>
-                                <button @click="store.addLink = false"
+                                <button @click="store.updatePayment = false"
                                     class="_ca1 font-semibold px-6 r_8 uppercase">cancel</button>
                             </div>
                         </div>
@@ -405,6 +496,7 @@ const store = reactive({
     slideStep: 0,
     editGamification: false,
     addLink: false,
+    updatePayment: false,
 })
 
 const access_list = [

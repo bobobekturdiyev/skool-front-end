@@ -25,7 +25,7 @@ function cropperImage() {
 
     isLoading.store.croppedImage = dataURL;
     isLoading.store.croppedFile = base64ToFile(dataURL, "upload")
-    isLoading.store.cropModal = false;
+    isLoading.store.cropModal = false; uuid()
 }
 
 function base64ToFile(base64Url, filename) {

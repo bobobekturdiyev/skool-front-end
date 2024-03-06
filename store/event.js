@@ -100,6 +100,7 @@ export const useEventStore = defineStore("event", () => {
           }
         }
         console.log(store.table_events);
+        setPagination();
       })
       .catch((err) => {
         if (err.response?.data?.message == "Events not found") {
@@ -185,7 +186,7 @@ export const useEventStore = defineStore("event", () => {
     }
 
     axios
-      .put(
+      .post(
         baseUrl +
         `update-event/${store.eventId}`, formData,
         {
@@ -231,5 +232,14 @@ export const useEventStore = defineStore("event", () => {
       });
   }
 
-  return { store, create, get_event, add_event, edit_event, delete_event };
+  function setPagination() {
+    isLoading.store.pagination_type = 4
+    isLoading.store.pagination.current_page = 1;
+    isLoading.store.pagination.from = (isLoading.store.pagination.current_page - 1) * 4 + 1;
+    isLoading.store.pagination.to = isLoading.store.pagination.current_page * 4;
+    isLoading.store.pagination.total = useEvent.store.table_events?.length;
+    isLoading.store.pagination.last_page = Math.ceil(isLoading.store.pagination.total / 4);
+  }
+
+  return { store, create, get_event, add_event, edit_event, delete_event, setPagination };
 });
