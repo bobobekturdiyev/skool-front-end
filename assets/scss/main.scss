@@ -317,3 +317,9 @@ label {
         transform: translateX(0);
     }
 }
+
+.video_upload {
+    .ytp-title-text  {
+        display: none !important;
+    }
+}

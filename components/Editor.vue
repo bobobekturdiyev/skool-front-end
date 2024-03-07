@@ -84,7 +84,7 @@ function handleEditor(e) {
 </script> -->
 <template>
   <div class="editor my-6">
-    <Editor v-model="value" editorStyle="height: 320px">
+    <Editor v-model="useClassroom.module.video_content" editorStyle="height: 320px">
       <template v-slot:toolbar>
         <div class="ql-formats">
           <button v-tooltip.bottom="'header 1'" class="h1 ql-header" :value="'1'"></button>
@@ -114,7 +114,10 @@ function handleEditor(e) {
 </template>
 
 <script setup>
+import { useClassroomStore } from '@/store';
 import Editor from 'primevue/editor';
+
+const useClassroom = useClassroomStore();
 
 const value = ref('<div>Hello World!</div><div>PrimeVue <b>Editor</b> Rocks</div><div><br></div>');
 </script>

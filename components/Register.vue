@@ -1,5 +1,5 @@
 <template>
-  <section class="space-y-8 bg-white rounded-lg p-6 w-[400px] text-center">
+  <section class="space-y-8 bg-white rounded-lg p-6 text-center">
     <router-link class="flex justify-center" to="/">
       <img src="/logo.svg" alt="" />
     </router-link>

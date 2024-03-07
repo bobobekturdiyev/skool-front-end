@@ -5,8 +5,11 @@ import ru from "../locales/ru.json";
 import en from "../locales/en.json";
 
 export default defineNuxtPlugin(({ vueApp }) => {
-  const locale =
-    typeof localStorage !== "undefined" ? localStorage.getItem("lang") : "en";
+  let locale =
+    typeof localStorage !== "undefined" ? localStorage.getItem("lang") : "uz";
+  if (!locale) {
+    locale = "uz";
+  }
 
   const i18n = createI18n({
     legacy: false,

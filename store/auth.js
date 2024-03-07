@@ -9,6 +9,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const store = reactive({
     errorMessage: "",
+    userData: [],
   });
   const modal = reactive({
     login: false,
@@ -43,11 +44,31 @@ export const useAuthStore = defineStore("auth", () => {
       });
   }
 
+  function getUser() {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("getUser");
+    axios
+      .get(baseUrl + "users/1", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        store.userData = res.data?.data;
+        isLoading.removeLoading("getUser");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("getUser");
+      });
+  }
+
   //   function priceFormatter(price) {
   //     price = String(price);
   //     let unformattedValue = price.replace(/\s/g, "");
   //     return unformattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
   //   }
 
-  return { store, modal, login, authLogin };
+  return { store, modal, login, authLogin, getUser };
 });

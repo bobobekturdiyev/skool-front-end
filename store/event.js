@@ -237,7 +237,7 @@ export const useEventStore = defineStore("event", () => {
     isLoading.store.pagination.current_page = 1;
     isLoading.store.pagination.from = (isLoading.store.pagination.current_page - 1) * 4 + 1;
     isLoading.store.pagination.to = isLoading.store.pagination.current_page * 4;
-    isLoading.store.pagination.total = useEvent.store.table_events?.length;
+    isLoading.store.pagination.total = store.table_events?.length;
     isLoading.store.pagination.last_page = Math.ceil(isLoading.store.pagination.total / 4);
   }
 

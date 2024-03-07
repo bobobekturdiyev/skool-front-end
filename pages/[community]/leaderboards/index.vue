@@ -18,7 +18,8 @@
               </div>
             </div>
           </div>
-          <h1 class="text-xl font-semibold mt-5 w-full text-center truncate">Xayot Sharapov</h1>
+          <h1 class="text-xl font-semibold mt-5 w-full text-center truncate">{{ useAuth.store.userData?.name }} {{
+            useAuth.store.userData?.surname }}</h1>
           <button class="my-5 mb-3 _c2a font-semibold text-xs b_cd9 h-8 px-[10px] rounded-full">Level 1 -
             STARTER</button>
           <div class="flex items-center gap-1 text-xs">
@@ -101,6 +102,14 @@
 definePageMeta({
   layout: "community",
 });
+
+import { useAuthStore } from '~/store';
+
+const useAuth = useAuthStore();
+
+onBeforeMount(() => {
+  useAuth.getUser();
+})
 </script>
 
 <style lang="scss" scoped></style>

@@ -1,6 +1,6 @@
 <template>
   <main class="flex gap-6">
-    <CropperImage />
+    <!-- <CropperImage /> -->
     <section class="min-w-[280px]">
       <div class="b_cd9 rounded-xl p-5">
         <div class="flex items-center justify-between">
@@ -8,8 +8,7 @@
           <el-dropdown placement="bottom-end" class="dropdown" trigger="click">
             <img src="@/assets/svg/three_dot.svg" alt="" />
             <template #dropdown>
-              <el-dropdown-menu @click="useClassroom.local_store.activeEdit = ''"
-                class="community_dropdown min-w-[200px] dropdown_shadow">
+              <el-dropdown-menu class="community_dropdown min-w-[200px] dropdown_shadow">
                 <el-dropdown-item>Edit course</el-dropdown-item>
                 <el-dropdown-item @click="useClassroom.store.setModal = true">Add set</el-dropdown-item>
                 <el-dropdown-item>Add module</el-dropdown-item>
@@ -30,10 +29,10 @@
               <div @click="handleActive(i.id)" :class="useClassroom.local_store.activeName == i.id
                   ? 'bg-transparent _c2a font-semibold'
                   : 'bg-white r_8'
-                " class="flex items-center justify-between h-full pr-5 w-full">
+                  " class="flex items-center justify-between h-full pr-5 w-full">
                 <div class="flex items-center">
                   <p :class="useClassroom.local_store.activeName == i.id ? 'b_c2a' : 'bg-transparent'
-                    " class="mr-4 w-1 h-[44px]"></p>
+                  " class="mr-4 w-1 h-[44px]"></p>
                   {{ i.name }}
                 </div>
                 <div class="flex items-center gap-[10px]">
@@ -57,8 +56,18 @@
               class="w-full duration-1000">
               <li @click="activeModule(module.id, m_index, index)" v-for="(module, m_index) in i.module"
                 :class="useClassroom.local_store.moduleActiveId == module.id ? 'b_cbc' : ''"
-                class="flex items-center text-xs px-9 h-8 r_8 cursor-pointer">
-                {{ module.name }}
+                class="flex items-center justify-between module_name text-xs pl-9 pr-2 h-8 r_8 cursor-pointer">
+                <p>{{ module.name }}</p>
+                <el-dropdown placement="bottom-end" class="dropdown" trigger="click">
+                  <img class="rotate-90 three_dot hidden" src="@/assets/svg/three_dot.svg" alt="" />
+                  <template #dropdown>
+                    <el-dropdown-menu class="community_dropdown min-w-[200px] dropdown_shadow">
+                      <el-dropdown-item @click="useClassroom.local_store.edit_card = true">Edit
+                        module</el-dropdown-item>
+                      <el-dropdown-item @click="useClassroom.delete_module()">Delete module</el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
               </li>
             </ul>
           </li>
@@ -67,40 +76,34 @@
     </section>
     <section class="w-full">
       <div class="bg-white r_16 overflow-hidden" v-if="!useClassroom.local_store.edit_card">
-        <div class="flex items-center justify-between border-b border-[#E0E0E0 w-full h-16 px-5 bg-white">
-          <h1 class="text-xl font-semibold">
-            {{
-              useClassroom.store.modules[0]?.set[useClassroom.local_store.setIndex]?.module[
-                useClassroom.local_store.moduleIndex
-              ].name
-            }}
-          </h1>
-          <div class="full_flex gap-4">
-            <button class="full_flex gap-1 border border-[#BCDEFF] r_8 _c2a h-9 px-3">
-              <img src="@/assets/svg/mark_as_read.svg" alt="" />Mark as done
-            </button>
-            <button @click="useClassroom.local_store.edit_card = true"
-              class="full_flex gap-1 border border-[#BCDEFF] r_8 _c2a h-9 px-3">
+        <div v-if="useClassroom.local_store.moduleIndex || useClassroom.local_store.moduleIndex == 0">
+          <div class="flex items-center justify-between border-b border-[#E0E0E0 w-full h-16 px-5 bg-white">
+            <h1 class="text-xl font-semibold">
               {{
-                useClassroom.store.modules[0]?.set[useClassroom.local_store.setIndex]?.module[
-                  useClassroom.local_store.moduleIndex
-                ]?.video
-              }}
-              <img src="@/assets/svg/edit.svg" alt="" />Edit
-            </button>
+                  useClassroom.store.modules[0]?.set[useClassroom.local_store.setIndex]?.module[
+                    useClassroom.local_store.moduleIndex
+                  ].name
+                }}
+            </h1>
+            <div class="full_flex gap-4">
+              <button class="full_flex gap-1 border border-[#BCDEFF] r_8 _c2a h-9 px-3">
+                <img src="@/assets/svg/mark_as_read.svg" alt="" />Mark as done
+              </button>
+              <button @click="useClassroom.local_store.edit_card = true"
+                class="full_flex gap-1 border border-[#BCDEFF] r_8 _c2a h-9 px-3">
+                <img src="@/assets/svg/edit.svg" alt="" />Edit
+              </button>
+            </div>
           </div>
-        </div>
-        <div class="space-y-5 p-5">
-          <div class="h-[332px] rounded-xl bg-[#0000004D]">
-            <img class="h-[332px] w-full object-contain object-center" src="@/assets/image/picture.png" alt="" />
+          <div class="space-y-5 p-5">
+            <div v-if="useClassroom.local_store.moduleData?.video" class="h-[332px] rounded-xl bg-[#0000004D]">
+              <img class="h-[332px] w-full object-contain object-center"
+                :src="useClassroom.local_store.moduleData?.video" alt="" />
+            </div>
+            <p v-if="useClassroom.local_store.moduleData?.video_content"
+              v-html="useClassroom.local_store.moduleData?.video_content">
+            </p>
           </div>
-          <p class="">
-            {{
-              useClassroom.store.modules[0]?.set[useClassroom.local_store.setIndex]?.module[
-                useClassroom.local_store.moduleIndex
-              ]?.description
-            }}
-          </p>
         </div>
       </div>
 
@@ -118,12 +121,15 @@
           <img src="@/assets/svg/add_video.svg" alt="" />
           <p class="font-medium _c2a">Add video</p>
         </div>
-        <div v-else class="full_flex flex-col cursor-pointer overflow-hidden gap-1 h-[400px] r_8 mt-5 b_cf2">
-          <iframe class="h-[400px] w-full object-contain object-center"
+        <div v-else
+          class="relative full_flex imagelabel video_upload flex-col cursor-pointer overflow-hidden gap-1 h-[400px] r_8 mt-5 b_cf2">
+          <button @click="deleteImage" type="button"
+            class="absolute deleteimage !hidden top-5 right-5 rounded-full w-10 h-10 full_flex border bg-white">
+            <img class="m-auto" src="@/assets/svg/x.svg" alt="">
+          </button>
+          <iframe disabled class="h-[400px] w-full object-contain object-center pointer-events-none"
             src="https://www.youtube.com/embed/rOCy-_LDlR8?si=mGScF5aRTphGOYwB" title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;"
-            allowfullscreen></iframe>
+            allow="clipboard-write;"></iframe>
         </div>
         <Editor />
 
@@ -146,8 +152,8 @@
               cancel
             </button>
             <button :type="isLoading.isLoadingType('createModule') ? 'button' : 'submit'
-              " :class="useClassroom.module.name ? 'b_cbc _c07' : 'b_ce0 _ca1'" class="uppercase h-10 px-6 rounded-lg"
-              v-loading="isLoading.isLoadingType('createModule')">
+                  " :class="useClassroom.module.name ? 'b_cbc _c07' : 'b_ce0 _ca1'"
+              class="uppercase h-10 px-6 rounded-lg" v-loading="isLoading.isLoadingType('createModule')">
               save
             </button>
           </div>
@@ -181,7 +187,8 @@
     </el-dialog>
 
     <!-- add set -->
-    <el-dialog v-model="useClassroom.store.setModal" width="440" align-center class="bg-opacity-50 !rounded-lg py-7 px-6">
+    <el-dialog v-model="useClassroom.store.setModal" width="440" align-center
+      class="bg-opacity-50 !rounded-lg py-7 px-6">
       <form @submit.prevent="useClassroom.create_set">
         <h1 v-if="useClassroom.store.setEdit" class="text-2xl mb-7 font-semibold">
           Edit set
@@ -225,6 +232,10 @@ function activeModule(id, m_index, s_index) {
   useClassroom.local_store.moduleActiveId = id;
   useClassroom.local_store.moduleIndex = m_index;
   useClassroom.local_store.setIndex = s_index;
+  useClassroom.local_store.moduleData = useClassroom.store.modules[0]?.set[s_index]?.module[m_index]
+  for (let i in useClassroom.module) {
+    useClassroom.module[i] = useClassroom.local_store.moduleData[i];
+  }
 }
 
 function addModuleInSet(id) {
@@ -254,9 +265,17 @@ function handleVideoLink() {
   if (!useClassroom.local_store.is_url) {
     useClassroom.module.video = useClassroom.local_store.videoLink;
     useClassroom.local_store.addVideoModal = false;
+    const url = new URL(useClassroom.local_store.videoLink);
+    console.log(url)
   } else {
     useClassroom.module.video = "";
   }
+}
+
+function deleteImage() {
+  useClassroom.local_store.is_url = "";
+  useClassroom.module.video = "";
+  useClassroom.local_store.videoLink = "";
 }
 
 function handleInput(type) {
@@ -265,8 +284,8 @@ function handleInput(type) {
 
 function handleSubmit() {
   useClassroom.module.video_content =
-    document.querySelector(".tiptap").innerHTML;
-  useClassroom.create_module();
+    // document.querySelector(".tiptap").innerHTML;
+    useClassroom.update_module();
 }
 
 watch(
@@ -283,4 +302,10 @@ onBeforeMount(() => {
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.module_name:hover {
+  .three_dot {
+    display: block !important;
+  }
+}
+</style>
