@@ -41,8 +41,8 @@
                     <template #dropdown>
                       <el-dropdown-menu @click="useClassroom.local_store.activeEdit = ''"
                         class="community_dropdown min-w-[200px] dropdown_shadow">
-                        <el-dropdown-item @click="editSet(i.id)">Edit set</el-dropdown-item>
-                        <el-dropdown-item>Delete set</el-dropdown-item>
+                        <el-dropdown-item @click="editSet(i)">Edit set</el-dropdown-item>
+                        <el-dropdown-item @click="useClassroom.delete_set(i.id)">Delete set</el-dropdown-item>
                         <el-dropdown-item @click="addModuleInSet(i.id)">Add module in set</el-dropdown-item>
                       </el-dropdown-menu>
                     </template>
@@ -82,7 +82,7 @@
               {{
                   useClassroom.store.modules[0]?.set[useClassroom.local_store.setIndex]?.module[
                     useClassroom.local_store.moduleIndex
-                  ].name
+                  ]?.name
                 }}
             </h1>
             <div class="full_flex gap-4">
@@ -246,8 +246,9 @@ function addModuleInSet(id) {
   useClassroom.create_module('new_module');
 }
 
-function editSet(id) {
-  useClassroom.store.set_id = id;
+function editSet(set) {
+  useClassroom.store.set_id = set.id;
+  useClassroom.set.name = set.name;
   useClassroom.store.setEdit = true;
   useClassroom.store.setModal = true;
 }
@@ -279,7 +280,7 @@ function deleteImage() {
 }
 
 function handleInput(type) {
-  useClassroom.module.name = useClassroom.module.name?.slice(0, 50);
+  useClassroom.module.name = useClassroom.module?.name?.slice(0, 50);
 }
 
 function handleSubmit() {

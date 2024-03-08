@@ -24,6 +24,7 @@ export const useClassroomStore = defineStore("classroom", () => {
     classrooms: [],
     modules: [],
     add_course: false,
+    edit_course: false,
     cropperPreview: false,
     setModal: false,
     setEdit: false,
@@ -31,11 +32,12 @@ export const useClassroomStore = defineStore("classroom", () => {
   });
 
   const create = reactive({
+    slug: "",
     title: "",
     description: "",
     image: "",
     access: "all",
-    level: "",
+    level: null,
     published: true,
   });
 
@@ -79,6 +81,9 @@ export const useClassroomStore = defineStore("classroom", () => {
   }
 
   function create_course() {
+    if(store.edit_course) {
+      return update_course();
+    }
     const formData = new FormData();
     for (let i of Object.keys(create)) {
       console.log(i);
@@ -91,6 +96,36 @@ export const useClassroomStore = defineStore("classroom", () => {
 
     axios
       .post(baseUrl + `add-course/${group_username}`, formData, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        const slug = res.data?.data?.slug;
+        router.push(`/${group_username}/classroom/${slug}`);
+        console.log(res);
+        clearCreate();
+        isLoading.removeLoading("createCourse");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("createCourse");
+      });
+  }
+
+  function update_course() {
+    const formData = new FormData();
+    for (let i of Object.keys(create)) {
+      console.log(i);
+      formData.append(i, create[i]);
+    }
+    const group_username = router.currentRoute.value.params.community;
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("createCourse");
+    console.log(create.slug);
+
+    axios
+      .post(baseUrl + `update-course/${create.slug}`, formData, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -256,15 +291,16 @@ export const useClassroomStore = defineStore("classroom", () => {
   function delete_module() {
     const token = localStorage.getItem("token");
     isLoading.addLoading("deleteModule");
-
+    console.log(local_store.moduleActiveId);
     axios
-      .delete(baseUrl + `modules/${local_store.moduleActiveId}`, {
+      .delete(baseUrl + `delete-module/${local_store.moduleActiveId}`, {
         headers: {
           Authorization: "Bearer " + token,
         },
       })
       .then((res) => {
         console.log(res);
+        local_store.moduleActiveId = '';
         get_module();
         isLoading.removeLoading("deleteModule");
       })
@@ -273,6 +309,50 @@ export const useClassroomStore = defineStore("classroom", () => {
         isLoading.removeLoading("deleteModule");
       });
   }
+
+  function delete_set(id) {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("deleteSet");
+    const slug = router.currentRoute.value.params.id;
+    console.log(local_store.activeName)
+    axios
+      .delete(baseUrl + `delete-set/${slug}/${id}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        get_module();
+        isLoading.removeLoading("deleteSet");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("deleteSet");
+      });
+  }
+
+  function delete_course(group_username) {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("deleteCourse");
+
+    axios
+      .delete(baseUrl + `delete-course/${group_username}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        get_classroom();
+        isLoading.removeLoading("deleteCourse");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("deleteCourse");
+      });
+  }
+
 
   function get_classroom() {
     const group_username = router.currentRoute.value.params.community;
@@ -312,10 +392,13 @@ export const useClassroomStore = defineStore("classroom", () => {
     set,
     get_classroom,
     create_course,
+    update_course,
     create_module,
     update_module,
     get_module,
     create_set,
+    delete_course,
     delete_module,
+    delete_set,
   };
 });

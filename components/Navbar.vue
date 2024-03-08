@@ -119,9 +119,20 @@
             </template>
           </el-dropdown>
           <img src="@/assets/svg/nav/notification.svg" alt="" />
-          <router-link to="/">
+          <!-- <router-link to="/">
             <img class="h-10 w-10 object-cover" src="@/assets/image/user.svg" alt="" />
-          </router-link>
+          </router-link> -->
+          <el-dropdown v-if="store.is_mount" placement="bottom-end">
+            <img class="h-10 w-10 object-cover" src="@/assets/image/user.svg" alt="" />
+            <template #dropdown>
+              <el-dropdown-menu class="navigation_dropdown min-w-[200px] dropdown_shadow !-ml-3">
+                <p class="px-4 py-3 border-b border-[]">xayotwork@gmail.com</p>
+                <el-dropdown-item>Profile</el-dropdown-item>
+                <el-dropdown-item>Settings</el-dropdown-item>
+                <el-dropdown-item>Log out</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </div>
         <div v-show="!isLoading.store.isLogin" class="sm:flex gap-2 hidden">
           <button @click="useAuth.modal.register = true"
