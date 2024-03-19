@@ -13,7 +13,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         const exp = parts[1];
         const decodedPayload = JSON.parse(atob(exp));
         console.log(decodedPayload);
-        isLoading.store.salesman_id = decodedPayload.id;
+        isLoading.user.id = decodedPayload.sub;
         // useAuth.getUser();
         const experition = decodedPayload.exp;
         const now = +Date.now().toString().slice(0, 10);

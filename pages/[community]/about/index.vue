@@ -108,7 +108,7 @@
       </section>
     </div>
 
-    <el-dialog v-model="store.slideModal" class="!p-0 !bg-transparent w-full !shadow-none bg-black bg-opacity-10"
+    <el-dialog v-model="store.slideModal" class="!p-0 !bg-transparent w-full fixed top-0 !shadow-none bg-black bg-opacity-10 full_flex" style="width: 100%;"
       align-center>
       <div class="min-w-[80vw] md:min-h-[80vh] full_flex overflow-hidden md:max-h-[80vh] md:max-w-[80vw]">
         <div class="mainSlider2 bg-black bg-opacity-10 duration-500 flex items-center w-full">

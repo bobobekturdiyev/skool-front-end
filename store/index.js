@@ -6,6 +6,8 @@ import { useClassroomStore } from "./classroom";
 import { useEventStore } from "./event";
 import { usePostStore } from "./post";
 import { useMemberStore } from "./members";
+import {useChatStore} from "./chat";
+import {useSettingsStore} from "./settings";
 
 export {
   useLoadingStore,
@@ -16,4 +18,6 @@ export {
   useEventStore,
   usePostStore,
   useMemberStore,
+  useChatStore,
+  useSettingsStore,
 };

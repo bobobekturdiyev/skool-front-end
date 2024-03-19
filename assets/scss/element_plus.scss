@@ -54,8 +54,6 @@
 }
 
 .community_page .el-dialog {
-    width: 80% !important;
-    height: 80% !important;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -76,11 +74,6 @@
 .el-select-dropdown__wrap {
     overflow: hidden !important;
     overflow-y: auto !important;
-}
-
-.el-scrollbar__wrap {
-    // overflow: hidden !important;
-    // overflow-y: auto !important;
 }
 
 .el-input__prefix,
@@ -343,7 +336,27 @@
 
 .chatModal {
     padding: 0 0 !important;
+
     .el-dialog__body {
         padding: 0 0 !important;
+    }
+}
+
+.profile_accordion {
+    .el-collapse-item__arrow {
+        display: none !important;
+    }
+
+    .el-collapse-item__header {
+        border: none !important;
+        height: 16px !important;
+    }
+
+    .el-collapse-item__content {
+        padding-bottom: 0 !important;
+    }
+
+    .el-collapse, .el-collapse-item__wrap {
+        border: none !important;
     }
 }

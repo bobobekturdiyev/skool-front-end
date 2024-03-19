@@ -26,7 +26,12 @@ export const useLoadingStore = defineStore("loading", () => {
     croppedImage: "",
     croppedFile: "",
     cropModal: false,
+    chatModal: false,
   });
+
+  const user = reactive({
+    id: "",
+  })
 
   function addLoading(type) {
     if (!store.loadingTypes?.includes(type)) {
@@ -85,6 +90,7 @@ export const useLoadingStore = defineStore("loading", () => {
   }
 
   return {
+    user,
     store,
     addLoading,
     removeLoading,

@@ -77,6 +77,12 @@ textarea {
     }
 }
 
+input::-webkit-inner-spin-button, input::-webkit-outer-spin-button {
+    -moz-appearance: textfield;
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 button {
     height: 40px;
 }
@@ -301,7 +307,9 @@ label {
 @keyframes animate-left {
     from {
         transform: translateX(-100%);
-    } to {
+    }
+
+    to {
         transform: translateX(0);
     }
 }
@@ -313,13 +321,19 @@ label {
 @keyframes animate-right {
     from {
         transform: translateX(100%);
-    } to {
+    }
+
+    to {
         transform: translateX(0);
     }
 }
 
 .video_upload {
-    .ytp-title-text  {
+    .ytp-title-text {
         display: none !important;
     }
+}
+
+.messages #nochatyet {
+    background: #FFF !important;
 }

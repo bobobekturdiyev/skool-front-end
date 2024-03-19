@@ -77,7 +77,7 @@
 
             <template #dropdown>
               <el-dropdown-menu
-                class="!text-[16px] messages navigation_dropdown w-[500px] dropdown_shadow !-mr-[120px]">
+                class="!text-[16px] messages navigation_dropdown w-[500px] min-h-[80vh] dropdown_shadow !mt-3 !-mr-[120px]">
                 <div class="flex items-center justify-between sticky z-20 top-0 bg-white pt-4 pb-5 px-4">
                   <h1 class="font-semibold">Chat</h1>
                   <el-dropdown placement="bottom-end" class="dropdown">
@@ -98,22 +98,29 @@
                   <input class="placeholder-[#9CCDFE] !pl-[60px] b_cf0f r_8 !border-none" type="text"
                     placeholder="Search all reports">
                 </div>
-                <el-dropdown-item @click="store.chatModal = true" :id="`tooltip${index}`" class="chat_item"
-                  v-for="(i, index) in 10">
-                  <img class="h-10 w-10 rounded-full object-cover" src="@/assets/image/user.svg" alt="">
-                  <div class="space-y-1 max-w-[390px]">
-                    <h1 class="font-semibold">Darlene Robertson <span class="_c59 font-[400] text-xs">19d ago</span>
-                    </h1>
-                    <p class="truncate max-w-[390px]">💪 I want to work on building my self-confidence. Have you ever
-                      struggled with
-                      this? How did you develop a stronger sense of self-worth? 💪💖</p>
-                  </div>
-                  <el-tooltip content="Mark unread" placement="top">
-                    <div class="unread_tooltip cursor-pointer" @mouseover="handleMouseOver(index)"
-                      @mouseleave="handleMouseLeave(index)">
-                      <p class="h-[10px] z-10 w-[10px] m-[6px] rounded-full b_c2a unreadbtn"></p>
+                <div v-if="useChat.store.users?.length">
+                  <el-dropdown-item @click="openChatModal(i)" :id="`tooltip${index}`" class="chat_item"
+                    v-for="(i, index) in useChat.store.users">
+                    <img class="h-10 w-10 rounded-full object-cover" :src="i.image"
+                      :title="i.user_id?.name + ' ' + i.surname">
+                    <div class="space-y-1 max-w-[390px]">
+                      <h1 class="font-semibold">{{ i.name }} {{ i.surname }} <span class="_c59 font-[400] text-xs">19d
+                          ago</span>
+                      </h1>
+                      <p class="truncate max-w-[390px]">💪 I want to work on building my self-confidence. Have you ever
+                        struggled with
+                        this? How did you develop a stronger sense of self-worth? 💪💖</p>
                     </div>
-                  </el-tooltip>
+                    <el-tooltip content="Mark unread" placement="top">
+                      <div class="unread_tooltip cursor-pointer" @mouseover="handleMouseOver(index)"
+                        @mouseleave="handleMouseLeave(index)">
+                        <p class="h-[10px] z-10 w-[10px] m-[6px] rounded-full b_c2a unreadbtn"></p>
+                      </div>
+                    </el-tooltip>
+                  </el-dropdown-item>
+                </div>
+                <el-dropdown-item v-else id="nochatyet" class="flex items-center justify-center">
+                  No chat yet
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -128,7 +135,7 @@
               <el-dropdown-menu class="navigation_dropdown min-w-[200px] dropdown_shadow !-ml-3">
                 <p class="px-4 py-3 border-b border-[]">xayotwork@gmail.com</p>
                 <el-dropdown-item>Profile</el-dropdown-item>
-                <el-dropdown-item>Settings</el-dropdown-item>
+                <el-dropdown-item @click="$router.push('/settings')">Settings</el-dropdown-item>
                 <el-dropdown-item>Log out</el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -206,13 +213,14 @@
     </el-dialog>
 
     <!-- chat -->
-    <el-dialog v-model="store.chatModal" align-center :class="store.isOpen ? 'h-full' : 'h-[542px]'"
+    <el-dialog v-model="isLoading.store.chatModal" align-center :class="store.isOpen ? 'h-full' : 'h-[542px]'"
       class="!rounded-xl overflow-hidden min-w-[632px] chatModal !relative">
       <div class="flex items-center justify-between h-16 border-b border-[#E0E0E0] px-5">
         <div class="flex items-center gap-4">
-          <img class="h-10 w-10 object-cover rounded-full" src="@/assets/image/user.svg" alt="">
+          <img class="h-10 w-10 object-cover rounded-full" :src="useChat.store.chat_user_data.image" alt="">
           <div>
-            <h1 class="font-semibold truncate max-w-[90%]">Get Clients Support Team</h1>
+            <h1 class="font-semibold truncate max-w-[90%]">{{ useChat.store.chat_user_data.name }} {{
+            useChat.store.chat_user_data.surname }}</h1>
             <p class="text-xs">active 15h ago (5:06am in Los Angeles)</p>
           </div>
         </div>
@@ -228,11 +236,13 @@
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <img @click="store.chatModal = false" class="cursor-pointer" src="@/assets/svg/chat/close.svg" alt="">
+          <img @click="isLoading.store.chatModal = false" class="cursor-pointer" src="@/assets/svg/chat/close.svg"
+            alt="">
         </div>
       </div>
-      <div class="overflow-y-auto overflow-hidden" :class="store.isOpen ? 'h-[calc(100vh_-_124px)]' : 'h-[420px]'">
-        <div class="flex items-center gap-10 py-5 px-4 b_cf0f mx-14 mt-5 mb-10 r_8">
+      <div id="chatContainer" @scroll="chatScrollListener" class="overflow-y-auto overflow-hidden"
+        :class="store.isOpen ? 'h-[calc(100vh_-_124px)]' : 'h-[420px]'">
+        <div v-if="isLoading.store.pagination.current_page == isLoading.store.pagination.last_page" class="flex items-center gap-10 py-5 px-4 b_cf0f mx-14 mt-5 mb-10 r_8">
           <div class="w-[158px] space-y-10 relative">
             <img title="Xayot Sharapov" class="h-10 w-10 object-cover cursor-pointer rounded-full mx-auto"
               src="@/assets/image/user.svg" alt="">
@@ -240,7 +250,7 @@
               <img title="Xayot Sharapov" class="h-10 w-10 object-cover cursor-pointer rounded-full"
                 src="@/assets/image/user.svg" alt="">
               <img title="Xayot Sharapov" class="h-10 w-10 object-cover cursor-pointer rounded-full"
-                src="@/assets/image/user.svg" alt="">
+                :src="useChat.store.chat_user_data.image" alt="">
             </div>
             <img class="mx-auto absolute top-[0px] left-[25px]" src="@/assets/svg/chat/arrows.svg" alt="">
           </div>
@@ -251,51 +261,44 @@
             <p class="leading-4 mt-4">Get Clients Support Team broke the ice!</p>
           </div>
         </div>
-        <p class="mb-5 text-center _ca1">Feb 4th 2024</p>
-        <article class="space-y-5 pb-6">
-          <div class="mx-5 flex gap-4">
-            <img title="Xayot Sharapov" class="h-8 w-8 object-cover cursor-pointer rounded-full"
-              src="@/assets/image/user.svg" alt="">
+        <article :id="`chat_messages${message.id}`" v-for="(message, index) of useChat.store.chat_messages"
+          class="space-y-5 pb-6">
+          <p v-if="useChat.store.chatTimeList[index]" class="mb-5 text-center _ca1">
+            {{ useChat.store.chatTimeList[index] }}
+          </p>
+          <div v-if="message.sender?.id != isLoading.user.id" class="mx-5 flex gap-4">
+            <img title="Xayot Sharapov" class="h-8 w-8 min-w-[32px] object-cover cursor-pointer rounded-full"
+              :src="message?.sender?.image" alt="">
             <div class="b_cf2 r_8 p-3">
-              <div class="flex items-center justify-between mb-3">
-                <h1 class="_c07 font-semibold">Get Clients Support Team</h1>
-                <p class="_ca1">8:28 pm</p>
+              <div class="flex items-center justify-between gap-3 mb-3">
+                <h1 class="_c07 font-semibold truncate max-w-[70%]">{{ message.sender?.name }} {{
+            message.sender?.surname
+          }}
+                </h1>
+                <p class="_ca1">{{ formateDate(message?.created_at, 'time') }}</p>
               </div>
-              <pre class="whitespace-pre-line leading-4">Hi Xayot,
-
-            Thanks for requesting to join Get Clients University
-
-            This group is for subscribers of our membership showing entrepreneurs the best ways to get new clients every
-            month through our courses, workshops, and supportive community.
-
-            I see that you previously had a membership but asked to end it.
-
-            If you'd like to resume your membership to gain access, you can use the link below. Once complete, please
-            let us
-            know so that we can make sure you get access asap.
-
-            Re-sub Link: https://getclients.com/re-sub
-
-            If you have any questions, please contact us at: support@getclients.com
-
-            See you on the inside!</pre>
+              <pre class="whitespace-pre-line leading-4">{{ message?.text }}</pre>
             </div>
           </div>
-          <div class="mx-5 flex justify-end gap-4">
+          <div v-else class="mx-5 flex justify-end gap-4">
             <div class="b_cf0f r_8 p-3">
               <div class="flex items-center justify-between mb-3">
-                <h1 class="_c07 font-semibold">Get Clients Support Team</h1>
-                <p class="_c59">8:28 pm</p>
+                <h1 class="_c07 font-semibold truncate max-w-[70%]">{{ message.sender?.name }} {{
+            message.sender?.surname
+          }}
+                </h1>
+                <p class="_c59">{{ formateDate(message?.created_at, 'time') }}</p>
               </div>
-              <pre class="whitespace-pre-line leading-4">Hi Get Clients Support Team, thank you!</pre>
+              <pre class="whitespace-pre-line leading-4">{{ message?.text }}</pre>
             </div>
-            <img title="Xayot Sharapov" class="h-8 w-8 object-cover cursor-pointer rounded-full"
-              src="@/assets/image/user.svg" alt="">
+            <img title="Xayot Sharapov" class="h-8 w-8 min-w-[32px] object-cover cursor-pointer rounded-full"
+              :src="message?.sender?.image" alt="">
           </div>
         </article>
       </div>
       <div class="flex items-center h-[60px] px-4 border-t border-[#E0E0E0] bg-white">
-        <input class="!border-0 w-full" type="text" placeholder="Message Get Clients Support Team">
+        <input @change="useChat.sendMessage" v-model="useChat.message.text" class="!border-0 w-full" type="text"
+          placeholder="Message Get Clients Support Team">
         <div class="flex h-[14px] w-[120px] gap-[26px]">
           <label for="upload_image">
             <img src="@/assets/svg/textarea/upload.svg" alt="">
@@ -320,17 +323,18 @@
 </template>
 
 <script setup>
-import { useAuthStore, useLoadingStore, useGroupStore } from "@/store";
+import { useAuthStore, useLoadingStore, useGroupStore, useChatStore } from "@/store";
 import uz from "@/assets/svg/uz.svg";
 import ru from "@/assets/svg/ru.svg";
 import uz_ru from "@/assets/svg/uz.svg";
 import en from "@/assets/svg/en.svg";
 import { useI18n } from "vue-i18n";
 
-const { locale } = useI18n();
+// const { locale } = useI18n();
 
 const useAuth = useAuthStore();
 const useGroup = useGroupStore();
+const useChat = useChatStore();
 const isLoading = useLoadingStore();
 
 const store = reactive({
@@ -343,8 +347,10 @@ const store = reactive({
   lang_type: ["en", "ru", "uz", "uz_ru"],
   lang_icon: { en, ru, uz, uz_ru },
   is_mount: false,
-  chatModal: false,
   isOpen: false,
+  chatTime: "",
+  chatTimeList: [],
+  chatUserId: "",
 });
 
 function changedLang(lang) {
@@ -370,9 +376,77 @@ function handleChatType(type) {
   console.log(dropdown)
 }
 
+function openChatModal(data) {
+  console.log(data)
+  isLoading.store.pagination.current_page = 1;
+  useChat.store.chat_user_data = data;
+  isLoading.store.chatModal = true;
+  useChat.getChatMessages()
+}
+
+function formateDate(date, type) {
+  try {
+    const nowDate = new Date(date);
+    if (type == 'time') {
+      return nowDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })?.toLowerCase();
+    }
+  } catch (_) { }
+}
+
 onBeforeMount(() => {
+  console.log(window.location.hostname)
   store.is_mount = true;
+  useChat.getChatUsers();
+  // window.Echo.channel("chat_" + 1).listen(
+  //   "MessageSent",
+  //   (e) => {
+  //     if (
+  //       e.message.sender_type === "user" &&
+  //       e.message.chat_id === 1
+  //     ) {
+  //       let index = this.managers.findIndex(
+  //         (manager) => manager.chat_id === chat_id
+  //       );
+  //       if (index !== -1) {
+  //         if (!this.counter[index]) {
+  //           this.counter[index] = 0;
+  //         }
+  //         this.counter[index]++;
+  //         this.notificationSound.play();
+  //       };
+  //     };
+  //   },
+  // );
 });
+
+function chatScrollListener() {
+  const chatContainer = document.getElementById('chatContainer')
+  if (chatContainer.scrollTop < 100) {
+    if (!isLoading.isLoadingType("getChatMessage")) {
+      if (isLoading.store.pagination.current_page < isLoading.store.pagination.last_page) {
+        isLoading.store.pagination.current_page += 1;
+        useChat.getChatMessages();
+      }
+    }
+  }
+}
+
+watch(() => useChat.store.chat_messages?.length, () => {
+  console.log(useChat.store.scrollToBottom)
+  if (useChat.store.scrollToBottom) {
+    setTimeout(() => {
+      const chatContainer = document.getElementById("chatContainer")
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }, 200)
+    useChat.store.scrollToBottom = false;
+  }
+})
+
+watch(() => isLoading.store.chatModal, () => {
+  if (!isLoading.store.chatModal) {
+    window.Echo.leave("chat_" + useChat.store.currentChatId);
+  }
+})
 </script>
 
 <style lang="scss" scoped>

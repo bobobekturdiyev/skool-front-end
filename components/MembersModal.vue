@@ -270,7 +270,7 @@
                     <section
                         class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 text-sm _c07 p-5 w-full">
                         <h1 class="font-semibold text-xl leading-6 px-[120px] text-center">In the past 30 days, your
-                            group stayed at 1 members and 1 members (100%) were active.</h1>
+                            group stayed at 1 membersand 1 members (100%) were active.</h1>
                         <div class="space-y-9 mt-10">
                             <div class="space-y-[30px]">
                                 <h1 class="font-semibold">Total members</h1>

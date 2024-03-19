@@ -388,7 +388,7 @@
                         <button class="uppercase border border-[#BCDEFF] r_8">
                           follow
                         </button>
-                        <button
+                        <button @click="openChatModal(i.user_id)"
                           class="full_flex gap-[10px] uppercase b_ce0 _ca1 r_8"
                         >
                           chat
@@ -912,10 +912,12 @@ definePageMeta({
   layout: "community",
 });
 
-import { usePostStore } from "@/store";
+import { usePostStore, useLoadingStore, useChatStore } from "@/store";
 import { useNotification } from "@/composables/notifications";
 
 const usePost = usePostStore();
+const useChat = useChatStore();
+const isLoading = useLoadingStore();
 const { showMessage } = useNotification();
 usePost.get_posts();
 const store = reactive({
@@ -947,6 +949,13 @@ const text_dropdown = [
   ],
   ["Bug Reports", "Found a bug? Report it here and we'll fix it"],
 ];
+
+function openChatModal(data) {
+  isLoading.store.chatModal = true
+  useChat.store.chat_user_data = data;
+  isLoading.store.chatModal = true;
+  useChat.getChatMessages()
+}
 
 watch(
   () => store.writingModal,
