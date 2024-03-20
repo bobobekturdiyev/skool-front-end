@@ -14,34 +14,39 @@
             </aside>
             <div class="w-full bg-white r_16 h-[calc(100vh_-140px)] overflow-hidden profile_accordion">
                 <div class="mainSlider h-[calc(100vh_-140px)] duration-700">
-                    <section class="h-[calc(100vh_-140px)] overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full">
+                    <form @submit.prevent="useSettings.updateUserData()"
+                        class="h-[calc(100vh_-140px)] overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full">
                         <h1 class="text-xl font-semibold">Profile</h1>
                         <div class="space-y-6">
                             <div class="flex items-center gap-8 mt-6">
-                                <img class="h-[100px] w-[100px] rounded-full object-cover" src="@/assets/image/user.svg"
+                                <img class="h-[100px] w-[100px] rounded-full object-cover" :src="isLoading.user.image"
                                     alt="">
                                 <button class="border_cbc px-4 _c2a r_8 font-semibold uppercase">change profile
                                     photo</button>
                             </div>
                             <div>
                                 <div class="grid grid-cols-2 gap-6">
-                                    <input class="text-sm _ca1 placeholder-[#A1A1A1]" type="text" placeholder="Name">
-                                    <input class="text-sm _ca1 placeholder-[#A1A1A1]" type="text" placeholder="Surname">
+                                    <input disabled v-model="isLoading.user.name"
+                                        class="text-sm _ca1 placeholder-[#A1A1A1]" type="text" placeholder="Name">
+                                    <input disabled v-model="isLoading.user.surname"
+                                        class="text-sm _ca1 placeholder-[#A1A1A1]" type="text" placeholder="Surname">
                                 </div>
                                 <p class="mt-1 _ca1 text-xs">You can only change your name once, and you must use your
                                     real
-                                    name. <span class="_c2a">Change name.</span></p>
+                                    name. <span @click="changeName()" class="_c2a hover:underline cursor-pointer">Change
+                                        name.</span></p>
                             </div>
                             <div>
                                 <label class="block _ca1 text-xs mb-2" for="url">URL</label>
-                                <input id="url" class="text-sm _ca1 placeholder-[#A1A1A1]" type="text">
+                                <input v-model="isLoading.user_update_checker.username" disabled id="url"
+                                    class="text-sm _ca1 placeholder-[#A1A1A1]" type="text">
                                 <p class="mt-1 _ca1 text-xs">You can change your URL once you’ve got 90 contributions,
                                     30 followers, and been using it for 90 days.</p>
                             </div>
                             <div>
                                 <label class="block _ca1 text-xs mb-2" for="bio">Bio</label>
-                                <textarea id="bio"
-                                    class="h-[100px] w-full rounded-[4px] text-sm _c07 placeholder-[#A1A1A1]"
+                                <textarea @input="listeneerUserData" v-model="isLoading.user_update_checker.bio"
+                                    id="bio" class="h-[100px] w-full rounded-[4px] text-sm _c07 placeholder-[#A1A1A1]"
                                     placeholder="Description"></textarea>
                                 <p class="text-end mt-2 _ca1 text-sm">
                                     15/150
@@ -50,11 +55,21 @@
                             <div class="grid grid-cols-2 gap-6">
                                 <div>
                                     <label class="block _ca1 text-xs mb-2" for="location">Location</label>
-                                    <input id="location" class="text-sm _c07 placeholder-[#A1A1A1]" type="text">
+                                    <input @input="listeneerUserData" v-model="isLoading.user_update_checker.location"
+                                        id="location" class="text-sm _c07 placeholder-[#A1A1A1]" type="text">
                                 </div>
                                 <div>
                                     <label class="block _ca1 text-xs mb-2" for="griggs">Myers Briggs</label>
-                                    <input id="griggs" class="text-sm _c07 placeholder-[#A1A1A1]" type="text">
+                                    <el-select @change="listeneerUserData"
+                                        v-model="isLoading.user_update_checker.myers_briggs" class="w-full">
+                                        <el-option v-for="item in myers_briggs" :key="item" :label="item" :value="item">
+                                            <div class="flex items-center gap-2">
+                                                {{ item }}
+                                                <img v-if="isLoading.user_update_checker?.myers_briggs == item"
+                                                    src="@/assets/svg/checked.svg" alt="" />
+                                            </div>
+                                        </el-option>
+                                    </el-select>
                                 </div>
                             </div>
                             <el-collapse accordion class="space-y-6">
@@ -64,12 +79,10 @@
                                         <img src="@/assets/svg/select_arrow.svg" alt="">
                                     </template>
                                     <div class="space-y-6 mt-6">
-                                        <input type="url" placeholder="Website">
-                                        <input type="url" placeholder="Instagram">
-                                        <input type="url" placeholder="Twitter">
-                                        <input type="url" placeholder="YouTube">
-                                        <input type="url" placeholder="LinkedIn">
-                                        <input type="url" placeholder="Facebook">
+                                        <input @input="listeneerUserData"
+                                            v-model="isLoading.user_update_checker.socials[i]"
+                                            v-for="i in Object.keys(isLoading.user_update_checker?.socials)" type="url"
+                                            :placeholder="i">
                                     </div>
                                 </el-collapse-item>
                                 <el-collapse-item title="Feedback" name="2">
@@ -83,15 +96,21 @@
                                             <p class="_c07 font-semibold">Creator of</p>
                                         </div>
                                         <div class="space-y-10 mt-6">
-                                            <div v-for="i in 3" class="flex items-center justify-between h-10">
+                                            <div v-for="i in isLoading.user.creator"
+                                                class="flex items-center justify-between h-10">
                                                 <div class="full_flex gap-4">
-                                                    <div class="w-10 h-10 b_c2a r_8 full_flex" v-if="true">
-                                                        <p class="font-semibold text-white">DM</p>
+                                                    <div class="w-10 h-10 b_c2a r_8 full_flex overflow-hidden"
+                                                        v-if="true">
+                                                        <p v-if="!i.image" class="font-semibold text-white">{{
+                            createLogo(i.name) }}</p>
+                                                        <img v-else class="w-10 h-10 object-cover" :src="i.image"
+                                                            alt="">
                                                     </div>
                                                     <img v-else src="@/assets/image/picture.png" alt="">
                                                     <div>
-                                                        <h1 class="font-semibold">Digital Marketer</h1>
-                                                        <p>Private • 1 member</p>
+                                                        <h1 class="font-semibold">{{ i.name }}</h1>
+                                                        <p><span class="capitalize">{{ i.group_type }}</span> • 1 member
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <el-switch />
@@ -101,15 +120,21 @@
                                             <p class="_c07 font-semibold">Member of</p>
                                         </div>
                                         <div class="space-y-10 mt-6">
-                                            <div v-for="i in 3" class="flex items-center justify-between h-10">
+                                            <div v-for="i in isLoading.user.member"
+                                                class="flex items-center justify-between h-10">
                                                 <div class="full_flex gap-4">
-                                                    <div class="w-10 h-10 b_c2a r_8 full_flex" v-if="true">
-                                                        <p class="font-semibold text-white">DM</p>
+                                                    <div class="w-10 h-10 b_c2a r_8 full_flex overflow-hidden"
+                                                        v-if="true">
+                                                        <p v-if="!i.image" class="font-semibold text-white">
+                                                            {{ createLogo(i.name) }}</p>
+                                                        <img v-else class="w-10 h-10 object-cover" :src="i.image"
+                                                            alt="">
                                                     </div>
                                                     <img v-else src="@/assets/image/picture.png" alt="">
                                                     <div>
-                                                        <h1 class="font-semibold">Digital Marketer</h1>
-                                                        <p>Private • 1 member</p>
+                                                        <h1 class="font-semibold">{{ i.name }}</h1>
+                                                        <p><span class="capitalize">{{ i.group_type }}</span> • 1 member
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <el-switch />
@@ -118,9 +143,12 @@
                                     </div>
                                 </el-collapse-item>
                             </el-collapse>
-                            <button class="_ca1 font-semibold px-6 r_8 mt-6 uppercase b_ce0">update profile</button>
+                            <button v-loading="isLoading.isLoadingType('updateUserData')"
+                                :type="useSettings.store.is_update ? 'submit' : 'button'"
+                                :class="useSettings.store.is_update ? 'b_cbc _c07' : 'b_ce0 _ca1'"
+                                class="font-semibold px-6 r_8 mt-6 uppercase">update profile</button>
                         </div>
-                    </section>
+                    </form @submit.prevent="useSettings.updateUserData()">
                     <section
                         class="h-[calc(100vh_-140px)] overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full space-y-6">
                         <h1 class="text-xl font-semibold">Email</h1>
@@ -152,14 +180,21 @@
                             class="full_flex gap-1 border border_ce0 r_8 _ca1 px-4 h-10 uppercase whitespace-nowrap font-semibold">log
                             out everywhere</button>
                     </section>
-                    <section
+                    <form @submit.prevent="useSettings.changePassword"
                         class="h-[calc(100vh_-140px)] overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full space-y-6">
                         <h1 class="text-xl font-semibold">Change password</h1>
-                        <input type="email" placeholder="Old password">
-                        <input type="email" placeholder="New password">
-                        <input type="email" placeholder="Confirm new password">
-                        <button class="_ca1 font-semibold px-6 r_8 mt-6 uppercase b_ce0">change password</button>
-                    </section>
+                        <input @input="listenerChangePassword" v-model="useSettings.changepassword.old_password"
+                            type="password" placeholder="Old password">
+                        <input @input="listenerChangePassword" v-model="useSettings.changepassword.password"
+                            type="password" placeholder="New password">
+                        <input @input="listenerChangePassword"
+                            v-model="useSettings.changepassword.password_confirmation" type="password"
+                            placeholder="Confirm new password">
+                        <button :type="useSettings.store.is_changepass ? 'submit' : 'button'"
+                            :class="useSettings.store.is_changepass ? 'b_cbc _c07' : 'b_ce0 _ca1'"
+                            class=" font-semibold px-6 r_8 mt-6 uppercase">change
+                            password</button>
+                    </form>
                     <section
                         class="h-[calc(100vh_-140px)] overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full space-y-6">
                         <h1 class="text-xl font-semibold">User notifications</h1>
@@ -355,7 +390,9 @@
                                 You don't have any cards on file
                             </div>
                         </div>
-                        <button @click="useSettings.store.addCartModal = true" class="_c07 font-semibold px-6 r_8 mt-6 uppercase b_cbc">add card</button>
+                        <button @click="useSettings.store.addCartModal = true"
+                            class="_c07 font-semibold px-6 r_8 mt-6 uppercase b_cbc">add
+                            card</button>
                     </section>
                     <section
                         class="h-[calc(100vh_-140px)] animate-left overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full">
@@ -375,13 +412,14 @@
             </div>
         </div>
 
-        <!-- register -->
+        <!-- card modal -->
         <el-dialog v-model="useSettings.store.addCartModal" width="400" align-center class="bg-opacity-50 !rounded-lg">
             <h1 class="font-semibold text-xl">Add card</h1>
             <form>
                 <label for="name" class="_ca1 mb-2 block mt-5">Card number</label>
                 <div class="flex items-center">
-                    <input class="w-[300px] placeholder-[#A1A1A1]" type="text" name="credit-number" placeholder="0000 0000 0000 0000" required>
+                    <input class="w-[300px] placeholder-[#A1A1A1]" type="text" name="credit-number"
+                        placeholder="0000 0000 0000 0000" required>
                     <div class="flex items-center gap-2 -ml-[108px]">
                         <img src="@/assets/svg/billing/electron.svg" alt="">
                         <img src="@/assets/svg/billing/maestro.svg" alt="">
@@ -391,17 +429,47 @@
                 <div class="flex gap-5 mt-4">
                     <div>
                         <label for="name" class="_ca1 mb-2 block">Exp. date</label>
-                        <input class="w-[100px] placeholder-[#A1A1A1]" type="text" name="credit-expires" placeholder="MM/YY" required>
+                        <input class="w-[100px] placeholder-[#A1A1A1]" type="text" name="credit-expires"
+                            placeholder="MM/YY" required>
                     </div>
                     <div>
                         <label for="name" class="_ca1 mb-2 block">CVV</label>
-                        <input class="w-[100px] placeholder-[#A1A1A1]" type="number" name="credit-cvc" placeholder="123" required>
+                        <input class="w-[100px] placeholder-[#A1A1A1]" type="number" name="credit-cvc" placeholder="123"
+                            required>
                     </div>
                 </div>
                 <div class="flex justify-end mt-4">
                     <button @click="useSettings.store.addCartModal = false"
-                    class="_ca1 font-semibold px-6 r_8 uppercase">cancel</button>
+                        class="_ca1 font-semibold px-6 r_8 uppercase">cancel</button>
                     <button class="_ca1 font-semibold b_ce0 px-6 r_8 uppercase">ADD</button>
+                </div>
+            </form>
+        </el-dialog>
+
+        <!-- edit user name -->
+        <el-dialog v-model="useSettings.store.editNameModal" width="400" align-center class="bg-opacity-50 !rounded-lg">
+            <h1 class="font-semibold text-xl">Change name</h1>
+            <p class="pt-4">You can only change your name once so be careful.</p>
+            <form @submit.prevent="updateuserName">
+                <div>
+                    <label for="name" class="_ca1 mb-2 block mt-5">First name</label>
+                    <input v-model="store.user_name.name" id="name" class="placeholder-[#A1A1A1]" type="text"
+                        placeholder="" required>
+                </div>
+                <div>
+                    <label for="surname" class="_ca1 mb-2 block mt-5">Last name</label>
+                    <input v-model="store.user_name.surname" id="surname" class="placeholder-[#A1A1A1]" type="text"
+                        placeholder="" required>
+                </div>
+
+                <div class="flex justify-end mt-4">
+                    <button @click="useSettings.store.editNameModal = false" type="button"
+                        class="_ca1 font-semibold px-6 r_8 uppercase">cancel</button>
+                    <button v-loading="isLoading.isLoadingType('updateUserData')"
+                        v-if="isLoading.user_update_checker.name != store.user_name.name || isLoading.user_update_checker.surname != store.user_name.surname"
+                        class="b_cbc _c07 font-semibold px-6 r_8 uppercase">save</button>
+                    <button v-loading="isLoading.isLoadingType('updateUserData')" type="button" v-else
+                        class="b_ce0 _ca1 font-semibold px-6 r_8 uppercase">save</button>
                 </div>
             </form>
         </el-dialog>
@@ -411,9 +479,8 @@
 
 <script setup>
 import { settings_sidebar } from "@/composables";
-import { useLoadingStore, useSettingsStore } from "@/store";
 import moment from 'moment-timezone';
-import { useChatStore } from "../../store/chat";
+import { useLoadingStore, useSettingsStore } from "@/store";
 
 
 const timeZones = moment.tz.names().map((name) => {
@@ -429,6 +496,10 @@ const store = reactive({
     addLink: false,
     updatePayment: false,
     activeCollapse: "",
+    user_name: {
+        name: "",
+        surname: "",
+    }
 })
 
 const email_notification = [
@@ -454,6 +525,48 @@ const group_notification = [
     },
 ];
 
+const myers_briggs = ["Don't show", "ISTJ", "ISTP", "ISFJ"];
+
+function changeName() {
+    store.user_name.name = isLoading.user_update_checker.name
+    store.user_name.surname = isLoading.user_update_checker.surname
+    useSettings.store.editNameModal = true;
+}
+
+function createLogo(name) {
+    return name.split(" ").map((word) => word.charAt(0).toUpperCase()).join("");
+}
+
+function updateuserName() {
+    isLoading.user_update_checker.name = store.user_name.name
+    isLoading.user_update_checker.surname = store.user_name.surname
+    useSettings.updateUserData();
+}
+
+function listeneerUserData() {
+    for (let i in isLoading.user) {
+        console.log(isLoading.user.socials, isLoading.user_update_checker.socials)
+        if (isLoading.user[i] != isLoading.user_update_checker[i]) {
+            return useSettings.store.is_update = true;
+        }
+        for (let i in isLoading.user.socials) {
+            if (isLoading.user.socials[i] != isLoading.user_update_checker.socials[i]) {
+                return useSettings.store.is_update = true;
+            }
+        }
+        useSettings.store.is_update = false;
+    }
+}
+
+function listenerChangePassword() {
+    if (useSettings.changepassword.old_password && useSettings.changepassword.password && useSettings.changepassword.password_confirmation) {
+        if (useSettings.changepassword.password == useSettings.changepassword.password_confirmation) {
+            return useSettings.store.is_changepass = true;
+        }
+    }
+    useSettings.store.is_changepass = false;
+}
+
 watch(
     () => store.slideStep,
     () => {
@@ -464,6 +577,10 @@ watch(
         } catch (error) { }
     }
 );
+
+onBeforeMount(() => {
+    useSettings.getFullData();
+})
 </script>
 
 <style lang="scss" scoped></style>

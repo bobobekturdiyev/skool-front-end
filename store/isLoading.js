@@ -31,7 +31,45 @@ export const useLoadingStore = defineStore("loading", () => {
 
   const user = reactive({
     id: "",
-  })
+    name: "",
+    surname: "",
+    username: "",
+    bio: "",
+    location: "",
+    image: null,
+    myers_briggs: "",
+    socials: {
+      website: null,
+      instagram: null,
+      twitter: null,
+      youtube: null,
+      linkedin: null,
+      facebook: null,
+    },
+    creator: [],
+    member: [],
+  });
+
+  const user_update_checker = reactive({
+    id: "",
+    name: "",
+    surname: "",
+    username: "",
+    bio: "",
+    location: "",
+    image: null,
+    myers_briggs: "",
+    socials: {
+      website: null,
+      instagram: null,
+      twitter: null,
+      youtube: null,
+      linkedin: null,
+      facebook: null,
+    },
+    creator: [],
+    member: [],
+  });
 
   function addLoading(type) {
     if (!store.loadingTypes?.includes(type)) {
@@ -92,6 +130,7 @@ export const useLoadingStore = defineStore("loading", () => {
   return {
     user,
     store,
+    user_update_checker,
     addLoading,
     removeLoading,
     isLoadingType,
