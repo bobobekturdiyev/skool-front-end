@@ -8,7 +8,8 @@ import { usePostStore } from "./post";
 import { useMemberStore } from "./members";
 import {useChatStore} from "./chat";
 import {useSettingsStore} from "./settings";
-
+import { useProfileStore } from "./profile";  
+ 
 export {
   useLoadingStore,
   useAuthStore,
@@ -20,4 +21,5 @@ export {
   useMemberStore,
   useChatStore,
   useSettingsStore,
+  useProfileStore,
 };

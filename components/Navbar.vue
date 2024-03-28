@@ -1,13 +1,22 @@
 <template>
   <nav class="fixed top-0 w-full z-50 bg-white navbar">
     <div
-      class="flex justify-between items-center h-[64px] mx-auto xl:px-[200px] lg:px-[100px] md:px-[50px] sm:px-[50px] px-5 max-w-[1536px]">
+      class="flex justify-between items-center h-[64px] mx-auto xl:px-[200px] lg:px-[100px] md:px-[50px] sm:px-[50px] px-5 max-w-[1536px]"
+    >
       <div class="flex items-center gap-5 cursor-pointer">
         <router-link to="/">
-          <img v-if="$router.currentRoute.value.name == 'index'" src="/logo.svg" alt="" />
+          <img
+            v-if="$router.currentRoute.value.name == 'index'"
+            src="/logo.svg"
+            alt=""
+          />
           <div v-else-if="$router.currentRoute.value.name == 'community-about'">
-            <img class="h-10 w-10 object-cover rounded-full" v-if="useGroup.store.group_by_username[0]?.user_id?.image"
-              :src="useGroup.store.group_by_username[0]?.user_id?.image" alt="" />
+            <img
+              class="h-10 w-10 object-cover rounded-full"
+              v-if="useGroup.store.group_by_username[0]?.user_id?.image"
+              :src="useGroup.store.group_by_username[0]?.user_id?.image"
+              alt=""
+            />
             <div v-else class="full_flex gap-5">
               <p class="bg-gray-600 h-10 w-10 rounded-full"></p>
               <p class="bg-gray-600 w-[120px] h-5 rounded"></p>
@@ -15,23 +24,43 @@
           </div>
           <img v-else src="/icon.svg" alt="" />
         </router-link>
-        <router-link v-if="$router.currentRoute.value.name == 'community-about'" class="text-lg font-semibold" to="/">{{
-            useGroup.store.group_by_username[0]?.user_id?.name }}
+        <router-link
+          v-if="$router.currentRoute.value.name == 'community-about'"
+          class="text-lg font-semibold"
+          to="/"
+          >{{ useGroup.store.group_by_username[0]?.user_id?.name }}
           {{
             useGroup.store.group_by_username[0]?.user_id?.surname
-          }}</router-link>
-        <router-link v-else-if="$router.currentRoute.value.name != 'index'" class="text-lg font-semibold" to="/">Skool
-          community</router-link>
+          }}</router-link
+        >
+        <router-link
+          v-else-if="$router.currentRoute.value.name != 'index'"
+          class="text-lg font-semibold"
+          to="/"
+          >Skool community</router-link
+        >
         <el-dropdown placement="bottom-end" class="dropdown" trigger="click">
-          <p class="h-[26px] arrow w-[26px] rounded-[5px]"
-            :class="$router.currentRoute.value.name == 'index' ? 'b_cf2' : ''">
+          <p
+            class="h-[26px] arrow w-[26px] rounded-[5px]"
+            :class="$router.currentRoute.value.name == 'index' ? 'b_cf2' : ''"
+          >
             <img class="mx-auto" src="@/assets/svg/arrow.svg" alt="" />
           </p>
           <template #dropdown>
-            <el-dropdown-menu class="community_dropdown min-w-[200px] !mt-3 !-mr-7 dropdown_shadow">
+            <el-dropdown-menu
+              class="community_dropdown min-w-[200px] !mt-3 !-mr-7 dropdown_shadow"
+            >
               <div class="flex items-center p-[6px] relative h-[44px]">
-                <img class="absolute py-[8px] pl-[10px]" src="@/assets/svg/search.svg" alt="" />
-                <input class="bg-[#F0F5FA] h-8 !pl-10 text-xs !border-0" type="text" placeholder="Search" />
+                <img
+                  class="absolute py-[8px] pl-[10px]"
+                  src="@/assets/svg/search.svg"
+                  alt=""
+                />
+                <input
+                  class="bg-[#F0F5FA] h-8 !pl-10 text-xs !border-0"
+                  type="text"
+                  placeholder="Search"
+                />
               </div>
               <el-dropdown-item>
                 <div class="flex items-center gap-3">
@@ -50,76 +79,131 @@
         </el-dropdown>
       </div>
       <div class="flex items-center md:gap-10 gap-6">
-        <el-dropdown v-if="store.is_mount" @command="(command) => {
-            $i18n.locale = command;
-            changedLang(command);
-          }
-            " placement="bottom-start">
-          <div class="flex items-center _c07 font-semibold gap-2 cursor-pointer">
+        <el-dropdown
+          v-if="store.is_mount"
+          @command="
+            (command) => {
+              $i18n.locale = command;
+              changedLang(command);
+            }
+          "
+          placement="bottom-start"
+        >
+          <div
+            class="flex items-center _c07 font-semibold gap-2 cursor-pointer"
+          >
             <img :src="store.lang_icon[$i18n.locale]" alt="" />
             {{ store.lang[$i18n.locale]?.slice(0, 2) }}
             <img src="@/assets/svg/lang_arrow.svg" alt="" />
           </div>
 
           <template #dropdown>
-            <el-dropdown-menu class="navigation_dropdown min-w-[200px] dropdown_shadow !-ml-3">
-              <el-dropdown-item v-show="i != $i18n.locale" :class="i == $i18n.locale ? 'current_lang' : ''"
-                v-for="(i, index) in store.lang_type" :command="i">
+            <el-dropdown-menu
+              class="navigation_dropdown min-w-[200px] dropdown_shadow !-ml-3"
+            >
+              <el-dropdown-item
+                v-show="i != $i18n.locale"
+                :class="i == $i18n.locale ? 'current_lang' : ''"
+                v-for="(i, index) in store.lang_type"
+                :command="i"
+              >
                 <img :src="store.lang_icon[i]" alt="" />
                 {{ store.lang[i] }}
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-        <div v-show="isLoading.store.isLogin" class="sm:flex items-center hidden gap-7">
-          <el-dropdown class="chat_dropdown" placement="bottom-end" trigger="click">
+        <div
+          v-show="isLoading.store.isLogin"
+          class="sm:flex items-center hidden gap-7"
+        >
+          <el-dropdown
+            class="chat_dropdown"
+            placement="bottom-end"
+            trigger="click"
+          >
             <img class="drop" src="@/assets/svg/nav/message.svg" alt="" />
 
             <template #dropdown>
               <el-dropdown-menu
-                class="!text-[16px] messages navigation_dropdown w-[500px] min-h-[80vh] dropdown_shadow !mt-3 !-mr-[120px]">
-                <div class="flex items-center justify-between sticky z-20 top-0 bg-white pt-4 pb-5 px-4">
+                class="!text-[16px] messages navigation_dropdown w-[500px] min-h-[80vh] dropdown_shadow !mt-3 !-mr-[120px]"
+              >
+                <div
+                  class="flex items-center justify-between sticky z-20 top-0 bg-white pt-4 pb-5 px-4"
+                >
                   <h1 class="font-semibold">Chat</h1>
                   <el-dropdown placement="bottom-end" class="dropdown">
                     <div class="full_flex gap-1 _c2a text-xs font-semibold">
                       <p class="text-xs">All</p>
-                      <img src="@/assets/svg/chat/select_arrow.svg" alt="">
+                      <img src="@/assets/svg/chat/select_arrow.svg" alt="" />
                     </div>
                     <template #dropdown>
-                      <el-dropdown-menu class="community_dropdown min-w-[200px] dropdown_shadow">
-                        <el-dropdown-item @click="handleChatType('all')">All</el-dropdown-item>
-                        <el-dropdown-item @click="handleChatType('unread')">Unread</el-dropdown-item>
+                      <el-dropdown-menu
+                        class="community_dropdown min-w-[200px] dropdown_shadow"
+                      >
+                        <el-dropdown-item @click="handleChatType('all')"
+                          >All</el-dropdown-item
+                        >
+                        <el-dropdown-item @click="handleChatType('unread')"
+                          >Unread</el-dropdown-item
+                        >
                       </el-dropdown-menu>
                     </template>
                   </el-dropdown>
                 </div>
                 <div class="flex pb-5 px-4">
-                  <img class="-mr-10 z-10 ml-5" src="@/assets/svg/chat/search.svg" alt="">
-                  <input class="placeholder-[#9CCDFE] !pl-[60px] b_cf0f r_8 !border-none" type="text"
-                    placeholder="Search all reports">
+                  <img
+                    class="-mr-10 z-10 ml-5"
+                    src="@/assets/svg/chat/search.svg"
+                    alt=""
+                  />
+                  <input
+                    class="placeholder-[#9CCDFE] !pl-[60px] b_cf0f r_8 !border-none"
+                    type="text"
+                    placeholder="Search all reports"
+                  />
                 </div>
                 <div v-if="useChat.store.users?.length">
-                  <el-dropdown-item @click="openChatModal(i)" :id="`tooltip${index}`" class="chat_item"
-                    v-for="(i, index) in useChat.store.users">
-                    <img class="h-10 w-10 rounded-full object-cover" :src="i.image"
-                      :title="i.user_id?.name + ' ' + i.surname">
+                  <el-dropdown-item
+                    @click="openChatModal(i)"
+                    :id="`tooltip${index}`"
+                    class="chat_item"
+                    v-for="(i, index) in useChat.store.users"
+                  >
+                    <img
+                      class="h-10 w-10 rounded-full object-cover"
+                      :src="i.image"
+                      :title="i.user_id?.name + ' ' + i.surname"
+                    />
                     <div class="space-y-1 max-w-[390px]">
-                      <h1 class="font-semibold">{{ i.name }} {{ i.surname }} <span class="_c59 font-[400] text-xs">19d
-                          ago</span>
+                      <h1 class="font-semibold">
+                        {{ i.name }} {{ i.surname }}
+                        <span class="_c59 font-[400] text-xs">19d ago</span>
                       </h1>
-                      <p class="truncate max-w-[390px]">💪 I want to work on building my self-confidence. Have you ever
-                        struggled with
-                        this? How did you develop a stronger sense of self-worth? 💪💖</p>
+                      <p class="truncate max-w-[390px]">
+                        💪 I want to work on building my self-confidence. Have
+                        you ever struggled with this? How did you develop a
+                        stronger sense of self-worth? 💪💖
+                      </p>
                     </div>
                     <el-tooltip content="Mark unread" placement="top">
-                      <div class="unread_tooltip cursor-pointer" @mouseover="handleMouseOver(index)"
-                        @mouseleave="handleMouseLeave(index)">
-                        <p class="h-[10px] z-10 w-[10px] m-[6px] rounded-full b_c2a unreadbtn"></p>
+                      <div
+                        class="unread_tooltip cursor-pointer"
+                        @mouseover="handleMouseOver(index)"
+                        @mouseleave="handleMouseLeave(index)"
+                      >
+                        <p
+                          class="h-[10px] z-10 w-[10px] m-[6px] rounded-full b_c2a unreadbtn"
+                        ></p>
                       </div>
                     </el-tooltip>
                   </el-dropdown-item>
                 </div>
-                <el-dropdown-item v-else id="nochatyet" class="flex items-center justify-center">
+                <el-dropdown-item
+                  v-else
+                  id="nochatyet"
+                  class="flex items-center justify-center"
+                >
                   No chat yet
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -130,33 +214,52 @@
             <img class="h-10 w-10 object-cover" src="@/assets/image/user.svg" alt="" />
           </router-link> -->
           <el-dropdown v-if="store.is_mount" placement="bottom-end">
-            <img class="h-10 w-10 object-cover" src="@/assets/image/user.svg" alt="" />
+            <img
+              class="h-10 w-10 object-cover"
+              src="@/assets/image/user.svg"
+              alt=""
+            />
             <template #dropdown>
-              <el-dropdown-menu class="navigation_dropdown min-w-[200px] dropdown_shadow !-ml-3">
+              <el-dropdown-menu
+                class="navigation_dropdown min-w-[200px] dropdown_shadow !-ml-3"
+              >
                 <p class="px-4 py-3 border-b border-[]">xayotwork@gmail.com</p>
                 <el-dropdown-item>Profile</el-dropdown-item>
-                <el-dropdown-item @click="$router.push('/settings')">Settings</el-dropdown-item>
+                <el-dropdown-item @click="$router.push('/settings')"
+                  >Settings</el-dropdown-item
+                >
                 <el-dropdown-item>Log out</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
         </div>
         <div v-show="!isLoading.store.isLogin" class="sm:flex gap-2 hidden">
-          <button @click="useAuth.modal.register = true"
-            class="border border-[#BCDEFF] _c2a font-semibold uppercase px-6 rounded-[6px]">
+          <button
+            @click="useAuth.modal.register = true"
+            class="border border-[#BCDEFF] _c2a font-semibold uppercase px-6 rounded-[6px]"
+          >
             {{ $t("nav.register") }}
           </button>
-          <button @click="useAuth.modal.login = true"
-            class="border border-[#BCDEFF] _c2a font-semibold uppercase px-6 rounded-[6px]">
+          <button
+            @click="useAuth.modal.login = true"
+            class="border border-[#BCDEFF] _c2a font-semibold uppercase px-6 rounded-[6px]"
+          >
             {{ $t("nav.login") }}
           </button>
         </div>
         <div class="sm:hidden block">
-          <el-dropdown v-show="!isLoading.store.isLogin" placement="bottom-end" class="dropdown" trigger="click">
+          <el-dropdown
+            v-show="!isLoading.store.isLogin"
+            placement="bottom-end"
+            class="dropdown"
+            trigger="click"
+          >
             <img src="@/assets/svg/menu.svg" alt="" />
 
             <template #dropdown>
-              <el-dropdown-menu class="menu_dropdown sm:hidden block min-w-[200px] !mt-3 dropdown_shadow">
+              <el-dropdown-menu
+                class="menu_dropdown sm:hidden block min-w-[200px] !mt-3 dropdown_shadow"
+              >
                 <el-dropdown-item @click="useAuth.modal.register = true">
                   <p>Sign up</p>
                 </el-dropdown-item>
@@ -166,13 +269,24 @@
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <el-dropdown v-show="isLoading.store.isLogin" placement="bottom-end" class="dropdown" trigger="click">
+          <el-dropdown
+            v-show="isLoading.store.isLogin"
+            placement="bottom-end"
+            class="dropdown"
+            trigger="click"
+          >
             <img src="@/assets/svg/menu.svg" alt="" />
 
             <template #dropdown>
-              <el-dropdown-menu class="logged_menu_dropdown sm:hidden block min-w-[200px] !mt-3 dropdown_shadow">
+              <el-dropdown-menu
+                class="logged_menu_dropdown sm:hidden block min-w-[200px] !mt-3 dropdown_shadow"
+              >
                 <el-dropdown-item>
-                  <img class="w-4 h-4 rounded-full object-cover" src="@/assets/image/user.svg" alt="" />
+                  <img
+                    class="w-4 h-4 rounded-full object-cover"
+                    src="@/assets/image/user.svg"
+                    alt=""
+                  />
                   <p>{{ isLoading.store.email }}</p>
                 </el-dropdown-item>
                 <el-dropdown-item>
@@ -203,127 +317,261 @@
     </div>
 
     <!-- register -->
-    <el-dialog v-model="useAuth.modal.register" width="400" align-center class="bg-opacity-50 !rounded-lg">
+    <el-dialog
+      v-model="useAuth.modal.register"
+      width="400"
+      align-center
+      class="bg-opacity-50 !rounded-lg"
+    >
       <Register />
     </el-dialog>
 
     <!-- login -->
-    <el-dialog v-model="useAuth.modal.login" width="400" align-center class="bg-opacity-50 !rounded-lg">
+    <el-dialog
+      v-model="useAuth.modal.login"
+      width="400"
+      align-center
+      class="bg-opacity-50 !rounded-lg"
+    >
       <Login />
     </el-dialog>
 
     <!-- chat -->
-    <el-dialog v-model="isLoading.store.chatModal" align-center :class="store.isOpen ? 'h-full' : 'h-[542px]'"
-      class="!rounded-xl overflow-hidden min-w-[632px] chatModal !relative">
-      <div class="flex items-center justify-between h-16 border-b border-[#E0E0E0] px-5">
+    <el-dialog
+      v-model="isLoading.store.chatModal"
+      v-if="isLoading.store.chatModal"
+      align-center
+      :class="store.isOpen ? 'h-full' : 'h-[542px]'"
+      class="!rounded-xl overflow-hidden min-w-[632px] chatModal !relative"
+    >
+      <div
+        class="flex items-center justify-between h-16 border-b border-[#E0E0E0] px-5"
+      >
         <div class="flex items-center gap-4">
-          <img class="h-10 w-10 object-cover rounded-full" :src="useChat.store.chat_user_data.image" alt="">
+          <img
+            class="h-10 w-10 object-cover rounded-full"
+            :src="useChat.store.chat_user_data.image"
+            alt=""
+          />
           <div>
-            <h1 class="font-semibold truncate max-w-[90%]">{{ useChat.store.chat_user_data.name }} {{
-            useChat.store.chat_user_data.surname }}</h1>
+            <h1 class="font-semibold truncate max-w-[90%]">
+              {{ useChat.store.chat_user_data.name }}
+              {{ useChat.store.chat_user_data.surname }}
+            </h1>
             <p class="text-xs">active 15h ago (5:06am in Los Angeles)</p>
           </div>
         </div>
         <div class="flex items-center gap-5">
-          <img @click="store.isOpen = !store.isOpen" class="cursor-pointer" src="@/assets/svg/chat/open.svg" alt="">
+          <img
+            @click="store.isOpen = !store.isOpen"
+            class="cursor-pointer"
+            src="@/assets/svg/chat/open.svg"
+            alt=""
+          />
           <el-dropdown placement="bottom-end" class="dropdown" trigger="click">
-            <img class="cursor-pointer" src="@/assets/svg/chat/three_dot.svg" alt="">
+            <img
+              class="cursor-pointer"
+              src="@/assets/svg/chat/three_dot.svg"
+              alt=""
+            />
 
             <template #dropdown>
-              <el-dropdown-menu class="community_dropdown min-w-[200px] dropdown_shadow">
+              <el-dropdown-menu
+                class="community_dropdown min-w-[200px] dropdown_shadow"
+              >
                 <el-dropdown-item>View profile</el-dropdown-item>
-                <el-dropdown-item>Block Get Clients Support Team</el-dropdown-item>
+                <el-dropdown-item
+                  >Block Get Clients Support Team</el-dropdown-item
+                >
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <img @click="isLoading.store.chatModal = false" class="cursor-pointer" src="@/assets/svg/chat/close.svg"
-            alt="">
+          <img
+            @click="isLoading.store.chatModal = false"
+            class="cursor-pointer"
+            src="@/assets/svg/chat/close.svg"
+            alt=""
+          />
         </div>
       </div>
-      <div id="chatContainer" @scroll="chatScrollListener" class="overflow-y-auto overflow-hidden"
-        :class="store.isOpen ? 'h-[calc(100vh_-_124px)]' : 'h-[420px]'">
-        <div v-if="isLoading.store.pagination.current_page == isLoading.store.pagination.last_page" class="flex items-center gap-10 py-5 px-4 b_cf0f mx-14 mt-5 mb-10 r_8">
+      <div
+        id="chatContainer"
+        @scroll="chatScrollListener"
+        class="overflow-y-auto overflow-hidden"
+        :class="store.isOpen ? 'h-[calc(100vh_-_124px)]' : 'h-[420px]'"
+      >
+        <div
+          v-if="
+            isLoading.store.pagination.current_page ==
+            isLoading.store.pagination.last_page && !isLoading.isLoadingType('getChatMessage')
+          "
+          class="flex items-center gap-10 py-5 px-4 b_cf0f mx-14 mt-5 mb-10 r_8"
+        >
           <div class="w-[158px] space-y-10 relative">
-            <img title="Xayot Sharapov" class="h-10 w-10 object-cover cursor-pointer rounded-full mx-auto"
-              src="@/assets/image/user.svg" alt="">
+            <img
+              title="Xayot Sharapov"
+              class="h-10 w-10 object-cover cursor-pointer rounded-full mx-auto"
+              src="@/assets/image/user.svg"
+              alt=""
+            />
             <div class="flex gap-[78px]">
-              <img title="Xayot Sharapov" class="h-10 w-10 object-cover cursor-pointer rounded-full"
-                src="@/assets/image/user.svg" alt="">
-              <img title="Xayot Sharapov" class="h-10 w-10 object-cover cursor-pointer rounded-full"
-                :src="useChat.store.chat_user_data.image" alt="">
+              <img
+                title="Xayot Sharapov"
+                class="h-10 w-10 object-cover cursor-pointer rounded-full"
+                src="@/assets/image/user.svg"
+                alt=""
+              />
+              <img
+                title="Xayot Sharapov"
+                class="h-10 w-10 object-cover cursor-pointer rounded-full"
+                :src="useChat.store.chat_user_data.image"
+                alt=""
+              />
             </div>
-            <img class="mx-auto absolute top-[0px] left-[25px]" src="@/assets/svg/chat/arrows.svg" alt="">
+            <img
+              class="mx-auto absolute top-[0px] left-[25px]"
+              src="@/assets/svg/chat/arrows.svg"
+              alt=""
+            />
           </div>
           <div class="_c59">
-            <p class="leading-4">You and Get Clients Support Team <br /> know each other from <br /> Get Clients
-              University
+            <p class="leading-4">
+              You and Get Clients Support Team <br />
+              know each other from <br />
+              Get Clients University
             </p>
-            <p class="leading-4 mt-4">Get Clients Support Team broke the ice!</p>
+            <p class="leading-4 mt-4">
+              Get Clients Support Team broke the ice!
+            </p>
           </div>
         </div>
-        <article :id="`chat_messages${message.id}`" v-for="(message, index) of useChat.store.chat_messages"
-          class="space-y-5 pb-6">
-          <p v-if="useChat.store.chatTimeList[index]" class="mb-5 text-center _ca1">
-            {{ useChat.store.chatTimeList[index] }}
-          </p>
-          <div v-if="message.sender?.id != isLoading.user.id" class="mx-5 flex gap-4">
-            <img title="Xayot Sharapov" class="h-8 w-8 min-w-[32px] object-cover cursor-pointer rounded-full"
-              :src="message?.sender?.image" alt="">
-            <div class="b_cf2 r_8 p-3">
-              <div class="flex items-center justify-between gap-3 mb-3">
-                <h1 class="_c07 font-semibold truncate max-w-[70%]">{{ message.sender?.name }} {{
-            message.sender?.surname
-          }}
-                </h1>
-                <p class="_ca1">{{ formateDate(message?.created_at, 'time') }}</p>
+        <div
+          v-show="
+            isLoading.store.pagination.current_page !=
+              isLoading.store.pagination.last_page || isLoading.isLoadingType('getChatMessage')"
+          id="chat_loading"
+          class="my-2 text-center"
+        >
+          <svg
+            aria-hidden="true"
+            class="w-8 h-8 text-gray-200 mx-auto animate-spin dark:text-gray-600 fill-blue-600"
+            viewBox="0 0 100 101"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+              fill="currentColor"
+            />
+            <path
+              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+              fill="currentFill"
+            />
+          </svg>
+          <span class="sr-only">Loading...</span>
+        </div>
+        <div id="chatContainerDiv">
+          <article
+            :id="`chat_messages${message.id}`"
+            v-for="(message, index) of useChat.store.chat_messages"
+            class="space-y-5 pb-6"
+          >
+            <p
+              v-if="useChat.store.chatTimeList[index]"
+              class="mb-5 text-center _ca1"
+            >
+              {{ useChat.store.chatTimeList[index] }}
+            </p>
+            <div
+              v-if="message.sender?.id != isLoading.user.id"
+              class="mx-5 flex gap-4"
+            >
+              <img
+                title="Xayot Sharapov"
+                class="h-8 w-8 min-w-[32px] object-cover cursor-pointer rounded-full"
+                :src="message?.sender?.image"
+                alt=""
+              />
+              <div class="b_cf2 r_8 p-3">
+                <div class="flex items-center justify-between gap-3 mb-3">
+                  <h1 class="_c07 font-semibold truncate max-w-[70%]">
+                    {{ message.sender?.name }} {{ message.sender?.surname }}
+                  </h1>
+                  <p class="_ca1">
+                    {{ useChat.formateDate(message?.created_at, "time") }}
+                  </p>
+                </div>
+                <pre class="whitespace-pre-line leading-4">{{
+                  message?.text
+                }}</pre>
               </div>
-              <pre class="whitespace-pre-line leading-4">{{ message?.text }}</pre>
             </div>
-          </div>
-          <div v-else class="mx-5 flex justify-end gap-4">
-            <div class="b_cf0f r_8 p-3">
-              <div class="flex items-center justify-between mb-3">
-                <h1 class="_c07 font-semibold truncate max-w-[70%]">{{ message.sender?.name }} {{
-            message.sender?.surname
-          }}
-                </h1>
-                <p class="_c59">{{ formateDate(message?.created_at, 'time') }}</p>
+            <div v-else class="mx-5 flex justify-end gap-4">
+              <div class="b_cf0f r_8 p-3">
+                <div class="flex items-center justify-between mb-3 gap-4">
+                  <h1 class="_c07 font-semibold truncate max-w-[70%]">
+                    {{ message.sender?.name }} {{ message.sender?.surname }}
+                  </h1>
+                  <p class="_c59">
+                    {{ useChat.formateDate(message?.created_at, "time") }}
+                  </p>
+                </div>
+                <pre class="whitespace-pre-line leading-4">{{
+                  message?.text
+                }}</pre>
               </div>
-              <pre class="whitespace-pre-line leading-4">{{ message?.text }}</pre>
+              <img
+                title="Xayot Sharapov"
+                class="h-8 w-8 min-w-[32px] object-cover cursor-pointer rounded-full"
+                :src="message?.sender?.image"
+                alt=""
+              />
             </div>
-            <img title="Xayot Sharapov" class="h-8 w-8 min-w-[32px] object-cover cursor-pointer rounded-full"
-              :src="message?.sender?.image" alt="">
-          </div>
-        </article>
+          </article>
+        </div>
       </div>
-      <div class="flex items-center h-[60px] px-4 border-t border-[#E0E0E0] bg-white">
-        <input @change="useChat.sendMessage" v-model="useChat.message.text" class="!border-0 w-full" type="text"
-          placeholder="Message Get Clients Support Team">
+      <div
+        class="flex items-center h-[60px] px-4 border-t border-[#E0E0E0] bg-white"
+      >
+        <input
+          @change="useChat.sendMessage"
+          v-model="useChat.message.text"
+          class="!border-0 w-full"
+          type="text"
+          placeholder="Message Get Clients Support Team"
+        />
         <div class="flex h-[14px] w-[120px] gap-[26px]">
           <label for="upload_image">
-            <img src="@/assets/svg/textarea/upload.svg" alt="">
+            <img src="@/assets/svg/textarea/upload.svg" alt="" />
           </label>
           <el-dropdown placement="bottom-end" class="dropdown" trigger="click">
-            <img src="@/assets/svg/textarea/emoji.svg" alt="">
+            <img src="@/assets/svg/textarea/emoji.svg" alt="" />
 
             <template #dropdown>
-              <el-dropdown-menu class="community_dropdown min-w-[200px] dropdown_shadow">
+              <el-dropdown-menu
+                class="community_dropdown min-w-[200px] dropdown_shadow"
+              >
                 <el-dropdown-item>👍🤣😊🧨🎎🎆🎈🎁</el-dropdown-item>
                 <el-dropdown-item>👍❎🚫🛴🏍😁✔👎</el-dropdown-item>
                 <el-dropdown-item>🛵🚞🚃💙🤍😗😂😐</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <img src="@/assets/svg/textarea/gif.svg" alt="">
+          <img src="@/assets/svg/textarea/gif.svg" alt="" />
         </div>
       </div>
     </el-dialog>
-    <input type="file" id="upload_image" class="h-0 w-0 overflow-hidden !p-0">
+    <input type="file" id="upload_image" class="h-0 w-0 overflow-hidden !p-0" />
   </nav>
 </template>
 
 <script setup>
-import { useAuthStore, useLoadingStore, useGroupStore, useChatStore } from "@/store";
+import {
+  useAuthStore,
+  useLoadingStore,
+  useGroupStore,
+  useChatStore,
+} from "@/store";
 import uz from "@/assets/svg/uz.svg";
 import ru from "@/assets/svg/ru.svg";
 import uz_ru from "@/assets/svg/uz.svg";
@@ -373,28 +621,19 @@ function handleMouseLeave(index) {
 function handleChatType(type) {
   const dropdown = document.querySelector(".chat_dropdown img");
   dropdown.click();
-  console.log(dropdown)
+  console.log(dropdown);
 }
 
 function openChatModal(data) {
-  console.log(data)
+  console.log(data);
   isLoading.store.pagination.current_page = 1;
   useChat.store.chat_user_data = data;
   isLoading.store.chatModal = true;
-  useChat.getChatMessages()
-}
-
-function formateDate(date, type) {
-  try {
-    const nowDate = new Date(date);
-    if (type == 'time') {
-      return nowDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })?.toLowerCase();
-    }
-  } catch (_) { }
+  useChat.getChatMessages();
 }
 
 onBeforeMount(() => {
-  console.log(window.location.hostname)
+  console.log(window.location.hostname);
   store.is_mount = true;
   useChat.getChatUsers();
   // window.Echo.channel("chat_" + 1).listen(
@@ -419,34 +658,73 @@ onBeforeMount(() => {
   // );
 });
 
-function chatScrollListener() {
-  const chatContainer = document.getElementById('chatContainer')
-  if (chatContainer.scrollTop < 100) {
-    if (!isLoading.isLoadingType("getChatMessage")) {
-      if (isLoading.store.pagination.current_page < isLoading.store.pagination.last_page) {
-        isLoading.store.pagination.current_page += 1;
-        useChat.getChatMessages();
-      }
+// function chatScrollListener() {
+//   const chatContainer = document.getElementById("chatContainer");
+//   if (chatContainer.scrollTop < 100) {
+//     if (!isLoading.isLoadingType("getChatMessage")) {
+//       if (
+//         isLoading.store.pagination.current_page <
+//         isLoading.store.pagination.last_page
+//       ) {
+//         isLoading.store.pagination.current_page += 1;
+//         useChat.getChatMessages();
+//       }
+//     }
+//   }
+// }
+
+watch(
+  () => useChat.store.chat_messages?.length,
+  () => {
+    console.log(useChat.store.scrollToBottom);
+    if (useChat.store.scrollToBottom) {
+      setTimeout(() => {
+        const chatContainer = document.getElementById("chatContainer");
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }, 200);
+      useChat.store.scrollToBottom = false;
     }
   }
-}
+);
 
-watch(() => useChat.store.chat_messages?.length, () => {
-  console.log(useChat.store.scrollToBottom)
-  if (useChat.store.scrollToBottom) {
-    setTimeout(() => {
-      const chatContainer = document.getElementById("chatContainer")
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }, 200)
-    useChat.store.scrollToBottom = false;
-  }
-})
+watch(
+  () => isLoading.store.chatModal,
+  () => {
+    if (!isLoading.store.chatModal) {
+      window.Echo.leave("chat_" + useChat.store.currentChatId);
+    } else {
+      setTimeout(() => {
+        const targetElement = document.getElementById("chat_loading");
+        const chatContainer = document.getElementById("chatContainer");
+        const chatH = chatContainer.scrollHeight;
+        chatContainer.scrollTop = chatH;
+        if (targetElement) {
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                // Element ekranda ko'rinayotgan bo'lsa
+                console.log("Element ekranda ko'rinayotgan bo'lsa");
+                if (!isLoading.isLoadingType("getChatMessage")) {
+                  if (
+                    isLoading.store.pagination.current_page <
+                    isLoading.store.pagination.last_page
+                  ) {
+                    isLoading.store.pagination.current_page += 1;
+                    useChat.getChatMessages();
+                  }
+                }
+              }
+            });
+          });
 
-watch(() => isLoading.store.chatModal, () => {
-  if (!isLoading.store.chatModal) {
-    window.Echo.leave("chat_" + useChat.store.currentChatId);
+          observer.observe(targetElement);
+        } else {
+          console.log("Element topilmadi");
+        }
+      }, 200);
+    }
   }
-})
+);
 </script>
 
 <style lang="scss" scoped>
@@ -460,7 +738,7 @@ watch(() => isLoading.store.chatModal, () => {
 .chat_item:hover {
   .unreadbtn {
     background: transparent !important;
-    border: 1px solid #A1A1A1 !important;
+    border: 1px solid #a1a1a1 !important;
   }
 }
 
@@ -470,7 +748,7 @@ watch(() => isLoading.store.chatModal, () => {
   border-radius: 4px;
 
   &:hover {
-    background: #F2F2F2 !important;
+    background: #f2f2f2 !important;
   }
 }
 </style>

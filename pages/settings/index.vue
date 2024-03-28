@@ -18,11 +18,13 @@
                         class="h-[calc(100vh_-140px)] overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full">
                         <h1 class="text-xl font-semibold">Profile</h1>
                         <div class="space-y-6">
-                            <div class="flex items-center gap-8 mt-6">
-                                <img class="h-[100px] w-[100px] rounded-full object-cover" :src="isLoading.user.image"
+                            <div v-loading="isLoading.isLoadingType('updateUserData') || isLoading.isLoadingType('getUserData')" class="flex items-center gap-8 mt-6">
+                                <img  class="h-[100px] w-[100px] rounded-full object-cover" :src="isLoading.user.image"
                                     alt="">
-                                <button class="border_cbc px-4 _c2a r_8 font-semibold uppercase">change profile
-                                    photo</button>
+                                <label for="profile_img" class="border_cbc px-4 _c2a r_8 font-semibold uppercase block h-10 full_flex">change profile
+                                    photo
+                                </label>
+                                <input @change="handlePhotoImage" type="file" id="profile_img" class="h-0 w-0 overflow-hidden !p-0">
                             </div>
                             <div>
                                 <div class="grid grid-cols-2 gap-6">
@@ -163,7 +165,7 @@
                         </div>
                         <h1 class="text-xl font-semibold">Timezone</h1>
                         <div class="w-full timezone">
-                            <el-select v-model="useSettings.store.timezone" filterable class="!w-full"
+                            <el-select @change="changedTimeZone"  v-model="isLoading.user_update_checker.location" filterable class="!w-full"
                                 placeholder="(GMT +05:00) Asia/Tashkent">
                                 <el-option v-for="item in timeZones" :key="item" :label="item" :value="item">
                                     <div class="flex items-center gap-2">
@@ -174,7 +176,7 @@
                                 </el-option>
                             </el-select>
                         </div>
-                        <button class="_ca1 font-semibold px-6 r_8 mt-6 uppercase b_ce0">update account</button>
+                        <button v-loading="isLoading.isLoadingType('updateUserData')" @click="updateTimeZone" :class="store.updateTimeZone ? '_c07 b_cbc':'_ca1 b_ce0'" class=" font-semibold px-6 r_8 mt-6 uppercase">update account</button>
                         <h1 class="text-xl font-semibold">Sessions</h1>
                         <button
                             class="full_flex gap-1 border border_ce0 r_8 _ca1 px-4 h-10 uppercase whitespace-nowrap font-semibold">log
@@ -185,11 +187,14 @@
                         <h1 class="text-xl font-semibold">Change password</h1>
                         <input @input="listenerChangePassword" v-model="useSettings.changepassword.old_password"
                             type="password" placeholder="Old password">
+                        <p v-if="useSettings.store.passwordError?.length && useSettings.store.passwordError[0] == 0" class="_c2a !mt-1 !-mb-3">{{useSettings.store.passwordError[1]}}</p>
                         <input @input="listenerChangePassword" v-model="useSettings.changepassword.password"
                             type="password" placeholder="New password">
+                        <p v-if="useSettings.store.passwordError?.length && useSettings.store.passwordError[0] == 1" class="_c2a !mt-1 !-mb-3">{{useSettings.store.passwordError[1]}}</p>
                         <input @input="listenerChangePassword"
                             v-model="useSettings.changepassword.password_confirmation" type="password"
                             placeholder="Confirm new password">
+                        <p v-if="useSettings.store.passwordError?.length && useSettings.store.passwordError[0] == 2" class="_c2a !mt-1 !-mb-3">{{useSettings.store.passwordError[1]}}</p>
                         <button :type="useSettings.store.is_changepass ? 'submit' : 'button'"
                             :class="useSettings.store.is_changepass ? 'b_cbc _c07' : 'b_ce0 _ca1'"
                             class=" font-semibold px-6 r_8 mt-6 uppercase">change
@@ -473,6 +478,13 @@
                 </div>
             </form>
         </el-dialog>
+
+         <!-- cropper image -->
+  <el-dialog v-model="isLoading.store.cropModal" v-if="isLoading.store.cropModal" width="780" align-center
+    class="bg-opacity-50 p-6 !w-[400px] !rounded-lg">
+    <cropper-image />
+    <p class="_c07 text-center mt-4">Or, <label class="_c2a" for="add_photo">upload a different photo</label></p>
+  </el-dialog>
     </main>
 </template>
 
@@ -482,13 +494,13 @@ import { settings_sidebar } from "@/composables";
 import moment from 'moment-timezone';
 import { useLoadingStore, useSettingsStore } from "@/store";
 
-
 const timeZones = moment.tz.names().map((name) => {
     const offset = moment.tz(name).format('Z');
     return `(GMT${offset}) ${name}`;
 });
 const useSettings = useSettingsStore();
 const isLoading = useLoadingStore();
+isLoading.addLoading("getUserData");
 
 const store = reactive({
     slideStep: 0,
@@ -496,10 +508,12 @@ const store = reactive({
     addLink: false,
     updatePayment: false,
     activeCollapse: "",
+    updateTimeZone: false,
     user_name: {
         name: "",
         surname: "",
-    }
+    },
+    changedImage: "",
 })
 
 const email_notification = [
@@ -533,8 +547,34 @@ function changeName() {
     useSettings.store.editNameModal = true;
 }
 
+function handlePhotoImage(e) {
+    // isLoading.user_update_checker.image = file;
+    isLoading.store.cropModal = false;
+  const file = e.target.files[0];
+  isLoading.store.previewImage = URL.createObjectURL(file);
+  document.getElementById("profile_img").value = "";
+  setTimeout(() => {
+    isLoading.store.cropModal = true;
+  }, 100);
+}
+
+function changedTimeZone() {
+    if (isLoading.user.location != isLoading.user_update_checker.location) {
+        store.updateTimeZone = true;
+    } else {
+        store.updateTimeZone = false;
+    }
+}
+
 function createLogo(name) {
     return name.split(" ").map((word) => word.charAt(0).toUpperCase()).join("");
+}
+
+function updateTimeZone() {
+    if (store.updateTimeZone) {
+        useSettings.updateUserData("timezone");
+        store.updateTimeZone = false;
+    }
 }
 
 function updateuserName() {
@@ -577,6 +617,14 @@ watch(
         } catch (error) { }
     }
 );
+
+watch(() => isLoading.store.cropModal, () => {
+  if (!isLoading.store.cropModal) {
+    isLoading.user_update_checker.image = isLoading.store.croppedFile
+  console.log(isLoading.user_update_checker.image)
+  useSettings.updateUserData()
+  }
+})
 
 onBeforeMount(() => {
     useSettings.getFullData();

@@ -1,6 +1,5 @@
 <template>
   <main class="flex gap-6">
-    <!-- <CropperImage /> -->
     <section class="min-w-[280px]">
       <div class="b_cd9 rounded-xl p-5">
         <div class="flex items-center justify-between">

@@ -35,7 +35,12 @@ export default defineNuxtConfig({
       baseURL: process.env.BASE_URL,
     },
   },
-  plugins: [{ src: "~/plugins/aos", mode: "client", ssr: false }, { src: '~/plugins/vuejs-clipper.js', mode: 'client' }, { src: '~/plugins/laravel-echo.ts', mode: 'client' }],
+  plugins: [
+    { src: "~/plugins/aos", mode: "client", ssr: false }, 
+    { src: '~/plugins/vuejs-clipper.js', mode: 'client' }, 
+    { src: '~/plugins/laravel-echo.ts', mode: 'client' },
+    { src: '~/plugins/vue-paginate-scroll.js', mode: 'client' },
+  ],
   imports: {
     autoImport: true,
   },

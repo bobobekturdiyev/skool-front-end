@@ -15,13 +15,14 @@ export const useSettingsStore = defineStore("settings", () => {
     editNameModal: false,
     is_update: false,
     is_changepass: false,
+    passwordError: [],
   });
 
   const changepassword = reactive({
     old_password: "",
     password: "",
     password_confirmation: "",
-  })
+  });
 
   function getFullData() {
     isLoading.addLoading("getUserData");
@@ -56,50 +57,86 @@ export const useSettingsStore = defineStore("settings", () => {
   }
 
   function changePassword() {
+    if (changepassword.old_password?.length < 8) {
+      return (store.passwordError = [
+        0,
+        "Parol 8 belgidan iborat bo'lishi kerak",
+      ]);
+    } else if (changepassword.password?.length < 8) {
+      return (store.passwordError = [
+        1,
+        "Parol 8 belgidan iborat bo'lishi kerak",
+      ]);
+    } else if (changepassword.password_confirmation?.length < 8) {
+      return (store.passwordError = [
+        2,
+        "Parol 8 belgidan iborat bo'lishi kerak",
+      ]);
+    }
     isLoading.addLoading("updateUserPassword");
     const token = localStorage.getItem("token");
     axios
-      .post(
-        baseUrl + `change-password`, changepassword,
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
+      .post(baseUrl + `change-password`, changepassword, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
       .then((res) => {
         console.log(res);
-        for (let i in changepassword) {
-          changepassword[i] = "";
-        } 
+        console.log(res.data.errors);
+        console.log(res.status);
+        if (res.data.code == 200) {
+          store.passwordError = "";
+          for (let i in changepassword) {
+            changepassword[i] = "";
+          }
+        } else {
+          store.passwordError = [0, res.data.message];
+        }
         isLoading.removeLoading("updateUserPassword");
       })
       .catch((err) => {
         console.log(err);
+        if (err.response.status == 400) {
+          store.passwordError = [0, err.response.data.errors[0]];
+        }
         isLoading.removeLoading("updateUserPassword");
       });
   }
 
-  function updateUserData() {
+  function updateUserData(type) {
     isLoading.addLoading("updateUserData");
     const token = localStorage.getItem("token");
+    let data;
+    const formData = new FormData();
+    if (type == "timezone") {
+      data = {
+        ...isLoading.user,
+        address: isLoading.user_update_checker.location,
+      };
+      for (let i of Object.keys(data)) {
+        formData.append(i, data[i]);
+      }
+    } else {
+      data = {
+        name: isLoading.user_update_checker.name,
+        surname: isLoading.user_update_checker.surname,
+        bio: isLoading.user_update_checker.bio,
+        address: isLoading.user_update_checker.location,
+        myers_briggs: isLoading.user_update_checker.myers_briggs,
+        image: isLoading.user_update_checker.image,
+        ...isLoading.user_update_checker.socials,
+      };
+      for (let i of Object.keys(data)) {
+        formData.append(i, data[i]);
+      }
+    }
     axios
-      .put(
-        baseUrl + `setting-account`,
-        {
-          name: isLoading.user_update_checker.name,
-          surname: isLoading.user_update_checker.surname,
-          bio: isLoading.user_update_checker.bio,
-          address: isLoading.user_update_checker.location,
-          myers_briggs: isLoading.user_update_checker.myers_briggs,
-          ...isLoading.user_update_checker.socials,
+      .post(baseUrl + `setting-account`, formData, {
+        headers: {
+          Authorization: "Bearer " + token,
         },
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
+      })
       .then((res) => {
         console.log(res);
         store.editNameModal = false;
@@ -124,5 +161,5 @@ export const useSettingsStore = defineStore("settings", () => {
       });
   }
 
-  return { store, changepassword, getFullData, updateUserData,changePassword };
+  return { store, changepassword, getFullData, updateUserData, changePassword };
 });
