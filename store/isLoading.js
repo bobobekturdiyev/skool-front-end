@@ -27,6 +27,7 @@ export const useLoadingStore = defineStore("loading", () => {
     croppedFile: "",
     cropModal: false,
     chatModal: false,
+    chatDialog: false,
   });
 
   const user = reactive({
@@ -37,6 +38,7 @@ export const useLoadingStore = defineStore("loading", () => {
     bio: "",
     location: "",
     image: null,
+    email: "",
     myers_briggs: "",
     socials: {
       website: null,

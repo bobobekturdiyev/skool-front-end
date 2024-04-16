@@ -1,9 +1,23 @@
 <template>
-    <main class="pt-4 -mb-[80px]">
+    <main class="sm:-mt-2 -mt-5 -mb-[80px]">
+        <nav
+        v-show="store.is_open"
+      @click="store.is_open = false"
+      class="sm:hidden flex items-center cursor-pointer -mt-10 mb-[10px] h-[60px] px-5"
+    >
+      <div class="full_flex gap-4 font-semibold _c07">
+        <img src="@/assets/svg/icon/back_route.svg" alt="" />
+        <p>{{ store.is_open_name }}</p>
+      </div>
+    </nav>
         <div class="flex gap-6">
-            <aside class="min-w-[280px] h-[calc(100vh_-140px)] overflow-hidden overflow-y-auto">
+            <aside 
+            :class="store.is_open ? 'sm:block hidden' : 'min-w-full'"
+            class="md:min-w-[280px] sm:min-w-[200px] h-[calc(100vh_-140px)] overflow-hidden overflow-y-auto !duration-300"
+            >
                 <ul class="_c07 text-sm">
-                    <li @click="store.slideStep = index"
+                    <li
+            @click="openData(index, i)"
                         :class="store.slideStep == index ? '_c2a font-medium bg-[#F0F5FA]' : 'bg-white'"
                         class="flex gap-4 items-center cursor-pointer r_8 overflow-hidden"
                         v-for="(i, index) in settings_sidebar">
@@ -12,16 +26,19 @@
                     </li>
                 </ul>
             </aside>
-            <div class="w-full bg-white r_16 h-[calc(100vh_-140px)] overflow-hidden profile_accordion">
+            <div 
+            class="w-full bg-white r_16 h-[calc(100vh_-140px)] overflow-hidden profile_accordion"
+        :class="store.is_open ? '' : 'sm:block hidden'"
+            >
                 <div class="mainSlider h-[calc(100vh_-140px)] duration-700">
                     <form @submit.prevent="useSettings.updateUserData()"
                         class="h-[calc(100vh_-140px)] overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full">
                         <h1 class="text-xl font-semibold">Profile</h1>
                         <div class="space-y-6">
-                            <div v-loading="isLoading.isLoadingType('updateUserData') || isLoading.isLoadingType('getUserData')" class="flex items-center gap-8 mt-6">
+                            <div v-loading="isLoading.isLoadingType('updateUserData') || isLoading.isLoadingType('getUserData')" class="flex items-center md:gap-8 gap-4 mt-6">
                                 <img  class="h-[100px] w-[100px] rounded-full object-cover" :src="isLoading.user.image"
                                     alt="">
-                                <label for="profile_img" class="border_cbc px-4 _c2a r_8 font-semibold uppercase block h-10 full_flex">change profile
+                                <label for="profile_img" class="md:text-[16px] text-sm border_cbc lg:px-4 sm:px-2 px-4 md:py-3 py-2 _c2a r_8 font-semibold text-center uppercase block full_flex">change profile
                                     photo
                                 </label>
                                 <input @change="handlePhotoImage" type="file" id="profile_img" class="h-0 w-0 overflow-hidden !p-0">
@@ -203,7 +220,7 @@
                     <section
                         class="h-[calc(100vh_-140px)] overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full space-y-6">
                         <h1 class="text-xl font-semibold">User notifications</h1>
-                        <div class="grid grid-cols-2 gap-6">
+                        <div class="grid md:grid-cols-2 gap-6">
                             <div>
                                 <label class="_c07 text-xs" for="follow_email">When somebody follows me</label>
                                 <el-select id="follow_email" class="block w-full mt-2"
@@ -240,7 +257,7 @@
                         <div class="space-y-10 mt-6">
                             <div v-for="i in 3" :key="i" class="flex items-center justify-between h-10">
                                 <div class="full_flex gap-4">
-                                    <div class="w-10 h-10 b_c2a r_8 full_flex" v-if="true">
+                                    <div class="w-10 h-10 min-w-[40px] b_c2a r_8 full_flex" v-if="true">
                                         <p class="font-semibold text-white">DM</p>
                                     </div>
                                     <img v-else src="@/assets/image/picture.png" alt="">
@@ -306,12 +323,12 @@
                         class="h-[calc(100vh_-140px)] animate-left overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full">
                         <div class="space-y-6 r_8">
                             <h1 class="text-xl font-semibold">Communities</h1>
-                            <p>Drag and drop to reorder your communities. Changes here will reflect in your switcher.
-                            </p>
+                            <p>Drag and drop to reorder your communities. Changes here will reflect in your switcher.</p>
                             <div class="space-y-10 mt-6">
-                                <div v-for="i in 3" class="flex items-center justify-between h-10">
-                                    <div class="full_flex gap-4">
-                                        <div class="w-10 h-10 b_c2a r_8 full_flex" v-if="true">
+                                <div v-for="i in 3">
+                                    <div class="flex items-center justify-between h-10">
+                                        <div class="full_flex gap-4">
+                                        <div class="w-10 h-10 min-w-[40px] b_c2a r_8 full_flex" v-if="true">
                                             <p class="font-semibold text-white">DM</p>
                                         </div>
                                         <img v-else src="@/assets/image/picture.png" alt="">
@@ -322,18 +339,31 @@
                                     </div>
                                     <div class="flex items-center gap-4">
                                         <button
-                                            class="full_flex gap-[10px] border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">
+                                            class="xl:flex hidden items-center justify-center gap-[10px] border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">
                                             Admin
                                             <img src="@/assets/svg/settings/settings.svg" alt="">
                                         </button>
                                         <button
-                                            class="full_flex gap-[10px] border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">
+                                            class="xl:flex hidden items-center justify-center gap-[10px] border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">
                                             Membership
                                             <img src="@/assets/svg/settings/settings.svg" alt="">
                                         </button>
                                         <p class="h-8 w-[1px] b_ce0"></p>
                                         <img v-if="true" src="@/assets/svg/settings/pinned.svg" alt="">
                                         <img v-else src="@/assets/svg/settings/unpinned.svg" alt="">
+                                    </div>
+                                    </div>
+                                    <div class="md:flex grid grid-cols-2 gap-4 md:mt-4 mt-[10px]">
+                                        <button
+                                            class="xl:hidden flex items-center justify-center gap-[10px] border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">
+                                            Admin
+                                            <img src="@/assets/svg/settings/settings.svg" alt="">
+                                        </button>
+                                        <button
+                                            class="xl:hidden flex items-center justify-center gap-[10px] border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">
+                                            Membership
+                                            <img src="@/assets/svg/settings/settings.svg" alt="">
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -357,11 +387,11 @@
                                     <button class="b_cbc px-6 uppercase font-semibold r_8">copy</button>
                                 </div>
                             </div>
-                            <div class="full_flex flex-col gap-4 _c07 border_ce0 h-[300px] r_8">
+                            <div class="full_flex flex-col gap-4 _c07 border_ce0 md:h-[300px] h-[150px] r_8">
                                 <img src="@/assets/svg/settings/empty_sales.svg" alt="">
                                 Your sales will show here
                             </div>
-                            <div class="flex items-center gap-6">
+                            <div class="lg:flex grid grid-cols-2 items-center xl:gap-6 gap-3">
                                 <div class="flex justify-center flex-col gap-3 _c07 border_cbc h-[80px] px-8 r_8">
                                     <p class="font-medium _ca1 leading-[14px] text-xs">Lifetime</p>
                                     <p class="text-xl font-semibold _c07 leading-6"><span class="_ca1">$</span>1500</p>
@@ -503,6 +533,8 @@ const isLoading = useLoadingStore();
 isLoading.addLoading("getUserData");
 
 const store = reactive({
+    is_open: false,
+    is_open_name: "",
     slideStep: 0,
     editGamification: false,
     addLink: false,
@@ -597,6 +629,13 @@ function listeneerUserData() {
         useSettings.store.is_update = false;
     }
 }
+
+function openData(index, name) {
+  store.slideStep = index;
+  store.is_open_name = name;
+  store.is_open = true;
+}
+
 
 function listenerChangePassword() {
     if (useSettings.changepassword.old_password && useSettings.changepassword.password && useSettings.changepassword.password_confirmation) {

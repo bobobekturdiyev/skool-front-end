@@ -9,20 +9,21 @@
             alt=""
           />
           <input
-            @focus="store.writingModal = true"
+            @focus="usePost.store.writingModal = true"
             class="!border-0 placeholder-black text-xl font-semibold"
             placeholder="Write something..."
           />
         </div>
 
         <div
-          v-if="store.writingModal"
-          @click="store.writingModal = false"
+          v-if="usePost.store.writingModal"
+          @click="usePost.store.writingModal = false"
           class="fixed top-0 bg-black bg-opacity-50 min-h-screen w-full z-50 left-0"
         ></div>
-        <div
-          v-if="store.writingModal"
-          class="b_cf0f relative z-50 r_16 overflow-hidden md:-mt-[72px]"
+        <form
+          @submit.prevent="usePost.write_post"
+          v-if="usePost.store.writingModal"
+          class="b_cf0f relative z-50 r_16 overflow-hidden overflow-y-auto max-h-[calc(100vh_-_177px)] md:-mt-[72px]"
         >
           <div class="flex items-center gap-3 b_cf0f h-[52px] px-5">
             <img
@@ -36,19 +37,67 @@
               <span class="font-semibold _c2a">Skool community</span>
             </p>
           </div>
-          <form class="p-5 space-y-5 bg-white">
-            <input class="h-10 !rounded-none" type="text" placeholder="Title" />
+          <div class="p-5 space-y-5 bg-white">
+            <input
+              v-model="usePost.create.title"
+              class="h-10 !rounded-none"
+              type="text"
+              placeholder="Title"
+              required
+            />
             <textarea
+              v-model="usePost.create.description"
               id="write_message"
               class="h-[120px] w-full !rounded-none"
               placeholder="Write something..."
+              required
             ></textarea>
-          </form>
+            <ul v-if="usePost.store.files_url.length" class="flex gap-5">
+              <li
+                class="relative imagelabel"
+                v-for="(i, index) in usePost.store.files_url"
+              >
+                <button
+                  @click="deleteImage(index)"
+                  type="button"
+                  class="absolute deleteimage !hidden top-2 right-2 rounded-full w-7 h-7 full_flex border p-2"
+                >
+                  <img src="@/assets/svg/x.svg" alt="" />
+                </button>
+                <img
+                  class="w-40 h-40 border rounded-xl object-cover"
+                  :src="i"
+                  alt=""
+                />
+              </li>
+              <li>
+                <label
+                  for="add_image"
+                  class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm w-40 h-40"
+                >
+                  <img class="w-1/3" src="@/assets/svg/add_photo.svg" alt="" />
+                  <p class="text-xs">Add a photo</p>
+                </label>
+              </li>
+            </ul>
+            <input
+              @change="handlePhotoImage"
+              type="file"
+              id="add_image"
+              class="h-0 w-0 overflow-hidden !p-0"
+            />
+            <p
+              v-if="usePost.store.error"
+              class="text-red-600 text-end text-sm pb-3"
+            >
+              {{ usePost.store.error }}
+            </p>
+          </div>
           <div class="flex items-center justify-between p-5 pt-0 bg-white">
             <div class="textarea_icon flex items-center">
-              <div class="icon full_flex h-10 w-10">
+              <label for="add_image" class="icon full_flex h-10 w-10">
                 <img src="@/assets/svg/textarea/upload.svg" alt="" />
-              </div>
+              </label>
               <div class="icon full_flex h-10 w-10">
                 <img src="@/assets/svg/textarea/link.svg" alt="" />
               </div>
@@ -65,40 +114,60 @@
                 <img src="@/assets/svg/textarea/gif.svg" alt="" />
               </div>
               <el-dropdown
+                @command="
+                  (command) => {
+                    usePost.create.category_id = command + 1;
+                  }
+                "
                 placement="bottom-end"
                 class="dropdown"
                 trigger="click"
               >
                 <div class="flex items-center gap-1 mx-4 font-medium text-sm">
-                  <p>Select category</p>
+                  <p class="whitespace-nowrap max-w-[100px] truncate">
+                    {{
+                      usePost.create.category_id
+                        ? text_dropdown[usePost.create.category_id - 1][0]
+                        : "Select category"
+                    }}
+                  </p>
                   <img src="@/assets/svg/textarea/select_arrow.svg" alt="" />
                 </div>
                 <template #dropdown>
                   <el-dropdown-menu
-                    class="min-w-[200px] !mt-3 !-mr-7 dropdown_shadow"
+                    class="min-w-[200px] !mt-3 !-mr-0 dropdown_shadow"
                   >
-                    <div
-                      v-for="i in text_dropdown"
-                      class="flex flex-col justify-center px-5 hover:bg-[#F2F2F2] cursor-pointer space-y-1 h-[63px]"
+                    <el-dropdown-item
+                      v-for="(i, index) in text_dropdown"
+                      :command="index"
+                      class="flex flex-col !items-start px-5 hover:bg-[#F2F2F2] cursor-pointer space-y-1 h-[63px]"
                     >
                       <h1 class="font-semibold">{{ i[0] }}</h1>
                       <p class="text-xs">{{ i[1] }}</p>
-                    </div>
+                    </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
             </div>
             <div class="flex gap-3 font-semibold">
               <button
-                @click="store.writingModal = false"
+                @click="usePost.store.writingModal = false"
                 class="uppercase h-10 px-6 rounded-lg _ca1"
               >
                 cancel
               </button>
-              <button class="uppercase h-10 px-6 b_ce0 rounded-lg">Post</button>
+              <button
+                v-loading="isLoading.isLoadingType('writePost')"
+                :type="
+                  isLoading.isLoadingType('writePost') ? 'button' : 'submit'
+                "
+                class="uppercase h-10 px-6 b_ce0 rounded-lg"
+              >
+                Post
+              </button>
             </div>
           </div>
-        </div>
+        </form>
       </section>
       <!-- category -->
       <section class="text-sm whitespace-nowrap">
@@ -155,7 +224,7 @@
                 class="flex min-w-[328px] filter_dropdown dropdown_shadow 2xl:!-ml-[60px]"
               >
                 <div class="w-[150px] border-r border-[#E0E0E0]">
-                  <h1 class="text-sm font-medium px-8 mb-2">Type</h1>
+                  <h1 class="text-sm font-medium px-8 mb-2">Filter</h1>
                   <el-dropdown-item
                     class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
                   >
@@ -165,7 +234,7 @@
                       type="radio"
                       name="type"
                     />
-                    <label for="type_all">All</label>
+                    <label for="type_all">None</label>
                   </el-dropdown-item>
                   <el-dropdown-item
                     class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
@@ -176,7 +245,7 @@
                       type="radio"
                       name="type"
                     />
-                    <label for="type_public">Public</label>
+                    <label for="type_public">Pinned (3)</label>
                   </el-dropdown-item>
                   <el-dropdown-item
                     class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
@@ -187,11 +256,33 @@
                       type="radio"
                       name="type"
                     />
-                    <label for="type_private">Private</label>
+                    <label for="type_private">Watching</label>
+                  </el-dropdown-item>
+                  <el-dropdown-item
+                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
+                  >
+                    <input
+                      id="type_private"
+                      class="rounded-full"
+                      type="radio"
+                      name="type"
+                    />
+                    <label for="type_private">Unread</label>
+                  </el-dropdown-item>
+                  <el-dropdown-item
+                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
+                  >
+                    <input
+                      id="type_private"
+                      class="rounded-full"
+                      type="radio"
+                      name="type"
+                    />
+                    <label for="type_private">No comments</label>
                   </el-dropdown-item>
                 </div>
                 <div class="w-[150px]">
-                  <h1 class="text-sm font-medium px-8 mb-2">Price</h1>
+                  <h1 class="text-sm font-medium px-8 mb-2">Sort</h1>
                   <el-dropdown-item
                     class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
                   >
@@ -201,7 +292,7 @@
                       type="radio"
                       name="price"
                     />
-                    <label for="price_all">All</label>
+                    <label for="price_all">Recent activity</label>
                   </el-dropdown-item>
                   <el-dropdown-item
                     class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
@@ -212,7 +303,7 @@
                       type="radio"
                       name="price"
                     />
-                    <label for="price_public">Public</label>
+                    <label for="price_public">Newest post</label>
                   </el-dropdown-item>
                   <el-dropdown-item
                     class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
@@ -223,7 +314,7 @@
                       type="radio"
                       name="price"
                     />
-                    <label for="price_private">Private</label>
+                    <label for="price_private">Best (this week)</label>
                   </el-dropdown-item>
                 </div>
               </el-dropdown-menu>
@@ -234,7 +325,17 @@
 
       <!-- posts -->
       <section class="md:space-y-5 space-y-4">
+        <div
+          class="md:space-y-5 space-y-4"
+          v-if="isLoading.isLoadingType('getPosts')"
+        >
+          <LoadingDiv
+            v-for="i in 10"
+            class="min-h-[250px] r_16 overflow-hidden"
+          />
+        </div>
         <article
+          v-else
           v-for="i in usePost.store.posts"
           data-aos="zoom-in"
           class="relative md:flex r_16 overflow-hidden bg-white"
@@ -388,7 +489,8 @@
                         <button class="uppercase border border-[#BCDEFF] r_8">
                           follow
                         </button>
-                        <button @click="openChatModal(i.user_id)"
+                        <button
+                          @click="openChatModal(i.user_id)"
                           class="full_flex gap-[10px] uppercase b_ce0 _ca1 r_8"
                         >
                           chat
@@ -408,7 +510,7 @@
                 </div>
               </div>
               <h2
-                class="md:mb-2 mb-4 md:mt-4 mt-6 truncate md:text-xl text-md font-semibold md:w-full w-[120%]"
+                class="md:mb-2 mb-4 md:mt-4 mt-6 truncate md:text-xl text-[16px] font-semibold md:w-full w-[120%]"
               >
                 {{ i.title }}
               </h2>
@@ -435,15 +537,21 @@
                   9 members have voted
                 </p>
               </div>
-              <div class="flex items-center _c59 gap-4 md:text-md text-sm">
+              <div class="flex items-center _c59 gap-4 md:text-[16px] text-sm">
                 <p class="full_flex gap-1">
                   <img src="@/assets/svg/community/like.svg" alt="" /> 355
                 </p>
-                <p @click="store.card_info = true" class="full_flex gap-1 cursor-pointer">
+                <p
+                  @click="store.card_info = true"
+                  class="full_flex gap-1 cursor-pointer"
+                >
                   <img src="@/assets/svg/community/message.svg" alt="" />
                   609
                 </p>
-                <div @click="store.card_info = true" class="flex -space-x-[5px] cursor-pointer">
+                <div
+                  @click="store.card_info = true"
+                  class="flex -space-x-[5px] cursor-pointer"
+                >
                   <img
                     v-for="(i, index) in 7"
                     class="h-[26px] w-[26px] md:block hidden object-cover"
@@ -452,7 +560,10 @@
                     :style="`z-index: ${7 - index}`"
                   />
                 </div>
-                <p @click="store.card_info = true" class="_c2a md:text-sm text-xs font-semibold cursor-pointer">
+                <p
+                  @click="store.card_info = true"
+                  class="_c2a md:text-sm text-xs font-semibold cursor-pointer"
+                >
                   New comment 10h ago
                 </p>
               </div>
@@ -471,23 +582,29 @@
         <Pagination_card class="pt-3" />
       </section>
     </div>
-    <div class="lg:min-w-[280px]">
+    <div class="min-w-[200px] md:max-w-[280px]">
       <!-- info card -->
       <section>
         <div class="rounded-2xl overflow-hidden bg-white">
           <img
             class="w-full md:max-h-[150px] object-cover"
-            src="@/assets/image/picture.png"
+            :src="useGroup.store.group_by_username[0]?.image"
             alt=""
           />
           <div class="p-4 space-y-4">
-            <h1 class="font-medium text-lg">Skool Community</h1>
+            <h1 class="font-medium text-lg">
+              {{ useGroup.store.group_by_username[0]?.name }}
+            </h1>
             <p class="flex items-center _ca1 gap-1">
               <img src="@/assets/svg/community/grey_private.svg" alt="" />
-              Private group
+              {{
+                useGroup.store.group_by_username[0]?.group_type == "private"
+                  ? "Private group"
+                  : "Public group"
+              }}
             </p>
             <p class="text-sm">
-              Let's collaborate to make Skool better. Share your feedback!
+              {{ useGroup.store.group_by_username[0]?.description }}
             </p>
             <div class="py-1 text-sm border-y border-[#E0E0E0]">
               <p class="flex items-center gap-1 h-7 px-3 _c59">
@@ -575,6 +692,9 @@
         </div>
       </section>
     </div>
+    <!-- <section class="md:hidden block mb-6">
+     
+    </section> -->
     <section class="md:hidden block mb-6">
       <div class="flex items-center px-5 bg-white r_16 h-[52px] gap-[14px]">
         <img
@@ -584,9 +704,162 @@
         />
         <input
           class="!border-0 placeholder-black font-semibold"
+          @focus="usePost.store.writingModal = true"
           placeholder="Write something..."
         />
       </div>
+
+      <div
+        v-if="usePost.store.writingModal"
+        @click="usePost.store.writingModal = false"
+        class="fixed top-0 bg-black bg-opacity-50 min-h-screen w-full z-50 left-0"
+      ></div>
+      <form
+        @submit.prevent="usePost.write_post"
+        v-if="usePost.store.writingModal"
+        class="b_cf0f relative z-50 r_16 overflow-hidden overflow-y-auto max-h-[calc(100vh_-_177px)] -mt-[72px]"
+      >
+        <div class="flex items-center gap-3 b_cf0f h-[52px] px-5">
+          <img
+            class="h-5 w-5 object-cover"
+            src="@/assets/image/user.svg"
+            alt=""
+          />
+          <p class="text-sm flex gap-1">
+            <span class="font-semibold">Xayot Sharapov</span>
+            <span class="_ca1">posting in</span>
+            <span class="font-semibold _c2a">Skool community</span>
+          </p>
+        </div>
+        <div class="p-5 space-y-5 bg-white">
+          <input
+            v-model="usePost.create.title"
+            class="h-10 !rounded-none"
+            type="text"
+            placeholder="Title"
+            required
+          />
+          <textarea
+            v-model="usePost.create.description"
+            id="write_message"
+            class="h-[120px] w-full !rounded-none"
+            placeholder="Write something..."
+            required
+          ></textarea>
+          <ul v-if="usePost.store.files_url.length" class="flex gap-5">
+            <li
+              class="relative imagelabel"
+              v-for="(i, index) in usePost.store.files_url"
+            >
+              <button
+                @click="deleteImage(index)"
+                type="button"
+                class="absolute deleteimage !hidden top-2 right-2 rounded-full w-7 h-7 full_flex border p-2"
+              >
+                <img src="@/assets/svg/x.svg" alt="" />
+              </button>
+              <img
+                class="w-40 h-40 border rounded-xl object-cover"
+                :src="i"
+                alt=""
+              />
+            </li>
+            <li>
+              <label
+                for="add_image"
+                class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm w-40 h-40"
+              >
+                <img class="w-1/3" src="@/assets/svg/add_photo.svg" alt="" />
+                <p class="text-xs">Add a photo</p>
+              </label>
+            </li>
+          </ul>
+          <input
+            @change="handlePhotoImage"
+            type="file"
+            id="add_image"
+            class="h-0 w-0 overflow-hidden !p-0"
+          />
+          <p
+            v-if="usePost.store.error"
+            class="text-red-600 text-end text-sm pb-3"
+          >
+            {{ usePost.store.error }}
+          </p>
+        </div>
+        <div class="flex items-center justify-between p-5 pt-0 bg-white">
+          <div class="textarea_icon flex items-center">
+            <label for="add_image" class="icon full_flex h-10 w-10">
+              <img src="@/assets/svg/textarea/upload.svg" alt="" />
+            </label>
+            <div class="icon full_flex h-10 w-10">
+              <img src="@/assets/svg/textarea/link.svg" alt="" />
+            </div>
+            <div class="icon full_flex h-10 w-10">
+              <img src="@/assets/svg/textarea/video.svg" alt="" />
+            </div>
+            <div class="icon full_flex h-10 w-10">
+              <img src="@/assets/svg/textarea/poll.svg" alt="" />
+            </div>
+            <div class="icon full_flex h-10 w-10">
+              <img src="@/assets/svg/textarea/emoji.svg" alt="" />
+            </div>
+            <div class="icon full_flex h-10 w-10">
+              <img src="@/assets/svg/textarea/gif.svg" alt="" />
+            </div>
+            <el-dropdown
+              @command="
+                (command) => {
+                  usePost.create.category_id = command + 1;
+                }
+              "
+              placement="bottom-end"
+              class="dropdown"
+              trigger="click"
+            >
+              <div class="flex items-center gap-1 mx-4 font-medium text-sm">
+                <p class="whitespace-nowrap max-w-[100px] truncate">
+                  {{
+                    usePost.create.category_id
+                      ? text_dropdown[usePost.create.category_id - 1][0]
+                      : "Select category"
+                  }}
+                </p>
+                <img src="@/assets/svg/textarea/select_arrow.svg" alt="" />
+              </div>
+              <template #dropdown>
+                <el-dropdown-menu
+                  class="min-w-[200px] !mt-3 !-mr-0 dropdown_shadow"
+                >
+                  <el-dropdown-item
+                    v-for="(i, index) in text_dropdown"
+                    :command="index"
+                    class="flex flex-col !items-start px-5 hover:bg-[#F2F2F2] cursor-pointer space-y-1 h-[63px]"
+                  >
+                    <h1 class="font-semibold">{{ i[0] }}</h1>
+                    <p class="text-xs">{{ i[1] }}</p>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+          <div class="flex gap-3 font-semibold">
+            <button
+              @click="usePost.store.writingModal = false"
+              class="uppercase h-10 px-6 rounded-lg _ca1"
+            >
+              cancel
+            </button>
+            <button
+              v-loading="isLoading.isLoadingType('writePost')"
+              :type="isLoading.isLoadingType('writePost') ? 'button' : 'submit'"
+              class="uppercase h-10 px-6 b_ce0 rounded-lg"
+            >
+              Post
+            </button>
+          </div>
+        </div>
+      </form>
     </section>
 
     <!-- card info -->
@@ -628,7 +901,9 @@
             </button>
             <template #dropdown>
               <el-dropdown-menu class="min-w-[140px] dropdown_shadow">
-                <el-dropdown-item @click="copyLink" class="!text-xs font-medium h-10 px-3"
+                <el-dropdown-item
+                  @click="copyLink"
+                  class="!text-xs font-medium h-10 px-3"
                   >Copy link</el-dropdown-item
                 >
                 <el-dropdown-item
@@ -821,7 +1096,7 @@ Skool group owners that want to play can join
                         </div>
                         <div class="flex gap-3 font-semibold">
                           <button
-                            @click="store.writingModal = false"
+                            @click="usePost.store.writingModal = false"
                             class="uppercase h-10 px-6 rounded-lg _ca1"
                           >
                             cancel
@@ -870,7 +1145,7 @@ Skool group owners that want to play can join
           </div>
           <div class="flex gap-3 font-semibold">
             <button
-              @click="store.writingModal = false"
+              @click="usePost.store.writingModal = false"
               class="uppercase h-10 px-6 rounded-lg _ca1"
             >
               cancel
@@ -900,7 +1175,12 @@ Skool group owners that want to play can join
           >
             cancel
           </button>
-          <button @click="reposrtToAdmins" class="uppercase h-10 px-6 b_cbc _c07 rounded-lg">yes</button>
+          <button
+            @click="reposrtToAdmins"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            yes
+          </button>
         </div>
       </div>
     </el-dialog>
@@ -912,14 +1192,21 @@ definePageMeta({
   layout: "community",
 });
 
-import { usePostStore, useLoadingStore, useChatStore } from "@/store";
+import {
+  usePostStore,
+  useLoadingStore,
+  useChatStore,
+  useGroupStore,
+} from "@/store";
 import { useNotification } from "@/composables/notifications";
 
 const usePost = usePostStore();
 const useChat = useChatStore();
+const useGroup = useGroupStore();
 const isLoading = useLoadingStore();
 const { showMessage } = useNotification();
 usePost.get_posts();
+usePost.get_categories();
 const store = reactive({
   is_show: false,
   writingModal: false,
@@ -951,20 +1238,42 @@ const text_dropdown = [
 ];
 
 function openChatModal(data) {
-  isLoading.store.chatModal = true
+  isLoading.store.chatModal = true;
   useChat.store.chat_user_data = data;
   isLoading.store.chatModal = true;
-  useChat.getChatMessages()
+  useChat.getChatMessages();
+}
+
+function handlePhotoImage(e) {
+  const file = e.target.files[0];
+  const url = URL.createObjectURL(file);
+  document.getElementById("add_image").value = "";
+  usePost.store.files_url.push(url);
+  usePost.create.files.push(file);
+}
+
+function deleteImage(index) {
+  console.log(index);
+  usePost.store.files_url.splice(index, 1);
+  usePost.create.files.splice(index, 1);
 }
 
 watch(
-  () => store.writingModal,
+  () => usePost.store.writingModal,
   () => {
-    if (store.writingModal) {
+    if (usePost.store.writingModal) {
       document.querySelector("body").classList.add("overflow-hidden");
     } else {
       document.querySelector("body").classList.remove("overflow-hidden");
     }
+  }
+);
+
+watch(
+  () => isLoading.store.pagination.current_page,
+  () => {
+    window.scrollTo(0, 0);
+    usePost.get_posts();
   }
 );
 </script>

@@ -1,8 +1,7 @@
 <template>
-  <main>
-    <el-tabs
+  <nav class="max-w-[100vw] overflow-hidden overflow-x-auto">
+    <el-tabs class="min-w-fit"
       v-model="store.activeName"
-      class="demo-tabs"
       @click="handleClick"
     >
       <el-tab-pane label="Community" name=""></el-tab-pane>
@@ -12,7 +11,7 @@
       <el-tab-pane label="Leaderboards" name="leaderboards"></el-tab-pane>
       <el-tab-pane label="About" name="about"></el-tab-pane>
     </el-tabs>
-  </main>
+  </nav>
 </template>
 
 <script setup>

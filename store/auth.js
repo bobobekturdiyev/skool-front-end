@@ -48,14 +48,25 @@ export const useAuthStore = defineStore("auth", () => {
     const token = localStorage.getItem("token");
     isLoading.addLoading("getUser");
     axios
-      .get(baseUrl + "users/1", {
+      .get(baseUrl + "setting-profile", {
         headers: {
           Authorization: "Bearer " + token,
         },
       })
       .then((res) => {
-        console.log(res);
-        store.userData = res.data?.data;
+        for (const [key, value] of Object.entries(res.data?.data)) {
+          if (key === "socials") {
+            for (const socialKey in value) {
+              isLoading.user_update_checker.socials[socialKey] =
+                value[socialKey];
+              isLoading.user.socials[socialKey] = value[socialKey];
+            }
+          } else {
+            isLoading.user[key] = value;
+            isLoading.user_update_checker[key] = value;
+            store.is_update = false;
+          }
+        }
         isLoading.removeLoading("getUser");
       })
       .catch((err) => {

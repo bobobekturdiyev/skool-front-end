@@ -1,18 +1,22 @@
 <template>
-  <nav class="fixed top-0 w-full z-50 bg-white navbar">
+  <nav class="fixed top-0 w-full z-50 bg-white navbar h-[64px]">
     <div
       class="flex justify-between items-center h-[64px] mx-auto xl:px-[200px] lg:px-[100px] md:px-[50px] sm:px-[50px] px-5 max-w-[1536px]"
     >
-      <div class="flex items-center gap-5 cursor-pointer">
+      <div class="flex items-center sm:gap-5 gap-3 cursor-pointer">
         <router-link to="/">
           <img
             v-if="$router.currentRoute.value.name == 'index'"
             src="/logo.svg"
             alt=""
           />
-          <div v-else-if="$router.currentRoute.value.name == 'community-about'">
+          <div
+            v-else-if="
+              $router.currentRoute.value.name.indexOf('community') == 0
+            "
+          >
             <img
-              class="h-10 w-10 object-cover rounded-full"
+              class="sm:h-10 sm:w-10 h-7 w-7 object-cover rounded-full"
               v-if="useGroup.store.group_by_username[0]?.user_id?.image"
               :src="useGroup.store.group_by_username[0]?.user_id?.image"
               alt=""
@@ -25,17 +29,18 @@
           <img v-else src="/icon.svg" alt="" />
         </router-link>
         <router-link
-          v-if="$router.currentRoute.value.name == 'community-about'"
-          class="text-lg font-semibold"
-          to="/"
-          >{{ useGroup.store.group_by_username[0]?.user_id?.name }}
+          v-if="$router.currentRoute.value.name.indexOf('community') == 0"
+          class="sm:text-lg text-sm font-semibold whitespace-nowrap max-w-[150px] truncate"
+          :to="'/' + $router.currentRoute.value.params.community"
+        >
+          {{ useGroup.store.group_by_username[0]?.user_id?.name }}
           {{
             useGroup.store.group_by_username[0]?.user_id?.surname
           }}</router-link
         >
         <router-link
           v-else-if="$router.currentRoute.value.name != 'index'"
-          class="text-lg font-semibold"
+          class="md:text-lg text-sm whitespace-nowrap font-semibold"
           to="/"
           >Skool community</router-link
         >
@@ -77,6 +82,24 @@
             </el-dropdown-menu>
           </template>
         </el-dropdown>
+      </div>
+      <div
+        class="relative lg:w-[50%] w-[40%] md:block hidden"
+        v-if="!search_bar.includes($router.currentRoute.value.name)"
+      >
+        <img
+          class="md:my-[10px] my-[14px] w-5 h-5 left-5 absolute"
+          src="@/assets/svg/blue_search.svg"
+          alt=""
+        />
+        <input
+          @input="handleSearch"
+          v-model="useGroup.store.filter.search"
+          autofocus
+          class="md:h-[40px] h-12 !pl-[60px] b_none font-medium w-full !rounded-lg bg-[#F0F5FA] placeholder-[#9CCDFE]"
+          type="text"
+          placeholder="Search all reports"
+        />
       </div>
       <div class="flex items-center md:gap-10 gap-6">
         <el-dropdown
@@ -128,103 +151,27 @@
               <el-dropdown-menu
                 class="!text-[16px] messages navigation_dropdown w-[500px] min-h-[80vh] dropdown_shadow !mt-3 !-mr-[120px]"
               >
-                <div
-                  class="flex items-center justify-between sticky z-20 top-0 bg-white pt-4 pb-5 px-4"
-                >
-                  <h1 class="font-semibold">Chat</h1>
-                  <el-dropdown placement="bottom-end" class="dropdown">
-                    <div class="full_flex gap-1 _c2a text-xs font-semibold">
-                      <p class="text-xs">All</p>
-                      <img src="@/assets/svg/chat/select_arrow.svg" alt="" />
-                    </div>
-                    <template #dropdown>
-                      <el-dropdown-menu
-                        class="community_dropdown min-w-[200px] dropdown_shadow"
-                      >
-                        <el-dropdown-item @click="handleChatType('all')"
-                          >All</el-dropdown-item
-                        >
-                        <el-dropdown-item @click="handleChatType('unread')"
-                          >Unread</el-dropdown-item
-                        >
-                      </el-dropdown-menu>
-                    </template>
-                  </el-dropdown>
-                </div>
-                <div class="flex pb-5 px-4">
-                  <img
-                    class="-mr-10 z-10 ml-5"
-                    src="@/assets/svg/chat/search.svg"
-                    alt=""
-                  />
-                  <input
-                    class="placeholder-[#9CCDFE] !pl-[60px] b_cf0f r_8 !border-none"
-                    type="text"
-                    placeholder="Search all reports"
-                  />
-                </div>
-                <div v-if="useChat.store.users?.length">
-                  <el-dropdown-item
-                    @click="openChatModal(i)"
-                    :id="`tooltip${index}`"
-                    class="chat_item"
-                    v-for="(i, index) in useChat.store.users"
-                  >
-                    <img
-                      class="h-10 w-10 rounded-full object-cover"
-                      :src="i.image"
-                      :title="i.user_id?.name + ' ' + i.surname"
-                    />
-                    <div class="space-y-1 max-w-[390px]">
-                      <h1 class="font-semibold">
-                        {{ i.name }} {{ i.surname }}
-                        <span class="_c59 font-[400] text-xs">19d ago</span>
-                      </h1>
-                      <p class="truncate max-w-[390px]">
-                        💪 I want to work on building my self-confidence. Have
-                        you ever struggled with this? How did you develop a
-                        stronger sense of self-worth? 💪💖
-                      </p>
-                    </div>
-                    <el-tooltip content="Mark unread" placement="top">
-                      <div
-                        class="unread_tooltip cursor-pointer"
-                        @mouseover="handleMouseOver(index)"
-                        @mouseleave="handleMouseLeave(index)"
-                      >
-                        <p
-                          class="h-[10px] z-10 w-[10px] m-[6px] rounded-full b_c2a unreadbtn"
-                        ></p>
-                      </div>
-                    </el-tooltip>
-                  </el-dropdown-item>
-                </div>
-                <el-dropdown-item
-                  v-else
-                  id="nochatyet"
-                  class="flex items-center justify-center"
-                >
-                  No chat yet
-                </el-dropdown-item>
+                <Chat />
               </el-dropdown-menu>
             </template>
           </el-dropdown>
           <img src="@/assets/svg/nav/notification.svg" alt="" />
-          <!-- <router-link to="/">
-            <img class="h-10 w-10 object-cover" src="@/assets/image/user.svg" alt="" />
-          </router-link> -->
           <el-dropdown v-if="store.is_mount" placement="bottom-end">
             <img
-              class="h-10 w-10 object-cover"
-              src="@/assets/image/user.svg"
+              class="h-10 w-10 rounded-full object-cover"
+              :src="isLoading.user.image"
               alt=""
             />
             <template #dropdown>
               <el-dropdown-menu
                 class="navigation_dropdown min-w-[200px] dropdown_shadow !-ml-3"
               >
-                <p class="px-4 py-3 border-b border-[]">xayotwork@gmail.com</p>
-                <el-dropdown-item>Profile</el-dropdown-item>
+                <p class="px-4 py-3 border-b border-[]">
+                  {{ isLoading.user.email }}
+                </p>
+                <el-dropdown-item @click="$router.push('/profile')"
+                  >Profile</el-dropdown-item
+                >
                 <el-dropdown-item @click="$router.push('/settings')"
                   >Settings</el-dropdown-item
                 >
@@ -287,13 +234,13 @@
                     src="@/assets/image/user.svg"
                     alt=""
                   />
-                  <p>{{ isLoading.store.email }}</p>
+                  <p>{{ isLoading.user.email }}</p>
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <el-dropdown-item @click="$router.push('/profile')">
                   <img src="@/assets/svg/menu/profile.svg" alt="" />
                   <p>My Profile</p>
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <el-dropdown-item @click="$router.push('/settings')">
                   <img src="@/assets/svg/menu/settings.svg" alt="" />
                   <p>Settings</p>
                 </el-dropdown-item>
@@ -301,7 +248,7 @@
                   <img src="@/assets/svg/menu/notifications.svg" alt="" />
                   <p>Notifications</p>
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <el-dropdown-item @click="isLoading.store.chatDialog = true">
                   <img src="@/assets/svg/menu/chats.svg" alt="" />
                   <p>Chats</p>
                 </el-dropdown-item>
@@ -336,13 +283,24 @@
       <Login />
     </el-dialog>
 
+    <!-- chat dialog -->
+    <el-dialog
+      v-model="isLoading.store.chatDialog"
+      align-center
+      class="!rounded-lg min-w-[90%] max-h-[70vh] overflow-hidden min-h-[70vh] !mx-auto !my-auto !p-0 !m-0"
+    >
+      <div class="my-auto">
+        <ChatMobile />
+      </div>
+    </el-dialog>
+
     <!-- chat -->
     <el-dialog
       v-model="isLoading.store.chatModal"
       v-if="isLoading.store.chatModal"
       align-center
-      :class="store.isOpen ? 'h-full' : 'h-[542px]'"
-      class="!rounded-xl overflow-hidden min-w-[632px] chatModal !relative"
+      :class="store.isOpen ? 'h-full' : 'sm:h-[542px] h-full'"
+      class="!rounded-xl overflow-hidden md:min-w-[632px] sm:min-w-[calc(100vw_-_40px)] min-w-full chatModal !relative"
     >
       <div
         class="flex items-center justify-between h-16 border-b border-[#E0E0E0] px-5"
@@ -358,19 +316,21 @@
               {{ useChat.store.chat_user_data.name }}
               {{ useChat.store.chat_user_data.surname }}
             </h1>
-            <p class="text-xs">active 15h ago (5:06am in Los Angeles)</p>
+            <p class="text-xs truncate w-[90%]">
+              active 15h ago (5:06am in Los Angeles)
+            </p>
           </div>
         </div>
         <div class="flex items-center gap-5">
           <img
             @click="store.isOpen = !store.isOpen"
-            class="cursor-pointer"
+            class="cursor-pointer sm:block hidden"
             src="@/assets/svg/chat/open.svg"
             alt=""
           />
           <el-dropdown placement="bottom-end" class="dropdown" trigger="click">
             <img
-              class="cursor-pointer"
+              class="cursor-pointer min-w-[24px]"
               src="@/assets/svg/chat/three_dot.svg"
               alt=""
             />
@@ -398,32 +358,37 @@
         id="chatContainer"
         @scroll="chatScrollListener"
         class="overflow-y-auto overflow-hidden"
-        :class="store.isOpen ? 'h-[calc(100vh_-_124px)]' : 'h-[420px]'"
+        :class="
+          store.isOpen
+            ? 'h-[calc(100vh_-_124px)]'
+            : 'sm:h-[420px] h-[calc(100vh_-_124px)]'
+        "
       >
         <div
           v-if="
             isLoading.store.pagination.current_page ==
-            isLoading.store.pagination.last_page && !isLoading.isLoadingType('getChatMessage')
+              isLoading.store.pagination.last_page &&
+            !isLoading.isLoadingType('getChatMessage')
           "
-          class="flex items-center gap-10 py-5 px-4 b_cf0f mx-14 mt-5 mb-10 r_8"
+          class="flex sm:flex-row flex-col items-center gap-10 py-5 px-4 b_cf0f sm:mx-14 mx-4 mt-5 md:mb-10 mb-4 r_8"
         >
           <div class="w-[158px] space-y-10 relative">
             <img
               title="Xayot Sharapov"
               class="h-10 w-10 object-cover cursor-pointer rounded-full mx-auto"
-              src="@/assets/image/user.svg"
+              :src="isLoading.user.image"
               alt=""
             />
             <div class="flex gap-[78px]">
               <img
                 title="Xayot Sharapov"
                 class="h-10 w-10 object-cover cursor-pointer rounded-full"
-                src="@/assets/image/user.svg"
+                :src="isLoading.user.image"
                 alt=""
               />
               <img
                 title="Xayot Sharapov"
-                class="h-10 w-10 object-cover cursor-pointer rounded-full"
+                class="h-10 w-10 min-w-[40px] object-cover cursor-pointer rounded-full"
                 :src="useChat.store.chat_user_data.image"
                 alt=""
               />
@@ -448,7 +413,9 @@
         <div
           v-show="
             isLoading.store.pagination.current_page !=
-              isLoading.store.pagination.last_page || isLoading.isLoadingType('getChatMessage')"
+              isLoading.store.pagination.last_page ||
+            isLoading.isLoadingType('getChatMessage')
+          "
           id="chat_loading"
           class="my-2 text-center"
         >
@@ -474,17 +441,17 @@
           <article
             :id="`chat_messages${message.id}`"
             v-for="(message, index) of useChat.store.chat_messages"
-            class="space-y-5 pb-6"
+            class="space-y-5 md:pb-6 pb-4 md:text-[16px] text-sm"
           >
             <p
               v-if="useChat.store.chatTimeList[index]"
-              class="mb-5 text-center _ca1"
+              class="md:mb-5 mb-4 text-center _ca1"
             >
               {{ useChat.store.chatTimeList[index] }}
             </p>
             <div
               v-if="message.sender?.id != isLoading.user.id"
-              class="mx-5 flex gap-4"
+              class="sm:mx-5 mx-4 flex gap-4"
             >
               <img
                 title="Xayot Sharapov"
@@ -536,16 +503,27 @@
         <input
           @change="useChat.sendMessage"
           v-model="useChat.message.text"
-          class="!border-0 w-full"
+          class="sm:block hidden !border-0 w-full"
           type="text"
           placeholder="Message Get Clients Support Team"
         />
+        <input
+          @change="useChat.sendMessage"
+          v-model="useChat.message.text"
+          class="sm:hidden block !border-0 w-full"
+          type="text"
+          placeholder="Message here"
+        />
         <div class="flex h-[14px] w-[120px] gap-[26px]">
-          <label for="upload_image">
+          <label for="upload_image" class="min-w-[14px]">
             <img src="@/assets/svg/textarea/upload.svg" alt="" />
           </label>
           <el-dropdown placement="bottom-end" class="dropdown" trigger="click">
-            <img src="@/assets/svg/textarea/emoji.svg" alt="" />
+            <img
+              class="min-w-[14px]"
+              src="@/assets/svg/textarea/emoji.svg"
+              alt=""
+            />
 
             <template #dropdown>
               <el-dropdown-menu
@@ -582,8 +560,10 @@ import { useI18n } from "vue-i18n";
 
 const useAuth = useAuthStore();
 const useGroup = useGroupStore();
-const useChat = useChatStore();
 const isLoading = useLoadingStore();
+const useChat = useChatStore();
+
+const search_bar = ["index", "settings", "community-about"];
 
 const store = reactive({
   lang: {
@@ -596,82 +576,12 @@ const store = reactive({
   lang_icon: { en, ru, uz, uz_ru },
   is_mount: false,
   isOpen: false,
-  chatTime: "",
-  chatTimeList: [],
-  chatUserId: "",
 });
 
 function changedLang(lang) {
   console.log(lang);
   localStorage.setItem("lang", lang);
 }
-
-function handleMouseOver(index) {
-  const chat_item = document.querySelector(`#tooltip${index}`);
-  chat_item?.classList.remove("el-dropdown-menu__item");
-  chat_item?.classList.add("el-dropdown-menu__item2");
-}
-
-function handleMouseLeave(index) {
-  const chat_item = document.querySelector(`#tooltip${index}`);
-  chat_item?.classList.remove("el-dropdown-menu__item2");
-  chat_item?.classList.add("el-dropdown-menu__item");
-}
-
-function handleChatType(type) {
-  const dropdown = document.querySelector(".chat_dropdown img");
-  dropdown.click();
-  console.log(dropdown);
-}
-
-function openChatModal(data) {
-  console.log(data);
-  isLoading.store.pagination.current_page = 1;
-  useChat.store.chat_user_data = data;
-  isLoading.store.chatModal = true;
-  useChat.getChatMessages();
-}
-
-onBeforeMount(() => {
-  console.log(window.location.hostname);
-  store.is_mount = true;
-  useChat.getChatUsers();
-  // window.Echo.channel("chat_" + 1).listen(
-  //   "MessageSent",
-  //   (e) => {
-  //     if (
-  //       e.message.sender_type === "user" &&
-  //       e.message.chat_id === 1
-  //     ) {
-  //       let index = this.managers.findIndex(
-  //         (manager) => manager.chat_id === chat_id
-  //       );
-  //       if (index !== -1) {
-  //         if (!this.counter[index]) {
-  //           this.counter[index] = 0;
-  //         }
-  //         this.counter[index]++;
-  //         this.notificationSound.play();
-  //       };
-  //     };
-  //   },
-  // );
-});
-
-// function chatScrollListener() {
-//   const chatContainer = document.getElementById("chatContainer");
-//   if (chatContainer.scrollTop < 100) {
-//     if (!isLoading.isLoadingType("getChatMessage")) {
-//       if (
-//         isLoading.store.pagination.current_page <
-//         isLoading.store.pagination.last_page
-//       ) {
-//         isLoading.store.pagination.current_page += 1;
-//         useChat.getChatMessages();
-//       }
-//     }
-//   }
-// }
 
 watch(
   () => useChat.store.chat_messages?.length,
@@ -687,44 +597,14 @@ watch(
   }
 );
 
-watch(
-  () => isLoading.store.chatModal,
-  () => {
-    if (!isLoading.store.chatModal) {
-      window.Echo.leave("chat_" + useChat.store.currentChatId);
-    } else {
-      setTimeout(() => {
-        const targetElement = document.getElementById("chat_loading");
-        const chatContainer = document.getElementById("chatContainer");
-        const chatH = chatContainer.scrollHeight;
-        chatContainer.scrollTop = chatH;
-        if (targetElement) {
-          const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                // Element ekranda ko'rinayotgan bo'lsa
-                console.log("Element ekranda ko'rinayotgan bo'lsa");
-                if (!isLoading.isLoadingType("getChatMessage")) {
-                  if (
-                    isLoading.store.pagination.current_page <
-                    isLoading.store.pagination.last_page
-                  ) {
-                    isLoading.store.pagination.current_page += 1;
-                    useChat.getChatMessages();
-                  }
-                }
-              }
-            });
-          });
+onBeforeMount(() => {
+  store.is_mount = true;
+  useGroup.groupByUsername();
+});
 
-          observer.observe(targetElement);
-        } else {
-          console.log("Element topilmadi");
-        }
-      }, 200);
-    }
-  }
-);
+onBeforeMount(() => {
+  useAuth.getUser();
+});
 </script>
 
 <style lang="scss" scoped>

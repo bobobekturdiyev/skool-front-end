@@ -50,6 +50,10 @@ pre {
   font-family: InterRegular;
 }
 
+* {
+  scroll-behavior: smooth;
+}
+
 .font-medium {
   font-family: InterMedium;
 }
@@ -71,7 +75,7 @@ textarea {
   border-radius: 4px !important;
   padding: 12px !important;
   outline: none !important;
-  resize: none;
+  resize: none !important;
 
   ::placeholder {
     color: $CA1;
@@ -134,6 +138,10 @@ label {
   border-radius: 16px;
 }
 
+.r_12 {
+  border-radius: 12px;
+}
+
 .r_8 {
   border-radius: 8px;
 }
@@ -178,6 +186,12 @@ label {
   bottom: 0;
   left: 0;
   right: 0;
+}
+
+@media (max-width: 767px) {
+  button {
+    height: 36px;
+  }
 }
 
 @media (max-width: 500px) {
@@ -298,10 +312,6 @@ label {
   }
 }
 
-.text-md {
-  font-size: 16px;
-}
-
 .animate-left {
   animation: animate-left 0.6s ease-out;
 }
@@ -346,15 +356,24 @@ label {
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #FFFFFF; /* Color of the scrollbar handle */
+    background: #ffffff; /* Color of the scrollbar handle */
     border-radius: 4px;
   }
 
   &::-webkit-scrollbar-track {
-    background: #E6EEF6; /* Color of the track */
+    background: #e6eef6; /* Color of the track */
   }
 }
 
 .grid_42 {
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.event_drawer {
+  height: auto !important;
+  max-height: 100vh;
+}
+
+.ql-container {
+  height: 70% !important;
 }

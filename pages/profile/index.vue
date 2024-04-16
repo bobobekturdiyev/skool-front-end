@@ -1,5 +1,5 @@
 <template>
-  <main class="flex gap-5">
+  <main class="flex md:flex-row flex-col-reverse gap-5">
     <div class="space-y-5 w-full overflow-hidden">
       <section class="bg-white px-4 py-6 rounded-xl">
         <h1 class="text-sm font-semibold mb-[20px]">Activity</h1>
@@ -96,10 +96,10 @@
         </div>
       </section>
 
-      <section class="bg-white px-4 py-6 rounded-xl">
+      <section class="bg-white px-4 py-6 rounded-xl ">
         <h1 class="font-semibold text-sm mb-7">Memberships</h1>
-        <div class="flex items-center gap-10 h-10">
-          <div v-for="i in 2" class="full_flex gap-4">
+        <div class="lg:flex grid items-center gap-10">
+          <div v-for="i in 2" class="flex items-center lg:justify-center gap-4 h-10">
             <div
               class="w-10 h-10 b_c2a r_8 full_flex overflow-hidden"
               v-if="true"
@@ -118,11 +118,11 @@
       </section>
 
       <section>
-        <nav class="flex items-center justify-between pt-4 mb-5">
-          <p class="text-sm font-semibold">
+        <nav class="lg:flex items-center justify-between pt-4 mb-5 lg:space-y-0 space-y-5">
+          <p class="text-sm font-semibold w-full">
             1 contribution to Digital Marketer
           </p>
-          <div class="flex items-center gap-5">
+          <div class="flex items-center lg:justify-start justify-end w-full whitespace-nowrap gap-5">
             <p class="_ca1 flex gap-1">
               Contributions for: <span class="_c2a">Digital Marketer</span
               ><img src="@/assets/svg/profile_arrow.svg" alt="" />
@@ -132,8 +132,8 @@
         </nav>
       </section>
       <section class="bg-white px-4 pt-6 rounded-xl">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-4">
+        <div class="flex lg:flex-row flex-col-reverse lg:items-center justify-between gap-3">
+          <div class="flex lg:items-center gap-4 w-full">
             <div class="relative max-w-fit">
               <img src="@/assets/image/user.svg" alt="" />
               <div class="full_flex absolute -bottom-[2px] -right-[5px] z-10">
@@ -154,8 +154,8 @@
               </p>
             </div>
           </div>
-          <div class="flex gap-2">
-            <button class="border border-[#BCDEFF] r_8 px-3 h-9">
+          <div class="flex gap-2 whitespace-nowrap lg:w-auto w-full lg:justify-start justify-end">
+            <button class="border border-[#BCDEFF] bg-[#F0F5FA] r_8 px-3 h-9">
               Watching (1)
             </button>
             <el-dropdown

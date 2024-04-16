@@ -13,11 +13,11 @@
           <div @click="store.slideModal = true"
             class="mainSlider cursor-pointer duration-500 lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] flex items-center w-full r_16">
             <div class="min-w-full" v-for="(post, index) in i.posts">
-              <div v-if="post.media_files[0]?.type == 'image'" class="h-full w-full min-w-[100%] object-cover">
+              <div v-if="post.media_files[0]?.type == 'image'" class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] w-full min-w-[100%] object-cover">
                 <img @click="store.slideStep = index" :src="post?.media_files[0]?.url" />
               </div>
               <div v-else @click="store.slideStep = index" class="relative">
-                <iframe class="min-w-full h-full cursor-pointer object-cover rounded-xl"
+                <iframe class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] min-w-full cursor-pointer object-cover rounded-xl"
                   :src="post?.media_files[0]?.url"></iframe>
                 <div class="absolute top-0 min-w-full h-full cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex">
                   <img src="@/assets/svg/video_btn.svg" alt="" />
@@ -69,43 +69,7 @@
         }}</pre>
       </section>
       <!-- info card -->
-      <section class="min-w-[200px] md:max-w-[280px]">
-        <div class="rounded-2xl overflow-hidden bg-white">
-          <img class="w-full h-[150px] object-cover" :src="i.image" alt="" />
-          <div class="p-4 space-y-4">
-            <h1 class="font-medium text-lg">{{ i.name }}</h1>
-            <p class="flex items-center _ca1 gap-1">
-              <img src="@/assets/svg/community/grey_private.svg" alt="" />
-              {{ i.group_type == "private" ? "Private group" : "Public group" }}
-            </p>
-            <pre class="text-sm leading-[21px] whitespace-pre-line">{{
-              i.description
-            }}</pre>
-            <div class="flex items-center justify-between text-xs text-center">
-              <div>
-                <p class="_c2a text-lg">226k</p>
-                <p class="_ca1">Members</p>
-              </div>
-              <div>
-                <p class="_c2a text-lg">15k</p>
-                <p class="_ca1">Online</p>
-              </div>
-              <div>
-                <p class="_c2a text-lg">100</p>
-                <p class="_ca1">Admins</p>
-              </div>
-            </div>
-            <button @click="$router.push(`/${$router.currentRoute.value.params.community}/classroom`)"
-              class="b_cbc rounded-lg w-full font-semibold text-sm uppercase">
-              join group
-            </button>
-          </div>
-        </div>
-        <div class="full_flex mt-8 gap-2 leading-[18px]">
-          <p>Powered by</p>
-          <img class="h-3 mt-0.5" src="/logo.svg" alt="" />
-        </div>
-      </section>
+      <GroupInfoCard class="md:max-w-[280px] sm:max-w-[200px]" />
     </div>
 
     <el-dialog v-model="store.slideModal" class="!p-0 !bg-transparent w-full fixed top-0 !shadow-none bg-black bg-opacity-10 full_flex" style="width: 100%;"

@@ -10,7 +10,10 @@ export const useMemberStore = defineStore("members", () => {
 
   const store = reactive({
     members: [],
+    levels: [],
     inviteModal: false,
+    levelId: '',
+    editGamification: false,
   });
 
   const general = reactive({
@@ -20,6 +23,12 @@ export const useMemberStore = defineStore("members", () => {
     Initials: "",
     color: "",
     type: "",
+  })
+
+  const level = reactive({
+    name: "",
+    custom_name: "",
+    completed: "",
   })
 
   function getMembers() {
@@ -43,5 +52,47 @@ export const useMemberStore = defineStore("members", () => {
       });
   }
 
-  return { store, general, getMembers };
+  function editLevel() {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("editLevels");
+    axios
+      .put(baseUrl + `update-leaderboard/${store.levelId}`, level, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res, 'levels');
+        store.editGamification = false;
+        getLevels()
+        isLoading.removeLoading("editLevels");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("editLevels");
+      });
+  }
+
+  function getLevels() {
+    const group_username = router.currentRoute.value.params.community;
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("getLevels");
+    axios
+      .get(baseUrl + `get-leaderboard/${group_username}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res, 'levels');
+        store.levels = res.data?.data;
+        isLoading.removeLoading("getLevels");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("getLevels");
+      });
+  }
+
+  return { store, level, general, getMembers, getLevels, editLevel };
 });
