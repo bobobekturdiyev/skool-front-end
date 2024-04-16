@@ -169,157 +169,138 @@
           </div>
         </form>
       </section>
+
       <!-- category -->
-      <section class="text-sm whitespace-nowrap">
-        <div class="flex items-start gap-3">
+      <section class="md:text-sm text-xs whitespace-nowrap">
+        <div class="flex items-start justify-between gap-3">
           <div
             :class="store.is_show ? 'flex-wrap' : ''"
-            class="relative flex gap-3 overflow-hidden items-center"
+            class="relative flex md:flex-row flex-wrap gap-3 md:h-auto category_wrap w-full h-[80px] overflow-hidden"
           >
             <button
-              class="py-2 px-3 rounded-full b_cbc hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
+              @click="handleCategory('all')"
+              :class="
+                usePost.store.filter.category_id != 'all' ? 'bg-white' : 'b_cbc'
+              "
+              class="py-2 px-3 rounded-full md:h-9 h-8 hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
             >
               All
             </button>
             <button
-              v-for="i in 16"
-              class="flex items-center hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full bg-white"
+              v-if="isLoading.isLoadingType('getPostCategories')"
+              v-for="i in 10"
+              class="flex items-center md:h-9 h-8 w-28 animate-pulse hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full bg-gray-900"
+            ></button>
+            <button
+              v-else-if="usePost.store.categories?.length"
+              @click="handleCategory(i.id)"
+              v-for="i in usePost.store.categories"
+              :class="
+                usePost.store.filter.category_id == i.id ? 'b_cbc' : 'bg-white'
+              "
+              class="flex md:flex-row flex-wrap items-center md:h-9 h-8 min-w-fit hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full"
             >
-              How I use Skool
+              <!-- <img
+                class="w-[14px] h-[21px] object-contain"
+                :src="i.icon"
+                alt=""
+              /> -->
+              {{ i.name }}
             </button>
             <img
-              v-if="!store.is_show"
-              class="absolute right-0"
+              v-if="!store.is_show && usePost.store.categories"
+              class="absolute md:block hidden -right-[2px]"
               src="@/assets/svg/shadow_hidden.svg"
               alt=""
             />
             <button
               @click="store.is_show = false"
-              v-if="store.is_show"
-              class="py-2 px-3 hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 rounded-full min-w-fit bg-white"
+              v-if="store.is_show && usePost.store.categories?.length"
+              class="py-2 px-3 md:h-9 h-8 md:block hidden rounded-full min-w-fit bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
             >
               Less...
             </button>
           </div>
           <button
+            v-if="!store.is_show && usePost.store.categories?.length"
             @click="store.is_show = true"
-            v-if="!store.is_show"
-            class="py-2 px-3 hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 rounded-full min-w-fit bg-white"
+            class="py-2 px-3 md:h-9 h-8 md:block hidden rounded-full min-w-fit bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
           >
             More...
           </button>
-          <el-dropdown
-            placement="bottom-start"
-            trigger="click"
-            :hide-on-click="false"
-            class="min-w-fit filter_btn"
-          >
-            <button
-              class="flex items-center gap-1 py-2 px-3 rounded-full bg-white"
+          <div class="min-w-fit text-end">
+            <el-dropdown
+              placement="bottom-start"
+              trigger="click"
+              :hide-on-click="false"
+              class="min-w-fit filter_btn"
             >
-              <img src="@/assets/svg/filter.svg" alt="" />
-            </button>
-            <template #dropdown>
-              <el-dropdown-menu
-                class="flex min-w-[328px] filter_dropdown dropdown_shadow 2xl:!-ml-[60px]"
+              <button
+                class="flex items-center gap-1 py-2 px-3 rounded-full bg-white"
               >
-                <div class="w-[150px] border-r border-[#E0E0E0]">
-                  <h1 class="text-sm font-medium px-8 mb-2">Filter</h1>
-                  <el-dropdown-item
-                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                  >
-                    <input
-                      id="type_all"
-                      class="rounded-full"
-                      type="radio"
-                      name="type"
-                    />
-                    <label for="type_all">None</label>
-                  </el-dropdown-item>
-                  <el-dropdown-item
-                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                  >
-                    <input
-                      id="type_public"
-                      class="rounded-full"
-                      type="radio"
-                      name="type"
-                    />
-                    <label for="type_public">Pinned (3)</label>
-                  </el-dropdown-item>
-                  <el-dropdown-item
-                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                  >
-                    <input
-                      id="type_private"
-                      class="rounded-full"
-                      type="radio"
-                      name="type"
-                    />
-                    <label for="type_private">Watching</label>
-                  </el-dropdown-item>
-                  <el-dropdown-item
-                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                  >
-                    <input
-                      id="type_private"
-                      class="rounded-full"
-                      type="radio"
-                      name="type"
-                    />
-                    <label for="type_private">Unread</label>
-                  </el-dropdown-item>
-                  <el-dropdown-item
-                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                  >
-                    <input
-                      id="type_private"
-                      class="rounded-full"
-                      type="radio"
-                      name="type"
-                    />
-                    <label for="type_private">No comments</label>
-                  </el-dropdown-item>
-                </div>
-                <div class="w-[150px]">
-                  <h1 class="text-sm font-medium px-8 mb-2">Sort</h1>
-                  <el-dropdown-item
-                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                  >
-                    <input
-                      id="price_all"
-                      class="rounded-full"
-                      type="radio"
-                      name="price"
-                    />
-                    <label for="price_all">Recent activity</label>
-                  </el-dropdown-item>
-                  <el-dropdown-item
-                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                  >
-                    <input
-                      id="price_public"
-                      class="rounded-full"
-                      type="radio"
-                      name="price"
-                    />
-                    <label for="price_public">Newest post</label>
-                  </el-dropdown-item>
-                  <el-dropdown-item
-                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                  >
-                    <input
-                      id="price_private"
-                      class="rounded-full"
-                      type="radio"
-                      name="price"
-                    />
-                    <label for="price_private">Best (this week)</label>
-                  </el-dropdown-item>
-                </div>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
+                <img src="@/assets/svg/filter.svg" alt="" />
+              </button>
+              <template #dropdown>
+                <el-dropdown-menu
+                  class="flex min-w-[328px] filter_dropdown dropdown_shadow 2xl:!-ml-[60px]"
+                >
+                  <div class="w-[150px] border-r border-[#E0E0E0]">
+                    <h1 class="text-sm font-medium px-8 mb-2">Filter</h1>
+                    <label
+                      @click="handleCategory(i.type, 'filter')"
+                      :for="i.type"
+                      v-for="i in filter_filter"
+                    >
+                      <el-dropdown-item
+                        class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
+                      >
+                        <input
+                          :id="i.type"
+                          class="rounded-full"
+                          type="radio"
+                          name="filter"
+                          :checked="
+                            usePost.store.filter.filter == i.type ? true : false
+                          "
+                        />
+                        {{ i.title }}
+                      </el-dropdown-item>
+                    </label>
+                  </div>
+                  <div class="w-[150px]">
+                    <h1 class="text-sm font-medium px-8 mb-2">Sort</h1>
+                    <label
+                      @click="handleCategory(i.type, 'sort')"
+                      :for="i.type"
+                      v-for="i in filter_sort"
+                    >
+                      <el-dropdown-item
+                        class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
+                      >
+                        <input
+                          :id="i.type"
+                          class="rounded-full"
+                          type="radio"
+                          name="sort"
+                          :checked="
+                            usePost.store.filter.sort == i.type ? true : false
+                          "
+                        />
+                        {{ i.title }}
+                      </el-dropdown-item>
+                    </label>
+                  </div>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+            <button
+              v-if="usePost.store.categories?.length"
+              @click="store.drawer = true"
+              class="py-2 px-3 md:h-9 h-8 mt-3 ml-auto md:hidden block rounded-full min-w-fit bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
+            >
+              More...
+            </button>
+          </div>
         </div>
       </section>
 
@@ -1184,6 +1165,49 @@ Skool group owners that want to play can join
         </div>
       </div>
     </el-dialog>
+
+    <el-drawer
+      v-model="store.drawer"
+      height="400"
+      direction="btt"
+      class="!w-full !h-[400px] !rounded-t-[16px] overflow-hidden"
+    >
+      <div
+        class="flex items-center justify-between sticky -top-[21px] bg-white z-20 pt-6 -mt-[21px] pb-6"
+      >
+        <h1 class="font-semibold">Choose category</h1>
+        <img
+          class="cursor-pointer"
+          @click="store.drawer = false"
+          src="@/assets/svg/close_drawer.svg"
+          alt=""
+        />
+      </div>
+      <div class="flex gap-3 whitespace-nowrap flex-wrap items-center">
+        <button
+          @click="handleCategory('all')"
+          :class="usePost.store.filter.category_id ? 'bg-[#F0F5FA]' : 'b_cbc'"
+          class="px-3 rounded-full md:h-9 h-8 hover:bg-[#F0F5FA] hover:bg-opacity-30 duration-700"
+        >
+          All
+        </button>
+        <button
+          @click="handleCategory(i.id)"
+          store.drawer="false"
+          v-for="i in usePost.store.categories"
+          :class="
+            usePost.store.filter.category_id == i.id ? 'b_cbc' : 'bg-[#F0F5FA]'
+          "
+          class="flex items-center md:h-9 h-8 hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full"
+        >
+          <img
+            class="w-[14px] h-[21px] object-contain"
+            :src="i.icon"
+            alt=""
+          />{{ i.name }}
+        </button>
+      </div>
+    </el-drawer>
   </main>
 </template>
 
@@ -1205,14 +1229,23 @@ const useChat = useChatStore();
 const useGroup = useGroupStore();
 const isLoading = useLoadingStore();
 const { showMessage } = useNotification();
-usePost.get_posts();
+const router = useRouter();
 usePost.get_categories();
+
+onBeforeMount(() => {
+  usePost.get_posts();
+});
 const store = reactive({
   is_show: false,
   writingModal: false,
   card_info: false,
   reportAdmin: false,
+  drawer: false,
 });
+
+usePost.store.filter.filter = router.currentRoute.value.query.filter;
+usePost.store.filter.sort = router.currentRoute.value.query.sort;
+usePost.store.filter.category_id = router.currentRoute.value.query.category_id;
 
 function copyLink() {
   var copyText = "http://localhost:4000/allan55";
@@ -1237,11 +1270,64 @@ const text_dropdown = [
   ["Bug Reports", "Found a bug? Report it here and we'll fix it"],
 ];
 
+const filter_sort = [
+  {
+    type: "recent",
+    title: "Recent activity",
+  },
+  {
+    type: "newest",
+    title: "Newest post",
+  },
+  {
+    type: "best",
+    title: "Best (this week)",
+  },
+];
+
+const filter_filter = [
+  {
+    type: "none",
+    title: "None",
+  },
+  {
+    type: "pinned",
+    title: "Pinned (3)",
+  },
+  {
+    type: "watching",
+    title: "Watching",
+  },
+  {
+    type: "unread",
+    title: "Unread",
+  },
+  {
+    type: "no_comments",
+    title: "No comments",
+  },
+];
+
 function openChatModal(data) {
   isLoading.store.chatModal = true;
   useChat.store.chat_user_data = data;
   isLoading.store.chatModal = true;
   useChat.getChatMessages();
+}
+
+function handleCategory(id, type) {
+  store.drawer = false;
+  if (type == "sort") {
+    usePost.store.filter.sort = id;
+    isLoading.changeQuery("sort", id);
+  } else if (type == "filter") {
+    usePost.store.filter.filter = id;
+    isLoading.changeQuery("filter", id);
+  } else {
+    usePost.store.filter.category_id = id;
+    isLoading.changeQuery("category_id", id);
+  }
+  usePost.get_posts()
 }
 
 function handlePhotoImage(e) {

@@ -2,7 +2,7 @@
   <main>
     <nav
       class="flex items-center justify-between z-20 relative bg-white border-b border-[#E0E0E0] h-[80px] px-5"
-      :class="store.is_open ? 'sm:block hidden' : ''"
+      :class="store.is_open ? 'sm:flex hidden' : ''"
     >
       <div class="full_flex gap-4">
         <div class="w-10 h-10 b_c2a r_8 full_flex" v-if="true">

@@ -14,6 +14,11 @@ export const usePostStore = defineStore("post", () => {
     files_url: [],
     error: "",
     writingModal: false,
+    filter: {
+      category_id: "all",
+      filter: "none",
+      sort: "recent",
+    },
   });
 
   const create = reactive({
@@ -24,10 +29,23 @@ export const usePostStore = defineStore("post", () => {
   });
 
   function get_posts() {
+    const token = localStorage.getItem("token");
     const group_username = router.currentRoute.value.params.community;
+    const filter = store.filter.filter;
+    const sort = store.filter.sort;
+    const category_id = store.filter.category_id;
+
     isLoading.addLoading("getPosts");
     axios
-      .get(baseUrl + `get-post/${group_username}?page=${isLoading.store.pagination.current_page}`)
+      .get(
+        baseUrl +
+          `get-post/${group_username}?page=${isLoading.store.pagination.current_page}&sort=${sort}&category_id=${category_id}&filter=${filter}`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
       .then((res) => {
         console.log(res);
         store.posts = res.data?.data;
@@ -46,13 +64,11 @@ export const usePostStore = defineStore("post", () => {
   }
 
   function get_categories() {
-    const group_username = router.currentRoute.value.params.community;
     isLoading.addLoading("getPostCategories");
-    // .get(baseUrl + `categories/${group_username}`)
     axios
       .get(baseUrl + `categories`)
       .then((res) => {
-        console.log(res, '--------------------------------');
+        console.log(res, "--------------------------------");
         store.categories = res.data?.data;
         isLoading.removeLoading("getPostCategories");
       })
