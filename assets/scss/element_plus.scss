@@ -377,3 +377,12 @@
     padding: 0 !important;
   }
 }
+
+.v3-body {
+  overflow: hidden !important;
+  overflow-y: auto !important;
+}
+
+.v3-groups, .v3-tone {
+  display: none !important;
+} 

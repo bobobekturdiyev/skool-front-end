@@ -52,7 +52,10 @@
               placeholder="Write something..."
               required
             ></textarea>
-            <ul v-if="usePost.store.files_url.length" class="flex gap-5">
+            <ul
+              v-if="usePost.store.files_url.length"
+              class="flex gap-5 overflow-x-auto"
+            >
               <li
                 class="relative imagelabel"
                 v-for="(i, index) in usePost.store.files_url"
@@ -65,7 +68,7 @@
                   <img src="@/assets/svg/x.svg" alt="" />
                 </button>
                 <img
-                  class="w-40 h-40 border rounded-xl object-cover"
+                  class="w-40 h-40 min-w-[160px] border rounded-xl object-cover"
                   :src="i"
                   alt=""
                 />
@@ -93,7 +96,9 @@
               {{ usePost.store.error }}
             </p>
           </div>
-          <div class="flex items-center justify-between p-5 pt-0 bg-white">
+          <div
+            class="2xl:flex items-center justify-between 2xl:space-y-0 space-y-5 p-5 pt-0 2xl:mt-0 -mt-10 bg-white"
+          >
             <div class="textarea_icon flex items-center">
               <label for="add_image" class="icon full_flex h-10 w-10">
                 <img src="@/assets/svg/textarea/upload.svg" alt="" />
@@ -107,12 +112,31 @@
               <div class="icon full_flex h-10 w-10">
                 <img src="@/assets/svg/textarea/poll.svg" alt="" />
               </div>
-              <div class="icon full_flex h-10 w-10">
-                <img src="@/assets/svg/textarea/emoji.svg" alt="" />
-              </div>
+              <el-dropdown
+                placement="bottom-end"
+                class="dropdown"
+                trigger="click"
+              >
+                <div id="emojidrop1" class="icon full_flex h-10 w-10 relative">
+                  <img src="@/assets/svg/textarea/emoji.svg" alt="" />
+                </div>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <div class="!overflow-hidden overflow-y-auto">
+                      <EmojiPicker
+                        :native="true"
+                        theme="light"
+                        @select="onSelectEmoji"
+                      />
+                    </div>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
               <div class="icon full_flex h-10 w-10">
                 <img src="@/assets/svg/textarea/gif.svg" alt="" />
               </div>
+            </div>
+            <div class="flex items-center justify-between">
               <el-dropdown
                 @command="
                   (command) => {
@@ -148,23 +172,23 @@
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
-            </div>
-            <div class="flex gap-3 font-semibold">
-              <button
-                @click="usePost.store.writingModal = false"
-                class="uppercase h-10 px-6 rounded-lg _ca1"
-              >
-                cancel
-              </button>
-              <button
-                v-loading="isLoading.isLoadingType('writePost')"
-                :type="
-                  isLoading.isLoadingType('writePost') ? 'button' : 'submit'
-                "
-                class="uppercase h-10 px-6 b_ce0 rounded-lg"
-              >
-                Post
-              </button>
+              <div class="flex gap-3 font-semibold md:text-[16px] text-sm">
+                <button
+                  @click="usePost.store.writingModal = false"
+                  class="uppercase h-10 px-6 rounded-lg _ca1"
+                >
+                  cancel
+                </button>
+                <button
+                  v-loading="isLoading.isLoadingType('writePost')"
+                  :type="
+                    isLoading.isLoadingType('writePost') ? 'button' : 'submit'
+                  "
+                  class="uppercase h-10 px-6 b_ce0 rounded-lg"
+                >
+                  Post
+                </button>
+              </div>
             </div>
           </div>
         </form>
@@ -175,7 +199,7 @@
         <div class="flex items-start justify-between gap-3">
           <div
             :class="store.is_show ? 'flex-wrap' : ''"
-            class="relative flex md:flex-row flex-wrap gap-3 md:h-auto category_wrap w-full h-[80px] overflow-hidden"
+            class="relative flex md:flex-row md:flex-nowrap flex-wrap gap-3 category_wrap w-full h-[80px] md:h-auto overflow-hidden"
           >
             <button
               @click="handleCategory('all')"
@@ -535,7 +559,7 @@
                 >
                   <img
                     v-for="(i, index) in 7"
-                    class="h-[26px] w-[26px] md:block hidden object-cover"
+                    class="h-[26px] w-[26px] xl:block md:hidden sm:block hidden object-cover"
                     src="@/assets/image/user.svg"
                     alt=""
                     :style="`z-index: ${7 - index}`"
@@ -700,19 +724,23 @@
         v-if="usePost.store.writingModal"
         class="b_cf0f relative z-50 r_16 overflow-hidden overflow-y-auto max-h-[calc(100vh_-_177px)] -mt-[72px]"
       >
-        <div class="flex items-center gap-3 b_cf0f h-[52px] px-5">
+        <div
+          class="flex md:items-center gap-3 b_cf0f md:h-[52px] h-[64px] px-5 py-3"
+        >
           <img
             class="h-5 w-5 object-cover"
             src="@/assets/image/user.svg"
             alt=""
           />
-          <p class="text-sm flex gap-1">
+          <p class="text-sm flex flex-wrap items-start gap-1 leading-4">
             <span class="font-semibold">Xayot Sharapov</span>
             <span class="_ca1">posting in</span>
-            <span class="font-semibold _c2a">Skool community</span>
+            <span class="font-semibold _c2a md:w-auto w-full"
+              >Skool community</span
+            >
           </p>
         </div>
-        <div class="p-5 space-y-5 bg-white">
+        <div class="md:p-5 p-3 space-y-5 bg-white">
           <input
             v-model="usePost.create.title"
             class="h-10 !rounded-none"
@@ -723,7 +751,7 @@
           <textarea
             v-model="usePost.create.description"
             id="write_message"
-            class="h-[120px] w-full !rounded-none"
+            class="h-[120px] w-full !md:rounded-none rounded-[4px]"
             placeholder="Write something..."
             required
           ></textarea>
@@ -768,7 +796,9 @@
             {{ usePost.store.error }}
           </p>
         </div>
-        <div class="flex items-center justify-between p-5 pt-0 bg-white">
+        <div
+          class="2xl:flex items-center justify-between 2xl:space-y-0 space-y-5 md:p-5 p-3 md:ml-0 -ml-2 pt-0 2xl:mt-0 -mt-10 bg-white"
+        >
           <div class="textarea_icon flex items-center">
             <label for="add_image" class="icon full_flex h-10 w-10">
               <img src="@/assets/svg/textarea/upload.svg" alt="" />
@@ -782,12 +812,31 @@
             <div class="icon full_flex h-10 w-10">
               <img src="@/assets/svg/textarea/poll.svg" alt="" />
             </div>
-            <div class="icon full_flex h-10 w-10">
-              <img src="@/assets/svg/textarea/emoji.svg" alt="" />
-            </div>
+            <el-dropdown
+              placement="bottom-end"
+              class="dropdown"
+              trigger="click"
+            >
+              <div id="emojidrop1" class="icon full_flex h-10 w-10 relative">
+                <img src="@/assets/svg/textarea/emoji.svg" alt="" />
+              </div>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <div class="!overflow-hidden overflow-y-auto">
+                    <EmojiPicker
+                      :native="true"
+                      theme="light"
+                      @select="onSelectEmoji"
+                    />
+                  </div>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
             <div class="icon full_flex h-10 w-10">
               <img src="@/assets/svg/textarea/gif.svg" alt="" />
             </div>
+          </div>
+          <div class="flex items-center justify-between">
             <el-dropdown
               @command="
                 (command) => {
@@ -823,21 +872,25 @@
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
-          </div>
-          <div class="flex gap-3 font-semibold">
-            <button
-              @click="usePost.store.writingModal = false"
-              class="uppercase h-10 px-6 rounded-lg _ca1"
+            <div
+              class="flex md:gap-3 gap-2 font-semibold md:text-[16px] text-sm"
             >
-              cancel
-            </button>
-            <button
-              v-loading="isLoading.isLoadingType('writePost')"
-              :type="isLoading.isLoadingType('writePost') ? 'button' : 'submit'"
-              class="uppercase h-10 px-6 b_ce0 rounded-lg"
-            >
-              Post
-            </button>
+              <button
+                @click="usePost.store.writingModal = false"
+                class="uppercase h-10 md:px-6 px-4 rounded-lg _ca1"
+              >
+                cancel
+              </button>
+              <button
+                v-loading="isLoading.isLoadingType('writePost')"
+                :type="
+                  isLoading.isLoadingType('writePost') ? 'button' : 'submit'
+                "
+                class="uppercase h-10 md:px-6 px-4 b_ce0 rounded-lg"
+              >
+                Post
+              </button>
+            </div>
           </div>
         </div>
       </form>
@@ -853,7 +906,7 @@
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
           <div class="relative max-w-fit">
-            <img src="@/assets/image/user.svg" alt="" />
+            <img class="min-w-[40px]" src="@/assets/image/user.svg" alt="" />
             <div class="full_flex absolute -bottom-[2px] -right-[5px] z-10">
               <div class="relative">
                 <img src="@/assets/svg/community/user_messages.svg" alt="" />
@@ -944,13 +997,13 @@ Skool group owners that want to play can join
         >
           <div class="relative max-w-fit">
             <img
-              class="h-10 w-10 object-cover"
+              class="h-10 w-10 min-w-[40px] object-cover"
               src="@/assets/image/user.svg"
               alt=""
             />
             <div class="full_flex absolute -bottom-[2px] -right-[5px] z-10">
               <div class="relative">
-                <img src="@/assets/svg/community/user_messages.svg" alt="" />
+                <img  src="@/assets/svg/community/user_messages.svg" alt="" />
                 <p
                   class="absolute full_flex bottom-0 w-5 h-5 pb-0.5 text-[10px] text-white font-medium"
                 >
@@ -990,7 +1043,7 @@ Skool group owners that want to play can join
             <div class="flex items-start w-full gap-4 mt-5">
               <div class="relative max-w-fit">
                 <img
-                  class="h-6 w-6 object-cover"
+                  class="h-6 w-6 min-w-[24px] object-cover"
                   src="@/assets/image/user.svg"
                   alt=""
                 />
@@ -1031,7 +1084,7 @@ Skool group owners that want to play can join
                     </p>
                     <button class="_ca1 font-semibold">Reply</button>
                   </div>
-                  <div class="flex pt-1 gap-[14px]">
+                  <div class="flex pt-1 md:gap-[14px] gap-[10px] md:ml-0 -ml-[92px]">
                     <img
                       class="h-6 w-6 mt-1 object-cover"
                       src="@/assets/image/user.svg"
@@ -1050,19 +1103,25 @@ Skool group owners that want to play can join
                               alt=""
                             />
                           </div>
-                          <div class="icon full_flex h-10 w-10">
+                          <div
+                            class="icon sm:flex hidden items-center justify-center h-10 w-10"
+                          >
                             <img
                               src="@/assets/svg/textarea/link_black.svg"
                               alt=""
                             />
                           </div>
-                          <div class="icon full_flex h-10 w-10">
+                          <div
+                            class="icon sm:flex hidden items-center justify-center h-10 w-10"
+                          >
                             <img
                               src="@/assets/svg/textarea/video_black.svg"
                               alt=""
                             />
                           </div>
-                          <div class="icon full_flex h-10 w-10">
+                          <div
+                            class="icon sm:flex hidden items-center justify-center h-10 w-10"
+                          >
                             <img
                               src="@/assets/svg/textarea/emoji_black.svg"
                               alt=""
@@ -1098,40 +1157,50 @@ Skool group owners that want to play can join
 
       <!-- writing input -->
       <div class="b_cf0f relative z-50 -mx-5 -mb-7 overflow-hidden">
-        <div class="flex items-center px-5 h-[72px] gap-[14px]">
+        <div class="flex items-start py-3 px-5 h-[112px] gap-[14px]">
           <img
             class="h-10 w-10 object-cover"
             src="@/assets/image/user.svg"
             alt=""
           />
-          <input class="text-sm !border-0" placeholder="Your comment" />
-        </div>
-        <div class="flex items-center justify-between p-5 pt-0">
-          <div class="textarea_icon flex items-center">
-            <div class="icon full_flex h-10 w-10">
-              <img src="@/assets/svg/textarea/upload_black.svg" alt="" />
+          <div class="w-full">
+            <input class="text-sm !border-0" placeholder="Your comment" />
+            <div class="flex items-center justify-between py-5 mt-2 pt-0">
+              <div class="textarea_icon flex items-center">
+                <div class="icon full_flex h-10 w-10">
+                  <img src="@/assets/svg/textarea/upload_black.svg" alt="" />
+                </div>
+                <div
+                  class="icon sm:flex hidden items-center justify-center h-10 w-10"
+                >
+                  <img src="@/assets/svg/textarea/link_black.svg" alt="" />
+                </div>
+                <div
+                  class="icon sm:flex hidden items-center justify-center h-10 w-10"
+                >
+                  <img src="@/assets/svg/textarea/video_black.svg" alt="" />
+                </div>
+                <div
+                  class="icon sm:flex hidden items-center justify-center h-10 w-10"
+                >
+                  <img src="@/assets/svg/textarea/emoji_black.svg" alt="" />
+                </div>
+                <div class="icon full_flex h-10 w-10">
+                  <img src="@/assets/svg/textarea/gif_black.svg" alt="" />
+                </div>
+              </div>
+              <div class="flex gap-3 font-semibold">
+                <button
+                  @click="store.card_info = false"
+                  class="uppercase h-10 px-6 rounded-lg _ca1"
+                >
+                  cancel
+                </button>
+                <button class="uppercase h-10 px-6 b_ce0 rounded-lg">
+                  Post
+                </button>
+              </div>
             </div>
-            <div class="icon full_flex h-10 w-10">
-              <img src="@/assets/svg/textarea/link_black.svg" alt="" />
-            </div>
-            <div class="icon full_flex h-10 w-10">
-              <img src="@/assets/svg/textarea/video_black.svg" alt="" />
-            </div>
-            <div class="icon full_flex h-10 w-10">
-              <img src="@/assets/svg/textarea/emoji_black.svg" alt="" />
-            </div>
-            <div class="icon full_flex h-10 w-10">
-              <img src="@/assets/svg/textarea/gif_black.svg" alt="" />
-            </div>
-          </div>
-          <div class="flex gap-3 font-semibold">
-            <button
-              @click="usePost.store.writingModal = false"
-              class="uppercase h-10 px-6 rounded-lg _ca1"
-            >
-              cancel
-            </button>
-            <button class="uppercase h-10 px-6 b_ce0 rounded-lg">Post</button>
           </div>
         </div>
       </div>
@@ -1186,7 +1255,9 @@ Skool group owners that want to play can join
       <div class="flex gap-3 whitespace-nowrap flex-wrap items-center">
         <button
           @click="handleCategory('all')"
-          :class="usePost.store.filter.category_id ? 'bg-[#F0F5FA]' : 'b_cbc'"
+          :class="
+            usePost.store.filter.category_id != 'all' ? 'bg-[#F0F5FA]' : 'b_cbc'
+          "
           class="px-3 rounded-full md:h-9 h-8 hover:bg-[#F0F5FA] hover:bg-opacity-30 duration-700"
         >
           All
@@ -1223,6 +1294,8 @@ import {
   useGroupStore,
 } from "@/store";
 import { useNotification } from "@/composables/notifications";
+import EmojiPicker from "vue3-emoji-picker";
+import "vue3-emoji-picker/css";
 
 const usePost = usePostStore();
 const useChat = useChatStore();
@@ -1241,6 +1314,7 @@ const store = reactive({
   card_info: false,
   reportAdmin: false,
   drawer: false,
+  is_emoji: false,
 });
 
 usePost.store.filter.filter = router.currentRoute.value.query.filter;
@@ -1315,6 +1389,11 @@ function openChatModal(data) {
   useChat.getChatMessages();
 }
 
+function onSelectEmoji(emoji) {
+  console.log(emoji.i);
+  usePost.create.description += emoji.i;
+}
+
 function handleCategory(id, type) {
   store.drawer = false;
   if (type == "sort") {
@@ -1327,7 +1406,7 @@ function handleCategory(id, type) {
     usePost.store.filter.category_id = id;
     isLoading.changeQuery("category_id", id);
   }
-  usePost.get_posts()
+  usePost.get_posts();
 }
 
 function handlePhotoImage(e) {
@@ -1367,9 +1446,6 @@ watch(
 <style lang="scss" scoped>
 .textarea_icon {
   .icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     height: 40px;
     width: 40px;
     cursor: pointer;

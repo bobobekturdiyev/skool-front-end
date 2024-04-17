@@ -1,5 +1,5 @@
 <template>
-  <footer class="flex items-center justify-between">
+  <footer class="flex md:flex-wrap-reverse md:flex-row flex-col-reverse md:items-center justify-between">
     <div class="flex items-center gap-[14px]">
       <p
         @click="changePage('dec')"
@@ -39,7 +39,7 @@
         <img class="rotate-180" src="@/assets/svg/page_arrow.svg" alt="" />
       </p>
     </div>
-    <div>
+    <div class="ml-auto md:mb-0 mb-3">
       <p>
         {{ isLoading.store.pagination.from }}-{{
           isLoading.store.pagination.to

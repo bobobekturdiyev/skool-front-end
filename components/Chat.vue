@@ -26,6 +26,8 @@
     <div class="flex pb-5 px-4">
       <img class="-mr-10 z-10 ml-5" src="@/assets/svg/chat/search.svg" alt="" />
       <input
+        v-model="store.search"
+        @input="handleSearch"
         class="placeholder-[#9CCDFE] !pl-[60px] b_cf0f r_8 !border-none"
         type="text"
         placeholder="Search all reports"
@@ -36,7 +38,7 @@
         @click="openChatModal(i)"
         :id="`tooltip${index}`"
         class="chat_item"
-        v-for="(i, index) in useChat.store.users"
+        v-for="(i, index) in store.search ? store.result : useChat.store.users"
       >
         <img
           class="h-10 w-10 rounded-full object-cover"
@@ -78,10 +80,7 @@
 </template>
 
 <script setup>
-import {
-  useLoadingStore,
-  useChatStore,
-} from "@/store";
+import { useLoadingStore, useChatStore } from "@/store";
 
 const useChat = useChatStore();
 const isLoading = useLoadingStore();
@@ -92,8 +91,9 @@ const store = reactive({
   chatTime: "",
   chatTimeList: [],
   chatUserId: "",
+  search: "",
+  result: [],
 });
-
 
 function handleMouseOver(index) {
   const chat_item = document.querySelector(`#tooltip${index}`);
@@ -119,6 +119,18 @@ function openChatModal(data) {
   useChat.store.chat_user_data = data;
   isLoading.store.chatModal = true;
   useChat.getChatMessages();
+}
+
+function handleSearch() {
+  store.result = [];
+  let s = store.search.trim().toLowerCase();
+  let full_name = "";
+  for (let i of useChat.store.users) {
+    full_name = i.name + " " + i.surname;
+    if (full_name.toLowerCase().indexOf(s) != -1) {
+      store.result.push(i);
+    }
+  }
 }
 
 onBeforeMount(() => {
