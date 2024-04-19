@@ -84,7 +84,7 @@
         </el-dropdown>
       </div>
       <div
-        class="relative lg:w-[50%] w-[40%] md:block hidden"
+        class="relative lg:w-[40%] xl:w-[50%] mx-5 w-[40%] md:block hidden"
         v-if="!search_bar.includes($router.currentRoute.value.name)"
       >
         <img
@@ -579,14 +579,12 @@ const store = reactive({
 });
 
 function changedLang(lang) {
-  console.log(lang);
   localStorage.setItem("lang", lang);
 }
 
 watch(
   () => useChat.store.chat_messages?.length,
   () => {
-    console.log(useChat.store.scrollToBottom);
     if (useChat.store.scrollToBottom) {
       setTimeout(() => {
         const chatContainer = document.getElementById("chatContainer");

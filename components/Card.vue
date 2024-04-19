@@ -8,19 +8,24 @@
       <p
         class="full_flex md:text-xs text-[8px] pb-0.5 font-medium absolute md:w-[30px] md:h-[30px] w-5 h-5 bg_loading md:rounded-lg rounded-[4px] m-3"
       ></p>
-      <div
+      <LoadingDiv
         class="card bg-gray-900 w-full object-cover md:h-[180px] sm:h-[140px] h-[120px]"
-      ></div>
+      />
     </div>
-    <div class="md:p-4 h-[180px] p-3">
+    <LoadingDiv class="md:p-4 h-[180px] p-3">
       <div class="flex items-center md:gap-4 gap-2">
-        <p class="md:h-10 md:w-10 h-5 w-5 rounded-full bg-gray-900"></p>
+        <p class="md:h-10 md:w-10 h-5 w-5 rounded-full bg-[#f5f5f5]"></p>
         <h1
-          class="font-semibold md:text-lg text-sm w-[80%] h-6 rounded bg-gray-900"
+          class="font-semibold md:text-lg text-sm w-[80%] h-6 rounded bg-[#f5f5f5]"
         ></h1>
       </div>
-      <div class="h-[150px]"></div>
-    </div>
+      <LoadingDiv
+        class="h-[150px] w-full"
+      />
+    </LoadingDiv>
+  </div>
+  <div v-else-if="!useGroup.store.groups.length" class="min-h-[30vh] full_flex col-span-4">
+    No data
   </div>
   <div
     v-else

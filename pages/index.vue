@@ -3,9 +3,7 @@
     <section
       class="sm:static sticky -top-8 z-20 duration-700"
       :class="
-        store.scrollHeight > 135
-          ? 'sm:bg-transparent bg-white px-5 -mx-5'
-          : ''
+        store.scrollHeight > 135 ? 'sm:bg-transparent bg-white px-5 -mx-5' : ''
       "
     >
       <div
@@ -59,22 +57,20 @@
         >
           <button
             @click="handleCategory('all')"
-            data-aos="zoom-in"
             :class="useGroup.store.filter.category_id ? 'bg-white' : 'b_cbc'"
             class="py-2 px-3 rounded-full md:h-9 h-8 hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
           >
             All
           </button>
-          <button
+          <LoadingDiv
             v-if="isLoading.isLoadingType('groupCategories')"
             v-for="i in 10"
             class="flex items-center md:h-9 h-8 w-28 animate-pulse hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full bg-gray-900"
-          ></button>
+          />
           <button
             v-else-if="useCategory.store.categories"
             @click="handleCategory(i.id)"
             v-for="i in useCategory.store.categories"
-            data-aos="zoom-in"
             :class="
               useGroup.store.filter.category_id == i.id ? 'b_cbc' : 'bg-white'
             "
@@ -130,81 +126,37 @@
               >
                 <div class="w-[150px] border-r border-[#E0E0E0]">
                   <h1 class="text-sm font-medium px-8 mb-2">Type</h1>
-                  <el-dropdown-item
-                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                  >
-                    <input
-                      @change="onFilterType"
-                      id="type_all"
-                      class="rounded-full"
-                      type="radio"
-                      name="type"
-                    />
-                    <label for="type_all">All</label>
-                  </el-dropdown-item>
-                  <el-dropdown-item
-                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                  >
-                    <input
-                      @change="onFilterType"
-                      id="public"
-                      class="rounded-full"
-                      type="radio"
-                      name="type"
-                    />
-                    <label for="public">Public</label>
-                  </el-dropdown-item>
-                  <el-dropdown-item
-                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                  >
-                    <input
-                      @change="onFilterType"
-                      id="private"
-                      class="rounded-full"
-                      type="radio"
-                      name="type"
-                    />
-                    <label for="private">Private</label>
-                  </el-dropdown-item>
+                  <label :for="`type_${i.type}`" v-for="i in filter_type">
+                    <el-dropdown-item
+                      class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
+                    >
+                      <input
+                        @change="onFilterType"
+                        :id="`type_${i.type}`"
+                        class="rounded-full"
+                        type="radio"
+                        name="type"
+                      />
+                      {{ i.title }}
+                    </el-dropdown-item>
+                  </label>
                 </div>
                 <div class="w-[150px]">
                   <h1 class="text-sm font-medium px-8 mb-2">Price</h1>
-                  <el-dropdown-item
-                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                  >
-                    <input
-                      @change="onFilterPrice"
-                      id="price_all"
-                      class="rounded-full"
-                      type="radio"
-                      name="price"
-                    />
-                    <label for="price_all">All</label>
-                  </el-dropdown-item>
-                  <el-dropdown-item
-                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                  >
-                    <input
-                      @change="onFilterPrice"
-                      id="free"
-                      class="rounded-full"
-                      type="radio"
-                      name="price"
-                    />
-                    <label for="free">Free</label>
-                  </el-dropdown-item>
-                  <el-dropdown-item
-                    class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
-                  >
-                    <input
-                      @change="onFilterPrice"
-                      id="paid"
-                      class="rounded-full"
-                      type="radio"
-                      name="price"
-                    />
-                    <label for="paid">Paid</label>
-                  </el-dropdown-item>
+                  <label :for="`price_${i.type}`" v-for="i in filter_price">
+                    <el-dropdown-item
+                      class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
+                    >
+                      <input
+                        @change="onFilterPrice"
+                        :id="`price_${i.type}`"
+                        class="rounded-full"
+                        type="radio"
+                        name="price"
+                      />
+                      {{i.title}}
+                    </el-dropdown-item>
+                  </label>
                 </div>
               </el-dropdown-menu>
             </template>
@@ -283,6 +235,36 @@ const router = useRouter();
 isLoading.addLoading("groupCategories");
 isLoading.store.page_name = "group";
 
+const filter_type = [
+  {
+    title: "All",
+    type: "all",
+  },
+  {
+    title: "Public",
+    type: "public",
+  },
+  {
+    title: "Private",
+    type: "private",
+  },
+];
+
+const filter_price = [
+  {
+    title: "All",
+    type: "all",
+  },
+  {
+    title: "Free",
+    type: "free",
+  },
+  {
+    title: "Paid",
+    type: "paid",
+  },
+];
+
 const store = reactive({
   is_show: false,
   drawer: false,
@@ -352,7 +334,6 @@ onBeforeMount(() => {
   });
 
   window.addEventListener("scroll", () => {
-    console.log(window.scrollY);
     store.scrollHeight = window.scrollY;
   });
 });

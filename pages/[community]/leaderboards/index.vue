@@ -7,7 +7,7 @@
           <el-progress :stroke-width="11" type="circle" :percentage="5" />
           <div class="absolute mx-auto top-[14.5px]">
             <div class="relative max-w-fit">
-              <img class="h-[138px] w-[138px] object-cover" src="@/assets/image/user.svg" alt="" />
+              <img class="h-[138px] w-[138px] rounded-full object-cover" :src="isLoading.user.image" alt="" />
               <div class="full_flex absolute -bottom-[2px] -right-[16px] z-10">
                 <div class="relative">
                   <img class="h-10 w-10" src="@/assets/svg/community/user_messages.svg" alt="" />

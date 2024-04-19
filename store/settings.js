@@ -34,7 +34,6 @@ export const useSettingsStore = defineStore("settings", () => {
         },
       })
       .then((res) => {
-        console.log(res);
         for (const [key, value] of Object.entries(res.data?.data)) {
           if (key === "socials") {
             for (const socialKey in value) {
@@ -82,9 +81,6 @@ export const useSettingsStore = defineStore("settings", () => {
         },
       })
       .then((res) => {
-        console.log(res);
-        console.log(res.data.errors);
-        console.log(res.status);
         if (res.data.code == 200) {
           store.passwordError = "";
           for (let i in changepassword) {
@@ -138,7 +134,6 @@ export const useSettingsStore = defineStore("settings", () => {
         },
       })
       .then((res) => {
-        console.log(res);
         store.editNameModal = false;
         for (const [key, value] of Object.entries(res.data?.data)) {
           if (key === "socials") {

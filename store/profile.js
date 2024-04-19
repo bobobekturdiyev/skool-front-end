@@ -23,7 +23,6 @@ export const useProfileStore = defineStore("post", () => {
       })
       .then((res) => {
         store.profile = res.data?.message?.reverse();
-        console.log(store.profile, 'profile====================');
         isLoading.removeLoading("getProfile");
       })
       .catch((err) => {

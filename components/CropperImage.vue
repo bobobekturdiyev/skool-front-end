@@ -50,15 +50,15 @@ function cropperWrap() {
         // aspectRatio: 1 / 1, // Aspect ratio for the crop box
         height: "10px",
         // viewMode: "400px", // Display mode (0: none, 1: fit, 2: fill, 3: contain, 4: cover)
-        crop: function (event) {
+        crop: function () {
             // Callback function triggered after cropping
-            console.log(event.detail.x);
-            console.log(event.detail.y);
-            console.log(event.detail.width);
-            console.log(event.detail.height);
-            console.log(event.detail.rotate);
-            console.log(event.detail.scaleX);
-            console.log(event.detail.scaleY);
+            // console.log(event.detail.x);
+            // console.log(event.detail.y);
+            // console.log(event.detail.width);
+            // console.log(event.detail.height);
+            // console.log(event.detail.rotate);
+            // console.log(event.detail.scaleX);
+            // console.log(event.detail.scaleY);
         },
     });
 }

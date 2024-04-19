@@ -1,205 +1,14 @@
 <template>
   <main class="flex md:flex-row flex-col-reverse md:gap-6 mt-[18px]">
     <div class="overflow-hidden w-full md:space-y-8 space-y-6">
-      <section class="md:block hidden">
-        <div class="flex items-center px-5 bg-white r_16 h-[72px] gap-[14px]">
-          <img
-            class="h-10 w-10 object-cover"
-            src="@/assets/image/user.svg"
-            alt=""
-          />
-          <input
-            @focus="usePost.store.writingModal = true"
-            class="!border-0 placeholder-black text-xl font-semibold"
-            placeholder="Write something..."
-          />
-        </div>
-
-        <div
-          v-if="usePost.store.writingModal"
-          @click="usePost.store.writingModal = false"
-          class="fixed top-0 bg-black bg-opacity-50 min-h-screen w-full z-50 left-0"
-        ></div>
-        <form
-          @submit.prevent="usePost.write_post"
-          v-if="usePost.store.writingModal"
-          class="b_cf0f relative z-50 r_16 overflow-hidden overflow-y-auto max-h-[calc(100vh_-_177px)] md:-mt-[72px]"
-        >
-          <div class="flex items-center gap-3 b_cf0f h-[52px] px-5">
-            <img
-              class="h-5 w-5 object-cover"
-              src="@/assets/image/user.svg"
-              alt=""
-            />
-            <p class="text-sm flex gap-1">
-              <span class="font-semibold">Xayot Sharapov</span>
-              <span class="_ca1">posting in</span>
-              <span class="font-semibold _c2a">Skool community</span>
-            </p>
-          </div>
-          <div class="p-5 space-y-5 bg-white">
-            <input
-              v-model="usePost.create.title"
-              class="h-10 !rounded-none"
-              type="text"
-              placeholder="Title"
-              required
-            />
-            <textarea
-              v-model="usePost.create.description"
-              id="write_message"
-              class="h-[120px] w-full !rounded-none"
-              placeholder="Write something..."
-              required
-            ></textarea>
-            <ul
-              v-if="usePost.store.files_url.length"
-              class="flex gap-5 overflow-x-auto"
-            >
-              <li
-                class="relative imagelabel"
-                v-for="(i, index) in usePost.store.files_url"
-              >
-                <button
-                  @click="deleteImage(index)"
-                  type="button"
-                  class="absolute deleteimage !hidden top-2 right-2 rounded-full w-7 h-7 full_flex border p-2"
-                >
-                  <img src="@/assets/svg/x.svg" alt="" />
-                </button>
-                <img
-                  class="w-40 h-40 min-w-[160px] border rounded-xl object-cover"
-                  :src="i"
-                  alt=""
-                />
-              </li>
-              <li>
-                <label
-                  for="add_image"
-                  class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm w-40 h-40"
-                >
-                  <img class="w-1/3" src="@/assets/svg/add_photo.svg" alt="" />
-                  <p class="text-xs">Add a photo</p>
-                </label>
-              </li>
-            </ul>
-            <input
-              @change="handlePhotoImage"
-              type="file"
-              id="add_image"
-              class="h-0 w-0 overflow-hidden !p-0"
-            />
-            <p
-              v-if="usePost.store.error"
-              class="text-red-600 text-end text-sm pb-3"
-            >
-              {{ usePost.store.error }}
-            </p>
-          </div>
-          <div
-            class="2xl:flex items-center justify-between 2xl:space-y-0 space-y-5 p-5 pt-0 2xl:mt-0 -mt-10 bg-white"
-          >
-            <div class="textarea_icon flex items-center">
-              <label for="add_image" class="icon full_flex h-10 w-10">
-                <img src="@/assets/svg/textarea/upload.svg" alt="" />
-              </label>
-              <div class="icon full_flex h-10 w-10">
-                <img src="@/assets/svg/textarea/link.svg" alt="" />
-              </div>
-              <div class="icon full_flex h-10 w-10">
-                <img src="@/assets/svg/textarea/video.svg" alt="" />
-              </div>
-              <div class="icon full_flex h-10 w-10">
-                <img src="@/assets/svg/textarea/poll.svg" alt="" />
-              </div>
-              <el-dropdown
-                placement="bottom-end"
-                class="dropdown"
-                trigger="click"
-              >
-                <div id="emojidrop1" class="icon full_flex h-10 w-10 relative">
-                  <img src="@/assets/svg/textarea/emoji.svg" alt="" />
-                </div>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <div class="!overflow-hidden overflow-y-auto">
-                      <EmojiPicker
-                        :native="true"
-                        theme="light"
-                        @select="onSelectEmoji"
-                      />
-                    </div>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-              <div class="icon full_flex h-10 w-10">
-                <img src="@/assets/svg/textarea/gif.svg" alt="" />
-              </div>
-            </div>
-            <div class="flex items-center justify-between">
-              <el-dropdown
-                @command="
-                  (command) => {
-                    usePost.create.category_id = command + 1;
-                  }
-                "
-                placement="bottom-end"
-                class="dropdown"
-                trigger="click"
-              >
-                <div class="flex items-center gap-1 mx-4 font-medium text-sm">
-                  <p class="whitespace-nowrap max-w-[100px] truncate">
-                    {{
-                      usePost.create.category_id
-                        ? text_dropdown[usePost.create.category_id - 1][0]
-                        : "Select category"
-                    }}
-                  </p>
-                  <img src="@/assets/svg/textarea/select_arrow.svg" alt="" />
-                </div>
-                <template #dropdown>
-                  <el-dropdown-menu
-                    class="min-w-[200px] !mt-3 !-mr-0 dropdown_shadow"
-                  >
-                    <el-dropdown-item
-                      v-for="(i, index) in text_dropdown"
-                      :command="index"
-                      class="flex flex-col !items-start px-5 hover:bg-[#F2F2F2] cursor-pointer space-y-1 h-[63px]"
-                    >
-                      <h1 class="font-semibold">{{ i[0] }}</h1>
-                      <p class="text-xs">{{ i[1] }}</p>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-              <div class="flex gap-3 font-semibold md:text-[16px] text-sm">
-                <button
-                  @click="usePost.store.writingModal = false"
-                  class="uppercase h-10 px-6 rounded-lg _ca1"
-                >
-                  cancel
-                </button>
-                <button
-                  v-loading="isLoading.isLoadingType('writePost')"
-                  :type="
-                    isLoading.isLoadingType('writePost') ? 'button' : 'submit'
-                  "
-                  class="uppercase h-10 px-6 b_ce0 rounded-lg"
-                >
-                  Post
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </section>
+      <ModalWriteSomething class="md:block hidden" />
 
       <!-- category -->
       <section class="md:text-sm text-xs whitespace-nowrap">
         <div class="flex items-start justify-between gap-3">
           <div
-            :class="store.is_show ? 'flex-wrap' : ''"
-            class="relative flex md:flex-row md:flex-nowrap flex-wrap gap-3 category_wrap w-full h-[80px] md:h-auto overflow-hidden"
+            :class="store.is_show ? 'flex-wrap' : 'md:flex-nowrap'"
+            class="relative flex md:flex-row flex-wrap gap-3 category_wrap w-full md:h-auto h-[80px] overflow-hidden"
           >
             <button
               @click="handleCategory('all')"
@@ -210,11 +19,11 @@
             >
               All
             </button>
-            <button
+            <LoadingDiv
               v-if="isLoading.isLoadingType('getPostCategories')"
               v-for="i in 10"
               class="flex items-center md:h-9 h-8 w-28 animate-pulse hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full bg-gray-900"
-            ></button>
+            />
             <button
               v-else-if="usePost.store.categories?.length"
               @click="handleCategory(i.id)"
@@ -330,14 +139,16 @@
 
       <!-- posts -->
       <section class="md:space-y-5 space-y-4">
-        <div
-          class="md:space-y-5 space-y-4"
+        <LoadingDiv
           v-if="isLoading.isLoadingType('getPosts')"
+          v-for="i in 10"
+          class="min-h-[250px] w-full r_16 overflow-hidden"
+        />
+        <div
+          v-else-if="!usePost.store.posts.length"
+          class="min-h-[30vh] full_flex col-span-4"
         >
-          <LoadingDiv
-            v-for="i in 10"
-            class="min-h-[250px] r_16 overflow-hidden"
-          />
+          No data
         </div>
         <article
           v-else
@@ -697,204 +508,8 @@
         </div>
       </section>
     </div>
-    <!-- <section class="md:hidden block mb-6">
-     
-    </section> -->
-    <section class="md:hidden block mb-6">
-      <div class="flex items-center px-5 bg-white r_16 h-[52px] gap-[14px]">
-        <img
-          class="h-7 w-7 object-cover"
-          src="@/assets/image/user.svg"
-          alt=""
-        />
-        <input
-          class="!border-0 placeholder-black font-semibold"
-          @focus="usePost.store.writingModal = true"
-          placeholder="Write something..."
-        />
-      </div>
 
-      <div
-        v-if="usePost.store.writingModal"
-        @click="usePost.store.writingModal = false"
-        class="fixed top-0 bg-black bg-opacity-50 min-h-screen w-full z-50 left-0"
-      ></div>
-      <form
-        @submit.prevent="usePost.write_post"
-        v-if="usePost.store.writingModal"
-        class="b_cf0f relative z-50 r_16 overflow-hidden overflow-y-auto max-h-[calc(100vh_-_177px)] -mt-[72px]"
-      >
-        <div
-          class="flex md:items-center gap-3 b_cf0f md:h-[52px] h-[64px] px-5 py-3"
-        >
-          <img
-            class="h-5 w-5 object-cover"
-            src="@/assets/image/user.svg"
-            alt=""
-          />
-          <p class="text-sm flex flex-wrap items-start gap-1 leading-4">
-            <span class="font-semibold">Xayot Sharapov</span>
-            <span class="_ca1">posting in</span>
-            <span class="font-semibold _c2a md:w-auto w-full"
-              >Skool community</span
-            >
-          </p>
-        </div>
-        <div class="md:p-5 p-3 space-y-5 bg-white">
-          <input
-            v-model="usePost.create.title"
-            class="h-10 !rounded-none"
-            type="text"
-            placeholder="Title"
-            required
-          />
-          <textarea
-            v-model="usePost.create.description"
-            id="write_message"
-            class="h-[120px] w-full !md:rounded-none rounded-[4px]"
-            placeholder="Write something..."
-            required
-          ></textarea>
-          <ul v-if="usePost.store.files_url.length" class="flex gap-5">
-            <li
-              class="relative imagelabel"
-              v-for="(i, index) in usePost.store.files_url"
-            >
-              <button
-                @click="deleteImage(index)"
-                type="button"
-                class="absolute deleteimage !hidden top-2 right-2 rounded-full w-7 h-7 full_flex border p-2"
-              >
-                <img src="@/assets/svg/x.svg" alt="" />
-              </button>
-              <img
-                class="w-40 h-40 border rounded-xl object-cover"
-                :src="i"
-                alt=""
-              />
-            </li>
-            <li>
-              <label
-                for="add_image"
-                class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm w-40 h-40"
-              >
-                <img class="w-1/3" src="@/assets/svg/add_photo.svg" alt="" />
-                <p class="text-xs">Add a photo</p>
-              </label>
-            </li>
-          </ul>
-          <input
-            @change="handlePhotoImage"
-            type="file"
-            id="add_image"
-            class="h-0 w-0 overflow-hidden !p-0"
-          />
-          <p
-            v-if="usePost.store.error"
-            class="text-red-600 text-end text-sm pb-3"
-          >
-            {{ usePost.store.error }}
-          </p>
-        </div>
-        <div
-          class="2xl:flex items-center justify-between 2xl:space-y-0 space-y-5 md:p-5 p-3 md:ml-0 -ml-2 pt-0 2xl:mt-0 -mt-10 bg-white"
-        >
-          <div class="textarea_icon flex items-center">
-            <label for="add_image" class="icon full_flex h-10 w-10">
-              <img src="@/assets/svg/textarea/upload.svg" alt="" />
-            </label>
-            <div class="icon full_flex h-10 w-10">
-              <img src="@/assets/svg/textarea/link.svg" alt="" />
-            </div>
-            <div class="icon full_flex h-10 w-10">
-              <img src="@/assets/svg/textarea/video.svg" alt="" />
-            </div>
-            <div class="icon full_flex h-10 w-10">
-              <img src="@/assets/svg/textarea/poll.svg" alt="" />
-            </div>
-            <el-dropdown
-              placement="bottom-end"
-              class="dropdown"
-              trigger="click"
-            >
-              <div id="emojidrop1" class="icon full_flex h-10 w-10 relative">
-                <img src="@/assets/svg/textarea/emoji.svg" alt="" />
-              </div>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <div class="!overflow-hidden overflow-y-auto">
-                    <EmojiPicker
-                      :native="true"
-                      theme="light"
-                      @select="onSelectEmoji"
-                    />
-                  </div>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-            <div class="icon full_flex h-10 w-10">
-              <img src="@/assets/svg/textarea/gif.svg" alt="" />
-            </div>
-          </div>
-          <div class="flex items-center justify-between">
-            <el-dropdown
-              @command="
-                (command) => {
-                  usePost.create.category_id = command + 1;
-                }
-              "
-              placement="bottom-end"
-              class="dropdown"
-              trigger="click"
-            >
-              <div class="flex items-center gap-1 mx-4 font-medium text-sm">
-                <p class="whitespace-nowrap max-w-[100px] truncate">
-                  {{
-                    usePost.create.category_id
-                      ? text_dropdown[usePost.create.category_id - 1][0]
-                      : "Select category"
-                  }}
-                </p>
-                <img src="@/assets/svg/textarea/select_arrow.svg" alt="" />
-              </div>
-              <template #dropdown>
-                <el-dropdown-menu
-                  class="min-w-[200px] !mt-3 !-mr-0 dropdown_shadow"
-                >
-                  <el-dropdown-item
-                    v-for="(i, index) in text_dropdown"
-                    :command="index"
-                    class="flex flex-col !items-start px-5 hover:bg-[#F2F2F2] cursor-pointer space-y-1 h-[63px]"
-                  >
-                    <h1 class="font-semibold">{{ i[0] }}</h1>
-                    <p class="text-xs">{{ i[1] }}</p>
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-            <div
-              class="flex md:gap-3 gap-2 font-semibold md:text-[16px] text-sm"
-            >
-              <button
-                @click="usePost.store.writingModal = false"
-                class="uppercase h-10 md:px-6 px-4 rounded-lg _ca1"
-              >
-                cancel
-              </button>
-              <button
-                v-loading="isLoading.isLoadingType('writePost')"
-                :type="
-                  isLoading.isLoadingType('writePost') ? 'button' : 'submit'
-                "
-                class="uppercase h-10 md:px-6 px-4 b_ce0 rounded-lg"
-              >
-                Post
-              </button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </section>
+    <ModalWriteSomething class="md:hidden block mb-6" />
 
     <!-- card info -->
     <el-dialog
@@ -1003,7 +618,7 @@ Skool group owners that want to play can join
             />
             <div class="full_flex absolute -bottom-[2px] -right-[5px] z-10">
               <div class="relative">
-                <img  src="@/assets/svg/community/user_messages.svg" alt="" />
+                <img src="@/assets/svg/community/user_messages.svg" alt="" />
                 <p
                   class="absolute full_flex bottom-0 w-5 h-5 pb-0.5 text-[10px] text-white font-medium"
                 >
@@ -1084,7 +699,9 @@ Skool group owners that want to play can join
                     </p>
                     <button class="_ca1 font-semibold">Reply</button>
                   </div>
-                  <div class="flex pt-1 md:gap-[14px] gap-[10px] md:ml-0 -ml-[92px]">
+                  <div
+                    class="flex pt-1 md:gap-[14px] gap-[10px] md:ml-0 -ml-[92px]"
+                  >
                     <img
                       class="h-6 w-6 mt-1 object-cover"
                       src="@/assets/image/user.svg"
@@ -1279,6 +896,9 @@ Skool group owners that want to play can join
         </button>
       </div>
     </el-drawer>
+
+    <ModalAddVideo />
+    <ModalAddLink />
   </main>
 </template>
 
@@ -1292,6 +912,7 @@ import {
   useLoadingStore,
   useChatStore,
   useGroupStore,
+  useClassroomStore,
 } from "@/store";
 import { useNotification } from "@/composables/notifications";
 import EmojiPicker from "vue3-emoji-picker";
@@ -1301,10 +922,11 @@ const usePost = usePostStore();
 const useChat = useChatStore();
 const useGroup = useGroupStore();
 const isLoading = useLoadingStore();
+const useClassroom = useClassroomStore();
 const { showMessage } = useNotification();
 const router = useRouter();
 usePost.get_categories();
-
+isLoading.addLoading('getPosts')
 onBeforeMount(() => {
   usePost.get_posts();
 });
@@ -1390,8 +1012,7 @@ function openChatModal(data) {
 }
 
 function onSelectEmoji(emoji) {
-  console.log(emoji.i);
-  usePost.create.description += emoji.i;
+  useClassroom.module.video_content += emoji.i;
 }
 
 function handleCategory(id, type) {
@@ -1418,27 +1039,28 @@ function handlePhotoImage(e) {
 }
 
 function deleteImage(index) {
-  console.log(index);
   usePost.store.files_url.splice(index, 1);
   usePost.create.files.splice(index, 1);
 }
-
-watch(
-  () => usePost.store.writingModal,
-  () => {
-    if (usePost.store.writingModal) {
-      document.querySelector("body").classList.add("overflow-hidden");
-    } else {
-      document.querySelector("body").classList.remove("overflow-hidden");
-    }
-  }
-);
 
 watch(
   () => isLoading.store.pagination.current_page,
   () => {
     window.scrollTo(0, 0);
     usePost.get_posts();
+  }
+);
+
+watch(
+  () => useClassroom.local_store.addVideoModal,
+  () => {
+    if (
+      !useClassroom.local_store.addVideoModal &&
+      useClassroom.local_store.videoLink
+    ) {
+      usePost.create.video_link.push(useClassroom.local_store.videoLink);
+      usePost.store.files_url.push(useClassroom.local_store.videoLink);
+    }
   }
 );
 </script>

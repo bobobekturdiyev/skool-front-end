@@ -31,7 +31,10 @@
         placeholder="Search all reports"
       />
     </div>
-    <div v-if="useChat.store.users?.length" class="overflow-hidden chat overflow-y-auto max-h-[54vh]">
+    <div
+      v-if="useChat.store.users?.length"
+      class="overflow-hidden chat overflow-y-auto max-h-[54vh]"
+    >
       <div
         @click="openChatModal(i)"
         :id="`tooltip${index}`"
@@ -102,11 +105,9 @@ function handleMouseLeave(index) {
 function handleChatType(type) {
   const dropdown = document.querySelector(".chat_dropdown img");
   dropdown.click();
-  console.log(dropdown);
 }
 
 function openChatModal(data) {
-  console.log(data);
   isLoading.store.pagination.current_page = 1;
   useChat.store.chat_user_data = data;
   isLoading.store.chatDialog = false;
@@ -135,7 +136,6 @@ watch(
             entries.forEach((entry) => {
               if (entry.isIntersecting) {
                 // Element ekranda ko'rinayotgan bo'lsa
-                console.log("Element ekranda ko'rinayotgan bo'lsa");
                 if (!isLoading.isLoadingType("getChatMessage")) {
                   if (
                     isLoading.store.pagination.current_page <
@@ -150,9 +150,7 @@ watch(
           });
 
           observer.observe(targetElement);
-        } else {
-          console.log("Element topilmadi");
-        }
+        } else {}
       }, 200);
     }
   }
@@ -161,6 +159,6 @@ watch(
 
 <style lang="scss">
 .chat .el-popper.is-dark {
-    margin-bottom: -20px !important;
+  margin-bottom: -20px !important;
 }
 </style>

@@ -386,3 +386,23 @@
 .v3-groups, .v3-tone {
   display: none !important;
 } 
+
+.community_editor {
+  border-radius: 4px;
+  overflow: hidden;
+  .editor * {
+    white-space: pre-wrap !important;
+    text-wrap: wrap !important;
+    word-break: break-all !important;
+  }
+  .ql-toolbar {
+    display: none !important;
+  }
+  .ql-editor {
+    height: 110px !important;
+  }
+  * {
+    margin: 0 !important;
+    border: none !important;
+  }
+}

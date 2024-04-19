@@ -527,17 +527,7 @@ function getCalendar(year, month) {
               0
             );
             date2 = new Date(i.date).setHours(0, 0, 0, 0);
-            console.log(
-              getFullYear,
-              getMonth,
-              getDay,
-              "----",
-              i.date,
-              "?",
-              date1 == date2
-            );
             if (date1 == date2) {
-              console.log(i);
               count =
                 +i.comments_count +
                 +i.created_groups +
@@ -561,13 +551,6 @@ function getCalendar(year, month) {
           store.currentMonth == getMonth &&
           store.currentDate == getDate
         ) {
-          console.log(
-            store.currentYear == getFullYear &&
-              store.currentMonth == getMonth &&
-              store.currentDate == getDate,
-            store.t,
-            "------------------------"
-          );
           store.is_current = false;
           return;
         }
@@ -579,7 +562,6 @@ function getCalendar(year, month) {
       return w;
     }
   );
-  //   console.log(store.calendar);
 }
 onBeforeMount(() => {
   useProfile.get_profile();

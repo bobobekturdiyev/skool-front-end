@@ -110,11 +110,9 @@ function handleMouseLeave(index) {
 function handleChatType(type) {
   const dropdown = document.querySelector(".chat_dropdown img");
   dropdown.click();
-  console.log(dropdown);
 }
 
 function openChatModal(data) {
-  console.log(data);
   isLoading.store.pagination.current_page = 1;
   useChat.store.chat_user_data = data;
   isLoading.store.chatModal = true;
@@ -134,7 +132,6 @@ function handleSearch() {
 }
 
 onBeforeMount(() => {
-  console.log(window.location.hostname);
   store.is_mount = true;
   useChat.getChatUsers();
   // window.Echo.channel("chat_" + 1).listen(
@@ -177,7 +174,6 @@ onBeforeMount(() => {
 watch(
   () => useChat.store.chat_messages?.length,
   () => {
-    console.log(useChat.store.scrollToBottom);
     if (useChat.store.scrollToBottom) {
       setTimeout(() => {
         const chatContainer = document.getElementById("chatContainer");
@@ -204,7 +200,6 @@ watch(
             entries.forEach((entry) => {
               if (entry.isIntersecting) {
                 // Element ekranda ko'rinayotgan bo'lsa
-                console.log("Element ekranda ko'rinayotgan bo'lsa");
                 if (!isLoading.isLoadingType("getChatMessage")) {
                   if (
                     isLoading.store.pagination.current_page <
@@ -219,9 +214,7 @@ watch(
           });
 
           observer.observe(targetElement);
-        } else {
-          console.log("Element topilmadi");
-        }
+        } else {}
       }, 200);
     }
   }

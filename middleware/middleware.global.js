@@ -12,13 +12,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         const parts = token.split(".");
         const exp = parts[1];
         const decodedPayload = JSON.parse(atob(exp));
-        console.log(decodedPayload);
         isLoading.user.id = decodedPayload.sub;
         // useAuth.getUser();
         const experition = decodedPayload.exp;
         const now = +Date.now().toString().slice(0, 10);
-        console.log(experition);
-        console.log(now);
         if (now >= experition) {
           isLoading.store.isLogin = false;
           localStorage.removeItem("token");

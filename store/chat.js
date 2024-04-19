@@ -52,7 +52,6 @@ export const useChatStore = defineStore("chat", () => {
         nowDate.getMonth() +
         ":" +
         nowDate.getFullYear();
-      console.log(chatTime, "chat time");
       if (chatTime == store.chatTime) {
         store.chatTime =
           nowDate.getDate() +
@@ -78,7 +77,6 @@ export const useChatStore = defineStore("chat", () => {
     isLoading.addLoading("sendMessage");
     const token = localStorage.getItem("token");
     message.user_id = store.chat_user_data.id;
-    console.log(message);
     const data = Object.assign({}, message);
     message.text = "";
     axios
@@ -88,7 +86,6 @@ export const useChatStore = defineStore("chat", () => {
         },
       })
       .then((res) => {
-        console.log(res);
         isLoading.removeLoading("sendMessage");
       })
       .catch((err) => {
@@ -193,8 +190,6 @@ export const useChatStore = defineStore("chat", () => {
           </article>
             `;
             document.getElementById("chatContainerDiv").prepend(div);
-            // document.getElementById("chatContainerDiv").scrollTop = scrollTop + 1000
-            console.log(firstChildId);
             document.getElementById(firstChildId).scrollIntoView();
             document
               .getElementById(firstChildId)
@@ -218,10 +213,6 @@ export const useChatStore = defineStore("chat", () => {
         },
       })
       .then((res) => {
-        console.log(
-          res,
-          "================================================================"
-        );
         store.users = res.data?.chat_user;
         isLoading.removeLoading("sendMessage");
       })
@@ -234,7 +225,6 @@ export const useChatStore = defineStore("chat", () => {
   function subscribeChannel(chat_id) {
     window.Echo.channel("chat_" + chat_id).listen("MessageSent", (e) => {
       store.scrollToBottom = true;
-      console.log(e);
       store.chat_messages.push(e.message);
     });
   }

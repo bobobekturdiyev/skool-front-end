@@ -4,34 +4,40 @@
 
 @import "./_colors.scss";
 @import "./element_plus.scss";
+@import url('https://fonts.cdnfonts.com/css/inter');
 
-@font-face {
-  font-family: "InterBold";
-  src: url("@/assets/fonts/InterBold.ttf") format("ttf");
-  font-weight: bold;
-  font-style: normal;
-}
+// @font-face {
+//   font-family: "Inter";
+//   src: url("@/assets/fonts/Inter.ttf") format("ttf");
+// }
 
-@font-face {
-  font-family: "InterSemiBold";
-  src: url("@/assets/fonts/InterSemiBold.ttf") format("ttf");
-  font-weight: 600;
-  font-style: normal;
-}
+// @font-face {
+//   font-family: "InterBold";
+//   src: url("@/assets/fonts/InterBold.ttf") format("ttf");
+//   font-weight: bold;
+//   font-style: normal;
+// }
 
-@font-face {
-  font-family: "InterMedium";
-  src: url("@/assets/fonts/InterMedium.ttf") format("ttf");
-  font-weight: 500;
-  font-style: normal;
-}
+// @font-face {
+//   font-family: "InterSemiBold";
+//   src: url("@/assets/fonts/InterSemiBold.ttf") format("ttf");
+//   font-weight: 600;
+//   font-style: normal;
+// }
 
-@font-face {
-  font-family: "InterRegular";
-  src: url("@/assets/fonts/InterRegular.ttf") format("ttf");
-  font-weight: 400;
-  font-style: normal;
-}
+// @font-face {
+//   font-family: "InterMedium";
+//   src: url("@/assets/fonts/InterMedium.ttf") format("ttf");
+//   font-weight: 500;
+//   font-style: normal;
+// }
+
+// @font-face {
+//   font-family: "InterRegular";
+//   src: url("@/assets/fonts/InterRegular.ttf") format("ttf");
+//   font-weight: 400;
+//   font-style: normal;
+// }
 
 html,
 body {
@@ -47,24 +53,24 @@ body {
 html *,
 body *,
 pre {
-  font-family: InterRegular;
+  font-family: Inter !important;
 }
 
 * {
   scroll-behavior: smooth;
 }
 
-.font-medium {
-  font-family: InterMedium;
-}
+// .font-medium {
+//   font-family: InterMedium;
+// }
 
-.font-semibold {
-  font-family: InterSemiBold;
-}
+// .font-semibold {
+//   font-family: InterSemiBold;
+// }
 
-.font-bold {
-  font-family: InterBold;
-}
+// .font-bold {
+//   font-family: InterBold;
+// }
 
 input,
 textarea {

@@ -617,7 +617,6 @@ function updateuserName() {
 
 function listeneerUserData() {
     for (let i in isLoading.user) {
-        console.log(isLoading.user.socials, isLoading.user_update_checker.socials)
         if (isLoading.user[i] != isLoading.user_update_checker[i]) {
             return useSettings.store.is_update = true;
         }
@@ -660,7 +659,6 @@ watch(
 watch(() => isLoading.store.cropModal, () => {
   if (!isLoading.store.cropModal) {
     isLoading.user_update_checker.image = isLoading.store.croppedFile
-  console.log(isLoading.user_update_checker.image)
   useSettings.updateUserData()
   }
 })

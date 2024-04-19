@@ -27,7 +27,6 @@ export const useGroupStore = defineStore("group", () => {
     for (let i in store.filter) {
         url += `&${i}=${store.filter[i]}`;
     }
-    console.log(url);
     axios
       .get(baseUrl + url, {
         headers: {
@@ -35,12 +34,10 @@ export const useGroupStore = defineStore("group", () => {
         },
       })
       .then((res) => {
-        console.log(res);
         store.groups = res.data?.data;
         for (let i in isLoading.store.pagination) {
           isLoading.store.pagination[i] = res.data.meta[i];
         }
-        console.log(isLoading.store.pagination);
         isLoading.removeLoading("groupGroups");
       })
       .catch((err) => {
@@ -61,7 +58,6 @@ export const useGroupStore = defineStore("group", () => {
         },
       })
       .then((res) => {
-        console.log(res, "--------------------------------");
         store.group_by_id = res.data?.data;
         isLoading.removeLoading("getById");
       })
@@ -83,7 +79,6 @@ export const useGroupStore = defineStore("group", () => {
         },
       })
       .then((res) => {
-        console.log(res, "--------------------------------");
         store.group_by_username = res.data?.data;
         isLoading.removeLoading("getByUsername");
       })

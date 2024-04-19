@@ -450,7 +450,6 @@ function handleVideoLink() {
     useClassroom.module.video = useClassroom.local_store.videoLink;
     useClassroom.local_store.addVideoModal = false;
     const url = new URL(useClassroom.local_store.videoLink);
-    console.log(url);
   } else {
     useClassroom.module.video = "";
   }

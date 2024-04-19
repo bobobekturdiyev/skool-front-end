@@ -21,18 +21,11 @@ const store = reactive({
   activeName: "first",
 });
 
-// watch(() => store.activeName, () => {
-//     console.log(store.activeName);
-// })
-
 const handleClick = (tab, event) => {
-//   console.log(tab, event);
-  console.log(store.activeName);
   router.push(`/${router.currentRoute.value.params.community}/${store.activeName}`)
 };
 
 onBeforeMount(() => {
-  console.log(router.currentRoute.value.name?.split('-')[1]);
   const route_name = router.currentRoute.value.name?.split('-')[1];
   if (route_name) {
     store.activeName = route_name;

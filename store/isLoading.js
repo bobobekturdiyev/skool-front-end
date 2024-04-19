@@ -52,6 +52,11 @@ export const useLoadingStore = defineStore("loading", () => {
     member: [],
   });
 
+  const modal = reactive({
+    add_link: false,
+    link: "",
+  })
+
   const user_update_checker = reactive({
     id: "",
     name: "",
@@ -112,9 +117,7 @@ export const useLoadingStore = defineStore("loading", () => {
     }
 
     const currentQueries = { ...router.currentRoute.value.query };
-    console.log(currentQueries);
     currentQueries[type] = query;
-    console.log(currentQueries);
     let url = "?";
     let t = 0;
     for (let i in currentQueries) {
@@ -132,6 +135,7 @@ export const useLoadingStore = defineStore("loading", () => {
   return {
     user,
     store,
+    modal,
     user_update_checker,
     addLoading,
     removeLoading,

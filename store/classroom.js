@@ -86,13 +86,11 @@ export const useClassroomStore = defineStore("classroom", () => {
     }
     const formData = new FormData();
     for (let i of Object.keys(create)) {
-      console.log(i);
       formData.append(i, create[i]);
     }
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("createCourse");
-    console.log(group_username);
 
     axios
       .post(baseUrl + `add-course/${group_username}`, formData, {
@@ -103,7 +101,6 @@ export const useClassroomStore = defineStore("classroom", () => {
       .then((res) => {
         const slug = res.data?.data?.slug;
         router.push(`/${group_username}/classroom/${slug}`);
-        console.log(res);
         clearCreate();
         isLoading.removeLoading("createCourse");
       })
@@ -116,13 +113,11 @@ export const useClassroomStore = defineStore("classroom", () => {
   function update_course() {
     const formData = new FormData();
     for (let i of Object.keys(create)) {
-      console.log(i);
       formData.append(i, create[i]);
     }
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("createCourse");
-    console.log(create.slug);
 
     axios
       .post(baseUrl + `update-course/${create.slug}`, formData, {
@@ -133,7 +128,6 @@ export const useClassroomStore = defineStore("classroom", () => {
       .then((res) => {
         const slug = res.data?.data?.slug;
         router.push(`/${group_username}/classroom/${slug}`);
-        console.log(res);
         clearCreate();
         isLoading.removeLoading("createCourse");
       })
@@ -158,7 +152,6 @@ export const useClassroomStore = defineStore("classroom", () => {
         },
       })
       .then((res) => {
-        console.log(res);
         clearSet();
         get_module();
         isLoading.removeLoading("createSet");
@@ -181,7 +174,6 @@ export const useClassroomStore = defineStore("classroom", () => {
         },
       })
       .then((res) => {
-        console.log(res);
         clearSet();
         get_module();
         isLoading.removeLoading("createSet");
@@ -195,7 +187,6 @@ export const useClassroomStore = defineStore("classroom", () => {
   function create_module(type) {
     const formData = new FormData();
     for (let i of Object.keys(module)) {
-      console.log(module[i]);
       formData.append(i, module[i]);
     }
     const course_name = router.currentRoute.value.params.id;
@@ -209,7 +200,6 @@ export const useClassroomStore = defineStore("classroom", () => {
         },
       })
       .then((res) => {
-        console.log(res);
         clearModule();
         get_module();
         isLoading.removeLoading("createModule");
@@ -230,7 +220,6 @@ export const useClassroomStore = defineStore("classroom", () => {
   function update_module(type) {
     const formData = new FormData();
     for (let i of Object.keys(module)) {
-      console.log(module[i]);
       formData.append(i, module[i]);
     }
     const course_name = router.currentRoute.value.params.id;
@@ -244,7 +233,6 @@ export const useClassroomStore = defineStore("classroom", () => {
         },
       })
       .then((res) => {
-        console.log(res);
         clearModule();
         get_module();
         isLoading.removeLoading("createModule");
@@ -278,7 +266,6 @@ export const useClassroomStore = defineStore("classroom", () => {
         }
       )
       .then((res) => {
-        console.log(res);
         store.modules = res.data?.data;
         isLoading.removeLoading("getModules");
       })
@@ -291,7 +278,6 @@ export const useClassroomStore = defineStore("classroom", () => {
   function delete_module() {
     const token = localStorage.getItem("token");
     isLoading.addLoading("deleteModule");
-    console.log(local_store.moduleActiveId);
     axios
       .delete(baseUrl + `delete-module/${local_store.moduleActiveId}`, {
         headers: {
@@ -299,7 +285,6 @@ export const useClassroomStore = defineStore("classroom", () => {
         },
       })
       .then((res) => {
-        console.log(res);
         local_store.moduleActiveId = '';
         get_module();
         isLoading.removeLoading("deleteModule");
@@ -314,7 +299,6 @@ export const useClassroomStore = defineStore("classroom", () => {
     const token = localStorage.getItem("token");
     isLoading.addLoading("deleteSet");
     const slug = router.currentRoute.value.params.id;
-    console.log(local_store.activeName)
     axios
       .delete(baseUrl + `delete-set/${slug}/${id}`, {
         headers: {
@@ -322,7 +306,6 @@ export const useClassroomStore = defineStore("classroom", () => {
         },
       })
       .then((res) => {
-        console.log(res);
         get_module();
         isLoading.removeLoading("deleteSet");
       })
@@ -343,7 +326,6 @@ export const useClassroomStore = defineStore("classroom", () => {
         },
       })
       .then((res) => {
-        console.log(res);
         get_classroom();
         isLoading.removeLoading("deleteCourse");
       })
@@ -358,7 +340,6 @@ export const useClassroomStore = defineStore("classroom", () => {
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("getClassrooms");
-    console.log(group_username);
 
     axios
       .get(
@@ -371,7 +352,6 @@ export const useClassroomStore = defineStore("classroom", () => {
         }
       )
       .then((res) => {
-        console.log(res);
         store.classrooms = res.data?.data;
         for (let i in isLoading.store.pagination) {
           isLoading.store.pagination[i] = res.data.meta[i];

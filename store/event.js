@@ -49,8 +49,6 @@ export const useEventStore = defineStore("event", () => {
     isLoading.addLoading("getEvents");
     const start_date = new Date(store.start_date).getTime()
     const end_date = new Date(store.end_date).getTime()
-    console.log(store.start_date, '---------------')
-    console.log(store.end_date, '----------------')
     store.data_events = [];
     store.table_events = [];
     let t;
@@ -65,7 +63,6 @@ export const useEventStore = defineStore("event", () => {
         }
       )
       .then((res) => {
-        console.log(res);
         let is_true;
         let dates;
         store.events = res.data?.data?.data;
@@ -76,7 +73,6 @@ export const useEventStore = defineStore("event", () => {
             is_true = false
             t = 0;
             for (let event of store.events) {
-              console.log(event, '=================')
               const newDate = new Date(+event.date);
               if (newDate.getMonth() == date[0] && newDate.getDate() == date[1]) {
                 for (let dates of event.data) {
@@ -100,7 +96,6 @@ export const useEventStore = defineStore("event", () => {
             }
           }
         }
-        console.log(store.table_events);
         store.table_events = store.table_events.splice(store.table_events.length/2)
         setPagination();
       })
@@ -137,10 +132,6 @@ export const useEventStore = defineStore("event", () => {
       }
     }
 
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`);
-    }
-
     axios
       .post(
         baseUrl +
@@ -152,7 +143,6 @@ export const useEventStore = defineStore("event", () => {
         }
       )
       .then((res) => {
-        console.log(res);
         store.add_event = false;
         isLoading.removeLoading("addEvents");
         get_event();
@@ -182,11 +172,7 @@ export const useEventStore = defineStore("event", () => {
         }
       }
     }
-
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`);
-    }
-
+    
     axios
       .post(
         baseUrl +
@@ -198,7 +184,6 @@ export const useEventStore = defineStore("event", () => {
         }
       )
       .then((res) => {
-        console.log(res);
         store.add_event = false;
         isLoading.removeLoading("addEvents");
         get_event();
@@ -223,7 +208,6 @@ export const useEventStore = defineStore("event", () => {
         }
       )
       .then((res) => {
-        console.log(res);
         store.add_event = false;
         isLoading.removeLoading("deleteEvent");
         get_event();

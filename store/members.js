@@ -42,7 +42,6 @@ export const useMemberStore = defineStore("members", () => {
         },
       })
       .then((res) => {
-        console.log(res);
         store.members = res.data?.data;
         isLoading.removeLoading("groupMembes");
       })
@@ -62,7 +61,6 @@ export const useMemberStore = defineStore("members", () => {
         },
       })
       .then((res) => {
-        console.log(res, 'levels');
         store.editGamification = false;
         getLevels()
         isLoading.removeLoading("editLevels");
@@ -84,7 +82,6 @@ export const useMemberStore = defineStore("members", () => {
         },
       })
       .then((res) => {
-        console.log(res, 'levels');
         store.levels = res.data?.data;
         isLoading.removeLoading("getLevels");
       })

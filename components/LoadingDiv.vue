@@ -1,5 +1,5 @@
 <template>
-  <div class="is_loading h-full w-full"></div>
+  <div class="is_loading"><slot></slot></div>
 </template>
 
 <script setup></script>

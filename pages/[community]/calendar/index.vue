@@ -929,10 +929,6 @@ function incMonth() {
   getCalendar(store.year, useEvent.store.month);
 }
 
-function handleLocation(item) {
-  // console.log(item)
-}
-
 function handleInput(type) {
   if (type == "input") {
     checkIsActive();

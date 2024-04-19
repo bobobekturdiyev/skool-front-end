@@ -161,7 +161,6 @@ onBeforeMount(() => {
   useGroup.groupByUsername();
   document.addEventListener("keydown", function (event) {
     // Check if Ctrl key is pressed and the key pressed along with it
-    console.log(event.key);
     if (!store.slideModal) {
       if (event.key == "ArrowRight") {
         store.slideStep = 1;

@@ -26,6 +26,8 @@ export const usePostStore = defineStore("post", () => {
     description: "",
     category_id: "",
     files: [],
+    video_link: [],
+    poll: {},
   });
 
   function get_posts() {
@@ -47,7 +49,6 @@ export const usePostStore = defineStore("post", () => {
         }
       )
       .then((res) => {
-        console.log(res);
         store.posts = res.data?.data;
         for (let i in isLoading.store.pagination) {
           isLoading.store.pagination[i] = res.data?.meta[i];
@@ -68,7 +69,6 @@ export const usePostStore = defineStore("post", () => {
     axios
       .get(baseUrl + `categories`)
       .then((res) => {
-        console.log(res, "--------------------------------");
         store.categories = res.data?.data;
         isLoading.removeLoading("getPostCategories");
       })
@@ -93,7 +93,6 @@ export const usePostStore = defineStore("post", () => {
     store.error = "";
     const formData = new FormData();
     for (let i of Object.keys(create)) {
-      console.log(i);
       formData.append(i, create[i]);
     }
     axios
@@ -103,7 +102,6 @@ export const usePostStore = defineStore("post", () => {
         },
       })
       .then((res) => {
-        console.log(res);
         isLoading.removeLoading("writePost");
         store.writingModal = false;
         get_posts();

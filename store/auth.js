@@ -26,7 +26,6 @@ export const useAuthStore = defineStore("auth", () => {
     axios
       .post(baseUrl + "login", login)
       .then((res) => {
-        console.log(res);
         if (res.data?.code == 200) {
           localStorage.setItem("token", res.data?.data?.authorization?.token);
           isLoading.store.email = res.data?.data?.email;
