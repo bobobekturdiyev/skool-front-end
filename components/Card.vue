@@ -19,12 +19,13 @@
           class="font-semibold md:text-lg text-sm w-[80%] h-6 rounded bg-[#f5f5f5]"
         ></h1>
       </div>
-      <LoadingDiv
-        class="h-[150px] w-full"
-      />
+      <LoadingDiv class="h-[150px] w-full" />
     </LoadingDiv>
   </div>
-  <div v-else-if="!useGroup.store.groups.length" class="min-h-[30vh] full_flex col-span-4">
+  <div
+    v-else-if="!useGroup.store.groups.length"
+    class="min-h-[30vh] full_flex col-span-4"
+  >
     No data
   </div>
   <div
@@ -49,12 +50,22 @@
     <div class="md:p-4 p-3">
       <div class="flex items-center md:gap-4 gap-2">
         <img
-          v-if="i.image"
+          v-if="i.icon"
           class="md:h-10 md:w-10 h-5 w-5 rounded-full bg_loading object-cover"
-          :src="i.image"
+          :src="i.icon"
           alt=""
         />
-        <p v-else class="md:h-10 md:w-10 h-5 w-5 rounded-full bg_loading"></p>
+        <div
+          v-else
+          class="full_flex text-white uppercase md:h-10 md:min-w-[40px] h-5 min-w-[20px] md:text-[16px] text-[10px] rounded-full"
+          :style="`background: ${i.color}`"
+        >
+          {{ i.initials }}
+        </div>
+        <p
+          v-if="isLoading.isLoadingType('groupGroups')"
+          class="md:h-10 md:w-10 h-5 w-5 rounded-full bg_loading"
+        ></p>
         <h1 class="font-semibold md:text-lg text-sm truncate">
           {{ i.name }}
         </h1>

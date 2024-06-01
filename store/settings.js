@@ -151,7 +151,7 @@ export const useSettingsStore = defineStore("settings", () => {
         isLoading.removeLoading("updateUserData");
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err, '--------------------------------');
         isLoading.removeLoading("updateUserData");
       });
   }

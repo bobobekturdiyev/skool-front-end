@@ -17,7 +17,7 @@ export const useLoadingStore = defineStore("loading", () => {
       current_page: router.currentRoute.value.query.page
         ? router.currentRoute.value.query.page
         : 1,
-      total: "",
+      total: null,
       last_page: 1,
       from: "",
       to: "",
@@ -55,7 +55,7 @@ export const useLoadingStore = defineStore("loading", () => {
   const modal = reactive({
     add_link: false,
     link: "",
-  })
+  });
 
   const user_update_checker = reactive({
     id: "",

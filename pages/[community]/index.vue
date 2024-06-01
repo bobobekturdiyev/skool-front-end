@@ -398,7 +398,7 @@
         <Pagination_card class="pt-3" />
       </section>
     </div>
-    <div class="min-w-[200px] md:max-w-[280px]">
+    <div class="min-w-[280px] md:max-w-[280px]">
       <!-- info card -->
       <section>
         <div class="rounded-2xl overflow-hidden bg-white">

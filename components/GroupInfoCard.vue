@@ -4,23 +4,23 @@
     <div class="rounded-2xl overflow-hidden bg-white">
       <img
         class="w-full h-[150px] object-cover"
-        :src="useGroup.store.group_by_username[0]?.image"
+        :src="useGroup.store.group_by_username?.image"
         alt=""
       />
       <div class="p-4 space-y-4">
         <h1 class="font-medium text-lg">
-          {{ useGroup.store.group_by_username[0]?.name }}
+          {{ useGroup.store.group_by_username?.name }}
         </h1>
         <p class="flex items-center _ca1 gap-1">
           <img src="@/assets/svg/community/grey_private.svg" alt="" />
           {{
-            useGroup.store.group_by_username[0]?.group_type == "private"
+            useGroup.store.group_by_username?.group_type == "private"
               ? "Private group"
               : "Public group"
           }}
         </p>
         <pre class="text-sm leading-[21px] whitespace-pre-line">{{
-          useGroup.store.group_by_username[0]?.description
+          useGroup.store.group_by_username?.excerpt
         }}</pre>
         <div class="flex items-center justify-between text-xs text-center">
           <div>
@@ -37,12 +37,14 @@
           </div>
         </div>
         <button
-          @click="
-            $router.push(`/${$router.currentRoute.value.params.community}`)
-          "
-          class="b_cbc rounded-lg w-full font-semibold text-sm uppercase"
+          @click="joinToGroup"
+          class="b_cbc rounded-lg w-full font-semibold text-sm"
         >
-          join group
+          {{
+            useGroup.store.group_by_username.group_price == "free"
+              ? "JOIN GROUP"
+              : `JOIN $${useGroup.store.group_by_username.price} /month`
+          }}
         </button>
       </div>
     </div>
@@ -57,10 +59,21 @@
 </template>
 
 <script setup>
-import { useLoadingStore, useGroupStore } from "@/store";
+import { useLoadingStore, useGroupStore, usePaymentStore } from "@/store";
 
+const router = useRouter();
 const isLoading = useLoadingStore();
 const useGroup = useGroupStore();
+const usePayment = usePaymentStore();
+
+function joinToGroup() {
+  console.log(useGroup.store.group_by_username);
+  if (useGroup.store.group_by_username.group_price == "paid") {
+    usePayment.store.joinToGroupModal = true;
+  } else {
+    router.push(`/${router.currentRoute.value.params.community}`);
+  }
+}
 </script>
 
 <style lang="scss" scoped></style>

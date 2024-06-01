@@ -20,13 +20,32 @@ export default defineNuxtConfig({
         },
         {
           src: "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js",
-        }
+        },
+        {
+          src: "https://connect.facebook.net/en_US/fbevents.js",
+          async: true,
+        },
+        {
+          innerHTML: `
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window,document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', ${process.env.FACEBOOK_PIXEL_ID});
+            fbq('track', 'PageView');
+          `,
+          type: "text/javascript",
+        },
       ],
       meta: [
-        // {
-        //   name: "theme-color",
-        //   content: "#5C0099",
-        // },
+        {
+          name: "theme-color",
+          content: "#F0F5FA",
+        },
       ],
     },
   },
@@ -36,10 +55,10 @@ export default defineNuxtConfig({
     },
   },
   plugins: [
-    { src: "~/plugins/aos", mode: "client", ssr: false }, 
-    { src: '~/plugins/vuejs-clipper.js', mode: 'client' }, 
-    { src: '~/plugins/laravel-echo.ts', mode: 'client' },
-    { src: '~/plugins/vue-paginate-scroll.js', mode: 'client' },
+    { src: "~/plugins/aos", mode: "client", ssr: false },
+    { src: "~/plugins/vuejs-clipper.js", mode: "client" },
+    { src: "~/plugins/laravel-echo.ts", mode: "client" },
+    { src: "~/plugins/vue-paginate-scroll.js", mode: "client" },
   ],
   imports: {
     autoImport: true,
@@ -54,23 +73,23 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  // tiptap: {
-  //   prefix: "Tiptap", //prefix for Tiptap imports, composables not included
-  // },
-  // router: {
-  //   extendRoutes(routes, resolve) {
-  //     routes.push({
-  //       name: '404',
-  //       path: '*',
-  //       component: resolve(__dirname, 'layouts/error.vue')
-  //     })
-  //   }
-  // },
   modules: [
     "@pinia/nuxt",
     "@element-plus/nuxt",
     "nuxt-swiper",
     "nuxt-primevue",
+    // "nuxt-facebook-pixel-module",
     // "nuxt-tiptap-editor",
+    // [
+    //   "nuxt-facebook-pixel-module",
+    //   {
+    //     /* module options */
+    //     pixelId: process.env.FACEBOOK_PIXEL_ID,
+    //   },
+    // ],
   ],
+  // facebook: {
+  //   pixelId: process.env.FACEBOOK_PIXEL_ID,
+  //   autoPageView: true,
+  // },
 });

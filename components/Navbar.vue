@@ -11,16 +11,26 @@
             alt=""
           />
           <div
+            class="flex"
             v-else-if="
               $router.currentRoute.value.name.indexOf('community') == 0
             "
           >
-            <img
-              class="sm:h-10 sm:w-10 h-7 w-7 object-cover rounded-full"
-              v-if="useGroup.store.group_by_username[0]?.user_id?.image"
-              :src="useGroup.store.group_by_username[0]?.user_id?.image"
-              alt=""
-            />
+            <div v-if="!isLoading.isLoadingType('getByUsername')">
+              <img
+                class="sm:h-10 sm:w-10 h-7 w-7 object-cover rounded-full"
+                v-if="useGroup.store.group_by_username.icon"
+                :src="useGroup.store.group_by_username.icon"
+                alt=""
+              />
+              <div
+                v-else
+                class="full_flex text-white uppercase md:h-10 md:min-w-[40px] h-5 min-w-[20px] md:text-[16px] text-[10px] rounded-full"
+                :style="`background: ${useGroup.store.group_by_username.color}`"
+              >
+                {{ useGroup.store.group_by_username.initials }}
+              </div>
+            </div>
             <div v-else class="full_flex gap-5">
               <p class="bg-gray-600 h-10 w-10 rounded-full"></p>
               <p class="bg-gray-600 w-[120px] h-5 rounded"></p>
@@ -28,18 +38,17 @@
           </div>
           <img v-else src="/icon.svg" alt="" />
         </router-link>
-        <router-link
+        <client-only>
+          <router-link
           v-if="$router.currentRoute.value.name.indexOf('community') == 0"
-          class="sm:text-lg text-sm font-semibold whitespace-nowrap max-w-[150px] truncate"
-          :to="'/' + $router.currentRoute.value.params.community"
+          class="sm:text-lg text-sm font-semibold whitespace-nowrap min-w-fit max-w-[150px] truncate"
+          :to="`/${$router.currentRoute.value.params.community}`"
         >
-          {{ useGroup.store.group_by_username[0]?.user_id?.name }}
-          {{
-            useGroup.store.group_by_username[0]?.user_id?.surname
-          }}</router-link
-        >
+          {{ useGroup.store.group_by_username.name }}
+        </router-link>
+        </client-only>
         <router-link
-          v-else-if="$router.currentRoute.value.name != 'index'"
+          v-show="$router.currentRoute.value.name.indexOf('community') != 0 && $router.currentRoute.value.name != 'index'"
           class="md:text-lg text-sm whitespace-nowrap font-semibold"
           to="/"
           >Skool community</router-link

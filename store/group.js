@@ -11,21 +11,29 @@ export const useGroupStore = defineStore("group", () => {
   const store = reactive({
     groups: [],
     group_by_id: [],
-    group_by_username: [],
+    group_by_username: {},
+    add_media: false,
     filter: {
       type: "all",
       price: "all",
       category_id: null,
       search: null,
     },
+    joinToGroupModal: false,
   });
+
+  const media = reactive({
+    image: "",
+    link: "",
+    username: "",
+  })
 
   function filterGroups() {
     const token = localStorage.getItem("token");
     isLoading.addLoading("groupGroups");
     let url = `search?page=${isLoading.store.pagination.current_page}`;
     for (let i in store.filter) {
-        url += `&${i}=${store.filter[i]}`;
+      url += `&${i}=${store.filter[i]}`;
     }
     axios
       .get(baseUrl + url, {
@@ -79,7 +87,8 @@ export const useGroupStore = defineStore("group", () => {
         },
       })
       .then((res) => {
-        store.group_by_username = res.data?.data;
+        console.log(res);
+        store.group_by_username = res.data;
         isLoading.removeLoading("getByUsername");
       })
       .catch((err) => {
@@ -88,5 +97,5 @@ export const useGroupStore = defineStore("group", () => {
       });
   }
 
-  return { store, filterGroups, groupById, groupByUsername };
+  return { store,media, filterGroups, groupById, groupByUsername };
 });
