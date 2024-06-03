@@ -132,6 +132,19 @@ export const useLoadingStore = defineStore("loading", () => {
     router.push(url);
   }
 
+  const showMessage = (message) => {
+    ElNotification({
+      title: '',
+      message: h('i', { style: 'color: #070707' }, message),
+      position: 'bottom-left',
+    })
+    // ElMessage({
+    //   message,
+    //   type,
+    //   duration: 100000,
+    // })
+  }
+
   return {
     user,
     store,
@@ -143,5 +156,6 @@ export const useLoadingStore = defineStore("loading", () => {
     priceFormatter,
     changeQuery,
     isURL,
+    showMessage,
   };
 });

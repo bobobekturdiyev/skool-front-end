@@ -10,13 +10,13 @@
       <section class="w-full bg-white md:px-7 md:py-6 p-3 r_16 overflow-hidden">
         <h1 class="font-semibold md:text-2xl text-lg mb-6">{{ useGroup.store.group_by_username.name }}</h1>
         <div class="w-full overflow-hidden r_16">
-          <div @click="() => {store.slideModal = true; store.slideStep2 = store.slideStep}"
+          <div v-if="useGroup.store.group_by_username.medias.length" @click="() => {store.slideModal = true; useGroup.store.slideStep2 = useGroup.store.slideStep}"
             class="mainSlider cursor-pointer duration-500 lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] flex items-center w-full r_16">
             <div class="min-w-full" v-for="(post, index) in useGroup.store.group_by_username.medias">
               <div v-if="post.type == 'image'" class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] w-full min-w-[100%] object-cover">
-                <img @click="store.slideStep = index" :src="post.link" />
+                <img class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] w-full min-w-[100%] object-cover" @click="useGroup.store.slideStep = index" :src="post.link" />
               </div>
-              <div v-else @click="store.slideStep = index" class="relative">
+              <div v-else @click="useGroup.store.slideStep = index" class="relative">
                 <iframe 
       class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] min-w-full" 
       :src="embedLink(post.link)" 
@@ -28,15 +28,36 @@
               </div>
             </div>
           </div>
+          <div v-else
+          @click="useGroup.store.add_media = true"
+          class="full_flex bg-[#F2F2F2] cursor-pointer duration-500 lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] flex items-center w-full r_16">
+          
+            <p>Upload images / videos</p>
+          </div>
         </div>
-        <div class="flex gap-4 mt-4 md:mb-6 mb-4 overflow-hidden overflow-x-auto">
-          <div v-for="(post, index) in useGroup.store.group_by_username.medias">
+        <div v-loading="isLoading.isLoadingType('positionMedia')" class="flex gap-4 mt-4 md:mb-6 mb-4 overflow-hidden overflow-x-auto">
+          <draggable
+                @change="useGroup.update_media_position"
+                :list="useGroup.store.group_by_username.medias"
+                group="grid"
+                :animation="200"
+                class="flex gap-4 overflow-hidden overflow-x-auto min-w-fit"
+            >
+                <template v-for="(post, index) in useGroup.store.group_by_username.medias" :key="post.id">
+                  <div class="relative" :class="useGroup.store.slideStep == index ? 'border p-[1px] rounded-xl' : ''">
+            <button
+            @click="() => deleteMedia(post.id)"
+            type="button"
+            class="absolute deleteimage top-1 right-1 z-20 rounded-full w-6 h-6 full_flex border bg-white"
+          >
+            <img class="m-auto" src="@/assets/svg/x.svg" alt="" />
+          </button>
             <div v-if="post.type == 'image'">
-              <img @click="store.slideStep = index"
+              <img @click="useGroup.store.slideStep = index"
                 class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px] h-[56px] cursor-pointer object-cover rounded-xl"
                 :src="post.link" />
             </div>
-            <div v-else @click="store.slideStep = index" class="relative">
+            <div v-else @click="useGroup.store.slideStep = index" class="relative">
                 <iframe 
                 class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px] cursor-pointer object-cover rounded-xl"
       :src="embedLink(post.link)" >
@@ -46,7 +67,9 @@
                 </div>
               </div>
           </div>
-            <div @click="useGroup.store.add_media = true"
+                </template>
+  </draggable>
+            <div v-if="useGroup.store.group_by_username.medias.length < 6 && useGroup.store.group_by_username.medias.length > 0" @click="useGroup.store.add_media = true"
               class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px]"
             >
               <img class="w-1/3" src="@/assets/svg/add_photo.svg" alt="" />
@@ -102,11 +125,11 @@
       </div>
 
       <!-- buttons -->
-      <button @click="store.slideStep2 = 1"
+      <button @click="() => handleSlideChange('right')"
         class="bg-black z-50 bg-opacity-20 backdrop-blur-lg absolute sm:right-5 right-3 top-0 bottom-0 my-auto full_flex rounded-full w-12 h-12 border border-white">
         <img src="@/assets/svg/slide_arrow.svg" alt="" />
       </button>
-      <button @click="store.slideStep2 = 0"
+      <button @click="() => handleSlideChange('left')"
         class="bg-black z-50 bg-opacity-20 backdrop-blur-lg absolute sm:left-5 left-3 top-0 bottom-0 my-auto full_flex rotate-180 rounded-full w-12 h-12 border border-white">
         <img src="@/assets/svg/slide_arrow.svg" alt="" />
       </button>
@@ -168,22 +191,52 @@
             </form>
         </el-dialog>
 
-        <!-- add Video -->
+        <!-- delete media -->
+    <el-dialog
+      v-model="useGroup.store.delete_media"
+      width="400"
+      align-center
+      class="!rounded-xl overflow-hidden px-6 py-7"
+    >
+      <div class="space-y-7">
+        <h1 class="text-2xl font-semibold">Delete media?</h1>
+        <p class="text-lg">
+          Are you sure you want to delete? You can't undo this.
+        </p>
+        <div class="flex justify-end gap-3 text-sm font-semibold">
+          <button
+            @click="useGroup.store.delete_media = false"
+            class="uppercase h-10 px-6 rounded-lg _ca1"
+          >
+            cancel
+          </button>
+          <button
+            @click="useGroup.delete_media"
+            v-loading="isLoading.isLoadingType('deleteMedia')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            delete
+          </button>
+        </div>
+      </div>
+    </el-dialog>
+
+        <!-- add media -->
    <el-dialog
       v-model="useGroup.store.add_media"
       width="400"
       align-center
       class="bg-opacity-50 !rounded-lg py-7 px-6"
     >
-      <form @submit.prevent="handleVideoLink">
+      <form @submit.prevent="useGroup.create_media">
         <h1 class="text-2xl font-semibold">Add media</h1>
         <p class="mt-6 font-medium">
           Upload an image (1400 x 790 recommended).
         </p>
-        <label for="upload_image" class="_ca1 font-semibold border_ce0 h-10 inline-block full_flex max-w-fit px-6 r_8 mt-4 uppercase">
+        <label for="add_image" class="_ca1 font-semibold border_ce0 h-10 inline-block full_flex max-w-fit px-6 r_8 mt-4 uppercase">
           UPLOAD IMAGE
         </label>
-        <input type="file" id="upload_image" class="h-0 w-0 overflow-hidden !p-0" />
+        <input @change="handleMediaUpload" type="file" id="add_image" accept="image/*" class="h-0 w-0 overflow-hidden !p-0" />
         <p class="mt-6 mb-4 font-medium">
           Or, add a YouTube, Vimeo, Loom, or Wistia video link.
         </p>
@@ -209,10 +262,10 @@
           </button>
           <button
             :class="
-              useGroup.store.videoLink ? 'b_cbc _c07' : 'b_ce0 _ca1'
+              useGroup.media.link ? 'b_cbc _c07' : 'b_ce0 _ca1'
             "
             class="uppercase h-10 px-6 rounded-lg"
-            v-loading="isLoading.isLoadingType('createModule')"
+            v-loading="isLoading.isLoadingType('createMedia')"
           >
             add
           </button>
@@ -224,16 +277,39 @@
 
 <script setup>
 import { useGroupStore, useLoadingStore, usePaymentStore } from "@/store";
+import { VueDraggableNext as draggable } from 'vue-draggable-next';
 const isLoading = useLoadingStore();
 const useGroup = useGroupStore();
 const usePayment = usePaymentStore();
 isLoading.addLoading("getByUsername");
 const videoIframe = ref("");
 const store = reactive({
-  slideStep: 0,
-  slideStep2: 0,
   slideModal: false,
 });
+
+function deleteMedia(id) {
+  useGroup.store.media_id = id;
+  useGroup.store.delete_media = true
+}
+
+function handleMediaUpload(e) {
+  console.log("Hi");
+  useGroup.media.image = e.target.files[0];
+  useGroup.create_media();
+  document.querySelector('#add_image').value = "";
+}
+
+function handleSlideChange(type) {
+  if (type == "right") {
+        if (useGroup.store.slideStep2 < useGroup.store.group_by_username.medias.length - 1) {
+          useGroup.store.slideStep2 += 1;
+        }
+      } else if (type == "left") {
+        if (useGroup.store.slideStep2 > 0) {
+          useGroup.store.slideStep2 -= 1;
+        }
+      }
+}
 
 function embedLink(link) {
   const url = new URL(link);
@@ -250,7 +326,7 @@ function embedLink(link) {
 watch(
   () => store.slideModal,
   () => {
-    store.slideStep2 = store.slideStep;
+    useGroup.store.slideStep2 = useGroup.store.slideStep;
 
     const video = document.getElementById("math_video");
     try {
@@ -260,26 +336,26 @@ watch(
 );
 
 watch(
-  () => store.slideStep,
+  () => useGroup.store.slideStep,
   () => {
     try {
-      store.slideStep2 = store.slideStep;
+      useGroup.store.slideStep2 = useGroup.store.slideStep;
       const image = document.querySelector(".mainSlider");
-      image.style.transform = `translateX(-${store.slideStep * 100}%)`;
+      image.style.transform = `translateX(-${useGroup.store.slideStep * 100}%)`;
     } catch (error) { }
   }
 );
 
 watch(
-  () => store.slideStep2,
+  () => useGroup.store.slideStep2,
   () => {
-    const video = document.getElementById("math_video");
+    const video = document.querySelector("video");
     try {
       video.pause();
     } catch (error) { }
     try {
       const image = document.querySelector(".mainSlider2");
-      image.style.transform = `translateX(-${store.slideStep2 * 100}%)`;
+      image.style.transform = `translateX(-${useGroup.store.slideStep2 * 100}%)`;
     } catch (error) { }
   }
 );
@@ -290,22 +366,22 @@ onBeforeMount(() => {
     // Check if Ctrl key is pressed and the key pressed along with it
     if (!store.slideModal) {
       if (event.key == "ArrowRight") {
-        if (store.slideStep < useGroup.store.group_by_username.medias.length - 1) {
-          store.slideStep += 1;
+        if (useGroup.store.slideStep < useGroup.store.group_by_username.medias.length - 1) {
+          useGroup.store.slideStep += 1;
         }
       } else if (event.key == "ArrowLeft") {
-        if (store.slideStep > 0) {
-          store.slideStep -= 1;
+        if (useGroup.store.slideStep > 0) {
+          useGroup.store.slideStep -= 1;
         }
       }
     } else {
       if (event.key == "ArrowRight") {
-        if (store.slideStep2 < useGroup.store.group_by_username.medias.length - 1) {
-          store.slideStep2 += 1;
+        if (useGroup.store.slideStep2 < useGroup.store.group_by_username.medias.length - 1) {
+          useGroup.store.slideStep2 += 1;
         }
       } else if (event.key == "ArrowLeft") {
-        if (store.slideStep2 > 0) {
-          store.slideStep2 -= 1;
+        if (useGroup.store.slideStep2 > 0) {
+          useGroup.store.slideStep2 -= 1;
         }
       }
     }

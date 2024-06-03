@@ -48,6 +48,7 @@
     "sharp": "^0.33.2",
     "timezone-support": "^3.1.0",
     "vue": "^3.4.19",
+    "vue-draggable-next": "^2.2.1",
     "vue-paginate-scroll": "^1.0.2",
     "vue-youtube-iframe-api": "^0.1.2",
     "vue3-emoji-picker": "^1.1.8"

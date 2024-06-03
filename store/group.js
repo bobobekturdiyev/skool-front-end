@@ -13,6 +13,8 @@ export const useGroupStore = defineStore("group", () => {
     group_by_id: [],
     group_by_username: {},
     add_media: false,
+    delete_media: false,
+    media_id: "",
     filter: {
       type: "all",
       price: "all",
@@ -20,13 +22,109 @@ export const useGroupStore = defineStore("group", () => {
       search: null,
     },
     joinToGroupModal: false,
+    slideStep: 0,
+    slideStep2: 0,
+    media_ids: [],
   });
 
   const media = reactive({
     image: "",
     link: "",
-    username: "",
-  })
+    group_id: "",
+  });
+
+  function clearModule() {
+    for (let i of Object.keys(media)) {
+      media[i] = "";
+    }
+  }
+
+  function create_media() {
+    const formData = new FormData();
+    if (!media.image) {
+      if (!isLoading.isURL(media.link)) {
+        isLoading.showMessage("Please enter a valid video link");
+        return;
+      }
+    }
+    media.group_id = store.group_by_username.id;
+    for (let i of Object.keys(media)) {
+      formData.append(i, media[i]);
+    }
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("createMedia");
+
+    axios
+      .post(baseUrl + `media-link`, formData, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        groupByUsername("no_load");
+        clearModule();
+        store.add_media = false;
+        isLoading.removeLoading("createMedia");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.showMessage(err.response.data.message.errors[0]);
+        isLoading.removeLoading("createMedia");
+      });
+  }
+
+  function update_media_position() {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("positionMedia");
+    store.media_ids = [];
+    for (let i of store.group_by_username.medias) {
+      store.media_ids.push(i.id);
+    }
+    axios
+      .post(
+        baseUrl + `media-link-position`,
+        { media_ids: store.media_ids },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        isLoading.removeLoading("positionMedia");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.showMessage(err.response.data.message.errors[0]);
+        isLoading.removeLoading("positionMedia");
+      });
+  }
+
+  function delete_media() {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("deleteMedia");
+
+    axios
+      .delete(baseUrl + `media-link/${store.media_id}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        store.delete_media = false;
+        store.slideStep = 0;
+        store.slideStep2 = 0;
+        groupByUsername("no_load");
+        isLoading.removeLoading("deleteMedia");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("deleteMedia");
+      });
+  }
 
   function filterGroups() {
     const token = localStorage.getItem("token");
@@ -75,10 +173,12 @@ export const useGroupStore = defineStore("group", () => {
       });
   }
 
-  function groupByUsername() {
+  function groupByUsername(type) {
     const username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
-    isLoading.addLoading("getByUsername");
+    if (type != "no_load") {
+      isLoading.addLoading("getByUsername");
+    }
 
     axios
       .get(baseUrl + `get-group/` + username, {
@@ -97,5 +197,14 @@ export const useGroupStore = defineStore("group", () => {
       });
   }
 
-  return { store,media, filterGroups, groupById, groupByUsername };
+  return {
+    store,
+    media,
+    create_media,
+    delete_media,
+    update_media_position,
+    filterGroups,
+    groupById,
+    groupByUsername,
+  };
 });

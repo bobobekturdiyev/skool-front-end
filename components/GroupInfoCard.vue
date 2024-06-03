@@ -36,7 +36,32 @@
             <p class="_ca1">Admins</p>
           </div>
         </div>
+        <div v-if="useGroup.store.group_by_username.status == 'pending'">
+          <button
+            class="b_cf2 rounded-lg pointer-events-none w-full font-semibold text-sm"
+          >
+            MEMBERSHIP PENDING
+          </button>
+          <button class="_ca1 hover:underline text-[10px] text-center w-full">
+            Cancel membership request
+          </button>
+        </div>
         <button
+          v-else-if="useGroup.store.group_by_username.status == 'active'"
+          class="border border-[#f2f2f2] _ca1 rounded-lg w-full font-semibold text-sm"
+        >
+          SETTINGS
+        </button>
+        <div v-else-if="useGroup.store.group_by_username.status == 'banned'">
+          <button
+            class="b_cf2 _ca1 rounded-lg pointer-events-none w-full font-semibold text-sm"
+          >
+            BANNED
+          </button>
+          <p class="_ca1 text-[10px] my-2">Sorry, you've been banned from this group.</p>
+        </div>
+        <button
+          v-else
           @click="joinToGroup"
           class="b_cbc rounded-lg w-full font-semibold text-sm"
         >

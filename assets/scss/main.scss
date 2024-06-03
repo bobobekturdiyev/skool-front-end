@@ -383,3 +383,7 @@ label {
 .ql-container {
   height: 70% !important;
 }
+
+.el-loading-parent--relative {
+  pointer-events: none;
+}

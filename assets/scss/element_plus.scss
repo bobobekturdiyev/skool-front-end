@@ -100,6 +100,22 @@
   background-position: center;
 }
 
+.el-notification__group {
+  .el-icon {
+    background: none !important;
+  }
+  svg {
+    display: none !important;
+  }
+
+  .el-notification__closeBtn {
+    background-image: url("@/assets/svg/x.svg") !important;
+    background-position: center;
+    background-repeat: no-repeat !important;
+  }
+}
+
+
 .el-input__suffix {
   color: transparent !important;
 }
@@ -405,4 +421,16 @@
     margin: 0 !important;
     border: none !important;
   }
+}
+
+.el-loading-parent--relative {
+  pointer-events: none;
+}
+
+.el-notification__icon {
+  display: none !important;
+}
+
+.el-notification {
+  z-index: 3000 !important; 
 }
