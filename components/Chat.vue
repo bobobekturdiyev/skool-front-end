@@ -4,7 +4,7 @@
       class="flex items-center justify-between sticky z-20 top-0 bg-white pt-4 pb-5 px-4"
     >
       <h1 class="font-semibold">Chat</h1>
-      <el-dropdown placement="bottom-end" class="dropdown">
+      <el-dropdown :hide-on-click="false" placement="bottom-end" class="dropdown" trigger="click">
         <div class="full_flex gap-1 _c2a text-xs font-semibold">
           <p class="text-xs">All</p>
           <img src="@/assets/svg/chat/select_arrow.svg" alt="" />

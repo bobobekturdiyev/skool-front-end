@@ -10,6 +10,7 @@ import { useChatStore } from "./chat";
 import { useSettingsStore } from "./settings";
 import { useProfileStore } from "./profile";
 import { usePaymentStore } from "./payment";
+import { useAddVideoStore } from "./addVideo"
 
 export {
   useLoadingStore,
@@ -24,4 +25,5 @@ export {
   useSettingsStore,
   useProfileStore,
   usePaymentStore,
+  useAddVideoStore,
 };

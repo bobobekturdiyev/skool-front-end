@@ -33,7 +33,11 @@
     </nav>
     <div class="flex">
       <aside
-        :class="store.is_open ? 'sm:translate-x-0 translate-x-[-100%] max-w-0' : 'sm:min-w-[280px] min-w-full'"
+        :class="
+          store.is_open
+            ? 'sm:translate-x-0 translate-x-[-100%] max-w-0'
+            : 'sm:min-w-[280px] min-w-full'
+        "
         class="sm:min-w-[280px] h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 border-r border-[#E0E0E0] duration-300 whitespace-nowrap"
       >
         <ul class="_c07 text-sm">
@@ -406,11 +410,13 @@
             </button>
           </section>
           <section
-            class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+            v-if="!usePost.modal.create"
+            class="h-[calc(100vh_-120px)] animate-left overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
           >
             <div class="flex items-center justify-between">
               <h1 class="font-semibold text-xl">Categories</h1>
               <button
+                @click="usePost.modal.create = true"
                 class="uppercase font-semibold text-sm b_cbc _c07 px-6 r_8"
               >
                 add category
@@ -422,17 +428,116 @@
                 <p class="text-xs">Discuss anything here</p>
               </div>
               <div class="flex gap-3">
-                <button
+                <button @click="editPostCategory()"
                   class="full_flex gap-1 border border_cbc r_8 _c2a px-3 h-9"
                 >
                   <img src="@/assets/svg/edit.svg" alt="" />
                   <p>Edit</p>
                 </button>
-                <button class="full_flex border border_cbc r_8 w-9 h-9">
-                  <img src="@/assets/svg/three_dot_blue.svg" alt="" />
-                </button>
+                <div class="border_cbc r_8 w-9 h-9">
+                  <el-dropdown placement="bottom-end" class="dropdown">
+                  <button class="full_flex w-9 h-9">
+                    <img src="@/assets/svg/three_dot_blue.svg" alt="" />
+                  </button>
+                  <template #dropdown>
+                    <el-dropdown-menu
+                      class="community_dropdown min-w-[200px] dropdown_shadow"
+                    >
+                      <el-dropdown-item>Move up</el-dropdown-item>
+                      <el-dropdown-item>Move down</el-dropdown-item>
+                      <el-dropdown-item>Delete</el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+                </div>
               </div>
             </div>
+          </section>
+          <section
+            v-else
+            class="h-[calc(100vh_-120px)] animate-right overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+          >
+            <form @submit.prevent="handleAddPostCategory" class="space-y-6">
+              <h1 class="md:text-2xl text-lg pb-2 font-semibold _c07">
+                <span v-if="usePost.modal.edit">Edit</span
+                ><span v-else>Add</span> category
+              </h1>
+              <div>
+                <input
+                  @input="handleInput('input')"
+                  v-model="usePost.create_category.name"
+                  type="text"
+                  class="text-sm"
+                  placeholder="Name"
+                  required
+                />
+                <p class="text-end mt-2 _ca1 md:text-sm text-xs">
+                  {{ usePost.create_category.name?.length }}/30
+                </p>
+              </div>
+              <div>
+                <textarea
+                  @input="handleInput('textarea')"
+                  id="write_message"
+                  v-model="usePost.create_category.description"
+                  class="h-[90px] text-sm w-full rounded-[4px]"
+                  placeholder="Description"
+                ></textarea>
+                <p class="text-end mt-2 _ca1 md:text-sm text-xs">
+                  {{ usePost.create_category.description?.length }}/150
+                </p>
+              </div>
+              <div>
+                <label class="_ca1 text-xs" for="access">Permissions</label>
+                <el-select
+                  class="block w-full mt-2"
+                  v-model="usePost.create_category.permission"
+                  placeholder="Select"
+                >
+                  <el-option
+                    v-for="item in post_category_access"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                    :disabled="item.disabled"
+                  >
+                    <div class="flex items-center gap-2">
+                      {{ item.label }}
+                      <img
+                        v-if="usePost.create_category.permission == item.value"
+                        src="@/assets/svg/checked.svg"
+                        alt=""
+                      />
+                    </div>
+                  </el-option>
+                </el-select>
+              </div>
+              <div
+                v-if="!usePost.store.edit_course"
+                class="flex gap-3 text-sm font-semibold"
+              >
+                <button
+                  :type="
+                    isLoading.isLoadingType('createCourse')
+                      ? 'button'
+                      : 'submit'
+                  "
+                  :class="usePost.create.title ? 'b_cbc _c07' : 'b_ce0 _ca1'"
+                  @click="reposrtToAdmins"
+                  class="uppercase h-10 px-6 rounded-lg"
+                  v-loading="isLoading.isLoadingType('createCourse')"
+                >
+                  <span v-if="!usePost.modal.edit">add</span><span v-else>save</span> 
+                </button>
+                <button
+                  type="button"
+                  @click="usePost.clearData"
+                  class="uppercase h-10 px-6 rounded-lg _ca1"
+                >
+                  cancel
+                </button>
+              </div>
+            </form>
           </section>
           <section
             class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
@@ -449,7 +554,7 @@
             <div class="space-y-9 md:mt-10 mt-6">
               <div class="space-y-[30px]">
                 <h1 class="font-semibold">Total members</h1>
-                <div>developing ...</div>
+                <LineChart />
               </div>
               <div class="space-y-[30px]">
                 <div class="flex items-center justify-between">
@@ -792,9 +897,10 @@
 
 <script setup>
 import { members_sidebar } from "@/composables";
-import { useMemberStore, useLoadingStore } from "@/store";
+import { useMemberStore, useLoadingStore, usePostStore } from "@/store";
 
 const useMembers = useMemberStore();
+const usePost = usePostStore();
 const isLoading = useLoadingStore();
 
 const store = reactive({
@@ -817,6 +923,17 @@ const access_list = [
   },
 ];
 
+const post_category_access = [
+  {
+    label: "Anyone can post, anyone can view",
+    value: true,
+  },
+  {
+    label: "Only admins/mods can post, anyone can view",
+    value: false,
+  },
+];
+
 function editLevel(data) {
   useMembers.store.levelId = data.id;
   useMembers.level.name = data.level;
@@ -828,6 +945,26 @@ function openData(index, name) {
   store.slideStep = index;
   store.is_open_name = name;
   store.is_open = true;
+}
+
+function handleAddPostCategory() {
+  usePost.modal.create = false;
+  usePost.createPostCategory();
+}
+
+function handleInput(type) {
+  if (type == "input") {
+    usePost.create_category.name = usePost.create_category.name?.slice(0, 30);
+  } else {
+    usePost.create_category.description =
+      usePost.create_category.description?.slice(0, 150);
+  }
+}
+
+// post categories
+function editPostCategory() {
+  usePost.modal.create = true;
+  usePost.modal.edit = true;
 }
 
 watch(

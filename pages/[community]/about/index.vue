@@ -276,6 +276,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+  layout: "community",
+});
 import { useGroupStore, useLoadingStore, usePaymentStore } from "@/store";
 import { VueDraggableNext as draggable } from 'vue-draggable-next';
 const isLoading = useLoadingStore();

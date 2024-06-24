@@ -18,7 +18,7 @@
           >
             <div v-if="!isLoading.isLoadingType('getByUsername')">
               <img
-                class="sm:h-10 sm:w-10 h-7 w-7 object-cover rounded-full"
+                class="sm:h-10 sm:w-10 h-7 w-7 min-w-[40px] min-h-[40px] object-cover rounded-full"
                 v-if="useGroup.store.group_by_username.icon"
                 :src="useGroup.store.group_by_username.icon"
                 alt=""
@@ -40,15 +40,18 @@
         </router-link>
         <client-only>
           <router-link
-          v-if="$router.currentRoute.value.name.indexOf('community') == 0"
-          class="sm:text-lg text-sm font-semibold whitespace-nowrap min-w-fit max-w-[150px] truncate"
-          :to="`/${$router.currentRoute.value.params.community}`"
-        >
-          {{ useGroup.store.group_by_username.name }}
-        </router-link>
+            v-if="$router.currentRoute.value.name.indexOf('community') == 0"
+            class="sm:text-lg tr text-sm font-semibold whitespace-nowrap max-w-[150px] truncate"
+            :to="`/${$router.currentRoute.value.params.community}`"
+          >
+            {{ useGroup.store.group_by_username.name }}
+          </router-link>
         </client-only>
         <router-link
-          v-show="$router.currentRoute.value.name.indexOf('community') != 0 && $router.currentRoute.value.name != 'index'"
+          v-show="
+            $router.currentRoute.value.name.indexOf('community') != 0 &&
+            $router.currentRoute.value.name != 'index'
+          "
           class="md:text-lg text-sm whitespace-nowrap font-semibold"
           to="/"
           >Skool community</router-link
@@ -82,7 +85,7 @@
                   <p>{{ $t("nav.create_community") }}</p>
                 </div>
               </el-dropdown-item>
-              <el-dropdown-item>
+              <el-dropdown-item @click="$router.push('/')">
                 <div class="flex items-center gap-3">
                   <img src="@/assets/svg/discover.svg" alt="" />
                   <p>{{ $t("nav.discover") }}</p>
@@ -149,12 +152,16 @@
           v-show="isLoading.store.isLogin"
           class="sm:flex items-center hidden gap-7"
         >
-          <el-dropdown
+          <el-dropdown :hide-on-click="false"
             class="chat_dropdown"
             placement="bottom-end"
             trigger="click"
           >
-            <img class="drop" src="@/assets/svg/nav/message.svg" alt="" />
+            <img
+              class="min-w-[24px]"
+              src="@/assets/svg/nav/message.svg"
+              alt=""
+            />
 
             <template #dropdown>
               <el-dropdown-menu
@@ -167,7 +174,7 @@
           <img src="@/assets/svg/nav/notification.svg" alt="" />
           <el-dropdown v-if="store.is_mount" placement="bottom-end">
             <img
-              class="h-10 w-10 rounded-full object-cover"
+              class="h-10 w-10 rounded-full min-w-[40px] object-cover"
               :src="isLoading.user.image"
               alt=""
             />
@@ -304,7 +311,7 @@
     </el-dialog>
 
     <!-- chat -->
-    <el-dialog
+    <el-dialog 
       v-model="isLoading.store.chatModal"
       v-if="isLoading.store.chatModal"
       align-center

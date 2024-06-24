@@ -48,6 +48,7 @@
         </div>
         <button
           v-else-if="useGroup.store.group_by_username.status == 'active'"
+          @click="isLoading.store.inviteModal = true"
           class="border border-[#f2f2f2] _ca1 rounded-lg w-full font-semibold text-sm"
         >
           SETTINGS

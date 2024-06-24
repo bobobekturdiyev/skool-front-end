@@ -330,9 +330,10 @@
               >
                 {{ i.title }}
               </h2>
-              <p class="md:text-sm text-xs line-clamp-2 md:w-full w-[120%]">
-                {{ i.description }}
-              </p>
+              <p
+                v-html="i.description"
+                class="md:text-sm text-xs line-clamp-2 md:w-full w-[120%]"
+              ></p>
               <div class="flex items-center mt-4 md:mb-3 mb-4 gap-4">
                 <div
                   class="b_cbc px-2 h-[26px] rounded-[4px] full_flex gap-1 text-xs"
@@ -354,18 +355,21 @@
                 </p>
               </div>
               <div class="flex items-center _c59 gap-4 md:text-[16px] text-sm">
-                <p class="full_flex gap-1">
+                <p
+                  @click="handleLikeModal('Likes')"
+                  class="full_flex gap-1 cursor-pointer"
+                >
                   <img src="@/assets/svg/community/like.svg" alt="" /> 355
                 </p>
                 <p
-                  @click="store.card_info = true"
+                  @click="() => showPostData(i.id)"
                   class="full_flex gap-1 cursor-pointer"
                 >
                   <img src="@/assets/svg/community/message.svg" alt="" />
                   609
                 </p>
                 <div
-                  @click="store.card_info = true"
+                  @click="() => showPostData(i.id)"
                   class="flex -space-x-[5px] cursor-pointer"
                 >
                   <img
@@ -377,7 +381,7 @@
                   />
                 </div>
                 <p
-                  @click="store.card_info = true"
+                  @click="() => showPostData(i.id)"
                   class="_c2a md:text-sm text-xs font-semibold cursor-pointer"
                 >
                   New comment 10h ago
@@ -404,23 +408,23 @@
         <div class="rounded-2xl overflow-hidden bg-white">
           <img
             class="w-full md:max-h-[150px] object-cover"
-            :src="useGroup.store.group_by_username[0]?.image"
+            :src="useGroup.store.group_by_username?.image"
             alt=""
           />
           <div class="p-4 space-y-4">
             <h1 class="font-medium text-lg">
-              {{ useGroup.store.group_by_username[0]?.name }}
+              {{ useGroup.store.group_by_username?.name }}
             </h1>
             <p class="flex items-center _ca1 gap-1">
               <img src="@/assets/svg/community/grey_private.svg" alt="" />
               {{
-                useGroup.store.group_by_username[0]?.group_type == "private"
+                useGroup.store.group_by_username?.group_type == "private"
                   ? "Private group"
                   : "Public group"
               }}
             </p>
             <p class="text-sm">
-              {{ useGroup.store.group_by_username[0]?.description }}
+              {{ useGroup.store.group_by_username.excerpt }}
             </p>
             <div class="py-1 text-sm border-y border-[#E0E0E0]">
               <p class="flex items-center gap-1 h-7 px-3 _c59">
@@ -438,15 +442,22 @@
             </div>
             <div class="flex items-center justify-between text-xs text-center">
               <div>
-                <p class="_c2a text-lg">226k</p>
+                <p class="_c2a text-lg h-[24px]">
+                  <!-- 226k -->
+                  {{ useGroup.store.group_by_username.members_count }}
+                </p>
                 <p class="_ca1">Members</p>
               </div>
               <div>
-                <p class="_c2a text-lg">15k</p>
+                <p class="_c2a text-lg h-[24px]">
+                  {{ useGroup.store.group_by_username.online }}
+                </p>
                 <p class="_ca1">Online</p>
               </div>
               <div>
-                <p class="_c2a text-lg">100</p>
+                <p class="_c2a text-lg h-[24px]">
+                  {{ useGroup.store.group_by_username.admin_count }}
+                </p>
                 <p class="_ca1">Admins</p>
               </div>
             </div>
@@ -460,6 +471,7 @@
               />
             </div>
             <button
+              @click="isLoading.store.inviteModal = true"
               class="border border-[#BCDEFF] _c2a rounded-lg w-full font-semibold text-sm uppercase"
             >
               settings
@@ -513,85 +525,469 @@
 
     <!-- card info -->
     <el-dialog
-      v-model="store.card_info"
+      v-model="usePost.store.card_info"
       width="780"
       align-center
       class="bg-opacity-50 !rounded-lg p-5 overflow-hidden"
     >
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <div class="relative max-w-fit">
-            <img class="min-w-[40px]" src="@/assets/image/user.svg" alt="" />
-            <div class="full_flex absolute -bottom-[2px] -right-[5px] z-10">
-              <div class="relative">
-                <img src="@/assets/svg/community/user_messages.svg" alt="" />
-                <p
-                  class="absolute full_flex bottom-0 w-5 h-5 pb-0.5 text-[10px] text-white font-medium"
-                >
-                  1
-                </p>
+      <div
+        v-if="
+          usePost.modal.change_category
+            ? true
+            : usePost.modal.edit
+            ? false
+            : true
+        "
+      >
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <div class="relative max-w-fit">
+              <img
+                class="min-w-[40px] min-h-[40px] h-10 w-10 object-cover rounded-full"
+                :src="usePost.store.postData.user?.image"
+                alt=""
+              />
+              <div class="full_flex absolute -bottom-[2px] -right-[5px] z-10">
+                <div class="relative">
+                  <img src="@/assets/svg/community/user_messages.svg" alt="" />
+                  <p
+                    class="absolute full_flex bottom-0 w-5 h-5 pb-0.5 text-[10px] text-white font-medium"
+                  >
+                    1
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="space-y-[2px]">
+              <h1 class="font-semibold">
+                {{ usePost.store.postData.user?.name }}
+                {{ usePost.store.postData.user?.surname }}
+              </h1>
+              <p class="text-xs">
+                19d ago in <span class="_c59">Announcements</span>
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button class="border border-[#BCDEFF] r_8 px-3 h-9">
+              Watch (134)
+            </button>
+            <el-dropdown
+              placement="bottom-end"
+              class="dropdown"
+              trigger="click"
+            >
+              <button class="full_flex comment_menu r_8 w-9 h-9">
+                <img src="@/assets/svg/three_dot.svg" alt="" />
+              </button>
+              <template #dropdown>
+                <el-dropdown-menu class="min-w-[140px] dropdown_shadow">
+                  <el-dropdown-item
+                    @click="editPostData"
+                    class="!text-xs font-medium h-10 px-3"
+                    >Edit</el-dropdown-item
+                  >
+                  <el-dropdown-item
+                    @click="editPostData('category')"
+                    class="!text-xs font-medium h-10 px-3"
+                    >Change category</el-dropdown-item
+                  >
+                  <el-dropdown-item
+                    @click="deletePost"
+                    class="!text-xs font-medium h-10 px-3"
+                    >Delete</el-dropdown-item
+                  >
+                  <el-dropdown-item
+                    @click="copyLink"
+                    class="!text-xs font-medium h-10 px-3"
+                    >Copy link</el-dropdown-item
+                  >
+                  <el-dropdown-item
+                    @click="store.reportAdmin = true"
+                    class="!text-xs font-medium h-10 px-3"
+                    >Report to admins</el-dropdown-item
+                  >
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+        </div>
+        <h2
+          class="mb-4 md:mt-8 mt-6 md:text-2xl text-lg font-semibold md:w-full"
+        >
+          {{ usePost.store.postData.title }}
+        </h2>
+        <pre
+          v-html="usePost.store.postData.description"
+          class="text-sm line-clamp-[11] float-left w-full whitespace-pre-line"
+        ></pre>
+        <button class="text-sm _c2a h-4">See more</button>
+        <div>
+          <div class="mt-8 text-sm space-y-3">
+            <div
+              v-for="(poll, index) in usePost.store.postData.polls"
+              class="flex items-center gap-3 h-10"
+            >
+              <label
+                @click="() => changeVote(poll)"
+                class="flex items-center gap-3"
+                :for="`poll${index}`"
+              >
+                <input
+                  disabled
+                  :checked="poll.is_selected"
+                  :id="`poll${index}`"
+                  type="radio"
+                  name="poll"
+                />
+                <p>{{ poll.option }}</p>
+              </label>
+              <div
+                v-if="poll.users?.length && usePost.store.userIsVoted"
+                @click="handleLikeModal('Votes', poll.users)"
+                class="flex items-center gap-1 cursor-pointer"
+              >
+                <div class="flex -space-x-[5px]">
+                  <img
+                    v-for="(user, index) in poll.users"
+                    v-show="index < 7"
+                    class="h-[26px] w-[26px] min-w-[26px] rounded-full object-cover"
+                    :src="user.image"
+                    :title="`${user.name} ${user.surname}`"
+                    alt=""
+                  />
+                </div>
+                <p class="text-xs _ca1">{{ poll.users?.length }} votes</p>
               </div>
             </div>
           </div>
-          <div class="space-y-[2px]">
-            <h1 class="font-semibold">Cameron Williamson</h1>
-            <p class="text-xs">
-              19d ago in <span class="_c59">Announcements</span>
-            </p>
-          </div>
-        </div>
-        <div class="flex gap-2">
-          <button class="border border-[#BCDEFF] r_8 px-3 h-9">
-            Watch (134)
+          <button
+            v-if="!usePost.store.userIsVoted"
+            class="flex justify-between mt-4 _ca1 text-sm font-bold w-full"
+          >
+            <p>View results</p>
+            <p>63 votes</p>
           </button>
-          <el-dropdown placement="bottom-end" class="dropdown" trigger="click">
-            <button class="full_flex comment_menu r_8 w-9 h-9">
-              <img src="@/assets/svg/three_dot.svg" alt="" />
-            </button>
-            <template #dropdown>
-              <el-dropdown-menu class="min-w-[140px] dropdown_shadow">
-                <el-dropdown-item
-                  @click="copyLink"
-                  class="!text-xs font-medium h-10 px-3"
-                  >Copy link</el-dropdown-item
-                >
-                <el-dropdown-item
-                  @click="store.reportAdmin = true"
-                  class="!text-xs font-medium h-10 px-3"
-                  >Report to admins</el-dropdown-item
-                >
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
+        </div>
+        <div class="w-full mt-4 mb-5">
+          <ul
+            v-if="usePost.store.postData.media_files?.length"
+            class="flex gap-5 min-w-fit w-full overflow-x-auto"
+          >
+            <li
+              class="relative imagelabel min-w-fit"
+              v-for="(i, index) in usePost.store.postData.media_files"
+            >
+              <img
+                v-if="i.type == 'image'"
+                class="max-h-[210px] min-h-[210px] rounded-[12px] object-cover"
+                :src="i.url"
+                alt=""
+              />
+              <iframe
+                v-else-if="
+                  i.type == 'youtube' ||
+                  i.type == 'wistia' ||
+                  i.type == 'vimeo' ||
+                  i.type == 'loom'
+                "
+                class="max-h-[210px] min-h-[210px] rounded-[12px] object-cover text-[#0000]"
+                :src="i.url"
+              ></iframe>
+            </li>
+          </ul>
         </div>
       </div>
-      <h2 class="mb-4 md:mt-8 mt-6 md:text-2xl text-lg font-semibold md:w-full">
-        Introducing "The Skool Games"
-      </h2>
-      <pre
-        class="text-sm line-clamp-[11] float-left w-full whitespace-pre-line"
+      <div
+        class="-mx-5 -mt-8"
+        v-else-if="usePost.modal.edit && !usePost.modal.change_category"
       >
-There's two sides to building a business online: Tools and Training on how to use those tools.
-
-The problem with training is opinions. There are so many opinions, they contradict each-other, and it's hard 
-to know what to do. If only there was a way to see what's working now in realtime...
-
-Introducing The Skool Games — a fun way to build your own business with other people — where the training comes 
-from the winners fresh every month. 
-
-Here's how it works: 
-
-Skool group owners that want to play can join
-Skool group owners that want to play can join
-Skool group owners that want to play can join
-      </pre>
-      <button class="text-sm _c2a h-4">See more</button>
-      <div class="w-full mt-4 mb-5">
-        <img
-          class="max-h-[210px] rounded-[12px]"
-          src="@/assets/image/picture.png"
-          alt=""
-        />
+        <div
+          @click="usePost.store.writingModal = true"
+          class="flex items-center md:px-5 px-3 bg-white r_16 md:h-[72px] h-[52px] gap-[14px]"
+        >
+          <img
+            class="md:h-10 md:w-10 h-7 w-7 object-cover"
+            src="@/assets/image/user.svg"
+            alt=""
+          />
+          <button class="!border-0 placeholder-black md:text-xl font-semibold">
+            Write something...
+          </button>
+        </div>
+        <form
+          @submit.prevent="addVideo.handleSubmit"
+          class="b_cf0f relative z-50 r_16 overflow-hidden overflow-y-auto -mt-[72px]"
+        >
+          <div
+            class="flex md:items-center gap-3 b_cf0f md:h-[52px] h-[64px] px-5 py-3"
+          >
+            <img
+              class="h-5 w-5 object-cover"
+              src="@/assets/image/user.svg"
+              alt=""
+            />
+            <p class="text-sm flex flex-wrap items-start gap-1 leading-4">
+              <span class="font-semibold">Xayot Sharapov</span>
+              <span class="_ca1">posting in</span>
+              <span class="font-semibold _c2a md:w-auto w-full"
+                >Skool community</span
+              >
+            </p>
+          </div>
+          <div class="md:p-5 p-3 space-y-5 bg-white">
+            <input
+              v-model="usePost.create.title"
+              class="h-10 !rounded-none"
+              type="text"
+              placeholder="Title"
+              required
+            />
+            <div class="community_editor border h-[120px] whitespace-pre-wrap">
+              <Editor />
+            </div>
+            <div
+              v-if="Object.keys(usePost.store.polls).length"
+              class="border_ce0 rounded-lg p-4"
+            >
+              <div class="flex items-center justify-between">
+                <p class="font-medium">Poll</p>
+                <p
+                  v-if="!usePost.store.userIsVoted"
+                  @click="removePoll"
+                  class="font-medium cursor-pointer hover:underline text-sm _ca1"
+                >
+                  Remove
+                </p>
+              </div>
+              <ul class="space-y-2 mt-2">
+                <li
+                  v-for="(i, index) in Object.keys(usePost.store.polls)"
+                  class="flex items-center gap-4"
+                >
+                  <input
+                    :disabled="usePost.store.userIsVoted ? true : false"
+                    :class="usePost.store.userIsVoted ? 'b_cf2' : ''"
+                    v-model="usePost.store.polls[i]"
+                    @input="addVideo.editPoll(index)"
+                    type="text"
+                    :placeholder="`Option ${index + 1}`"
+                  />
+                  <img
+                    v-if="
+                      Object.keys(usePost.store.polls).length > 2 &&
+                      !usePost.store.userIsVoted
+                    "
+                    @click="addVideo.deletePoll(i, index)"
+                    class="opacity-50 hover:bg-gray-300 cursor-pointer rounded-full p-2"
+                    src="@/assets/svg/x.svg"
+                    alt=""
+                  />
+                </li>
+              </ul>
+              <button
+                v-if="!usePost.store.userIsVoted"
+                @click="addVideo.addPoll"
+                type="button"
+                class="uppercase border_ce0 px-3 rounded-md mt-2"
+                :class="
+                  Object.keys(usePost.store.polls).length >= 10
+                    ? 'b_ce0 _ca1'
+                    : ''
+                "
+              >
+                Add option
+              </button>
+              <p class="mt-2">
+                You cannot edit or remove a poll that already has votes
+              </p>
+            </div>
+            <ul
+              v-if="addVideo.store.files.length"
+              class="flex gap-5 overflow-x-auto"
+            >
+              <draggable
+                :list="addVideo.store.files"
+                group="grid"
+                :animation="200"
+                class="flex gap-4 z-20 overflow-hidden overflow-x-auto min-w-fit"
+              >
+                <li
+                  class="relative imagelabel"
+                  v-for="(i, index) in addVideo.store.files"
+                >
+                  <button
+                    @click="deleteMedia(index)"
+                    type="button"
+                    class="absolute deleteimage z-20 bg-white !hidden top-2 right-2 rounded-full w-7 h-7 full_flex border p-2"
+                  >
+                    <img src="@/assets/svg/x.svg" alt="" />
+                  </button>
+                  <img
+                    v-if="i.type == 'image'"
+                    class="w-40 h-40 min-w-[160px] border rounded-xl object-cover"
+                    :src="i.url"
+                    alt=""
+                  />
+                  <div v-else-if="i.type == 'video'">
+                    <video
+                      class="w-40 h-40 min-w-[160px] border rounded-xl object-cover"
+                      controls
+                    >
+                      <source :src="i.url" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                  <div v-else-if="i.type == 'video'">
+                    <video
+                      class="w-40 h-40 min-w-[160px] border rounded-xl object-cover"
+                      controls
+                    >
+                      <source :src="i.url" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                  <iframe
+                    v-else-if="
+                      i.type == 'youtube' ||
+                      i.type == 'wistia' ||
+                      i.type == 'vimeo' ||
+                      i.type == 'loom'
+                    "
+                    class="w-40 h-40 min-w-[160px] border rounded-xl object-cover text-[#0000]"
+                    :src="i.url"
+                  ></iframe>
+                </li>
+              </draggable>
+              <li>
+                <label
+                  for="add_image"
+                  class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm w-40 h-40"
+                >
+                  <img class="w-1/3" src="@/assets/svg/add_photo.svg" alt="" />
+                </label>
+              </li>
+            </ul>
+            <input
+              @change="addVideo.handleImage"
+              type="file"
+              id="add_image"
+              class="h-0 w-0 overflow-hidden !p-0"
+            />
+            <p
+              v-if="usePost.store.error"
+              class="text-red-600 text-end text-sm pb-3"
+            >
+              {{ usePost.store.error }}
+            </p>
+          </div>
+          <div
+            class="2xl:flex items-center justify-between 2xl:space-y-0 space-y-5 p-5 pt-0 2xl:mt-0 -mt-10 bg-white"
+          >
+            <div class="textarea_icon flex items-center">
+              <label for="add_image" class="icon full_flex h-10 w-10">
+                <img src="@/assets/svg/textarea/upload.svg" alt="" />
+              </label>
+              <div
+                @click="isLoading.modal.add_link = true"
+                class="icon full_flex h-10 w-10"
+              >
+                <img src="@/assets/svg/textarea/link.svg" alt="" />
+              </div>
+              <div
+                @click="useClassroom.local_store.addVideoModal = true"
+                class="icon full_flex h-10 w-10"
+              >
+                <img src="@/assets/svg/textarea/video.svg" alt="" />
+              </div>
+              <div
+                @click="addVideo.openPoll"
+                class="icon full_flex h-10 w-10 cursor-pointer"
+              >
+                <img src="@/assets/svg/textarea/poll.svg" alt="" />
+              </div>
+              <el-dropdown
+                placement="bottom-end"
+                class="dropdown"
+                trigger="click"
+              >
+                <div id="emojidrop1" class="icon full_flex h-10 w-10 relative">
+                  <img src="@/assets/svg/textarea/emoji.svg" alt="" />
+                </div>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <div class="!overflow-hidden overflow-y-auto">
+                      <EmojiPicker
+                        :native="true"
+                        theme="light"
+                        @select="addVideo.onSelectEmoji"
+                      />
+                    </div>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+              <div class="icon full_flex h-10 w-10">
+                <img src="@/assets/svg/textarea/gif.svg" alt="" />
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <el-dropdown
+                @command="
+                  (command) => {
+                    usePost.store.category_id = command;
+                  }
+                "
+                placement="bottom-end"
+                class="dropdown"
+                trigger="click"
+              >
+                <div class="flex items-center gap-1 mx-4 font-medium text-sm">
+                  <p class="whitespace-nowrap max-w-[100px] truncate">
+                    {{
+                      usePost.store.category_id
+                        ? usePost.store.category_id.name
+                        : "Select category"
+                    }}
+                  </p>
+                  <img src="@/assets/svg/textarea/select_arrow.svg" alt="" />
+                </div>
+                <template #dropdown>
+                  <el-dropdown-menu
+                    class="min-w-[200px] !mt-3 !-mr-0 dropdown_shadow"
+                  >
+                    <el-dropdown-item
+                      v-for="(i, index) in usePost.store.categories"
+                      :command="i"
+                      class="flex flex-col !items-start px-5 hover:bg-[#F2F2F2] cursor-pointer space-y-1 h-[63px]"
+                    >
+                      <h1 class="font-semibold">{{ i.name }}</h1>
+                      <p class="text-xs">{{ i.description }}</p>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+              <div class="flex gap-3 font-semibold md:text-[16px] text-sm">
+                <button
+                  type="button"
+                  @click="usePost.modal.edit = false"
+                  class="uppercase h-10 px-6 rounded-lg _ca1"
+                >
+                  cancel
+                </button>
+                <button
+                  v-loading="isLoading.isLoadingType('writePost')"
+                  :type="
+                    isLoading.isLoadingType('writePost') ? 'button' : 'submit'
+                  "
+                  class="uppercase h-10 px-6 rounded-lg"
+                  :class="usePost.create.title ? 'b_cbc _c07' : 'b_ce0 _ca1'"
+                >
+                  Post
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
       <div class="flex items-center _c59 gap-4 text-sm">
         <p
@@ -608,7 +1004,7 @@ Skool group owners that want to play can join
       <!-- comment -->
       <section class="mt-4">
         <div
-          class="flex items-start gap-4 border-y border-[#F0F5FA] w-full -mx-5 p-5"
+          class="flex items-start gap-4 border-y border-[#F0F5FA] w-full py-5"
         >
           <div class="relative max-w-fit">
             <img
@@ -808,7 +1204,7 @@ Skool group owners that want to play can join
               </div>
               <div class="flex gap-3 font-semibold">
                 <button
-                  @click="store.card_info = false"
+                  @click="usePost.store.card_info = false"
                   class="uppercase h-10 px-6 rounded-lg _ca1"
                 >
                   cancel
@@ -849,6 +1245,164 @@ Skool group owners that want to play can join
             yes
           </button>
         </div>
+      </div>
+    </el-dialog>
+
+    <!-- Delete post -->
+    <el-dialog
+      v-model="usePost.modal.delete"
+      width="400"
+      align-center
+      class="!rounded-xl overflow-hidden px-6 py-7"
+    >
+      <div class="space-y-7">
+        <h1 class="text-2xl font-semibold">
+          {{ usePost.store.changeVoteData.title }}
+        </h1>
+        <p class="text-lg">{{ usePost.store.changeVoteData.description }}</p>
+        <div class="flex justify-end gap-3 text-sm font-semibold">
+          <button
+            @click="usePost.modal.delete = false"
+            class="uppercase h-10 px-6 rounded-lg _ca1"
+          >
+            cancel
+          </button>
+          <button
+            v-if="usePost.store.modalType == 'delete'"
+            @click="usePost.deletePost"
+            v-loading="isLoading.isLoadingType('deletePost')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            delete
+          </button>
+          <button
+            v-else-if="usePost.store.modalType == 'changeVote'"
+            @click="usePost.setUserVote"
+            v-loading="isLoading.isLoadingType('setUserVote')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            confirm
+          </button>
+          <button
+            v-else-if="usePost.store.modalType == 'media'"
+            @click="() => addVideo.deleteImage(store.media_index)"
+            v-loading="isLoading.isLoadingType('deleteMedia')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            confirm
+          </button>
+          <button
+            v-else-if="usePost.store.modalType == 'poll'"
+            @click="() => usePost.removePoll()"
+            v-loading="isLoading.isLoadingType('removePoll')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            confirm
+          </button>
+        </div>
+      </div>
+    </el-dialog>
+
+    <!-- Change category -->
+    <el-dialog
+      v-model="usePost.modal.change_category"
+      width="400"
+      align-center
+      class="!rounded-xl overflow-hidden px-6 py-7"
+    >
+      <div class="space-y-7">
+        <h1 class="text-2xl font-semibold">Change category to</h1>
+        <el-select
+          class="block w-full mt-2"
+          v-model="usePost.create.category_id"
+          @change="handleChangeCategory"
+          placeholder="Select"
+        >
+          <el-option
+            v-for="item in usePost.store.categories"
+            :key="item.name"
+            :label="item.name"
+            :value="item.id"
+          >
+            <div class="flex items-center gap-2">
+              {{ item.name }}
+              <img
+                v-if="usePost.store.category_id.name == item.name"
+                src="@/assets/svg/checked.svg"
+                alt=""
+              />
+            </div>
+          </el-option>
+        </el-select>
+        <div class="flex justify-end gap-3 text-sm font-semibold">
+          <button
+            @click="usePost.modal.change_category = false"
+            class="uppercase h-10 px-6 rounded-lg _ca1"
+          >
+            cancel
+          </button>
+          <button
+            @click="addVideo.handleSubmit"
+            v-loading="isLoading.isLoadingType('writePost')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            change
+          </button>
+        </div>
+      </div>
+    </el-dialog>
+
+    <!-- Like modal -->
+    <el-dialog
+      v-model="store.likeModal"
+      width="500"
+      align-center
+      class="!rounded-xl overflow-hidden px-6 py-7"
+    >
+      <div class="space-y-7">
+        <div class="flex items-center justify-between border-b pb-4 -mx-4 px-4">
+          <h1 class="font-semibold">
+            {{ store.likeModalData.length }} {{ store.likeModalType }}
+          </h1>
+          <img
+            @click="store.likeModal = false"
+            class="cursor-pointer"
+            src="@/assets/svg/x.svg"
+            alt=""
+          />
+        </div>
+        <ul>
+          <li
+            v-for="i in store.likeModalData.users"
+            class="flex items-center gap-4 w-full"
+          >
+            <img
+              class="h-10 w-10 rounded-full object-cover"
+              :src="i.image"
+              title="user"
+            />
+            <div class="space-y-1 w-[65%]">
+              <h1 class="truncate font-semibold">
+                {{ i.name }} {{ i.surname }}
+              </h1>
+              <p v-if="store.likeModalType == 'Votes'" class="truncate">
+                {{ i.username }}
+              </p>
+              <p v-else class="truncate">
+                💪 I want to work on building my self-confidence. Have you ever
+                struggled with this? How did you develop a stronger sense of
+                self-worth? 💪💖
+              </p>
+            </div>
+            <button
+              v-if="store.likeModalType != 'Votes'"
+              class="full_flex gap-[10px] min-w-fit uppercase b_ce0 _ca1 r_8 px-3"
+            >
+              chat
+              <img src="@/assets/svg/chat_x.svg" alt="" />
+            </button>
+          </li>
+        </ul>
       </div>
     </el-dialog>
 
@@ -913,7 +1467,9 @@ import {
   useChatStore,
   useGroupStore,
   useClassroomStore,
+  useAddVideoStore,
 } from "@/store";
+import { VueDraggableNext as draggable } from "vue-draggable-next";
 import { useNotification } from "@/composables/notifications";
 import EmojiPicker from "vue3-emoji-picker";
 import "vue3-emoji-picker/css";
@@ -923,25 +1479,136 @@ const useChat = useChatStore();
 const useGroup = useGroupStore();
 const isLoading = useLoadingStore();
 const useClassroom = useClassroomStore();
+const addVideo = useAddVideoStore();
 const { showMessage } = useNotification();
 const router = useRouter();
-usePost.get_categories();
-isLoading.addLoading('getPosts')
+isLoading.addLoading("getPosts");
 onBeforeMount(() => {
+  usePost.get_categories();
   usePost.get_posts();
 });
 const store = reactive({
   is_show: false,
   writingModal: false,
+  likeModal: false,
+  likeModalType: "Likes",
+  likeModalData: {
+    length: 0,
+    users: [],
+  },
   card_info: false,
   reportAdmin: false,
   drawer: false,
   is_emoji: false,
+  media_index: "",
 });
 
 usePost.store.filter.filter = router.currentRoute.value.query.filter;
 usePost.store.filter.sort = router.currentRoute.value.query.sort;
 usePost.store.filter.category_id = router.currentRoute.value.query.category_id;
+
+const changeVoteData = {
+  title: "Change vote?",
+  description: "Are you sure you want to change your vote?",
+};
+
+const deleteVoteData = {
+  title: "Remove vote?",
+  description: "Are you sure you want to remove your vote?",
+};
+
+const deleteMediaFile = {
+  title: "Delete file?",
+  description: "Are you sure you want to delete this file?",
+};
+
+const deletePostData = {
+  title: "Delete post?",
+  description: "Are you sure you want to delete?",
+};
+
+const deletePostPoll = {
+  title: "Remove poll?",
+  description: "Are you sure you want to remove this poll",
+};
+
+function deletePost() {
+  usePost.store.modalType = "delete";
+  usePost.store.changeVoteData = deletePostData;
+  usePost.modal.delete = true;
+}
+
+function removePoll() {
+  usePost.store.modalType = "poll";
+  usePost.store.changeVoteData = deletePostPoll;
+  usePost.modal.delete = true;
+}
+
+function deleteMedia(index) {
+  store.media_index = index;
+  usePost.store.modalType = "media";
+  usePost.store.changeVoteData = deleteMediaFile;
+  usePost.modal.delete = true;
+}
+
+function changeVote(poll) {
+  usePost.store.poll_id = poll.id;
+  if (usePost.store.userIsVoted) {
+    if (poll.is_selected) {
+      usePost.store.modalType = "changeVote";
+      usePost.store.changeVoteData = deleteVoteData;
+    } else {
+      usePost.store.modalType = "changeVote";
+      usePost.store.changeVoteData = changeVoteData;
+    }
+    usePost.modal.delete = true;
+  } else {
+    usePost.setUserVote();
+  }
+}
+
+function editPostData(type) {
+  if (type == "category") {
+    usePost.modal.change_category = true;
+    usePost.modal.edit = true;
+  } else {
+    usePost.modal.edit = true;
+  }
+  for (let i in usePost.create) {
+    usePost.create[i] = usePost.store.postData[i];
+  }
+  let t = 0;
+  usePost.store.polls = {};
+  for (let i of usePost.store.postData.polls) {
+    usePost.store.polls[`option${t}`] = i.option;
+    t++;
+  }
+  if (!usePost.store.postData.polls?.length) {
+    usePost.store.polls = {};
+    usePost.store.isPollSaved = false;
+  } else {
+    usePost.store.isPollSaved = true;
+  }
+  for (let category of usePost.store.categories) {
+    console.log(category);
+    if (usePost.store.postData.category_id == category.id) {
+      usePost.store.category_id = category;
+    }
+  }
+  if (!usePost.store.polls) {
+    usePost.store.polls = {};
+  }
+  addVideo.store.files = [];
+  for (let i of usePost.store.postData.media_files) {
+    addVideo.store.files.push({
+      id: i.id,
+      url: i.url,
+      file: i.url,
+      type: i.type,
+      is_new: false,
+    });
+  }
+}
 
 function copyLink() {
   var copyText = "http://localhost:4000/allan55";
@@ -1004,6 +1671,32 @@ const filter_filter = [
   },
 ];
 
+function handleChangeCategory(item) {
+  console.log(usePost.create.category_id);
+  for (let i of usePost.store.categories) {
+    if (i.id == usePost.create.category_id) {
+      console.log(usePost.store.category_id);
+      usePost.store.category_id = i;
+    }
+  }
+  console.log(item);
+}
+
+function showPostData(id) {
+  usePost.store.card_info = true;
+  usePost.store.post_id = id;
+  usePost.getPostById();
+}
+
+function handleLikeModal(type, data) {
+  store.likeModalType = type;
+  store.likeModal = true;
+  store.likeModalData = {
+    length: data.length,
+    users: data,
+  };
+}
+
 function openChatModal(data) {
   isLoading.store.chatModal = true;
   useChat.store.chat_user_data = data;
@@ -1048,6 +1741,15 @@ watch(
   () => {
     window.scrollTo(0, 0);
     usePost.get_posts();
+  }
+);
+
+watch(
+  () => usePost.modal.change_category,
+  () => {
+    if (!usePost.modal.change_category) {
+      usePost.modal.edit = false;
+    }
   }
 );
 

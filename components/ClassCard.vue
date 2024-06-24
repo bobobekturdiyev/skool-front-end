@@ -90,7 +90,7 @@
         <p class="md:text-[16px] text-[10px]">Add new cource</p>
       </div>
     </div>
-
+ 
     <!-- add course -->
     <el-dialog
       v-model="useClassroom.store.add_course"

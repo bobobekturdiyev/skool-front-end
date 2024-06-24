@@ -387,3 +387,34 @@ label {
 .el-loading-parent--relative {
   pointer-events: none;
 }
+
+// apexchart styles
+.apexcharts-grid *{
+  // display: none;
+  stroke: $CE0 !important;
+}
+
+.apexcharts-gridlines-vertical, .apexcharts-inner .apexcharts-xaxis-tick, .apexcharts-grid>line, .apexcharts-grid-borders :nth-child(3) {
+  display: none !important;
+}
+
+.apexcharts-tooltip {
+  box-shadow: none !important;
+  background: transparent !important;
+  overflow: visible !important;
+  //  top: 20px !important;
+  // left: 50% !important; 
+  transform: translate(500%, -20%) !important;
+}
+
+.apexcharts-xaxistooltip, .apexcharts-yaxistooltip, .apexcharts-xaxistooltip-bottom:after, .apexcharts-xaxistooltip-bottom:before {
+  background: transparent !important;
+  border: none !important;
+}
+
+.apexcharts-xcrosshairs {
+  stroke-dasharray: none !important;
+  color: black !important;
+  stroke: $CE0 !important;
+
+}

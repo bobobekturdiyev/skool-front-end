@@ -20,7 +20,7 @@
       class="fixed top-0 bg-black bg-opacity-50 min-h-screen w-full z-50 left-0"
     ></div>
     <form
-      @submit.prevent="handleSubmit"
+      @submit.prevent="addVideo.handleSubmit"
       v-if="usePost.store.writingModal"
       class="b_cf0f relative z-50 r_16 overflow-hidden overflow-y-auto max-h-[calc(100vh_-_177px)] -mt-[72px]"
     >
@@ -52,13 +52,13 @@
           <Editor />
         </div>
         <div
-          v-if="Object.keys(usePost.create.poll).length"
+          v-if="Object.keys(usePost.store.polls).length"
           class="border_ce0 rounded-lg p-4"
         >
           <div class="flex items-center justify-between">
             <p class="font-medium">Poll</p>
             <p
-              @click="usePost.create.poll = {}"
+              @click="usePost.store.polls = {}"
               class="font-medium cursor-pointer hover:underline text-sm _ca1"
             >
               Remove
@@ -66,17 +66,17 @@
           </div>
           <ul class="space-y-2 mt-2">
             <li
-              v-for="(i, index) in Object.keys(usePost.create.poll)"
+              v-for="(i, index) in Object.keys(usePost.store.polls)"
               class="flex items-center gap-4"
             >
               <input
-                v-model="usePost.create.poll[i]"
+                v-model="usePost.store.polls[i]"
                 type="text"
                 :placeholder="`Option ${index + 1}`"
               />
               <img
-                v-if="Object.keys(usePost.create.poll).length > 2"
-                @click="deletePoll(i)"
+                v-if="Object.keys(usePost.store.polls).length > 2"
+                @click="addVideo.deletePoll(i)"
                 class="opacity-50 hover:bg-gray-300 cursor-pointer rounded-full p-2"
                 src="@/assets/svg/x.svg"
                 alt=""
@@ -84,48 +84,75 @@
             </li>
           </ul>
           <button
-            @click="addPoll"
+            @click="addVideo.addPoll"
             type="button"
             class="uppercase border_ce0 px-3 rounded-md mt-2"
             :class="
-              Object.keys(usePost.create.poll).length >= 10 ? 'b_ce0 _ca1' : ''
+              Object.keys(usePost.store.polls).length >= 10 ? 'b_ce0 _ca1' : ''
             "
           >
             Add option
           </button>
         </div>
         <ul
-          v-if="usePost.store.files_url.length"
+          v-if="addVideo.store.files.length"
           class="flex gap-5 overflow-x-auto"
         >
-          <li
-            class="relative imagelabel"
-            v-for="(i, index) in usePost.store.files_url"
+          <draggable
+            :list="addVideo.store.files"
+            group="grid"
+            :animation="200"
+            class="flex gap-4 overflow-hidden overflow-x-auto min-w-fit"
           >
-            <button
-              @click="deleteImage(index)"
-              type="button"
-              class="absolute deleteimage !hidden top-2 right-2 rounded-full w-7 h-7 full_flex border p-2"
+            <li
+              class="relative imagelabel"
+              v-for="(i, index) in addVideo.store.files"
             >
-              <img src="@/assets/svg/x.svg" alt="" />
-            </button>
-            <img
-              class="w-40 h-40 min-w-[160px] border rounded-xl object-cover"
-              :src="i"
-              alt=""
-            />
-          </li>
-          <li>
-            <label
-              for="add_image"
-              class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm w-40 h-40"
-            >
-              <img class="w-1/3" src="@/assets/svg/add_photo.svg" alt="" />
-            </label>
-          </li>
+              <button
+                @click="addVideo.deleteImage(index)"
+                type="button"
+                class="absolute deleteimage z-10 bg-white !hidden top-2 right-2 rounded-full w-7 h-7 full_flex border p-2"
+              >
+                <img src="@/assets/svg/x.svg" alt="" />
+              </button>
+              <img
+                v-if="i.type == 'image'"
+                class="w-40 h-40 min-w-[160px] border rounded-xl object-cover"
+                :src="i.url"
+                alt=""
+              />
+              <div v-else-if="i.type == 'video'">
+                <video
+                  class="w-40 h-40 min-w-[160px] border rounded-xl object-cover"
+                  controls
+                >
+                  <source :src="i.url" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <iframe
+                v-else-if="
+                  i.type == 'youtube' ||
+                  i.type == 'wistia' ||
+                  i.type == 'vimeo' ||
+                  i.type == 'loom'
+                "
+                class="w-40 h-40 min-w-[160px] border rounded-xl object-cover text-[#0000]"
+                :src="i.url"
+              ></iframe>
+            </li>
+            <li>
+              <label
+                for="add_image"
+                class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm w-40 h-40"
+              >
+                <img class="w-1/3" src="@/assets/svg/add_photo.svg" alt="" />
+              </label>
+            </li>
+          </draggable>
         </ul>
         <input
-          @change="handlePhotoImage"
+          @change="addVideo.handleImage"
           type="file"
           id="add_image"
           class="h-0 w-0 overflow-hidden !p-0"
@@ -157,7 +184,7 @@
             <img src="@/assets/svg/textarea/video.svg" alt="" />
           </div>
           <div
-            @click="openPoll"
+            @click="addVideo.openPoll"
             class="icon full_flex h-10 w-10 cursor-pointer"
           >
             <img src="@/assets/svg/textarea/poll.svg" alt="" />
@@ -172,7 +199,7 @@
                   <EmojiPicker
                     :native="true"
                     theme="light"
-                    @select="onSelectEmoji"
+                    @select="addVideo.onSelectEmoji"
                   />
                 </div>
               </el-dropdown-menu>
@@ -186,7 +213,7 @@
           <el-dropdown
             @command="
               (command) => {
-                usePost.create.category_id = command + 1;
+                usePost.store.category_id = command;
               }
             "
             placement="bottom-end"
@@ -196,8 +223,8 @@
             <div class="flex items-center gap-1 mx-4 font-medium text-sm">
               <p class="whitespace-nowrap max-w-[100px] truncate">
                 {{
-                  usePost.create.category_id
-                    ? text_dropdown[usePost.create.category_id - 1][0]
+                  usePost.store.category_id
+                    ? usePost.store.category_id.name
                     : "Select category"
                 }}
               </p>
@@ -208,12 +235,12 @@
                 class="min-w-[200px] !mt-3 !-mr-0 dropdown_shadow"
               >
                 <el-dropdown-item
-                  v-for="(i, index) in text_dropdown"
-                  :command="index"
+                  v-for="(i, index) in usePost.store.categories"
+                  :command="i"
                   class="flex flex-col !items-start px-5 hover:bg-[#F2F2F2] cursor-pointer space-y-1 h-[63px]"
                 >
-                  <h1 class="font-semibold">{{ i[0] }}</h1>
-                  <p class="text-xs">{{ i[1] }}</p>
+                  <h1 class="font-semibold">{{ i.name }}</h1>
+                  <p class="text-xs">{{ i.description }}</p>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -228,7 +255,8 @@
             <button
               v-loading="isLoading.isLoadingType('writePost')"
               :type="isLoading.isLoadingType('writePost') ? 'button' : 'submit'"
-              class="uppercase h-10 px-6 b_ce0 rounded-lg"
+              class="uppercase h-10 px-6 rounded-lg"
+              :class="usePost.create.title ? 'b_cbc _c07' : 'b_ce0 _ca1'"
             >
               Post
             </button>
@@ -240,6 +268,7 @@
 </template>
 
 <script setup>
+import { useAddVideoStore } from "@/store";
 import "vue3-emoji-picker/css";
 import EmojiPicker from "vue3-emoji-picker";
 
@@ -253,6 +282,7 @@ import {
 
 const usePost = usePostStore();
 const useChat = useChatStore();
+const addVideo = useAddVideoStore();
 const useGroup = useGroupStore();
 const isLoading = useLoadingStore();
 const useClassroom = useClassroomStore();
@@ -267,65 +297,6 @@ const store = reactive({
   is_emoji: false,
   poll_step: 3,
 });
-
-function handleSubmit() {
-  usePost.create.description = useClassroom.module.video_content;
-  usePost.write_post();
-}
-
-function reposrtToAdmins() {
-  showMessage("Reported to group admins.");
-  store.reportAdmin = false;
-}
-
-const text_dropdown = [
-  ["Product Feedback", "Share your general feedback about Skool here"],
-  ["Product Question", "Ask a question about the product, or search above"],
-  [
-    "Feature Requests",
-    "Want a feature Skool doesn't have? Ask for it, or search above",
-  ],
-  ["Bug Reports", "Found a bug? Report it here and we'll fix it"],
-];
-
-function handlePhotoImage(e) {
-  const file = e.target.files[0];
-  const url = URL.createObjectURL(file);
-  document.getElementById("add_image").value = "";
-  usePost.store.files_url.push(url);
-  usePost.create.files.push(file);
-}
-
-function deleteImage(index) {
-  usePost.store.files_url.splice(index, 1);
-  usePost.create.files.splice(index, 1);
-}
-
-function onSelectEmoji(emoji) {
-  useClassroom.module.video_content += emoji.i;
-}
-
-function deletePoll(index) {
-  delete usePost.create.poll[index];
-}
-
-function addPoll() {
-  if (Object.keys(usePost.create.poll).length >= 10) {
-    return;
-  }
-  usePost.create.poll[
-    "option" +
-      (parseInt(Object.keys(usePost.create.poll).pop().match(/\d+$/)[0]) + 1)
-  ] = "";
-}
-
-function openPoll() {
-  usePost.create.poll = {
-    option1: "",
-    option2: "",
-    option3: "",
-  };
-}
 
 watch(
   () => usePost.store.writingModal,

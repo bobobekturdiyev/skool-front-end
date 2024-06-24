@@ -157,7 +157,7 @@
                   <div class="relative max-w-fit min-w-[40px]">
                     <img
                       class="h-10 w-10 object-cover rounded-full"
-                      :src="useMembers.store.members.user?.image"
+                      :src="useMembers.store.members?.user?.image"
                       alt=""
                     />
                     <div
@@ -274,8 +274,8 @@
                 <div class="space-y-[26px]">
                   <div class="space-y-[2px]">
                     <h1 class="font-semibold">
-                      {{ useMembers.store.members.user?.name }}
-                      {{ useMembers.store.members.user?.surname }}
+                      {{ useMembers.store.members?.user?.name }}
+                      {{ useMembers.store.members?.user?.surname }}
                       <span class="_c59 font-medium text-xs">(Creator)</span>
                     </h1>
                     <p class="text-xs">
@@ -323,7 +323,7 @@
                             alt=""
                           />
                           {{
-                            useMembers.store.members.group_price == "free"
+                            useMembers.store.members?.group_price == "free"
                               ? "Free"
                               : "Paid"
                           }}
@@ -521,16 +521,6 @@
     </div>
 
     <GroupInfoCard class="lg:block hidden lg:max-w-[280px]" />
-
-    <!-- cropper image -->
-    <el-dialog
-      v-model="isLoading.store.inviteModal"
-      width="1036px"
-      align-center
-      class="bg-opacity-50 !p-0 !rounded-lg members_dialog overflow-hidden"
-    >
-      <MembersModal />
-    </el-dialog>
   </main>
 </template>
 
