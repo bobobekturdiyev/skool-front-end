@@ -351,22 +351,33 @@
                   <p class="">Poll</p>
                 </div>
                 <p class="text-xs font-semibold md:_c2a _c07">
-                  9 members have voted
+                  {{ i.poll_count }} members have voted
                 </p>
               </div>
               <div class="flex items-center _c59 gap-4 md:text-[16px] text-sm">
-                <p
-                  @click="handleLikeModal('Likes')"
-                  class="full_flex gap-1 cursor-pointer"
-                >
-                  <img src="@/assets/svg/community/like.svg" alt="" /> 355
+                <p class="full_flex gap-1 cursor-pointer">
+                  <img
+                    @click="usePost.setLike(i.id)"
+                    v-show="i.is_liked"
+                    src="@/assets/svg/like_active.svg"
+                    alt=""
+                  />
+                  <img
+                    @click="usePost.setLike(i.id)"
+                    v-show="!i.is_liked"
+                    src="@/assets/svg/community/like.svg"
+                    alt=""
+                  />
+                  <span @click="handleLikeModal('Likes')">
+                    {{ i.like_count }}
+                  </span>
                 </p>
                 <p
                   @click="() => showPostData(i.id)"
                   class="full_flex gap-1 cursor-pointer"
                 >
                   <img src="@/assets/svg/community/message.svg" alt="" />
-                  609
+                  {{ i.comment_count }}
                 </p>
                 <div
                   @click="() => showPostData(i.id)"
@@ -991,25 +1002,38 @@
       </div>
       <div class="flex items-center _c59 gap-4 text-sm">
         <p
-          class="full_flex border border-[#F0F5FA] r_8 p-[6px] leading-[21px] h-8 gap-1"
+          @click="usePost.setLike(usePost.store.postData.id)"
+          class="full_flex border border-[#F0F5FA] r_8 p-[6px] cursor-pointer leading-[21px] h-8 gap-1"
         >
-          <img src="@/assets/svg/community/like.svg" alt="" /> Like
-          <span class="_cf0f pb-0.5">|</span> 355
+          <img
+            v-show="usePost.store.postData.is_liked"
+            src="@/assets/svg/like_active.svg"
+            alt=""
+          />
+          <img
+            @click="usePost.setLike(usePost.store.postData.id)"
+            v-show="!usePost.store.postData.is_liked"
+            src="@/assets/svg/community/like.svg"
+            alt=""
+          />
+          Like <span class="_cf0f pb-0.5">|</span>
+          {{ usePost.store.postData.like_count }}
         </p>
         <p class="full_flex h-8 gap-1">
           <img src="@/assets/svg/community/message.svg" alt="" />
-          609 comments
+          {{ usePost.store.postData.comment_count }} comments
         </p>
       </div>
       <!-- comment -->
       <section class="mt-4">
         <div
+          v-for="comment in usePost.store.postData.comments"
           class="flex items-start gap-4 border-y border-[#F0F5FA] w-full py-5"
         >
           <div class="relative max-w-fit">
             <img
-              class="h-10 w-10 min-w-[40px] object-cover"
-              src="@/assets/image/user.svg"
+              class="h-10 w-10 min-w-[40px] min-h-[40px] rounded-full object-cover"
+              :src="comment.user.image"
               alt=""
             />
             <div class="full_flex absolute -bottom-[2px] -right-[5px] z-10">
@@ -1024,38 +1048,143 @@
             </div>
           </div>
           <div class="w-full">
-            <div class="space-y-[2px] h-10">
-              <h1 class="font-semibold text-[16px]">Cameron Williamson</h1>
-              <p class="text-xs _ca1">19d ago</p>
+            <div class="flex items-center justify-between">
+              <div class="space-y-[2px] h-10">
+                <h1 class="font-semibold text-[16px]">
+                  {{ comment.user.name }} {{ comment.user.surname }}
+                </h1>
+                <p class="text-xs _ca1">19d ago</p>
+              </div>
+              <el-dropdown
+                placement="bottom-end"
+                class="dropdown"
+                trigger="click"
+              >
+                <button class="full_flex comment_menu r_8 w-9 h-9">
+                  <img src="@/assets/svg/three_dot.svg" alt="" />
+                </button>
+                <template #dropdown>
+                  <el-dropdown-menu class="min-w-[140px] dropdown_shadow">
+                    <el-dropdown-item
+                      @click="editPostData"
+                      class="!text-xs font-medium h-10 px-3"
+                      >Edit</el-dropdown-item
+                    >
+                    <el-dropdown-item
+                      @click="deleteReply(comment.id)"
+                      usePost.store.comment_id="id"
+                      class="!text-xs font-medium h-10 px-3"
+                      >Delete</el-dropdown-item
+                    >
+                    <el-dropdown-item
+                      @click="copyLink"
+                      class="!text-xs font-medium h-10 px-3"
+                      >Copy link</el-dropdown-item
+                    >
+                    <el-dropdown-item
+                      @click="store.reportAdmin = true"
+                      class="!text-xs font-medium h-10 px-3"
+                      >Report to admins</el-dropdown-item
+                    >
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </div>
             <div class="space-y-3 mt-3">
               <div class="space-y-3">
-                <p class="text-sm leading-4 text-black">Nice🔥🔥</p>
-                <div class="relative max-w-fit">
-                  <img
-                    class="max-h-20 r_8"
-                    src="@/assets/image/photo.svg"
-                    alt=""
-                  />
-                  <img
-                    class="absolute z-10 tblr m-auto"
-                    src="@/assets/svg/gif.svg"
-                    alt=""
-                  />
+                <p
+                  v-html="comment.comment"
+                  class="text-sm leading-4 text-black"
+                ></p>
+                <div class="w-full mt-4 mb-5">
+                  <ul
+                    v-if="comment.media_files?.length"
+                    class="flex gap-5 min-w-fit w-full overflow-x-auto"
+                  >
+                    <li
+                      class="relative imagelabel min-w-fit"
+                      v-for="(i, index) in comment.media_files"
+                    >
+                      <img
+                        v-if="i.type == 'image'"
+                        class="max-h-[40px] min-h-[40px] r_8 object-cover"
+                        :src="i.url"
+                        alt=""
+                      />
+                      <iframe
+                        v-else-if="
+                          i.type == 'youtube' ||
+                          i.type == 'wistia' ||
+                          i.type == 'vimeo' ||
+                          i.type == 'loom'
+                        "
+                        class="max-h-[40px] min-h-[40px] r_8 max-w-[40px] object-cover text-[#0000]"
+                        :src="i.url"
+                      ></iframe>
+                    </li>
+                    <div class="relative max-w-fit">
+                      <img
+                        class="max-h-[40px] r_8"
+                        src="@/assets/image/photo.svg"
+                        alt=""
+                      />
+                      <img
+                        class="absolute z-10 tblr m-auto"
+                        src="@/assets/svg/gif.svg"
+                        alt=""
+                      />
+                    </div>
+                  </ul>
                 </div>
               </div>
               <div class="flex items-center gap-3 h-[18px] text-xs">
                 <p class="full_flex gap-1 _c2a">
-                  <img src="@/assets/svg/like_active.svg" alt="" />14
+                  <img
+                    class="cursor-pointer"
+                    @click="usePost.setLike(comment.id, 'comment', 1)"
+                    v-show="comment.is_liked"
+                    src="@/assets/svg/like_active.svg"
+                    alt=""
+                  />
+                  <img
+                    class="cursor-pointer"
+                    @click="usePost.setLike(comment.id, 'comment', 1)"
+                    v-show="!comment.is_liked"
+                    src="@/assets/svg/community/like.svg"
+                    alt=""
+                  />
+                  {{ comment.like_count }}
                 </p>
-                <button class="_ca1 font-semibold">Reply</button>
+                <button
+                  @click="usePost.store.comment_id = [comment.id, 1]"
+                  class="_ca1 font-semibold"
+                >
+                  Reply
+                </button>
+              </div>
+              <div
+                v-if="
+                  usePost.store.comment_id[0] == comment.id &&
+                  usePost.store.comment_id[1] == 1
+                "
+                class="flex w-full pt-1 md:gap-[14px] gap-[10px] md:ml-0 -ml-[92px]"
+              >
+                <img
+                  class="h-6 w-6 mt-1 object-cover"
+                  src="@/assets/image/user.svg"
+                  alt=""
+                />
+                <WriteInlineComment class="w-full" />
               </div>
             </div>
-            <div class="flex items-start w-full gap-4 mt-5">
+            <div
+              v-for="reply in comment.replies"
+              class="flex items-start w-full gap-4 mt-5"
+            >
               <div class="relative max-w-fit">
                 <img
-                  class="h-6 w-6 min-w-[24px] object-cover"
-                  src="@/assets/image/user.svg"
+                  class="h-6 w-6 min-w-[24px] min-h-[24px] rounded-full object-cover"
+                  :src="reply.user?.image"
                   alt=""
                 />
                 <div class="full_flex absolute -bottom-[2px] -right-[5px] z-10">
@@ -1066,7 +1195,7 @@
                       alt=""
                     />
                     <p
-                      class="absolute full_flex bottom-0 h-3 w-3 pb-0.5 text-[8px] text-white font-medium"
+                      class="absolute full_flex bottom-0 h-3 w-3 pb-0.5 pt-[1px] text-[8px] text-white font-medium"
                     >
                       1
                     </p>
@@ -1074,28 +1203,87 @@
                 </div>
               </div>
               <div class="w-full">
-                <div class="space-y-[1px] h-10">
-                  <h1 class="font-semibold text-[16px] leading-4">
-                    Cameron Williamson
-                  </h1>
-                  <p class="text-xs _ca1 leading-[14px]">19d ago</p>
+                <div class="flex items-center justify-between">
+                  <div class="space-y-[2px] h-10">
+                    <h1 class="font-semibold text-[16px]">
+                      {{ comment.user.name }} {{ comment.user.surname }}
+                    </h1>
+                    <p class="text-xs _ca1">19d ago</p>
+                  </div>
+                  <el-dropdown
+                    placement="bottom-end"
+                    class="dropdown"
+                    trigger="click"
+                  >
+                    <button class="full_flex comment_menu r_8 w-9 h-9">
+                      <img src="@/assets/svg/three_dot.svg" alt="" />
+                    </button>
+                    <template #dropdown>
+                      <el-dropdown-menu class="min-w-[140px] dropdown_shadow">
+                        <el-dropdown-item
+                          @click="editPostData"
+                          class="!text-xs font-medium h-10 px-3"
+                          >Edit</el-dropdown-item
+                        >
+                        <el-dropdown-item
+                          @click="deleteReply(reply.id, comment.id)"
+                          usePost.store.comment_id="id"
+                          class="!text-xs font-medium h-10 px-3"
+                          >Delete</el-dropdown-item
+                        >
+                        <el-dropdown-item
+                          @click="copyLink"
+                          class="!text-xs font-medium h-10 px-3"
+                          >Copy link</el-dropdown-item
+                        >
+                        <el-dropdown-item
+                          @click="store.reportAdmin = true"
+                          class="!text-xs font-medium h-10 px-3"
+                          >Report to admins</el-dropdown-item
+                        >
+                      </el-dropdown-menu>
+                    </template>
+                  </el-dropdown>
                 </div>
                 <div class="space-y-3 mt-4">
-                  <p class="text-sm leading-4 text-black">
+                  <p class="flex gap-1 text-sm leading-4 text-black">
                     <a
                       class="_c2a border-b border-[#2A85FF]"
                       href="/@gerry_gonzalez"
                       >@Gerry Gonzalez</a
                     >
-                    Continue making progress
+                    <span v-html="reply.comment"></span>
                   </p>
                   <div class="flex items-center gap-3 h-[18px] text-xs">
                     <p class="full_flex gap-1 _ca1">
-                      <img src="@/assets/svg/like_grey.svg" alt="" />14
+                      <img
+                        class="cursor-pointer"
+                        @click="usePost.setLike(reply.id, 'comment', 2)"
+                        v-show="reply.is_liked"
+                        src="@/assets/svg/like_active.svg"
+                        alt=""
+                      />
+                      <img
+                        class="cursor-pointer"
+                        @click="usePost.setLike(reply.id, 'comment', 2)"
+                        v-show="!reply.is_liked"
+                        src="@/assets/svg/community/like.svg"
+                        alt=""
+                      />
+                      {{ reply.like_count }}
                     </p>
-                    <button class="_ca1 font-semibold">Reply</button>
+                    <button
+                      @click="usePost.store.comment_id = [comment.id, 2]"
+                      class="_ca1 font-semibold"
+                    >
+                      Reply
+                    </button>
                   </div>
                   <div
+                    v-if="
+                      usePost.store.comment_id[0] == comment.id &&
+                      usePost.store.comment_id[1] == 2
+                    "
                     class="flex pt-1 md:gap-[14px] gap-[10px] md:ml-0 -ml-[92px]"
                   >
                     <img
@@ -1103,63 +1291,7 @@
                       src="@/assets/image/user.svg"
                       alt=""
                     />
-                    <div class="w-full">
-                      <input
-                        class="text-sm h-10 r_8"
-                        placeholder="@Andrew Kirby"
-                      />
-                      <div class="flex items-center justify-between py-3">
-                        <div class="textarea_icon flex items-center">
-                          <div class="icon full_flex h-10 w-10">
-                            <img
-                              src="@/assets/svg/textarea/upload_black.svg"
-                              alt=""
-                            />
-                          </div>
-                          <div
-                            class="icon sm:flex hidden items-center justify-center h-10 w-10"
-                          >
-                            <img
-                              src="@/assets/svg/textarea/link_black.svg"
-                              alt=""
-                            />
-                          </div>
-                          <div
-                            class="icon sm:flex hidden items-center justify-center h-10 w-10"
-                          >
-                            <img
-                              src="@/assets/svg/textarea/video_black.svg"
-                              alt=""
-                            />
-                          </div>
-                          <div
-                            class="icon sm:flex hidden items-center justify-center h-10 w-10"
-                          >
-                            <img
-                              src="@/assets/svg/textarea/emoji_black.svg"
-                              alt=""
-                            />
-                          </div>
-                          <div class="icon full_flex h-10 w-10">
-                            <img
-                              src="@/assets/svg/textarea/gif_black.svg"
-                              alt=""
-                            />
-                          </div>
-                        </div>
-                        <div class="flex gap-3 font-semibold">
-                          <button
-                            @click="usePost.store.writingModal = false"
-                            class="uppercase h-10 px-6 rounded-lg _ca1"
-                          >
-                            cancel
-                          </button>
-                          <button class="uppercase h-10 px-6 b_ce0 rounded-lg">
-                            Post
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                    <WriteInlineComment />
                   </div>
                 </div>
               </div>
@@ -1170,34 +1302,126 @@
 
       <!-- writing input -->
       <div class="b_cf0f relative z-50 -mx-5 -mb-7 overflow-hidden">
-        <div class="flex items-start py-3 px-5 h-[112px] gap-[14px]">
+        <div
+          class="flex items-start py-3 px-5 gap-[14px]"
+          :class="addVideo.store.files.length ? '' : 'h-[112px]'"
+        >
           <img
             class="h-10 w-10 object-cover"
             src="@/assets/image/user.svg"
             alt=""
           />
           <div class="w-full">
-            <input class="text-sm !border-0" placeholder="Your comment" />
+            <!-- <input class="text-sm !border-0" placeholder="Your comment" /> -->
+            <div class="comment_editor h-10 whitespace-pre-wrap">
+              <Editor />
+            </div>
+            <ul
+              v-if="addVideo.store.files.length"
+              class="flex gap-5 py-5 overflow-x-auto"
+            >
+              <draggable
+                :list="addVideo.store.files"
+                group="grid"
+                :animation="200"
+                class="flex gap-4 overflow-hidden overflow-x-auto min-w-fit"
+              >
+                <li
+                  class="relative imagelabel"
+                  v-for="(i, index) in addVideo.store.files"
+                >
+                  <button
+                    @click="addVideo.deleteImage(index)"
+                    type="button"
+                    class="absolute deleteimage z-10 bg-white !hidden top-2 right-2 rounded-full w-7 h-7 full_flex border p-2"
+                  >
+                    <img src="@/assets/svg/x.svg" alt="" />
+                  </button>
+                  <img
+                    v-if="i.type == 'image'"
+                    class="w-40 h-40 min-w-[160px] border rounded-xl object-cover"
+                    :src="i.url"
+                    alt=""
+                  />
+                  <div v-else-if="i.type == 'video'">
+                    <video
+                      class="w-40 h-40 min-w-[160px] border rounded-xl object-cover"
+                      controls
+                    >
+                      <source :src="i.url" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                  <iframe
+                    v-else-if="
+                      i.type == 'youtube' ||
+                      i.type == 'wistia' ||
+                      i.type == 'vimeo' ||
+                      i.type == 'loom'
+                    "
+                    class="w-40 h-40 min-w-[160px] border rounded-xl object-cover text-[#0000]"
+                    :src="i.url"
+                  ></iframe>
+                </li>
+                <li>
+                  <label
+                    for="add_image"
+                    class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm w-40 h-40"
+                  >
+                    <img
+                      class="w-1/3"
+                      src="@/assets/svg/add_photo.svg"
+                      alt=""
+                    />
+                  </label>
+                </li>
+              </draggable>
+            </ul>
             <div class="flex items-center justify-between py-5 mt-2 pt-0">
-              <div class="textarea_icon flex items-center">
+              <div
+                @click="usePost.store.writecomment_type = 'comment'"
+                class="textarea_icon flex items-center"
+              >
                 <div class="icon full_flex h-10 w-10">
-                  <img src="@/assets/svg/textarea/upload_black.svg" alt="" />
+                  <label for="add_image" class="icon full_flex h-10 w-10">
+                    <img src="@/assets/svg/textarea/upload_black.svg" alt="" />
+                  </label>
                 </div>
                 <div
+                  @click="isLoading.modal.add_link = true"
                   class="icon sm:flex hidden items-center justify-center h-10 w-10"
                 >
                   <img src="@/assets/svg/textarea/link_black.svg" alt="" />
                 </div>
                 <div
+                  @click="useClassroom.local_store.addVideoModal = true"
                   class="icon sm:flex hidden items-center justify-center h-10 w-10"
                 >
                   <img src="@/assets/svg/textarea/video_black.svg" alt="" />
                 </div>
-                <div
-                  class="icon sm:flex hidden items-center justify-center h-10 w-10"
+                <el-dropdown
+                  placement="bottom-end"
+                  class="dropdown"
+                  trigger="click"
                 >
-                  <img src="@/assets/svg/textarea/emoji_black.svg" alt="" />
-                </div>
+                  <div
+                    id="emojidrop1"
+                    class="icon full_flex h-10 w-10 relative"
+                  >
+                    <img src="@/assets/svg/textarea/emoji_black.svg" alt="" />
+                  </div>
+                  <template #dropdown>
+                    <el-dropdown-menu>
+                      <div class="!overflow-hidden overflow-y-auto">
+                        <EmojiPicker
+                          :native="true"
+                          theme="light"
+                          @select="addVideo.onSelectEmoji"
+                        />
+                      </div>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
                 <div class="icon full_flex h-10 w-10">
                   <img src="@/assets/svg/textarea/gif_black.svg" alt="" />
                 </div>
@@ -1209,7 +1433,24 @@
                 >
                   cancel
                 </button>
-                <button class="uppercase h-10 px-6 b_ce0 rounded-lg">
+                <button
+                  @click="
+                    () => {
+                      usePost.store.writecomment_type = 'comment';
+                      usePost.write_comment();
+                    }
+                  "
+                  class="uppercase h-10 px-6 rounded-lg"
+                  v-loading="
+                    isLoading.isLoadingType('writeComment') &&
+                    usePost.store.writecomment_type != 'inline'
+                  "
+                  :class="
+                    useClassroom.module.video_content
+                      ? 'b_cbc _c07'
+                      : 'b_ce0 _ca1'
+                  "
+                >
                   Post
                 </button>
               </div>
@@ -1217,6 +1458,19 @@
           </div>
         </div>
       </div>
+      <input
+        @change="addVideo.handleImage"
+        type="file"
+        id="add_image"
+        class="h-0 w-0 block overflow-hidden !p-0"
+      />
+
+      <input
+        @change="addVideo.handleInlieImage"
+        type="file"
+        id="add_inline_image"
+        class="h-0 w-0 block overflow-hidden !p-0"
+      />
     </el-dialog>
 
     <!-- Report to group admins -->
@@ -1295,6 +1549,14 @@
             v-else-if="usePost.store.modalType == 'poll'"
             @click="() => usePost.removePoll()"
             v-loading="isLoading.isLoadingType('removePoll')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            confirm
+          </button>
+          <button
+            v-else-if="usePost.store.modalType == 'reply'"
+            @click="() => usePost.deleteComment()"
+            v-loading="isLoading.isLoadingType('deleteComment')"
             class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
           >
             confirm
@@ -1517,6 +1779,11 @@ const deleteVoteData = {
   description: "Are you sure you want to remove your vote?",
 };
 
+const deletePostReply = {
+  title: "Delete reply?",
+  description: "Are you sure you want to delete?",
+};
+
 const deleteMediaFile = {
   title: "Delete file?",
   description: "Are you sure you want to delete this file?",
@@ -1541,6 +1808,18 @@ function deletePost() {
 function removePoll() {
   usePost.store.modalType = "poll";
   usePost.store.changeVoteData = deletePostPoll;
+  usePost.modal.delete = true;
+}
+
+function deleteReply(id, comment_id) {
+  if (comment_id) {
+    usePost.store.deleteReplyData = [id, comment_id];
+  } else {
+    usePost.store.deleteReplyData = [];
+  }
+  usePost.store.comment_id = id;
+  usePost.store.modalType = "reply";
+  usePost.store.changeVoteData = deletePostReply;
   usePost.modal.delete = true;
 }
 

@@ -20,19 +20,40 @@ export const useAddVideoStore = defineStore("addvideo", () => {
     document.getElementById("add_image").value = "";
   }
 
+  function handleInlieImage(e) {
+    const file = e.target.files[0];
+    const url = URL.createObjectURL(file);
+    let type = file.type.split("/")[0];
+    usePost.inline_comment.files.push({ url, file, type, is_new: true });
+    document.getElementById("add_image").value = "";
+  }
+
   function deleteImage(index) {
-    if (store.files[index]?.is_new) {
-      store.files.splice(index, 1);
-      usePost.modal.delete = false;
+    if (usePost.store.writecomment_type == "inline") {
+      if (usePost.inline_comment.files[index]?.is_new) {
+        usePost.inline_comment.files.splice(index, 1);
+        usePost.modal.delete = false;
+      } else {
+        usePost.store.media_id = usePost.inline_comment.files[index].id;
+        usePost.deleteMediaFile(index);
+      }
     } else {
-      usePost.store.media_id = store.files[index].id;
-      usePost.deleteMediaFile(index);
+      if (store.files[index]?.is_new) {
+        store.files.splice(index, 1);
+        usePost.modal.delete = false;
+      } else {
+        usePost.store.media_id = store.files[index].id;
+        usePost.deleteMediaFile(index);
+      }
     }
-    console.log(store.files[index]);
   }
 
   function onSelectEmoji(emoji) {
-    useClassroom.module.video_content += emoji.i;
+    if (usePost.store.writecomment_type == "inline") {
+      usePost.inline_comment.comment += emoji.i;
+    } else {
+      useClassroom.module.video_content += emoji.i;
+    }
   }
 
   function deletePoll(poll_name, index) {
@@ -77,14 +98,19 @@ export const useAddVideoStore = defineStore("addvideo", () => {
   }
 
   function handleSubmit() {
-    usePost.create.description = useClassroom.module.video_content;
-    usePost.write_post();
+    if (usePost.store.writecomment_type == "inline") {
+      usePost.write_comment();
+    } else {
+      usePost.create.description = useClassroom.module.video_content;
+      usePost.write_post();
+    }
   }
 
   return {
     store,
     handleImage,
     deleteImage,
+    handleInlieImage,
     onSelectEmoji,
     deletePoll,
     addPoll,

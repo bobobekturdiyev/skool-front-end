@@ -115,7 +115,6 @@
   }
 }
 
-
 .el-input__suffix {
   color: transparent !important;
 }
@@ -399,9 +398,10 @@
   overflow-y: auto !important;
 }
 
-.v3-groups, .v3-tone {
+.v3-groups,
+.v3-tone {
   display: none !important;
-} 
+}
 
 .community_editor {
   border-radius: 4px;
@@ -423,6 +423,27 @@
   }
 }
 
+.comment_editor {
+  border-radius: 4px;
+  overflow: hidden;
+  .editor * {
+    white-space: pre-wrap !important;
+    text-wrap: wrap !important;
+    word-break: break-all !important;
+  }
+  .ql-toolbar {
+    display: none !important;
+  }
+  .ql-editor {
+    padding-top: 50px !important;
+    height: 80px !important;
+  }
+  * {
+    margin: 0 !important;
+    border: none !important;
+  }
+}
+
 .el-loading-parent--relative {
   pointer-events: none;
 }
@@ -432,5 +453,5 @@
 }
 
 .el-notification {
-  z-index: 3000 !important; 
+  z-index: 3000 !important;
 }
