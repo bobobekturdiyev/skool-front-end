@@ -422,13 +422,18 @@
                 add category
               </button>
             </div>
-            <div class="flex items-center justify-between md:mt-9 mt-4">
+            <div
+              v-for="(i, index) in usePost.store.categories"
+              v-loading="isLoading.isLoadingType('getPostCategories')"
+              class="flex items-center justify-between md:mt-9 mt-4"
+            >
               <div class="space-y-2">
-                <p class="font-semibold">General discussion (1)</p>
-                <p class="text-xs">Discuss anything here</p>
+                <p class="font-semibold">{{ i.name }} ({{ i.post_count }})</p>
+                <p class="text-xs">{{ i.description }}</p>
               </div>
               <div class="flex gap-3">
-                <button @click="editPostCategory()"
+                <button
+                  @click="editPostCategory(i)"
                   class="full_flex gap-1 border border_cbc r_8 _c2a px-3 h-9"
                 >
                   <img src="@/assets/svg/edit.svg" alt="" />
@@ -436,19 +441,42 @@
                 </button>
                 <div class="border_cbc r_8 w-9 h-9">
                   <el-dropdown placement="bottom-end" class="dropdown">
-                  <button class="full_flex w-9 h-9">
-                    <img src="@/assets/svg/three_dot_blue.svg" alt="" />
-                  </button>
-                  <template #dropdown>
-                    <el-dropdown-menu
-                      class="community_dropdown min-w-[200px] dropdown_shadow"
-                    >
-                      <el-dropdown-item>Move up</el-dropdown-item>
-                      <el-dropdown-item>Move down</el-dropdown-item>
-                      <el-dropdown-item>Delete</el-dropdown-item>
-                    </el-dropdown-menu>
-                  </template>
-                </el-dropdown>
+                    <button class="full_flex w-9 h-9">
+                      <img src="@/assets/svg/three_dot_blue.svg" alt="" />
+                    </button>
+                    <template #dropdown>
+                      <el-dropdown-menu
+                        class="community_dropdown min-w-[200px] dropdown_shadow"
+                      >
+                        <el-dropdown-item
+                        @click="usePost.updatePositionCategory(index, 'up')"
+                          ><span :class="index == 0 ? '_ca1' : ''"
+                            >Move up</span
+                          ></el-dropdown-item
+                        >
+                        <el-dropdown-item
+                          @click="usePost.updatePositionCategory(index, 'down')"
+                        >
+                          <span
+                            :class="
+                              index == usePost.store.categories.length - 1
+                                ? '_ca1'
+                                : ''
+                            "
+                            >Move down</span
+                          ></el-dropdown-item
+                        >
+                        <el-dropdown-item @click="deleteFunc('post', i)"
+                          ><span
+                            :class="
+                              usePost.store.categories.length == 1 ? '_ca1' : ''
+                            "
+                            >Delete</span
+                          ></el-dropdown-item
+                        >
+                      </el-dropdown-menu>
+                    </template>
+                  </el-dropdown>
                 </div>
               </div>
             </div>
@@ -517,17 +545,15 @@
                 class="flex gap-3 text-sm font-semibold"
               >
                 <button
-                  :type="
-                    isLoading.isLoadingType('createCourse')
-                      ? 'button'
-                      : 'submit'
+                  :class="
+                    usePost.create_category.name ? 'b_cbc _c07' : 'b_ce0 _ca1'
                   "
-                  :class="usePost.create.title ? 'b_cbc _c07' : 'b_ce0 _ca1'"
                   @click="reposrtToAdmins"
                   class="uppercase h-10 px-6 rounded-lg"
-                  v-loading="isLoading.isLoadingType('createCourse')"
+                  v-loading="isLoading.isLoadingType('createPostCategory')"
                 >
-                  <span v-if="!usePost.modal.edit">add</span><span v-else>save</span> 
+                  <span v-if="!usePost.modal.edit">add</span
+                  ><span v-else>save</span>
                 </button>
                 <button
                   type="button"
@@ -892,6 +918,129 @@
         </div>
       </div>
     </div>
+
+    <!-- Delete -->
+    <el-dialog
+      v-model="isLoading.membersModal.delete"
+      width="400"
+      align-center
+      class="!rounded-xl overflow-hidden px-6 py-7"
+    >
+      <div class="space-y-7">
+        <h1 class="text-2xl font-semibold">
+          {{ store.deleteType.title }}
+        </h1>
+        <p class="text-lg">{{ store.deleteType.description }}</p>
+        <div class="flex justify-end gap-3 text-sm font-semibold">
+          <button
+            @click="isLoading.membersModal.delete = false"
+            class="uppercase h-10 px-6 rounded-lg _ca1"
+          >
+            cancel
+          </button>
+          <button
+            v-if="isLoading.membersModal.modalType == 'post'"
+            @click="usePost.deletePostCategory"
+            v-loading="isLoading.isLoadingType('deletePostCategory')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            delete
+          </button>
+          <!-- <button
+            v-else-if="isLoading.membersModal.modalType == 'changeVote'"
+            @click="usePost.setUserVote"
+            v-loading="isLoading.isLoadingType('setUserVote')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            confirm
+          </button> -->
+        </div>
+      </div>
+    </el-dialog>
+
+    <!-- Change category -->
+    <el-dialog
+      v-model="isLoading.membersModal.change_category"
+      width="400"
+      align-center
+      class="!rounded-xl overflow-hidden px-6 py-7"
+    >
+      <div class="space-y-7">
+        <h1 class="text-2xl font-semibold">
+          Recategorize {{ usePost.store.deleteCategoryData.post_count }} posts
+        </h1>
+        <p class="text-sm !mt-2">
+          The category "{{ usePost.store.deleteCategoryData.name }}" contains
+          {{ usePost.store.deleteCategoryData.post_count }} posts. You must
+          recategorize all posts before deleting a category. You can
+          recategorize the posts manually, or, you can bulk migrate them to
+          another category.
+        </p>
+        <p class="text-sm _ceb !mt-2 font-semibold">
+          Bulk migrate {{ usePost.store.deleteCategoryData.post_count }} posts
+          from "{{ usePost.store.deleteCategoryData.name }}" to:
+        </p>
+        <el-select
+          class="block w-full mt-2"
+          v-model="usePost.create.category_id"
+          @change="handleChangeCategory"
+          placeholder="Select"
+        >
+          <el-option
+            v-for="item in usePost.store.categories"
+            :key="item.name"
+            :label="item.name"
+            :value="item.id"
+            v-show="item.id != usePost.store.category_id"
+          >
+            <div class="flex items-center gap-2">
+              {{ item.name }}
+              <img
+                v-if="usePost.store.category_id.name == item.name"
+                src="@/assets/svg/checked.svg"
+                alt=""
+              />
+            </div>
+          </el-option>
+        </el-select>
+        <div class="flex gap-2">
+          <input
+            v-model="usePost.store.isCheckConfirm"
+            id="confirm_change"
+            type="checkbox"
+            class="!w-3 !h-3 !p-2.5"
+          />
+          <label for="confirm_change" class="text-sm">
+            I confirm that I want to bulk migrate
+            {{ usePost.store.deleteCategoryData.post_count }} posts from “{{
+              usePost.store.deleteCategoryData.name
+            }}” to the above category, and then delete “{{
+              usePost.store.deleteCategoryData.name
+            }}”. I understand this action is permanent.
+          </label>
+        </div>
+        <div class="flex justify-end gap-3 text-sm font-semibold">
+          <button
+            @click="isLoading.membersModal.change_category = false"
+            class="uppercase h-10 px-6 rounded-lg _ca1"
+          >
+            cancel
+          </button>
+          <button
+            @click="usePost.deletePostCategory"
+            v-loading="isLoading.isLoadingType('deletePostCategory')"
+            class="uppercase h-10 px-6 rounded-lg"
+            :class="
+              usePost.store.isCheckConfirm && usePost.create.category_id
+                ? 'b_cbc _c07'
+                : 'b_ce0 _ca1'
+            "
+          >
+            PROCEED
+          </button>
+        </div>
+      </div>
+    </el-dialog>
   </main>
 </template>
 
@@ -903,6 +1052,10 @@ const useMembers = useMemberStore();
 const usePost = usePostStore();
 const isLoading = useLoadingStore();
 
+onBeforeMount(() => {
+  usePost.get_categories();
+});
+
 const store = reactive({
   slideStep: 0,
   editGamification: false,
@@ -910,7 +1063,13 @@ const store = reactive({
   updatePayment: false,
   is_open: false,
   is_open_name: "",
+  deleteType: "",
 });
+
+const deletePostCategory = {
+  title: "Delete category?",
+  description: "Are you sure you want to delete this category?",
+};
 
 const access_list = [
   {
@@ -933,6 +1092,23 @@ const post_category_access = [
     value: false,
   },
 ];
+
+function deleteFunc(type, data) {
+  if (usePost.store.categories.length == 1) {
+    return;
+  }
+  isLoading.membersModal.modalType = type;
+  if (type == "post") {
+    usePost.store.category_id = data.id;
+    if (data.post_count == 0) {
+      store.deleteType = deletePostCategory;
+      isLoading.membersModal.delete = true;
+    } else {
+      usePost.store.deleteCategoryData = data;
+      isLoading.membersModal.change_category = true;
+    }
+  }
+}
 
 function editLevel(data) {
   useMembers.store.levelId = data.id;
@@ -962,7 +1138,14 @@ function handleInput(type) {
 }
 
 // post categories
-function editPostCategory() {
+function editPostCategory(data) {
+  usePost.store.category_id = data.id;
+  for (let i in usePost.create_category) {
+    console.log(i);
+    usePost.create_category[i] = data[i];
+  }
+  console.log(data.permission);
+  usePost.create_category.permission = data.permission ? true : false;
   usePost.modal.create = true;
   usePost.modal.edit = true;
 }

@@ -237,7 +237,7 @@
                 <el-dropdown-item
                   v-for="(i, index) in usePost.store.categories"
                   :command="i"
-                  class="flex flex-col !items-start px-5 hover:bg-[#F2F2F2] cursor-pointer space-y-1 h-[63px]"
+                  class="flex flex-col justify-center !items-start px-5 hover:bg-[#F2F2F2] cursor-pointer space-y-1 h-[63px]"
                 >
                   <h1 class="font-semibold">{{ i.name }}</h1>
                   <p class="text-xs">{{ i.description }}</p>

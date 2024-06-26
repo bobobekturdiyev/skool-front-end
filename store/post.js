@@ -14,15 +14,22 @@ export const usePostStore = defineStore("post", () => {
     posts: [],
     postData: [],
     categories: [],
+    deleteCategoryData: "",
+    isCheckConfirm: false,
     files_url: [],
     error: "",
     writingModal: false,
     filter: {
-      category_id: "all",
+      category_id: null,
       filter: "none",
       sort: "recent",
     },
-    category_id: "",
+    likeModalData: {
+      length: 0,
+      users: [],
+    },
+    likeModalType: "Likes",
+    category_id: null,
     post_id: "",
     card_info: false,
     polls: {},
@@ -57,9 +64,9 @@ export const usePostStore = defineStore("post", () => {
   });
 
   const create_category = reactive({
-    title: "",
+    name: "",
     description: "",
-    permission: "",
+    permission: true,
     username: "",
   });
 
@@ -70,22 +77,36 @@ export const usePostStore = defineStore("post", () => {
   });
 
   function clearData() {
+    for (let i in create_category) {
+      create_category[i] = "";
+    }
+    create_category.permission = true;
     modal.create = false;
     modal.edit = false;
   }
 
   function get_posts() {
     const token = localStorage.getItem("token");
+    console.log(router.currentRoute.value.query);
     const group_username = router.currentRoute.value.params.community;
-    const filter = store.filter.filter;
-    const sort = store.filter.sort;
-    const category_id = store.filter.category_id;
+    let filter_url = "";
+    const filter = {
+      filter: store.filter.filter,
+      sort: store.filter.sort,
+      category_id: store.filter.category_id,
+    };
+
+    for (let i in filter) {
+      if (i != "page" && filter[i]) {
+        filter_url += `&${i}=${filter[i]}`;
+      }
+    }
 
     isLoading.addLoading("getPosts");
     axios
       .get(
         baseUrl +
-          `get-post/${group_username}?page=${isLoading.store.pagination.current_page}&sort=${sort}&category_id=${category_id}&filter=${filter}`,
+          `get-post/${group_username}?page=${isLoading.store.pagination.current_page}${filter_url}`,
         {
           headers: {
             Authorization: "Bearer " + token,
@@ -145,6 +166,9 @@ export const usePostStore = defineStore("post", () => {
   function createPostCategory() {
     const group_username = router.currentRoute.value.params.community;
     create_category.username = group_username;
+    if (modal.edit) {
+      return updatePostCategory();
+    }
     const token = localStorage.getItem("token");
     isLoading.addLoading("createPostCategory");
 
@@ -156,9 +180,33 @@ export const usePostStore = defineStore("post", () => {
       })
       .then((res) => {
         console.log(res);
-        // const slug = res.data?.data?.slug;
-        // router.push(`/${group_username}/classroom/${slug}`);
-        // clearCreate();
+        get_categories();
+        clearData();
+        isLoading.removeLoading("createPostCategory");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("createPostCategory");
+      });
+  }
+
+  function updatePostCategory() {
+    const group_username = router.currentRoute.value.params.community;
+    create_category.username = group_username;
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("createPostCategory");
+
+    axios
+      .put(baseUrl + `post/categories/${store.category_id}`, create_category, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        get_categories();
+        clearData();
+        create.category_id = null;
         isLoading.removeLoading("createPostCategory");
       })
       .catch((err) => {
@@ -188,6 +236,43 @@ export const usePostStore = defineStore("post", () => {
         }
         console.log(err);
         isLoading.removeLoading("getPostCategories");
+      });
+  }
+
+  function get_likes() {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("getLikes");
+    if (isLoading.store.pagination_two.current_page == 1) {
+      store.likeModalData = {
+        length: 0,
+        users: [],
+      };
+    }
+    console.log(isLoading.store.pagination_two.current_page);
+    axios
+      .get(
+        baseUrl +
+          `get-user/${store.post_id}?page=${isLoading.store.pagination_two.current_page}`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        store.likeModalData.length =
+          store.likeModalData.length + res.data.data.length;
+        console.log(store.likeModalData.users);
+        store.likeModalData.users.push(...res.data.data);
+        for (let i in isLoading.store.pagination_two) {
+          isLoading.store.pagination_two[i] = res.data?.meta[i];
+        }
+        isLoading.removeLoading("getLikes");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("getLikes");
       });
   }
 
@@ -448,6 +533,38 @@ export const usePostStore = defineStore("post", () => {
       });
   }
 
+  function pinToFeed() {
+    isLoading.addLoading("setUserVote");
+    const token = localStorage.getItem("token");
+    axios
+      .post(
+        baseUrl + `post-pinned/${store.post_id}`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        store.postData.group_pinned = !store.postData.group_pinned;
+        // for (let i of store.postData.polls) {
+        //   for (let user of i.users) {
+        //     if (user.username == isLoading.user.username) {
+        //       store.userIsVoted = true;
+        //     }
+        //   }
+        // }
+        get_posts();
+        isLoading.removeLoading("setUserVote");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("setUserVote");
+      });
+  }
+
   function setLike(post_id, type, index) {
     if (isLoading.isLoadingType("setLike")) {
       return;
@@ -492,8 +609,15 @@ export const usePostStore = defineStore("post", () => {
               comment < store.postData.comments?.length;
               comment++
             ) {
-              for (let reply = 0; reply < store.postData.comments[comment].repliesgit a?.length; reply++) {
-                console.log(store.postData.comments[comment].replies[reply].id, post_id)
+              for (
+                let reply = 0;
+                reply < store.postData.comments[comment].replies?.length;
+                reply++
+              ) {
+                console.log(
+                  store.postData.comments[comment].replies[reply].id,
+                  post_id
+                );
                 if (
                   store.postData.comments[comment].replies[reply].id == post_id
                 ) {
@@ -674,6 +798,91 @@ export const usePostStore = defineStore("post", () => {
       });
   }
 
+  function deletePostCategory() {
+    if (
+      store.deleteCategoryData.post_count > 0 &&
+      !store.isCheckConfirm &&
+      !create.category_id
+    ) {
+      return;
+    }
+    isLoading.addLoading("deletePostCategory");
+    const token = localStorage.getItem("token");
+
+    axios
+      .post(
+        baseUrl + `post/categories/${store.category_id}`,
+        {
+          new_category_id: create.category_id,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        create.category_id = null;
+        isLoading.membersModal.delete = false;
+        isLoading.membersModal.change_category = false;
+        isLoading.removeLoading("deletePostCategory");
+        get_categories();
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("deletePostCategory");
+      });
+  }
+
+  function updatePositionCategory(index, type) {
+    let ids = [];
+    if (index >= store.categories.length - 1 && type == "down") {
+      return;
+    } else if (index == 0 && type == "up") {
+      return;
+    }
+    isLoading.addLoading("getPostCategories");
+    const token = localStorage.getItem("token");
+    if (type === "down") {
+      [store.categories[index], store.categories[index + 1]] = [
+        store.categories[index + 1],
+        store.categories[index],
+      ];
+    } else {
+      [store.categories[index - 1], store.categories[index]] = [
+        store.categories[index],
+        store.categories[index - 1],
+      ];
+    }
+
+    for (let i of store.categories) {
+      ids.push(i.id);
+    }
+    axios
+      .post(
+        baseUrl + `post-categories/position`,
+        {
+          ids,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        create.category_id = null;
+        console.log(res);
+        isLoading.removeLoading("getPostCategories");
+        // get_categories();
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("getPostCategories");
+      });
+  }
+
   return {
     store,
     modal,
@@ -692,6 +901,10 @@ export const usePostStore = defineStore("post", () => {
     setUserVote,
     write_comment,
     setLike,
+    get_likes,
+    pinToFeed,
     deleteComment,
+    deletePostCategory,
+    updatePositionCategory,
   };
 });

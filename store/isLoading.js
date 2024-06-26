@@ -22,6 +22,15 @@ export const useLoadingStore = defineStore("loading", () => {
       from: "",
       to: "",
     },
+    pagination_two: {
+      current_page: router.currentRoute.value.query.page
+        ? router.currentRoute.value.query.page
+        : 1,
+      total: null,
+      last_page: 1,
+      from: "",
+      to: "",
+    },
     previewImage: "",
     croppedImage: "",
     croppedFile: "",
@@ -56,6 +65,14 @@ export const useLoadingStore = defineStore("loading", () => {
     add_link: false,
     link: "",
   });
+
+  const membersModal = {
+    create:false,
+    edit: false,
+    delete: false,
+    change_category: false,
+    modalType: "",
+  }
 
   const user_update_checker = reactive({
     id: "",
@@ -149,6 +166,7 @@ export const useLoadingStore = defineStore("loading", () => {
     user,
     store,
     modal,
+    membersModal,
     user_update_checker,
     addLoading,
     removeLoading,

@@ -11,7 +11,7 @@
             class="relative flex md:flex-row flex-wrap gap-3 category_wrap w-full md:h-auto h-[80px] overflow-hidden"
           >
             <button
-              @click="handleCategory('all')"
+              @click="handleCategory()"
               :class="
                 usePost.store.filter.category_id != 'all' ? 'bg-white' : 'b_cbc'
               "
@@ -368,7 +368,7 @@
                     src="@/assets/svg/community/like.svg"
                     alt=""
                   />
-                  <span @click="handleLikeModal('Likes')">
+                  <span @click="handleLikeModal('Likes', i)">
                     {{ i.like_count }}
                   </span>
                 </p>
@@ -613,6 +613,11 @@
                     class="!text-xs font-medium h-10 px-3"
                     >Copy link</el-dropdown-item
                   >
+                  <el-dropdown-item
+                    @click="pinToFeed(usePost.store.postData.id)"
+                      class="!text-xs font-medium h-10 px-3"
+                      ><span v-if="usePost.store.postData.group_pinned">Unpin from feed</span><span v-else>Pin to feed</span></el-dropdown-item
+                    >
                   <el-dropdown-item
                     @click="store.reportAdmin = true"
                     class="!text-xs font-medium h-10 px-3"
@@ -969,7 +974,7 @@
                     <el-dropdown-item
                       v-for="(i, index) in usePost.store.categories"
                       :command="i"
-                      class="flex flex-col !items-start px-5 hover:bg-[#F2F2F2] cursor-pointer space-y-1 h-[63px]"
+                      class="flex flex-col justify-center !items-start px-5 hover:bg-[#F2F2F2] cursor-pointer space-y-1 h-[63px]"
                     >
                       <h1 class="font-semibold">{{ i.name }}</h1>
                       <p class="text-xs">{{ i.description }}</p>
@@ -1002,22 +1007,24 @@
       </div>
       <div class="flex items-center _c59 gap-4 text-sm">
         <p
-          @click="usePost.setLike(usePost.store.postData.id)"
           class="full_flex border border-[#F0F5FA] r_8 p-[6px] cursor-pointer leading-[21px] h-8 gap-1"
         >
-          <img
-            v-show="usePost.store.postData.is_liked"
-            src="@/assets/svg/like_active.svg"
-            alt=""
-          />
-          <img
-            @click="usePost.setLike(usePost.store.postData.id)"
-            v-show="!usePost.store.postData.is_liked"
-            src="@/assets/svg/community/like.svg"
-            alt=""
-          />
-          Like <span class="_cf0f pb-0.5">|</span>
-          {{ usePost.store.postData.like_count }}
+          <p class="full_flex gap-1" @click="usePost.setLike(usePost.store.postData.id)">
+            <img
+              v-show="usePost.store.postData.is_liked"
+              src="@/assets/svg/like_active.svg"
+              alt=""
+            />
+            <img
+              v-show="!usePost.store.postData.is_liked"
+              src="@/assets/svg/community/like.svg"
+              alt=""
+            />
+            Like <span class="_cf0f pb-0.5">|</span>
+          </p>
+          <span @click="handleLikeModal('Likes', usePost.store.postData)">
+            {{ usePost.store.postData.like_count }}
+          </span>
         </p>
         <p class="full_flex h-8 gap-1">
           <img src="@/assets/svg/community/message.svg" alt="" />
@@ -1624,7 +1631,8 @@
       <div class="space-y-7">
         <div class="flex items-center justify-between border-b pb-4 -mx-4 px-4">
           <h1 class="font-semibold">
-            {{ store.likeModalData.length }} {{ store.likeModalType }}
+            {{ usePost.store.likeModalData.length }}
+            {{ usePost.store.likeModalType }}
           </h1>
           <img
             @click="store.likeModal = false"
@@ -1633,38 +1641,85 @@
             alt=""
           />
         </div>
-        <ul>
-          <li
-            v-for="i in store.likeModalData.users"
-            class="flex items-center gap-4 w-full"
-          >
-            <img
-              class="h-10 w-10 rounded-full object-cover"
-              :src="i.image"
-              title="user"
-            />
-            <div class="space-y-1 w-[65%]">
-              <h1 class="truncate font-semibold">
-                {{ i.name }} {{ i.surname }}
-              </h1>
-              <p v-if="store.likeModalType == 'Votes'" class="truncate">
-                {{ i.username }}
-              </p>
-              <p v-else class="truncate">
-                💪 I want to work on building my self-confidence. Have you ever
-                struggled with this? How did you develop a stronger sense of
-                self-worth? 💪💖
-              </p>
-            </div>
-            <button
-              v-if="store.likeModalType != 'Votes'"
-              class="full_flex gap-[10px] min-w-fit uppercase b_ce0 _ca1 r_8 px-3"
+        <div v-if="usePost.store.likeModalData.length">
+          <ul class="overflow-auto max-h-[300px]">
+            <li
+              v-for="i in usePost.store.likeModalData.users"
+              :key="i.id"
+              class="flex items-center gap-4 w-full"
             >
-              chat
-              <img src="@/assets/svg/chat_x.svg" alt="" />
+              <img
+                class="h-10 w-10 rounded-full object-cover"
+                :src="i.image"
+                title="user"
+              />
+              <div class="space-y-1 w-[65%]">
+                <h1 class="truncate font-semibold">
+                  {{ i.name }} {{ i.surname }}
+                </h1>
+                <p
+                  v-if="usePost.store.likeModalType == 'Votes'"
+                  class="truncate"
+                >
+                  {{ i.username }}
+                </p>
+                <p v-else class="truncate">
+                  💪 I want to work on building my self-confidence. Have you
+                  ever struggled with this? How did you develop a stronger sense
+                  of self-worth? 💪💖
+                </p>
+              </div>
+              <button
+                v-if="usePost.store.likeModalType != 'Votes'"
+                class="full_flex gap-[10px] min-w-fit uppercase b_ce0 _ca1 r_8 px-3"
+              >
+                chat
+                <img src="@/assets/svg/chat_x.svg" alt="" />
+              </button>
+            </li>
+            <button
+              @click="load"
+              v-if="
+                !isLoading.isLoadingType('getLikes') &&
+                isLoading.store.pagination_two.current_page !=
+                  isLoading.store.pagination_two.last_page
+              "
+              class="border border-[#BCDEFF] mt-4 _c2a rounded-lg w-full font-semibold text-sm uppercase"
+            >
+              Load more
             </button>
-          </li>
-        </ul>
+          </ul>
+        </div>
+        <div
+          v-else-if="
+            !isLoading.isLoadingType('getLikes') &&
+            !usePost.store.likeModalData.length
+          "
+          class="full_flex py-5"
+        >
+          No likes yet
+        </div>
+        <div
+          v-if="isLoading.isLoadingType('getLikes')"
+          class="my-2 text-center chat_loading"
+        >
+          <svg
+            aria-hidden="true"
+            class="w-8 h-8 text-gray-200 mx-auto animate-spin dark:text-gray-600 fill-blue-600"
+            viewBox="0 0 100 101"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+              fill="currentColor"
+            />
+            <path
+              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+              fill="currentFill"
+            />
+          </svg>
+        </div>
       </div>
     </el-dialog>
 
@@ -1753,11 +1808,6 @@ const store = reactive({
   is_show: false,
   writingModal: false,
   likeModal: false,
-  likeModalType: "Likes",
-  likeModalData: {
-    length: 0,
-    users: [],
-  },
   card_info: false,
   reportAdmin: false,
   drawer: false,
@@ -1821,6 +1871,11 @@ function deleteReply(id, comment_id) {
   usePost.store.modalType = "reply";
   usePost.store.changeVoteData = deletePostReply;
   usePost.modal.delete = true;
+}
+
+function pinToFeed(id) {
+  usePost.store.post_id = id;
+  usePost.pinToFeed();
 }
 
 function deleteMedia(index) {
@@ -1968,12 +2023,15 @@ function showPostData(id) {
 }
 
 function handleLikeModal(type, data) {
-  store.likeModalType = type;
+  usePost.store.likeModalType = type;
+  console.log(type);
   store.likeModal = true;
-  store.likeModalData = {
-    length: data.length,
-    users: data,
-  };
+  if (type == "Likes") {
+    isLoading.store.pagination_two.current_page = 1;
+    console.log(isLoading.store.pagination_two.current_page);
+    usePost.store.post_id = data.id;
+    usePost.get_likes();
+  }
 }
 
 function openChatModal(data) {
@@ -2014,6 +2072,11 @@ function deleteImage(index) {
   usePost.store.files_url.splice(index, 1);
   usePost.create.files.splice(index, 1);
 }
+
+const load = () => {
+  isLoading.store.pagination_two.current_page += 1;
+  usePost.get_likes();
+};
 
 watch(
   () => isLoading.store.pagination.current_page,
