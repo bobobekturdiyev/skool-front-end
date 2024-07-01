@@ -28,7 +28,7 @@
               </div>
             </div>
           </div>
-          <div v-else
+          <div v-else v-if="role_ac.includes(useGroup.store.group_by_username.type)"
           @click="useGroup.store.add_media = true"
           class="full_flex bg-[#F2F2F2] cursor-pointer duration-500 lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] flex items-center w-full r_16">
           
@@ -50,7 +50,7 @@
             type="button"
             class="absolute deleteimage top-1 right-1 z-20 rounded-full w-6 h-6 full_flex border bg-white"
           >
-            <img class="m-auto" src="@/assets/svg/x.svg" alt="" />
+            <img :class="role_ac.includes(useGroup.store.group_by_username.type) ? '' : 'hidden'" class="m-auto" src="@/assets/svg/x.svg" alt="" />
           </button>
             <div v-if="post.type == 'image'">
               <img @click="useGroup.store.slideStep = index"
@@ -69,7 +69,7 @@
           </div>
                 </template>
   </draggable>
-            <div v-if="useGroup.store.group_by_username.medias.length < 6 && useGroup.store.group_by_username.medias.length > 0" @click="useGroup.store.add_media = true"
+            <div v-if="useGroup.store.group_by_username.medias.length < 6 && useGroup.store.group_by_username.medias.length > 0 && role_ac.includes(useGroup.store.group_by_username.type)" @click="useGroup.store.add_media = true"
               class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px]"
             >
               <img class="w-1/3" src="@/assets/svg/add_photo.svg" alt="" />
@@ -95,9 +95,39 @@
           By {{ useGroup.store.group_by_username.user.name }} {{ useGroup.store.group_by_username.user.surname }}
           </p>
         </div>
-        <pre class="md:mt-8 mt-4 text-sm leading-[21px] whitespace-pre-line">{{
+        <pre :class="role_ac.includes(useGroup.store.group_by_username.type) ? '': 'pointer-events-none'" @click="editDescription" v-if="!useGroup.store.description_modal" class="md:mt-8 mt-4 text-sm leading-[21px] whitespace-pre-line hover:bg-[#F2F2F2] cursor-pointer p-4 -m-4 r_8">{{
           useGroup.store.group_by_username.description
         }}</pre>
+        <div v-else v-if="role_ac.includes(useGroup.store.group_by_username.type)" class="md:mt-8 mt-4">
+          <el-input
+    v-model="useGroup.store.description"
+    @input="handleInput"
+    class="w-full"
+    :autosize="{ minRows: 2, maxRows: 20 }"
+    type="textarea"
+    placeholder="Please input"
+  />
+  <p class="text-end mt-2 _ca1 md:text-sm text-xs">
+                  {{ useGroup.store.description?.length }}/1000
+                </p>
+                <div class="flex justify-end md:mt-6">
+                  <button
+                    type="button"
+                    @click="() => {useGroup.store.description_modal = false; useGroup.store.description = ''}"
+                    class="_ca1 font-semibold px-6 r_8 uppercase"
+                  >
+                    cancel
+                  </button>
+                <button
+                  v-loading="isLoading.isLoadingType('changeGroupDescription')"
+                  class=" font-semibold px-6 r_8 uppercase"
+                  :class="useGroup.store.description?.length ? '_c07 b_cbc' :'_ca1 b_ce0'"
+                  @click="useGroup.updateGroupDescription"
+                >
+                  Save
+                </button>
+              </div>
+        </div>
       </section>
       <!-- info card -->
       <GroupInfoCard class="md:max-w-[280px] sm:max-w-[200px]" />
@@ -279,6 +309,7 @@
 definePageMeta({
   layout: "community",
 });
+import { role_ac } from "@/composables";
 import { useGroupStore, useLoadingStore, usePaymentStore } from "@/store";
 import { VueDraggableNext as draggable } from 'vue-draggable-next';
 const isLoading = useLoadingStore();
@@ -289,6 +320,10 @@ const videoIframe = ref("");
 const store = reactive({
   slideModal: false,
 });
+
+await useAsyncData(() => {
+  useGroup.groupByUsername();
+})
 
 function deleteMedia(id) {
   useGroup.store.media_id = id;
@@ -312,6 +347,16 @@ function handleSlideChange(type) {
           useGroup.store.slideStep2 -= 1;
         }
       }
+}
+
+function editDescription() {
+  useGroup.store.description_modal = true;
+  useGroup.store.description = useGroup.store.group_by_username.description;
+}
+
+function handleInput() {
+    useGroup.store.description =
+    useGroup.store.description?.slice(0, 1000);
 }
 
 function embedLink(link) {
@@ -364,7 +409,6 @@ watch(
 );
 
 onBeforeMount(() => {
-  useGroup.groupByUsername();
   document.addEventListener("keydown", function (event) {
     // Check if Ctrl key is pressed and the key pressed along with it
     if (!store.slideModal) {

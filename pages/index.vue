@@ -126,13 +126,13 @@
               >
                 <div class="w-[150px] border-r border-[#E0E0E0]">
                   <h1 class="text-sm font-medium px-8 mb-2">Type</h1>
-                  <label :for="`type_${i.type}`" v-for="i in filter_type">
+                  <label :for="`${i.type}`" v-for="i in filter_type">
                     <el-dropdown-item
                       class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
                     >
                       <input
                         @change="onFilterType"
-                        :id="`type_${i.type}`"
+                        :id="`${i.type}`"
                         class="rounded-full"
                         type="radio"
                         name="type"
@@ -290,7 +290,11 @@ function onFilterPrice(e) {
   if (e.target.id == "price_all") {
     useGroup.store.filter.price = "all";
   } else {
-    useGroup.store.filter.price = e.target.id;
+    if (e.target.id == 'price_free') {
+      useGroup.store.filter.price = 'free';
+    } else if (e.target.id == 'price_paid') {
+      useGroup.store.filter.price = 'paid';
+    }
   }
   isLoading.changeQuery("price", useGroup.store.filter.price);
 }

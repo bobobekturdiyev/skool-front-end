@@ -11,6 +11,7 @@ import { useSettingsStore } from "./settings";
 import { useProfileStore } from "./profile";
 import { usePaymentStore } from "./payment";
 import { useAddVideoStore } from "./addVideo"
+import { useLinkStore } from "./links";
 
 export {
   useLoadingStore,
@@ -26,4 +27,5 @@ export {
   useProfileStore,
   usePaymentStore,
   useAddVideoStore,
+  useLinkStore,
 };

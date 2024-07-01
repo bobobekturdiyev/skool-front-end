@@ -143,6 +143,7 @@ export const useEventStore = defineStore("event", () => {
         }
       )
       .then((res) => {
+        console.log(res);
         store.add_event = false;
         isLoading.removeLoading("addEvents");
         get_event();

@@ -1,8 +1,13 @@
 <template>
   <div>
     <div class="w-full">
-      <div class="community_editor h-10 border whitespace-pre-wrap">
-        <EditorInlineComment />
+      <div class="flex">
+        <p v-if="usePost.store.comment_id[2] != isLoading.user.username" class="full_flex border rounded-l-lg border-r-0 bg-white _c2a h-10 pl-3 pt-1 -mr-3 z-10">
+          @{{ usePost.store.comment_id[2] }}
+        </p>
+        <div class="community_editor w-full h-10 border whitespace-pre-wrap">
+          <EditorInlineComment class="w-full !-ml-5" />
+        </div>
       </div>
       <ul
         v-if="usePost.inline_comment.files.length"
@@ -105,13 +110,21 @@
         </div>
         <div class="flex gap-3 font-semibold">
           <button
-            @click="usePost.store.writingModal = false"
+            @click="
+              () => {
+                usePost.store.writingModal = false;
+                usePost.store.comment_id = [];
+              }
+            "
             class="uppercase h-10 px-6 rounded-lg _ca1"
           >
             cancel
           </button>
           <button
-            v-loading="isLoading.isLoadingType('writeComment') && usePost.store.writecomment_type == 'inline'"
+            v-loading="
+              isLoading.isLoadingType('writeComment') &&
+              usePost.store.writecomment_type == 'inline'
+            "
             @click="
               () => {
                 usePost.store.writecomment_type = 'inline';

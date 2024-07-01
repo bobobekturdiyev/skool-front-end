@@ -144,7 +144,7 @@ export const useClassroomStore = defineStore("classroom", () => {
     const slug = router.currentRoute.value.params.id;
     const token = localStorage.getItem("token");
     isLoading.addLoading("createSet");
-
+    console.log(set)
     axios
       .post(baseUrl + `add-set/${slug}`, set, {
         headers: {
@@ -266,6 +266,7 @@ export const useClassroomStore = defineStore("classroom", () => {
         }
       )
       .then((res) => {
+        console.log(res);
         store.modules = res.data?.data;
         isLoading.removeLoading("getModules");
       })

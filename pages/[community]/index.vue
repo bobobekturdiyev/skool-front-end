@@ -3,6 +3,10 @@
     <div class="overflow-hidden w-full md:space-y-8 space-y-6">
       <ModalWriteSomething class="md:block hidden" />
 
+      <section v-if="usePost.store.members_count" class="flex gap-2 justify-center">
+        <p class="full_flex rounded-full text-white text-xs h-6 w-6 bg-[#e74c3c]">{{usePost.store.members_count}}</p>
+        <p @click="routeToRequests" class="_c2a hover:underline cursor-pointer">membership requests pending</p>
+      </section>
       <!-- category -->
       <section class="md:text-sm text-xs whitespace-nowrap">
         <div class="flex items-start justify-between gap-3">
@@ -137,6 +141,30 @@
         </div>
       </section>
 
+      <section 
+      class="r_16 overflow-hidden bg-white px-4 community_data"
+      >
+        <el-collapse v-model="store.activeCollapse" class="space-y-6 !w-full">
+                                <el-collapse-item name="open">
+                                    <template #title>
+                                        <p class="_c07 font-semibold">Set up your group</p>
+                                        <img src="@/assets/svg/select_arrow.svg" alt="">
+                                    </template>
+                                    <div class="space-y-6 px-1">
+                                      <p class="b_cf2 h-[1px] w-full"></p>
+                                      <ul class="space-y-3">
+<li v-for="i in setupgroup" class="flex items-center gap-3">
+  <p class="!outline outline-[#E0E0E0] rounded-full h-5 w-5"></p>
+ <p>
+  {{i}}
+ </p>
+</li>
+                                      </ul>
+                                    </div>
+                                </el-collapse-item>
+                            </el-collapse>
+      </section>
+
       <!-- posts -->
       <section class="md:space-y-5 space-y-4">
         <LoadingDiv
@@ -194,7 +222,7 @@
               <p class="pb-0.5">Hide</p>
             </div>
           </div>
-          <div class="flex items-end md:gap-14 gap-3 p-4">
+          <div class="flex items-end relative md:gap-14 gap-3 p-4">
             <div>
               <div class="flex items-center gap-4">
                 <el-dropdown placement="top-start" class="dropdown">
@@ -321,7 +349,7 @@
                     {{ i.user_id?.name }} {{ i.user_id?.surname }}
                   </h1>
                   <p class="text-xs">
-                    19d ago in <span class="_c59">Announcements</span>
+                    {{formatDate(i.created_at)}} in <span class="_c59">Announcements</span>
                   </p>
                 </div>
               </div>
@@ -332,9 +360,9 @@
               </h2>
               <p
                 v-html="i.description"
-                class="md:text-sm text-xs line-clamp-2 md:w-full w-[120%]"
+                class="md:text-sm text-xs min-h-[40px] leading-6 line-clamp-2 md:w-full w-[120%]"
               ></p>
-              <div class="flex items-center mt-4 md:mb-3 mb-4 gap-4">
+              <div v-if="i.poll_available"  @click="() => showPostData(i.id)" class="flex items-center cursor-pointer mt-4 gap-4">
                 <div
                   class="b_cbc px-2 h-[26px] rounded-[4px] full_flex gap-1 text-xs"
                 >
@@ -354,7 +382,7 @@
                   {{ i.poll_count }} members have voted
                 </p>
               </div>
-              <div class="flex items-center _c59 gap-4 md:text-[16px] text-sm">
+              <div class="flex items-center _c59 gap-4 md:text-[16px] text-sm md:mt-3 mt-4">
                 <p class="full_flex gap-1 cursor-pointer">
                   <img
                     @click="usePost.setLike(i.id)"
@@ -380,16 +408,20 @@
                   {{ i.comment_count }}
                 </p>
                 <div
+                v-if="i.comment_count"
                   @click="() => showPostData(i.id)"
                   class="flex -space-x-[5px] cursor-pointer"
                 >
-                  <img
-                    v-for="(i, index) in 7"
-                    class="h-[26px] w-[26px] xl:block md:hidden sm:block hidden object-cover"
-                    src="@/assets/image/user.svg"
+                  <el-tooltip
+                  v-for="(user, index) in i.comment_users"
+                   :content="`${user.name} ${user.surname} - ${index < 3 ? comment_step[index] + ' commenter' : 'Recent commenter'}`" placement="top">
+    <img
+                    class="h-[26px] w-[26px] rounded-full xl:block md:hidden sm:block hidden object-cover"
+                    :src="user.image"
                     alt=""
                     :style="`z-index: ${7 - index}`"
                   />
+  </el-tooltip>
                 </div>
                 <p
                   @click="() => showPostData(i.id)"
@@ -399,138 +431,55 @@
                 </p>
               </div>
             </div>
-            <div
-              class="rounded-tl-xl -mr-4 -mb-4 min-w-fit max-w-[400px] overflow-hidden"
-            >
-              <img
-                class="md:max-w-[400px] max-h-[75px] max-w-fit object-contain"
-                src="@/assets/image/photo.svg"
-                alt=""
-              />
-            </div>
           </div>
+          <!-- <div
+            class=""
+          >
+            <img
+              class="max-w-[140px] max-h-[140px] max-w-fit object-contain"
+              src="@/assets/image/photo.svg"
+              alt=""
+            />
+          </div> -->
+          <ul
+              v-if="i.media_files"
+              class="flex gap-5 absolute bottom-0 right-0 min-w-fit max-w-[400px] overflow-hidden"
+            >
+                <li
+                  class="relative imagelabel"
+                >
+                  <img
+                    v-if="i.media_files.type == 'image'"
+                    class="max-w-[140px] max-h-[140px] rounded-tl-xl object-contain"
+                    :src="i.media_files.url"
+                    alt=""
+                  />
+                  <div v-else-if="i.media_files.type == 'video'">
+                    <video
+                      class="max-w-[140px] max-h-[140px] rounded-tl-xl object-contain"
+                      controls
+                    >
+                      <source :src="i.media_files.url" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                  <iframe
+                    v-else-if="
+                      i.media_files.type == 'youtube' ||
+                      i.media_files.type == 'wistia' ||
+                      i.media_files.type == 'vimeo' ||
+                      i.media_files.type == 'loom'
+                    "
+                    class="rounded-tl-xl max-w-[140px] max-h-[140px] object-contain"
+                    :src="i.media_files.url"
+                  ></iframe>
+                </li>
+            </ul>
         </article>
         <Pagination_card class="pt-3" />
       </section>
     </div>
-    <div class="min-w-[280px] md:max-w-[280px]">
-      <!-- info card -->
-      <section>
-        <div class="rounded-2xl overflow-hidden bg-white">
-          <img
-            class="w-full md:max-h-[150px] object-cover"
-            :src="useGroup.store.group_by_username?.image"
-            alt=""
-          />
-          <div class="p-4 space-y-4">
-            <h1 class="font-medium text-lg">
-              {{ useGroup.store.group_by_username?.name }}
-            </h1>
-            <p class="flex items-center _ca1 gap-1">
-              <img src="@/assets/svg/community/grey_private.svg" alt="" />
-              {{
-                useGroup.store.group_by_username?.group_type == "private"
-                  ? "Private group"
-                  : "Public group"
-              }}
-            </p>
-            <p class="text-sm">
-              {{ useGroup.store.group_by_username.excerpt }}
-            </p>
-            <div class="py-1 text-sm border-y border-[#E0E0E0]">
-              <p class="flex items-center gap-1 h-7 px-3 _c59">
-                <img src="@/assets/svg/href.svg" alt="" />
-                Want your own group?
-              </p>
-              <p class="flex items-center gap-1 h-7 px-3 _c59">
-                <img src="@/assets/svg/href.svg" alt="" />
-                Product announcements
-              </p>
-              <p class="flex items-center gap-1 h-7 px-3 _c59">
-                <img src="@/assets/svg/href.svg" alt="" />
-                We're hiring!
-              </p>
-            </div>
-            <div class="flex items-center justify-between text-xs text-center">
-              <div>
-                <p class="_c2a text-lg h-[24px]">
-                  <!-- 226k -->
-                  {{ useGroup.store.group_by_username.members_count }}
-                </p>
-                <p class="_ca1">Members</p>
-              </div>
-              <div>
-                <p class="_c2a text-lg h-[24px]">
-                  {{ useGroup.store.group_by_username.online }}
-                </p>
-                <p class="_ca1">Online</p>
-              </div>
-              <div>
-                <p class="_c2a text-lg h-[24px]">
-                  {{ useGroup.store.group_by_username.admin_count }}
-                </p>
-                <p class="_ca1">Admins</p>
-              </div>
-            </div>
-            <div class="flex -space-x-[5px]">
-              <img
-                v-for="(i, index) in 7"
-                class="h-[26px] w-[26px] object-cover"
-                src="@/assets/image/user.svg"
-                alt=""
-                :style="`z-index: ${7 - index}`"
-              />
-            </div>
-            <button
-              @click="isLoading.store.inviteModal = true"
-              class="border border-[#BCDEFF] _c2a rounded-lg w-full font-semibold text-sm uppercase"
-            >
-              settings
-            </button>
-          </div>
-        </div>
-        <div class="bg-white mt-5 r_16 px-4 py-5">
-          <h1 class="font-semibold">Leaderboard (30-day)</h1>
-          <div class="text-sm border-t borer-[#E0E0E0] py-4 mt-4">
-            <div
-              v-for="(i, index) in 5"
-              class="flex items-center h-[44px] justify-between"
-            >
-              <div class="flex items-center gap-2">
-                <p
-                  :class="
-                    index == 0
-                      ? 'b_c2a !text-white'
-                      : index == 1
-                      ? 'b_c59 !text-white'
-                      : index == 2
-                      ? 'b_cbc'
-                      : ''
-                  "
-                  class="full_flex _c07 font-medium rounded-full w-7 h-7"
-                >
-                  {{ index + 1 }}
-                </p>
-                <img
-                  class="h-5 w-5 object-cover"
-                  src="@/assets/image/user.svg"
-                  alt=""
-                />
-                <h1 class="_c07">Xayot Sharapov</h1>
-              </div>
-              <p class="_c2a font-medium text-xs">+1904</p>
-            </div>
-          </div>
-          <router-link class="_c2a text-sm font-semibold" to="/"
-            >See all leaderboards</router-link
-          >
-        </div>
-        <div class="full_flex md:mt-8 mt-4 gap-2 leading-[18px]">
-          <p>Powered by</p>
-          <img class="h-3 mt-0.5" src="/logo.svg" alt="" />
-        </div>
-      </section>
-    </div>
+   <GroupInfoCard />
 
     <ModalWriteSomething class="md:hidden block mb-6" />
 
@@ -575,7 +524,7 @@
                 {{ usePost.store.postData.user?.surname }}
               </h1>
               <p class="text-xs">
-                19d ago in <span class="_c59">Announcements</span>
+                {{formatDate(usePost.store.postData.created_at)}} in <span class="_c59">Announcements</span>
               </p>
             </div>
           </div>
@@ -635,9 +584,10 @@
         </h2>
         <pre
           v-html="usePost.store.postData.description"
-          class="text-sm line-clamp-[11] float-left w-full whitespace-pre-line"
+          class="text-sm float-left w-full whitespace-pre-line"
+          :class="store.see_more ? '': 'line-clamp-[11]'"
         ></pre>
-        <button class="text-sm _c2a h-4">See more</button>
+        <button @click="store.see_more" v-if="usePost.store.postData.description" class="text-sm _c2a h-4">See more</button>
         <div>
           <div class="mt-8 text-sm space-y-3">
             <div
@@ -660,7 +610,7 @@
               </label>
               <div
                 v-if="poll.users?.length && usePost.store.userIsVoted"
-                @click="handleLikeModal('Votes', poll.users)"
+                @click="handleLikeModal('Votes', poll.id)"
                 class="flex items-center gap-1 cursor-pointer"
               >
                 <div class="flex -space-x-[5px]">
@@ -673,7 +623,7 @@
                     alt=""
                   />
                 </div>
-                <p class="text-xs _ca1">{{ poll.users?.length }} votes</p>
+                <p class="text-xs _ca1">{{ poll.poll_selecet_count }} votes</p>
               </div>
             </div>
           </div>
@@ -723,8 +673,8 @@
           class="flex items-center md:px-5 px-3 bg-white r_16 md:h-[72px] h-[52px] gap-[14px]"
         >
           <img
-            class="md:h-10 md:w-10 h-7 w-7 object-cover"
-            src="@/assets/image/user.svg"
+            class="md:h-10 md:w-10 h-7 w-7 object-cover rounded-full"
+            :src="isLoading.user.image"
             alt=""
           />
           <button class="!border-0 placeholder-black md:text-xl font-semibold">
@@ -739,8 +689,8 @@
             class="flex md:items-center gap-3 b_cf0f md:h-[52px] h-[64px] px-5 py-3"
           >
             <img
-              class="h-5 w-5 object-cover"
-              src="@/assets/image/user.svg"
+              class="h-5 w-5 object-cover rounded-full"
+              :src="isLoading.user.image"
               alt=""
             />
             <p class="text-sm flex flex-wrap items-start gap-1 leading-4">
@@ -1060,7 +1010,7 @@
                 <h1 class="font-semibold text-[16px]">
                   {{ comment.user.name }} {{ comment.user.surname }}
                 </h1>
-                <p class="text-xs _ca1">19d ago</p>
+                <p class="text-xs _ca1">{{formatDate(comment.created_at)}}</p>
               </div>
               <el-dropdown
                 placement="bottom-end"
@@ -1163,7 +1113,7 @@
                   {{ comment.like_count }}
                 </p>
                 <button
-                  @click="usePost.store.comment_id = [comment.id, 1]"
+                  @click="usePost.store.comment_id = [comment.id, 1, comment.user.username, comment.user.id]"
                   class="_ca1 font-semibold"
                 >
                   Reply
@@ -1177,8 +1127,8 @@
                 class="flex w-full pt-1 md:gap-[14px] gap-[10px] md:ml-0 -ml-[92px]"
               >
                 <img
-                  class="h-6 w-6 mt-1 object-cover"
-                  src="@/assets/image/user.svg"
+                  class="h-6 w-6 mt-1 object-cover rounded-full"
+                  :src="isLoading.user.image"
                   alt=""
                 />
                 <WriteInlineComment class="w-full" />
@@ -1215,7 +1165,7 @@
                     <h1 class="font-semibold text-[16px]">
                       {{ comment.user.name }} {{ comment.user.surname }}
                     </h1>
-                    <p class="text-xs _ca1">19d ago</p>
+                    <p class="text-xs _ca1">{{formatDate(comment.created_at)}}</p>
                   </div>
                   <el-dropdown
                     placement="bottom-end"
@@ -1253,14 +1203,113 @@
                   </el-dropdown>
                 </div>
                 <div class="space-y-3 mt-4">
-                  <p class="flex gap-1 text-sm leading-4 text-black">
-                    <a
+                  <div class="flex gap-1">
+                    <el-dropdown placement="top-start" class="dropdown">
+                <div>
+                  <p v-if="reply.reply_user?.username"
                       class="_c2a border-b border-[#2A85FF]"
-                      href="/@gerry_gonzalez"
-                      >@Gerry Gonzalez</a
+                     >@{{ reply.reply_user?.username }}</p>
+                </div>
+              <template #dropdown>
+                <el-dropdown-menu
+                  class="min-w-[440px] max-w-[440px] !-ml-1 dropdown_shadow"
+                >
+                  <div class="flex">
+                    <div
+                      class="border-r border-[#F2F2F2] min-w-[192px] p-4 space-y-3"
                     >
-                    <span v-html="reply.comment"></span>
-                  </p>
+                      <div class="relative user_img max-w-fit">
+                        <img
+                          class="h-[160px] w-[160px] object-cover rounded-full"
+                          :src="reply.reply_user?.image"
+                          alt=""
+                        />
+                        <div
+                          class="full_flex absolute -bottom-[2px] -right-[5px] z-10"
+                        >
+                          <div class="relative">
+                            <img
+                              class="h-10 w-10"
+                              src="@/assets/svg/community/user_messages.svg"
+                              alt=""
+                            />
+                            <p
+                              class="absolute full_flex bottom-0 w-10 h-10 pb-2 text-[22px] text-white font-medium"
+                            >
+                              1
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <p
+                        class="full_flex max-w-fit mx-auto text-xs font-semibold h-8 px-[10px] bg-[#D9ECFF] _c2a rounded-full"
+                      >
+                        Level 2 - Contributer
+                      </p>
+                      <div class="full_flex gap-1 text-xs">
+                        <span class="_c2a font-semibold">40</span> points to
+                        level up
+                        <img src="@/assets/svg/level_up.svg" alt="" />
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        class="space-y-4 px-5 py-5 v border-b border-[#F2F2F2]"
+                      >
+                        <h1 class="font-semibold text-xl leading-6">
+                          Gerry Gonzalez
+                        </h1>
+                        <ul class="space-y-2">
+                          <li
+                            class="flex items-center gap-2 leading-[14px] _ca1"
+                          >
+                            <img src="@/assets/svg/clock.svg" alt="" />
+                            <p>Active 19d ago</p>
+                          </li>
+                          <li class="flex items-center gap-2 _ca1">
+                            <img src="@/assets/svg/location.svg" alt="" />
+                            <p>San Jose, Costa Rica</p>
+                          </li>
+                        </ul>
+                        <p
+                          class="line-clamp-3 overflow_hidden leading-[18px] text-[16px]"
+                        >
+                          We the descendants of old, chained up and confined
+                          within bars, are free spirited and apple apple
+                        </p>
+                      </div>
+                      <div
+                        class="space-y-2 leading-[14px] p-4 font-semibold"
+                      >
+                        <p>2 Memberships</p>
+                        <p>Creator of 2 groups</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="grid grid-cols-3 gap-3 border-t border-[#F2F2F2] p-4 font-semibold text-sm w-full"
+                  >
+                    <button class="uppercase border border-[#BCDEFF] r_8">
+                      profile
+                    </button>
+                    <button class="uppercase border border-[#BCDEFF] r_8">
+                      follow
+                    </button>
+                    <button
+                      @click="openChatModal(reply.reply_user?.id)"
+                      class="full_flex gap-[10px] uppercase b_ce0 _ca1 r_8"
+                    >
+                      chat
+                      <img src="@/assets/svg/chat_x.svg" alt="" />
+                    </button>
+                  </div>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+            <p class="flex gap-1 text-sm leading-4 text-black">
+              <span v-html="reply.comment"></span>
+            </p>
+                  </div>
                   <div class="flex items-center gap-3 h-[18px] text-xs">
                     <p class="full_flex gap-1 _ca1">
                       <img
@@ -1280,7 +1329,7 @@
                       {{ reply.like_count }}
                     </p>
                     <button
-                      @click="usePost.store.comment_id = [comment.id, 2]"
+                      @click="usePost.store.comment_id = [comment.id, 2, reply.user.username, reply.user.id]"
                       class="_ca1 font-semibold"
                     >
                       Reply
@@ -1294,8 +1343,8 @@
                     class="flex pt-1 md:gap-[14px] gap-[10px] md:ml-0 -ml-[92px]"
                   >
                     <img
-                      class="h-6 w-6 mt-1 object-cover"
-                      src="@/assets/image/user.svg"
+                      class="h-6 w-6 mt-1 object-cover rounded-full"
+                      :src="isLoading.user.image"
                       alt=""
                     />
                     <WriteInlineComment />
@@ -1314,8 +1363,8 @@
           :class="addVideo.store.files.length ? '' : 'h-[112px]'"
         >
           <img
-            class="h-10 w-10 object-cover"
-            src="@/assets/image/user.svg"
+            class="h-10 w-10 object-cover rounded-full"
+            :src="isLoading.user.image"
             alt=""
           />
           <div class="w-full">
@@ -1787,11 +1836,12 @@ import {
   useAddVideoStore,
 } from "@/store";
 import { VueDraggableNext as draggable } from "vue-draggable-next";
-import { useNotification } from "@/composables/notifications";
+import { useNotification, useFormatDate } from "@/composables";
 import EmojiPicker from "vue3-emoji-picker";
 import "vue3-emoji-picker/css";
 
 const usePost = usePostStore();
+const { formatDate} = useFormatDate();
 const useChat = useChatStore();
 const useGroup = useGroupStore();
 const isLoading = useLoadingStore();
@@ -1804,6 +1854,7 @@ onBeforeMount(() => {
   usePost.get_categories();
   usePost.get_posts();
 });
+const comment_step = ["First", "Second", "Third"]
 const store = reactive({
   is_show: false,
   writingModal: false,
@@ -1813,11 +1864,20 @@ const store = reactive({
   drawer: false,
   is_emoji: false,
   media_index: "",
+  see_more: false,
+  activeCollapse: 'open',
 });
 
 usePost.store.filter.filter = router.currentRoute.value.query.filter;
 usePost.store.filter.sort = router.currentRoute.value.query.sort;
 usePost.store.filter.category_id = router.currentRoute.value.query.category_id;
+
+const setupgroup = {
+  "invite": "Invite 3 people",
+  "description": "Add group description",
+  "cover": "Set cover image",
+  "post": "Write your first post",
+}
 
 const changeVoteData = {
   title: "Change vote?",
@@ -1848,6 +1908,11 @@ const deletePostPoll = {
   title: "Remove poll?",
   description: "Are you sure you want to remove this poll",
 };
+
+function routeToRequests() {
+  const username = router.currentRoute.value.params.community;
+  router.push(`/${username}/-/pending`)
+}
 
 function deletePost() {
   usePost.store.modalType = "delete";
@@ -1911,6 +1976,7 @@ function editPostData(type) {
   for (let i in usePost.create) {
     usePost.create[i] = usePost.store.postData[i];
   }
+  usePost.create.video_link = [];
   let t = 0;
   usePost.store.polls = {};
   for (let i of usePost.store.postData.polls) {
@@ -2031,6 +2097,10 @@ function handleLikeModal(type, data) {
     console.log(isLoading.store.pagination_two.current_page);
     usePost.store.post_id = data.id;
     usePost.get_likes();
+  } else if (type == 'Votes') {
+    isLoading.store.pagination_two.current_page = 1;
+    usePost.store.poll_id = data;
+    usePost.get_votes();
   }
 }
 
@@ -2075,7 +2145,11 @@ function deleteImage(index) {
 
 const load = () => {
   isLoading.store.pagination_two.current_page += 1;
-  usePost.get_likes();
+  if (usePost.store.likeModalType == 'Votes') {
+    usePost.get_votes();
+  } else if (usePost.store.likeModalType == 'Likes') {
+    usePost.get_likes();
+  }
 };
 
 watch(

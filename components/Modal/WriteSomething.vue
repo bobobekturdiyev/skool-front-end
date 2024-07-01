@@ -5,8 +5,8 @@
       class="flex items-center md:px-5 px-3 bg-white r_16 md:h-[72px] h-[52px] gap-[14px]"
     >
       <img
-        class="md:h-10 md:w-10 h-7 w-7 object-cover"
-        src="@/assets/image/user.svg"
+        class="md:h-10 md:w-10 h-7 w-7 object-cover rounded-full"
+        :src="isLoading.user.image"
         alt=""
       />
       <button class="!border-0 placeholder-black md:text-xl font-semibold">
@@ -28,8 +28,8 @@
         class="flex md:items-center gap-3 b_cf0f md:h-[52px] h-[64px] px-5 py-3"
       >
         <img
-          class="h-5 w-5 object-cover"
-          src="@/assets/image/user.svg"
+          class="h-5 w-5 object-cover rounded-full"
+          :src="isLoading.user.image"
           alt=""
         />
         <p class="text-sm flex flex-wrap items-start gap-1 leading-4">

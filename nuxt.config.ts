@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  ssr: true,
   app: {
     head: {
       title: "skool",
@@ -59,6 +60,7 @@ export default defineNuxtConfig({
     { src: "~/plugins/vuejs-clipper.js", mode: "client" },
     { src: "~/plugins/laravel-echo.ts", mode: "client" },
     { src: "~/plugins/vue-paginate-scroll.js", mode: "client" },
+    {src: "~/plugins/giphy.js", mode: "client"},
   ],
   imports: {
     autoImport: true,

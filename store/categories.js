@@ -20,7 +20,8 @@ export const useCategoryStore = defineStore("category", () => {
         },
       })
       .then((res) => {
-        store.categories = res.data?.data;
+        console.log(res)
+        store.categories = res.data;
         isLoading.removeLoading("groupCategories");
       })
       .catch((err) => {

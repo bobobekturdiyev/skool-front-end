@@ -4,7 +4,7 @@
       class="flex items-center justify-between z-20 relative bg-white border-b border-[#E0E0E0] h-[80px] px-5"
       :class="store.is_open ? 'sm:flex hidden' : ''"
     >
-      <div class="full_flex gap-4">
+      <div v-if="!useMembers.store.manageUserRole" class="full_flex gap-4">
         <div class="w-10 h-10 b_c2a r_8 full_flex" v-if="true">
           <p class="font-semibold text-white">DM</p>
         </div>
@@ -12,6 +12,20 @@
         <div>
           <h1>Digital Marketer</h1>
           <p>Group settings</p>
+        </div>
+      </div>
+      <div v-else class="full_flex gap-4">
+        <img
+          class="h-10 w-10 rounded-full object-cover"
+          :src="useMembers.store.member_data.image"
+          alt=""
+        />
+        <div>
+          <h1>
+            {{ useMembers.store.member_data.name }}
+            {{ useMembers.store.member_data.surname }}
+          </h1>
+          <p>Membership settings</p>
         </div>
       </div>
       <img
@@ -40,7 +54,7 @@
         "
         class="sm:min-w-[280px] h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 border-r border-[#E0E0E0] duration-300 whitespace-nowrap"
       >
-        <ul class="_c07 text-sm">
+        <ul v-if="!useMembers.store.manageUserRole" class="_c07 text-sm">
           <li
             @click="openData(index, i)"
             :class="
@@ -56,12 +70,24 @@
             <p>{{ i }}</p>
           </li>
         </ul>
+        <ul v-else class="_c07 text-sm">
+          <li
+            @click="openData(0, 'Members')"
+            class="flex gap-4 items-center cursor-pointer _c2a font-medium bg-[#F0F5FA]"
+          >
+            <p class="b_c2a w-1 h-[44px]"></p>
+            <p>Members</p>
+          </li>
+        </ul>
       </aside>
       <div
         class="w-full h-[calc(100vh_-120px)] overflow-hidden"
         :class="store.is_open ? '' : 'sm:block hidden'"
       >
-        <div class="mainSlider h-[calc(100vh_-120px)] duration-700">
+        <div
+          v-if="!useMembers.store.manageUserRole"
+          class="mainSlider h-[calc(100vh_-120px)] duration-700"
+        >
           <section
             class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
           >
@@ -199,28 +225,64 @@
             class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
           >
             <div class="flex flex-wrap md:gap-10 gap-4 md:mb-0 mb-2">
-              <div class="flex gap-5">
-                <p class="h-[60px] w-[60px] b_cf2 r_8"></p>
+              <div class="flex gap-5" @click="general.filetype = 'icon'">
+                <img
+                  v-if="useMembers.general.icon.url"
+                  :src="useMembers.general.icon.url"
+                  alt=""
+                  class="h-[60px] w-[60px] b_cf2 r_8 object-cover"
+                />
+                <label
+                  for="upload_icon"
+                  v-else
+                  class="h-[60px] w-[60px] b_cf2 r_8"
+                ></label>
                 <div class="space-y-1">
                   <p class="font-semibold">Icon</p>
                   <p class="text-xs">Recommended:</p>
                   <p class="text-xs pb-2">128x128</p>
-                  <button class="border_cbc px-3 _c2a r_8 uppercase">
+                  <label
+                    class="border_cbc px-3 _c2a r_8 uppercase h-10 block full_flex"
+                    for="upload_icon"
+                  >
                     change
-                  </button>
+                  </label>
                 </div>
+                <input
+                  @change="handleGeneralFile"
+                  type="file"
+                  id="upload_icon"
+                  class="h-0 w-0 overflow-hidden block !p-0"
+                />
               </div>
-              <div class="flex gap-5">
-                <p
+              <div @click="general.filetype = 'cover'" class="flex gap-5">
+                <img
+                  v-if="useMembers.general.image.url"
+                  :src="useMembers.general.image.url"
+                  alt=""
+                  class="md:h-[144px] h-[105px] md:w-[271px] w-[195px] b_cf2 r_8 object-cover"
+                />
+                <label
+                  for="upload_cover"
+                  v-else
                   class="md:h-[144px] h-[105px] md:w-[271px] w-[195px] b_cf2 r_8"
-                ></p>
+                ></label>
                 <div class="space-y-1">
                   <p class="font-semibold">Cover</p>
                   <p class="text-xs">Recommended:</p>
                   <p class="text-xs pb-2">1084x576</p>
-                  <button class="border_cbc px-3 _c2a r_8 uppercase">
+                  <label
+                    class="border_cbc px-3 _c2a r_8 uppercase h-10 block full_flex"
+                    for="upload_cover"
+                  >
                     change
-                  </button>
+                  </label>
+                  <input
+                    @change="handleGeneralFile"
+                    type="file"
+                    id="upload_cover"
+                    class="h-0 w-0 overflow-hidden block !p-0"
+                  />
                 </div>
               </div>
             </div>
@@ -233,7 +295,7 @@
                     v-model="useMembers.general.name"
                     @input="handleInput('input')"
                     type="text"
-                    placeholder="Title"
+                    placeholder="Group name"
                     required
                   />
                   <p class="text-end mt-1 _ca1">
@@ -259,51 +321,63 @@
                 </div>
               </div>
               <el-input
-                v-model="useMembers.general.description"
+                v-model="useMembers.general.excerpt"
                 autosize
                 type="textarea"
                 placeholder="Group description"
               />
               <div class="grid md:grid-cols-2 md:gap-20 gap-4">
                 <div class="space-y-2">
-                  <label for="initials" class="_ca1 text-xs">Initials</label>
+                  <label for="initials" class="_ca1 text-xs">initials</label>
                   <div>
                     <input
+                      @input="expandShortHex"
                       type="text"
                       class="_ca1"
                       id="initials"
-                      v-model="useMembers.general.Initials"
-                      placeholder="Initials"
+                      v-model="useMembers.general.initials"
+                      placeholder="initials"
                       required
                     />
                   </div>
                 </div>
                 <div class="flex gap-3 items-end">
-                  <p class="h-10 min-w-[40px] bg-[#0452B4] r_8"></p>
+                  <p
+                    class="h-10 min-w-[40px] r_8"
+                    :style="`background: ${useMembers.general.color}`"
+                  ></p>
                   <div class="space-y-2 w-full">
                     <label for="initials" class="_ca1 text-xs">Color</label>
                     <div>
                       <el-select
-                        class="block w-full mt-2"
+                        class="block w-full"
                         v-model="useMembers.general.color"
                         placeholder="Select"
                       >
-                        <el-option
-                          v-for="item in access_list"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value"
-                          :disabled="item.disabled"
+                        <ul
+                          class="color_list grid grid-cols-5 gap-2 max-auto !h-[108px] !p-3 !pt-2"
                         >
-                          <div class="flex items-center gap-2">
-                            {{ item.label }}
-                            <img
-                              v-if="useMembers.general.color == item.value"
-                              src="@/assets/svg/checked.svg"
-                              alt=""
-                            />
-                          </div>
-                        </el-option>
+                          <el-option
+                            :key="i"
+                            :label="''"
+                            :value="i"
+                            v-for="i in colors_list"
+                            @click="useMembers.general.color = i"
+                            class="h-10 w-[40px] max-w-[40px] bg-[#009e5d] r_8"
+                            :style="`background: ${i}`"
+                          ></el-option>
+                        </ul>
+                        <p class="mt-2 mb- ml-5">Or create your color</p>
+                        <p
+                          class="ml-5 full_flex pb-3 r_8 w-[216px] overflow-hidden"
+                        >
+                          <input
+                            v-model="useMembers.general.color"
+                            class="r_8 !w-[320px] !h-10 overflow-hidden"
+                            :style="`background: ${useMembers.general.color}`"
+                            type="color"
+                          />
+                        </p>
                       </el-select>
                     </div>
                   </div>
@@ -311,19 +385,21 @@
               </div>
               <div class="grid md:grid-cols-2 gap-5">
                 <label
-                  @click="useMembers.general.type = 'private'"
+                  @click="useMembers.general.group_type = 'private'"
                   class="space-y-3 r_8 p-5 cursor-pointer"
                   :class="
-                    useMembers.general.type == 'private'
+                    useMembers.general.group_type == 'private'
                       ? 'border_cbc b_cf0f'
                       : 'border_ce0'
                   "
                 >
                   <div class="flex items-center gap-3">
                     <input
-                      v-model="useMembers.general.type"
+                      v-model="useMembers.general.group_type"
                       :checked="
-                        useMembers.general.type == 'private' ? true : false
+                        useMembers.general.group_type == 'private'
+                          ? true
+                          : false
                       "
                       id="private"
                       class="rounded-full"
@@ -341,19 +417,19 @@
                   </p>
                 </label>
                 <label
-                  @click="useMembers.general.type = 'public'"
+                  @click="useMembers.general.group_type = 'public'"
                   class="space-y-3 r_8 p-5 cursor-pointer"
                   :class="
-                    useMembers.general.type == 'private'
+                    useMembers.general.group_type == 'private'
                       ? 'border_ce0'
                       : 'border_cbc b_cf0f'
                   "
                 >
                   <div class="flex items-center gap-3">
                     <input
-                      v-model="useMembers.general.type"
+                      v-model="useMembers.general.group_type"
                       :checked="
-                        useMembers.general.type == 'public' ? true : false
+                        useMembers.general.group_type == 'public' ? true : false
                       "
                       id="public"
                       class="rounded-full"
@@ -372,7 +448,10 @@
                 </label>
               </div>
             </div>
-            <button class="_ca1 b_ce0 px-6 r_8 md:mt-6 mt-4">
+            <button
+              @click="useMembers.gereralSettings"
+              class="_ca1 b_ce0 px-6 r_8 md:mt-6 mt-4"
+            >
               UPDATE SETTINGS
             </button>
           </section>
@@ -449,7 +528,7 @@
                         class="community_dropdown min-w-[200px] dropdown_shadow"
                       >
                         <el-dropdown-item
-                        @click="usePost.updatePositionCategory(index, 'up')"
+                          @click="usePost.updatePositionCategory(index, 'up')"
                           ><span :class="index == 0 ? '_ca1' : ''"
                             >Move up</span
                           ></el-dropdown-item
@@ -733,49 +812,129 @@
             </div>
           </section>
           <section
-            v-if="!store.addLink"
+            v-if="!useLink.modal.create"
             class="h-[calc(100vh_-120px)] animate-left overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
           >
-            <div class="flex items-center justify-between">
-              <h1 class="font-semibold text-xl">Links</h1>
+            <div>
+              <div class="flex items-center justify-between">
+                <h1 class="font-semibold text-xl">Links</h1>
+                <button
+                  @click="useLink.modal.create = true"
+                  class="md:block hidden uppercase font-semibold text-sm px-6 r_8"
+                  :class="
+                    useLink.store.links.length != 3
+                      ? '_c07 b_cbc'
+                      : '_ca1 b_ce0 pointer-events-none'
+                  "
+                >
+                  add link
+                </button>
+              </div>
+              <p class="mt-5">
+                Share important resources with your members by adding links.
+              </p>
               <button
-                @click="store.addLink = true"
-                class="md:block hidden uppercase font-semibold text-sm b_cbc _c07 px-6 r_8"
+                @click="useLink.modal.create = true"
+                class="md:hidden block mt-4 uppercase font-semibold text-sm px-6 r_8"
+                :class="
+                  useLink.store.links.length != 3
+                    ? '_c07 b_cbc'
+                    : '_ca1 b_ce0 pointer-events-none'
+                "
               >
                 add link
               </button>
             </div>
-            <p class="mt-5">
-              Share important resources with your members by adding links.
-            </p>
-            <button
-              @click="store.addLink = true"
-              class="md:hidden block mt-4 uppercase font-semibold text-sm b_cbc _c07 px-6 r_8"
+            <div
+              v-for="(i, index) in useLink.store.links"
+              v-loading="isLoading.isLoadingType('getPostCategories')"
+              class="flex items-center justify-between md:mt-9 mt-4"
             >
-              add link
-            </button>
+              <div class="space-y-2 max-w-[70%]">
+                <p class="font-semibold truncate">
+                  {{ i.label }} ({{ i.is_public ? "Public" : "Private" }})
+                </p>
+                <p class="text-xs truncate">{{ i.url }}</p>
+              </div>
+              <div class="flex gap-3">
+                <button
+                  @click="editLink(i)"
+                  class="full_flex gap-1 border min-w-fit border_cbc r_8 _c2a px-3 h-9"
+                >
+                  <img src="@/assets/svg/edit.svg" alt="" />
+                  <p>Edit</p>
+                </button>
+                <div class="border_cbc r_8 w-9 h-9">
+                  <el-dropdown placement="bottom-end" class="dropdown">
+                    <button class="full_flex w-9 h-9">
+                      <img src="@/assets/svg/three_dot_blue.svg" alt="" />
+                    </button>
+                    <template #dropdown>
+                      <el-dropdown-menu
+                        class="community_dropdown min-w-[200px] dropdown_shadow"
+                      >
+                        <el-dropdown-item
+                          @click="useLink.updatePosition(index, 'up')"
+                          ><span :class="index == 0 ? '_ca1' : ''"
+                            >Move up</span
+                          ></el-dropdown-item
+                        >
+                        <el-dropdown-item
+                          @click="useLink.updatePosition(index, 'down')"
+                        >
+                          <span
+                            :class="
+                              index == useLink.store.links.length - 1
+                                ? '_ca1'
+                                : ''
+                            "
+                            >Move down</span
+                          ></el-dropdown-item
+                        >
+                        <el-dropdown-item @click="deleteFunc('link', i)"
+                          ><span>Delete</span></el-dropdown-item
+                        >
+                      </el-dropdown-menu>
+                    </template>
+                  </el-dropdown>
+                </div>
+              </div>
+            </div>
           </section>
           <section
             v-else
             class="h-[calc(100vh_-120px)] animate-right overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
           >
             <h1 class="text-xl font-semibold">Add link</h1>
-            <div class="md:space-y-5 space-y-4">
+            <form
+              @submit.prevent="useLink.createLink"
+              class="md:space-y-5 space-y-4"
+            >
               <div>
                 <label for="name" class="_ca1 mb-2 block md:mt-7 mt-4"
                   >Label</label
                 >
-                <input class="" type="text" />
+                <input
+                  v-model="useLink.create.label"
+                  class=""
+                  type="text"
+                  required
+                />
                 <p class="_ca1 text-end mt-1">0/34</p>
               </div>
               <div>
-                <input type="text" placeholder="URL" />
+                <input
+                  v-model="useLink.create.url"
+                  type="url"
+                  placeholder="URL"
+                  required
+                />
               </div>
               <div>
                 <label for="name" class="_ca1 mb-2 block">Privacy</label>
                 <el-select
                   class="block w-full mt-2"
-                  v-model="useMembers.general.color"
+                  v-model="useLink.create.is_public"
                   placeholder="Select"
                 >
                   <el-option
@@ -788,7 +947,7 @@
                     <div class="flex items-center gap-2">
                       {{ item.label }}
                       <img
-                        v-if="useMembers.general.color == item.value"
+                        v-if="useMembers.general.fjdkfjdf == item.value"
                         src="@/assets/svg/checked.svg"
                         alt=""
                       />
@@ -798,18 +957,28 @@
               </div>
               <div>
                 <button
-                  class="_ca1 font-semibold b_ce0 px-6 r_8 md:mt-6 uppercase"
+                  :class="
+                    useLink.create.label && useLink.create.url
+                      ? '_c07 b_cbc'
+                      : '_ca1 b_ce0'
+                  "
+                  class="font-semibold px-6 r_8 md:mt-6 uppercase"
                 >
                   Save
                 </button>
                 <button
-                  @click="store.addLink = false"
+                  @click="
+                    () => {
+                      useLink.modal.create = false;
+                      useLink.modal.edit = false;
+                    }
+                  "
                   class="_ca1 font-semibold px-6 r_8 uppercase"
                 >
                   cancel
                 </button>
               </div>
-            </div>
+            </form>
           </section>
           <section
             v-if="!store.updatePayment"
@@ -916,6 +1085,89 @@
             </div>
           </section>
         </div>
+        <section
+          v-if="useMembers.store.manageUserRole"
+          class="h-[calc(100vh_-120px)] overflow-hidden space-y-4 overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+        >
+          <div
+            v-loading="isLoading.isLoadingType('updateRole')"
+            class="text-[16px]"
+          >
+            <span class="font-semibold">Role:</span>
+            {{ useMembers.store.member_type }}
+            <el-dropdown placement="bottom-end" class="dropdown">
+              <button class="_c2a cursor-pointer hover:underline h-5">
+                (change)
+              </button>
+              <template #dropdown>
+                <el-dropdown-menu
+                  class="community_dropdown min-w-[200px] dropdown_shadow"
+                >
+                  <el-dropdown-item @click="useMembers.updateUserRole('Member')"
+                    >Member</el-dropdown-item
+                  >
+                  <el-dropdown-item @click="useMembers.updateUserRole('Admin')"
+                    >Admin</el-dropdown-item
+                  >
+                  <el-dropdown-item
+                    @click="useMembers.updateUserRole('Moderator')"
+                    >Moderator</el-dropdown-item
+                  >
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+          <div 
+          v-if="useMembers.store.member_type == 'Admin'"
+            v-loading="isLoading.isLoadingType('updateRole')"
+            class="text-[16px]"
+          >
+            <span class="font-semibold">Billing access:</span>
+            No
+            <el-dropdown placement="bottom-end" class="dropdown">
+              <button class="_c2a cursor-pointer hover:underline h-5">
+                (change)
+              </button>
+              <template #dropdown>
+                <el-dropdown-menu
+                  class="community_dropdown min-w-[200px] dropdown_shadow"
+                >
+                  <el-dropdown-item @click="useMembers.updateUserRole('Yes')"
+                    >Yes</el-dropdown-item
+                  >
+                  <el-dropdown-item @click="useMembers.updateUserRole('No')"
+                    >No</el-dropdown-item
+                  >
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+          <div v-else-if="useMembers.store.member_type != 'Moderator'">
+            <p
+            @click="
+              () => {
+                useMembers.store.banchurned.type = 'churned';
+                useMembers.store.banchurned.status = true;
+                useMembers.store.user_id = useMembers.store.member_data.id;
+              }
+            "
+            class="md:mt-5 mt-4 hover:underline _ceb font-medium cursor-pointer"
+          >
+            Remove from group
+          </p>
+          <p
+            @click="
+              () => {
+                useMembers.store.banchurned.type = 'ban';
+                useMembers.store.banchurned.status = true;
+              }
+            "
+            class="md:mt-5 mt-4 hover:underline _ceb font-medium cursor-pointer"
+          >
+            Ban from group
+          </p>
+          </div>
+        </section>
       </div>
     </div>
 
@@ -945,6 +1197,97 @@
             class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
           >
             delete
+          </button>
+          <button
+            v-else-if="isLoading.membersModal.modalType == 'link'"
+            @click="useLink.deleteLink"
+            v-loading="isLoading.isLoadingType('deleteLink')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            delete
+          </button>
+          <!-- <button
+            v-else-if="isLoading.membersModal.modalType == 'changeVote'"
+            @click="usePost.setUserVote"
+            v-loading="isLoading.isLoadingType('setUserVote')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            confirm
+          </button> -->
+        </div>
+      </div>
+    </el-dialog>
+
+    <!-- Ban or churned member from group -->
+    <el-dialog
+      v-model="useMembers.store.banchurned.status"
+      width="400"
+      align-center
+      class="!rounded-xl overflow-hidden px-6 py-7"
+    >
+      <div class="space-y-7">
+        <h1 class="text-2xl font-semibold">
+          <span v-if="useMembers.store.banchurned.type == 'churned'"
+            >Remove from group?</span
+          ><span v-else>Ban from group?</span>
+        </h1>
+        <p class="text-lg">
+          <span v-if="useMembers.store.banchurned.type == 'churned'">
+            Are you sure you want to remove
+            <span class="font-semibold"
+              >{{ useMembers.store.member_data.name }}
+              {{ useMembers.store.member_data.surname }}</span
+            >
+            from
+            <span class="font-semibold">{{
+              useGroup.store.group_by_username?.name
+            }}</span
+            >?
+          </span>
+          <span v-else>
+            You're banning
+            <span class="font-semibold"
+              >{{ useMembers.store.member_data.name }}
+              {{ useMembers.store.member_data.surname }}</span
+            >
+            from
+            <span class="font-semibold">{{
+              useGroup.store.group_by_username?.name
+            }}</span
+            >. <br />
+            Delete recent activity? <br />
+            Delete <span class="font-semibold">{{ useMembers.store.member_data.name }}'s</span> recent posts and comments from their profile here
+            before banning them. It's easier this way.
+          </span>
+        </p>
+        <div class="flex justify-end gap-3 text-sm font-semibold">
+          <button
+            @click="useMembers.store.banchurned.status = false"
+            class="uppercase h-10 px-6 rounded-lg _ca1"
+          >
+            cancel
+          </button>
+          <button
+            v-if="useMembers.store.banchurned.type == 'churned'"
+            @click="
+              () => {
+                useMembers.store.status = 'churned';
+                useMembers.store.user_id = useMembers.store.member_data.id;
+                useMembers.setMemberJoinType();
+              }
+            "
+            v-loading="isLoading.isLoadingType('groupMembesRequest')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            remove
+          </button>
+          <button
+            v-else-if="useMembers.store.banchurned.type == 'ban'"
+            @click="useLink.deleteLink"
+            v-loading="isLoading.isLoadingType('deleteLink')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            ban
           </button>
           <!-- <button
             v-else-if="isLoading.membersModal.modalType == 'changeVote'"
@@ -1046,15 +1389,37 @@
 
 <script setup>
 import { members_sidebar } from "@/composables";
-import { useMemberStore, useLoadingStore, usePostStore } from "@/store";
-
+import {
+  useMemberStore,
+  useLoadingStore,
+  usePostStore,
+  useLinkStore,
+  useGroupStore,
+} from "@/store";
+import Color from "color";
 const useMembers = useMemberStore();
+const useGroup = useGroupStore();
+const useLink = useLinkStore();
 const usePost = usePostStore();
 const isLoading = useLoadingStore();
 
 onBeforeMount(() => {
   usePost.get_categories();
+  useLink.getLinks();
 });
+
+const colors_list = [
+  "#009e5d",
+  "#ff6900",
+  "#0693e3",
+  "#e4a511",
+  "#df1a1a",
+  "#bb6ee7",
+  "#21b8a6",
+  "#e9597f",
+  "#767676",
+  "#956228",
+];
 
 const store = reactive({
   slideStep: 0,
@@ -1066,9 +1431,18 @@ const store = reactive({
   deleteType: "",
 });
 
+const general = reactive({
+  filetype: "",
+});
+
 const deletePostCategory = {
   title: "Delete category?",
   description: "Are you sure you want to delete this category?",
+};
+
+const deleteLink = {
+  title: "Delete link?",
+  description: "Are you sure you want to delete this link?",
 };
 
 const access_list = [
@@ -1093,6 +1467,39 @@ const post_category_access = [
   },
 ];
 
+function handleGeneralFile(e) {
+  const file = e.target.files[0];
+  const url = URL.createObjectURL(file);
+  console.log(useMembers.general.icon);
+  if (general.filetype == "icon") {
+    useMembers.general.icon = {
+      file,
+      url,
+    };
+  } else if (general.filetype == "cover") {
+    useMembers.general.image = {
+      file,
+      url,
+    };
+  }
+}
+
+function expandShortHex(e) {
+  const hex = e.target.value;
+  const color = Color(hex);
+  console.log(color);
+  console.log(color.hex());
+}
+
+function editLink(data) {
+  useLink.store.link_id = data.id;
+  for (let i in useLink.create) {
+    useLink.create[i] = data[i];
+  }
+  useLink.modal.create = true;
+  useLink.modal.edit = true;
+}
+
 function deleteFunc(type, data) {
   if (usePost.store.categories.length == 1) {
     return;
@@ -1107,6 +1514,10 @@ function deleteFunc(type, data) {
       usePost.store.deleteCategoryData = data;
       isLoading.membersModal.change_category = true;
     }
+  } else if (type == "link") {
+    useLink.store.link_id = data.id;
+    store.deleteType = deleteLink;
+    isLoading.membersModal.delete = true;
   }
 }
 
@@ -1154,13 +1565,15 @@ watch(
   () => store.slideStep,
   () => {
     try {
-      store.slideStep2 = store.slideStep;
+      console.log(store.slideStep);
       if (store.slideStep == 8) {
         useMembers.getLevels();
       }
       const slide = document.querySelector(".mainSlider");
       slide.style.transform = `translateY(-${store.slideStep * 100}%)`;
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 </script>

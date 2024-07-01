@@ -13,6 +13,7 @@ export const usePostStore = defineStore("post", () => {
   const store = reactive({
     posts: [],
     postData: [],
+    members_count: 0,
     categories: [],
     deleteCategoryData: "",
     isCheckConfirm: false,
@@ -116,6 +117,7 @@ export const usePostStore = defineStore("post", () => {
       .then((res) => {
         console.log(res, "kfdlfkd");
         store.posts = res.data?.data;
+        store.members_count = res.data?.members_count;
         for (let i in isLoading.store.pagination) {
           isLoading.store.pagination[i] = res.data?.meta[i];
         }
@@ -149,6 +151,7 @@ export const usePostStore = defineStore("post", () => {
           for (let user of i.users) {
             if (user.username == isLoading.user.username) {
               store.userIsVoted = true;
+              break;
             }
           }
         }
@@ -276,9 +279,46 @@ export const usePostStore = defineStore("post", () => {
       });
   }
 
+  function get_votes() {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("getLikes");
+    if (isLoading.store.pagination_two.current_page == 1) {
+      store.likeModalData = {
+        length: 0,
+        users: [],
+      };
+    }
+    console.log(isLoading.store.pagination_two.current_page);
+    axios
+      .get(
+        baseUrl +
+          `get-user-poll/${store.poll_id}?page=${isLoading.store.pagination_two.current_page}`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        store.likeModalData.length =
+          store.likeModalData.length + res.data.data.length;
+        console.log(store.likeModalData.users);
+        store.likeModalData.users.push(...res.data.data);
+        for (let i in isLoading.store.pagination_two) {
+          isLoading.store.pagination_two[i] = res.data?.meta[i];
+        }
+        isLoading.removeLoading("getLikes");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("getLikes");
+      });
+  }
+
   function write_post() {
     console.log(modal.edit);
-    create.category_id = store.category_id.id;
+    create.category_id = store.category_id?.id;
     create.polls = [];
     for (let i in store.polls) {
       create.polls.push(store.polls[i]);
@@ -383,6 +423,9 @@ export const usePostStore = defineStore("post", () => {
       formData.append("comment", useClassroom.module.video_content);
     }
     formData.append("types", JSON.stringify(types));
+    if (store.comment_id[3] != isLoading.user.id) {
+      formData.append("reply_user_id", store.comment_id[3])
+    }
     for (let [key, value] of formData.entries()) {
       console.log(`${key}: ${value}`);
     }
@@ -520,6 +563,7 @@ export const usePostStore = defineStore("post", () => {
           for (let user of i.users) {
             if (user.username == isLoading.user.username) {
               store.userIsVoted = true;
+              break;
             }
           }
         }
@@ -549,13 +593,6 @@ export const usePostStore = defineStore("post", () => {
       .then((res) => {
         console.log(res);
         store.postData.group_pinned = !store.postData.group_pinned;
-        // for (let i of store.postData.polls) {
-        //   for (let user of i.users) {
-        //     if (user.username == isLoading.user.username) {
-        //       store.userIsVoted = true;
-        //     }
-        //   }
-        // }
         get_posts();
         isLoading.removeLoading("setUserVote");
       })
@@ -902,6 +939,7 @@ export const usePostStore = defineStore("post", () => {
     write_comment,
     setLike,
     get_likes,
+    get_votes,
     pinToFeed,
     deleteComment,
     deletePostCategory,

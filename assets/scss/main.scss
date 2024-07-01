@@ -4,7 +4,7 @@
 
 @import "./_colors.scss";
 @import "./element_plus.scss";
-@import url('https://fonts.cdnfonts.com/css/inter');
+@import url("https://fonts.cdnfonts.com/css/inter");
 
 // @font-face {
 //   font-family: "Inter";
@@ -46,7 +46,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   ::-webkit-scrollbar {
-    width: 20px;
+    width: 0px;
   }
 }
 
@@ -389,12 +389,15 @@ label {
 }
 
 // apexchart styles
-.apexcharts-grid *{
+.apexcharts-grid * {
   // display: none;
   stroke: $CE0 !important;
 }
 
-.apexcharts-gridlines-vertical, .apexcharts-inner .apexcharts-xaxis-tick, .apexcharts-grid>line, .apexcharts-grid-borders :nth-child(3) {
+.apexcharts-gridlines-vertical,
+.apexcharts-inner .apexcharts-xaxis-tick,
+.apexcharts-grid > line,
+.apexcharts-grid-borders :nth-child(3) {
   display: none !important;
 }
 
@@ -403,11 +406,14 @@ label {
   background: transparent !important;
   overflow: visible !important;
   //  top: 20px !important;
-  // left: 50% !important; 
+  // left: 50% !important;
   transform: translate(500%, -20%) !important;
 }
 
-.apexcharts-xaxistooltip, .apexcharts-yaxistooltip, .apexcharts-xaxistooltip-bottom:after, .apexcharts-xaxistooltip-bottom:before {
+.apexcharts-xaxistooltip,
+.apexcharts-yaxistooltip,
+.apexcharts-xaxistooltip-bottom:after,
+.apexcharts-xaxistooltip-bottom:before {
   background: transparent !important;
   border: none !important;
 }
@@ -416,5 +422,32 @@ label {
   stroke-dasharray: none !important;
   color: black !important;
   stroke: $CE0 !important;
+}
 
+.user_reply {
+  color: #2a85ff !important;
+}
+
+input[type="color"] {
+  -webkit-appearance: none;
+  border: none;
+  padding: 0 !important;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0 !important;
+}
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+  padding: 0 !important;
+}
+
+.color_list {
+  .el-select-dropdown__item  {
+    width: 40px !important;
+    height: 40px !important;
+    span {
+      display: none !important;
+    }
+    padding: 0 !important;
+  }
 }

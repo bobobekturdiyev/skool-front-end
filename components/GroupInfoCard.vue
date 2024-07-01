@@ -1,6 +1,6 @@
 <template>
   <!-- info card -->
-  <section class="min-w-[200px] md:max-w-[280px]">
+  <section class="min-w-[280px] md:max-w-[280px]">
     <div class="rounded-2xl overflow-hidden bg-white">
       <img
         class="w-full h-[150px] object-cover"
@@ -22,19 +22,60 @@
         <pre class="text-sm leading-[21px] whitespace-pre-line">{{
           useGroup.store.group_by_username?.excerpt
         }}</pre>
+        <ul
+          v-if="useGroup.store.showLinksPublic"
+          class="py-1 text-sm border-y border-[#E0E0E0]"
+        >
+          <li v-for="link in useGroup.store.group_by_username.links">
+            <a
+              :href="link.url"
+              target="_blank"
+              v-if="link.is_public == 0"
+              class="flex items-center gap-1 h-7 px-3 _c59"
+            >
+              <img src="@/assets/svg/href.svg" alt="" />
+              {{ link.label }}
+            </a>
+            <a
+              v-else-if="useGroup.store.group_by_username.status == 'active'"
+              :href="link.url"
+              target="_blank"
+              v-if="link.is_public"
+              class="flex items-center gap-1 h-7 px-3 _c59"
+            >
+              <img src="@/assets/svg/href.svg" alt="" />
+              {{ link.label }}
+            </a>
+          </li>
+        </ul>
         <div class="flex items-center justify-between text-xs text-center">
           <div>
-            <p class="_c2a text-lg">226k</p>
+            <p class="_c2a text-lg">
+              {{ useGroup.store.group_by_username.members_count }}
+            </p>
             <p class="_ca1">Members</p>
           </div>
           <div>
-            <p class="_c2a text-lg">15k</p>
+            <p class="_c2a text-lg">
+              {{ useGroup.store.group_by_username.online }}
+            </p>
             <p class="_ca1">Online</p>
           </div>
           <div>
-            <p class="_c2a text-lg">100</p>
+            <p class="_c2a text-lg">
+              {{ useGroup.store.group_by_username.admin_count }}
+            </p>
             <p class="_ca1">Admins</p>
           </div>
+        </div>
+        <div class="flex -space-x-[5px]">
+          <img
+            v-for="(i, index) in 7"
+            class="h-[26px] w-[26px] object-cover rounded-full"
+            :src="isLoading.user.image"
+            alt=""
+            :style="`z-index: ${7 - index}`"
+          />
         </div>
         <div v-if="useGroup.store.group_by_username.status == 'pending'">
           <button
@@ -42,7 +83,11 @@
           >
             MEMBERSHIP PENDING
           </button>
-          <button class="_ca1 hover:underline text-[10px] text-center w-full">
+          <button
+            @click="useMember.joinToGroup"
+            v-loading="isLoading.isLoadingType('joinGroup')"
+            class="_ca1 hover:underline text-[10px] text-center w-full"
+          >
             Cancel membership request
           </button>
         </div>
@@ -59,11 +104,14 @@
           >
             BANNED
           </button>
-          <p class="_ca1 text-[10px] my-2">Sorry, you've been banned from this group.</p>
+          <p class="_ca1 text-[10px] my-2">
+            Sorry, you've been banned from this group.
+          </p>
         </div>
         <button
           v-else
           @click="joinToGroup"
+          v-loading="isLoading.isLoadingType('joinGroup')"
           class="b_cbc rounded-lg w-full font-semibold text-sm"
         >
           {{
@@ -74,6 +122,42 @@
         </button>
       </div>
     </div>
+    <div class="bg-white mt-5 r_16 px-4 py-5">
+      <h1 class="font-semibold">Leaderboard (30-day)</h1>
+      <div class="text-sm border-t borer-[#E0E0E0] py-4 mt-4">
+        <div
+          v-for="(i, index) in 5"
+          class="flex items-center h-[44px] justify-between"
+        >
+          <div class="flex items-center gap-2">
+            <p
+              :class="
+                index == 0
+                  ? 'b_c2a !text-white'
+                  : index == 1
+                  ? 'b_c59 !text-white'
+                  : index == 2
+                  ? 'b_cbc'
+                  : ''
+              "
+              class="full_flex _c07 font-medium rounded-full w-7 h-7"
+            >
+              {{ index + 1 }}
+            </p>
+            <img
+              class="h-5 w-5 object-cover rounded-full"
+              :src="isLoading.user.image"
+              alt=""
+            />
+            <h1 class="_c07">Xayot Sharapov</h1>
+          </div>
+          <p class="_c2a font-medium text-xs">+1904</p>
+        </div>
+      </div>
+      <router-link class="_c2a text-sm font-semibold" to="/"
+        >See all leaderboards</router-link
+      >
+    </div>
     <div
       v-if="$router.currentRoute.value.name == 'community-about'"
       class="full_flex mt-8 gap-2 leading-[18px]"
@@ -82,22 +166,53 @@
       <img class="h-3 mt-0.5" src="/logo.svg" alt="" />
     </div>
   </section>
+
+  <!-- Membership pending -->
+  <el-dialog
+    v-model="useGroup.modal.pending"
+    width="400"
+    align-center
+    class="!rounded-xl overflow-hidden px-6 py-7"
+  >
+    <div class="space-y-7 _c07 text-center">
+      <h1 class="text-2xl font-semibold">Membership pending</h1>
+      <p class="text-lg">
+        The 4D Copywriting Community admins are reviewing your request. You'll
+        get an email when you're approved.
+      </p>
+      <div class="flex justify-end gap-3 text-sm font-semibold">
+        <button
+          @click="useGroup.modal.pending = false"
+          v-loading="isLoading.isLoadingType('deletePost')"
+          class="uppercase h-10 px-6 b_cbc _c07 rounded-lg w-full"
+        >
+          GOT IT
+        </button>
+      </div>
+    </div>
+  </el-dialog>
 </template>
 
 <script setup>
-import { useLoadingStore, useGroupStore, usePaymentStore } from "@/store";
+import {
+  useLoadingStore,
+  useGroupStore,
+  usePaymentStore,
+  useMemberStore,
+} from "@/store";
 
 const router = useRouter();
 const isLoading = useLoadingStore();
+const useMember = useMemberStore();
 const useGroup = useGroupStore();
 const usePayment = usePaymentStore();
 
 function joinToGroup() {
-  console.log(useGroup.store.group_by_username);
   if (useGroup.store.group_by_username.group_price == "paid") {
     usePayment.store.joinToGroupModal = true;
   } else {
-    router.push(`/${router.currentRoute.value.params.community}`);
+    useMember.joinToGroup();
+    // router.push(`/${router.currentRoute.value.params.community}`);
   }
 }
 </script>

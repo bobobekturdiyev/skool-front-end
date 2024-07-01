@@ -7,7 +7,12 @@
     <div
       class="pb-[40px] mx-auto xl:px-[200px] lg:px-[100px] md:px-[50px] sm:px-[50px] px-5 max-w-[1536px]"
     >
-      <div v-if="useGroup.store.group_by_username.status == 'active' && !isLoading.isLoadingType('getByUsername')">
+      <div
+        v-if="
+          useGroup.store.group_by_username.status == 'active' &&
+          !isLoading.isLoadingType('getByUsername')
+        "
+      >
         <Community_tabs />
       </div>
       <slot />
@@ -27,9 +32,19 @@
 </template>
 
 <script setup>
-import { useLoadingStore, useGroupStore } from "@/store";
+import { useLoadingStore, useGroupStore, useMemberStore } from "@/store";
 const isLoading = useLoadingStore();
+const useMembers = useMemberStore();
 const useGroup = useGroupStore();
+
+watch(
+  () => isLoading.store.inviteModal,
+  () => {
+    if (!isLoading.store.inviteModal) {
+      useMembers.store.manageUserRole = false;
+    }
+  }
+);
 </script>
 
 <style lang="scss" scoped></style>

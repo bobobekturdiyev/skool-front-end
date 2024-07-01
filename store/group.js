@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { useLoadingStore } from "@/store";
+import { useLoadingStore, useMemberStore } from "@/store";
 import axios from "axios";
 
 export const useGroupStore = defineStore("group", () => {
@@ -7,6 +7,7 @@ export const useGroupStore = defineStore("group", () => {
   const runtime = useRuntimeConfig();
   const baseUrl = runtime.public.baseURL;
   const router = useRouter();
+  const useMembers = useMemberStore();
 
   const store = reactive({
     groups: [],
@@ -25,6 +26,13 @@ export const useGroupStore = defineStore("group", () => {
     slideStep: 0,
     slideStep2: 0,
     media_ids: [],
+    description: "",
+    description_modal: false,
+    showLinksPublic: false,
+  });
+
+  const modal = reactive({
+    pending: false,
   });
 
   const media = reactive({
@@ -102,6 +110,35 @@ export const useGroupStore = defineStore("group", () => {
       });
   }
 
+  function updateGroupDescription() {
+    if (!store.description?.length) {
+      return;
+    }
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("changeGroupDescription");
+    const username = router.currentRoute.value.params.community;
+    const formData = new FormData();
+    formData.append("description", store.description);
+    axios
+      .post(baseUrl + `update-group-description/${username}`, formData, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        store.group_by_username = res.data;
+        store.description_modal = false;
+        store.description = '';
+        isLoading.removeLoading("changeGroupDescription");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.showMessage(err.response.data.message.errors[0]);
+        isLoading.removeLoading("changeGroupDescription");
+      });
+  }
+
   function delete_media() {
     const token = localStorage.getItem("token");
     isLoading.addLoading("deleteMedia");
@@ -129,9 +166,11 @@ export const useGroupStore = defineStore("group", () => {
   function filterGroups() {
     const token = localStorage.getItem("token");
     isLoading.addLoading("groupGroups");
-    let url = `search?page=${isLoading.store.pagination.current_page}`;
+    let url = `get-group?page=${isLoading.store.pagination.current_page}`;
     for (let i in store.filter) {
-      url += `&${i}=${store.filter[i]}`;
+      if (store.filter[i]) {
+        url += `&${i}=${store.filter[i]}`;
+      }
     }
     axios
       .get(baseUrl + url, {
@@ -140,6 +179,7 @@ export const useGroupStore = defineStore("group", () => {
         },
       })
       .then((res) => {
+        console.log(res);
         store.groups = res.data?.data;
         for (let i in isLoading.store.pagination) {
           isLoading.store.pagination[i] = res.data.meta[i];
@@ -189,6 +229,20 @@ export const useGroupStore = defineStore("group", () => {
       .then((res) => {
         console.log(res);
         store.group_by_username = res.data;
+        if (!store.group_by_username.links?.length) {
+          store.showLinksPublic =  false;
+        }
+        for (let i of store.group_by_username?.links) {
+          if (i.is_public) {
+            store.showLinksPublic =  true;
+          }
+        }
+        if (store.group_by_username.status == "active") {
+          store.showLinksPublic =  true;
+        } else {
+        store.showLinksPublic = false;
+        }
+        useMembers.setGeneralSettings(res.data);
         isLoading.removeLoading("getByUsername");
       })
       .catch((err) => {
@@ -200,11 +254,13 @@ export const useGroupStore = defineStore("group", () => {
   return {
     store,
     media,
+    modal,
     create_media,
     delete_media,
     update_media_position,
     filterGroups,
     groupById,
     groupByUsername,
+    updateGroupDescription,
   };
 });

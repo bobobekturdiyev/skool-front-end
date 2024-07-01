@@ -455,3 +455,23 @@
 .el-notification {
   z-index: 3000 !important;
 }
+
+.el-popper span {
+  font-size: 12px !important;
+}
+
+.community_data {
+  .el-collapse-item__arrow {
+    display: none !important;
+  }
+
+  .el-collapse-item__header {
+    display: flex;
+    justify-content: space-between;
+    width: 100% !important;
+  }
+  
+  * {
+    border: none !important;
+  }
+}

@@ -53,7 +53,8 @@ export const useAuthStore = defineStore("auth", () => {
         },
       })
       .then((res) => {
-        for (const [key, value] of Object.entries(res.data?.data)) {
+        console.log(res);
+        for (const [key, value] of Object.entries(res.data)) {
           if (key === "socials") {
             for (const socialKey in value) {
               isLoading.user_update_checker.socials[socialKey] =
