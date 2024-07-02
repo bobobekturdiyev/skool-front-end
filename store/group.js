@@ -11,7 +11,7 @@ export const useGroupStore = defineStore("group", () => {
 
   const store = reactive({
     groups: [],
-    group_by_id: [],
+    mygroups: [],
     group_by_username: {},
     add_media: false,
     delete_media: false,
@@ -31,6 +31,10 @@ export const useGroupStore = defineStore("group", () => {
     showLinksPublic: false,
   });
 
+  const community = reactive({
+    name: "",
+  });
+
   const modal = reactive({
     pending: false,
   });
@@ -45,6 +49,57 @@ export const useGroupStore = defineStore("group", () => {
     for (let i of Object.keys(media)) {
       media[i] = "";
     }
+  }
+
+  function getMyGroups() {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("getMyGroups");
+
+    axios
+      .get(baseUrl + 'get-join-group', {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        store.mygroups = res.data;
+        isLoading.removeLoading("getMyGroups");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("getMyGroups");
+      });
+  }
+
+  function create_community() {
+    const formData = new FormData();
+    for (let i in community) {
+      formData.append(i, community[i]);
+    }
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("createCommunity");
+
+    axios
+      .post(baseUrl + `create-group`, formData, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        router.push(`/${res.data.username}`)
+        isLoading.removeLoading("createCommunity");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.showMessage(err.response.data.message);
+        isLoading.removeLoading("createCommunity");
+      });
   }
 
   function create_media() {
@@ -129,7 +184,7 @@ export const useGroupStore = defineStore("group", () => {
         console.log(res);
         store.group_by_username = res.data;
         store.description_modal = false;
-        store.description = '';
+        store.description = "";
         isLoading.removeLoading("changeGroupDescription");
       })
       .catch((err) => {
@@ -192,27 +247,6 @@ export const useGroupStore = defineStore("group", () => {
       });
   }
 
-  function groupById() {
-    const id = router.currentRoute.value.params.id;
-    const token = localStorage.getItem("token");
-    isLoading.addLoading("getById");
-
-    axios
-      .get(baseUrl + `get-group-by-categories/` + id, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        store.group_by_id = res.data?.data;
-        isLoading.removeLoading("getById");
-      })
-      .catch((err) => {
-        console.log(err);
-        isLoading.removeLoading("getById");
-      });
-  }
-
   function groupByUsername(type) {
     const username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
@@ -230,17 +264,17 @@ export const useGroupStore = defineStore("group", () => {
         console.log(res);
         store.group_by_username = res.data;
         if (!store.group_by_username.links?.length) {
-          store.showLinksPublic =  false;
+          store.showLinksPublic = false;
         }
         for (let i of store.group_by_username?.links) {
           if (i.is_public) {
-            store.showLinksPublic =  true;
+            store.showLinksPublic = true;
           }
         }
         if (store.group_by_username.status == "active") {
-          store.showLinksPublic =  true;
+          store.showLinksPublic = true;
         } else {
-        store.showLinksPublic = false;
+          store.showLinksPublic = false;
         }
         useMembers.setGeneralSettings(res.data);
         isLoading.removeLoading("getByUsername");
@@ -255,12 +289,14 @@ export const useGroupStore = defineStore("group", () => {
     store,
     media,
     modal,
+    community,
+    create_community,
     create_media,
     delete_media,
     update_media_position,
     filterGroups,
-    groupById,
     groupByUsername,
     updateGroupDescription,
+    getMyGroups,
   };
 });

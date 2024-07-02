@@ -19,6 +19,7 @@ export const useLoadingStore = defineStore("loading", () => {
         : 1,
       total: null,
       last_page: 1,
+      per_page: 10,
       from: "",
       to: "",
     },
@@ -37,6 +38,7 @@ export const useLoadingStore = defineStore("loading", () => {
     cropModal: false,
     chatModal: false,
     chatDialog: false,
+    slideStep: 0,
   });
 
   const user = reactive({
@@ -67,12 +69,12 @@ export const useLoadingStore = defineStore("loading", () => {
   });
 
   const membersModal = {
-    create:false,
+    create: false,
     edit: false,
     delete: false,
     change_category: false,
     modalType: "",
-  }
+  };
 
   const user_update_checker = reactive({
     id: "",
@@ -151,16 +153,35 @@ export const useLoadingStore = defineStore("loading", () => {
 
   const showMessage = (message) => {
     ElNotification({
-      title: '',
-      message: h('i', { style: 'color: #070707' }, message),
-      position: 'bottom-left',
-    })
+      title: "",
+      message: h("i", { style: "color: #070707" }, message),
+      position: "bottom-left",
+    });
     // ElMessage({
     //   message,
     //   type,
     //   duration: 100000,
     // })
-  }
+  };
+
+  // function checkOverflow(id) {
+  //   console.log("fdfdf");
+  //   if (process.client) {
+  //     let showMore;
+  //     const buttonGroup = document.getElementById(id);
+  //     const buttonGroupWrap = document.getElementById("community_categorywrap");
+  //     if (!buttonGroup) return;
+  //     console.log(buttonGroup.scrollWidth);
+  //     console.log(buttonGroupWrap.scrollWidth);
+  //     if (buttonGroup.scrollWidth >= buttonGroupWrap.scrollWidth - 200) {
+  //       showMore = true;
+  //     } else {
+  //       showMore = false;
+  //     }
+  //     console.log(showMore);
+  //     return showMore;
+  //   }
+  // }
 
   return {
     user,

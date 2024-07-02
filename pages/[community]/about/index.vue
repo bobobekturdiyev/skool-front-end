@@ -2,8 +2,8 @@
   <main>
     <section v-if="isLoading.isLoadingType('getByUsername')"
       class="flex sm:flex-row flex-col-reverse gap-6 community_page">
-      <div class="bg-gray-600 r_16 h-[700px] w-full"></div>
-      <div class="bg-gray-600 r_16 h-[429px] min-w-[200px] md:min-w-[280px]"></div>
+      <LoadingDiv class="h-[700px] w-full r_16"/>
+      <LoadingDiv class="h-[429px] min-w-[280px] r_16"/>
     </section>
     <div v-else
       class="flex sm:flex-row flex-col-reverse gap-6 community_page">
@@ -96,7 +96,7 @@
           </p>
         </div>
         <pre :class="role_ac.includes(useGroup.store.group_by_username.type) ? '': 'pointer-events-none'" @click="editDescription" v-if="!useGroup.store.description_modal" class="md:mt-8 mt-4 text-sm leading-[21px] whitespace-pre-line hover:bg-[#F2F2F2] cursor-pointer p-4 -m-4 r_8">{{
-          useGroup.store.group_by_username.description
+          useGroup.store.group_by_username.description ? useGroup.store.group_by_username.description:'Add a description...'
         }}</pre>
         <div v-else v-if="role_ac.includes(useGroup.store.group_by_username.type)" class="md:mt-8 mt-4">
           <el-input

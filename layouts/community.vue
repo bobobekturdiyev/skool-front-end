@@ -8,10 +8,8 @@
       class="pb-[40px] mx-auto xl:px-[200px] lg:px-[100px] md:px-[50px] sm:px-[50px] px-5 max-w-[1536px]"
     >
       <div
-        v-if="
-          useGroup.store.group_by_username.status == 'active' &&
-          !isLoading.isLoadingType('getByUsername')
-        "
+        v-if="useGroup.store.group_by_username.status == 'active'"
+        :class="isLoading.isLoadingType('getByUsername') ? 'pointer-events-none' : ''"
       >
         <Community_tabs />
       </div>

@@ -3,14 +3,15 @@
     <div class="overflow-hidden w-full md:space-y-8 space-y-6">
       <ModalWriteSomething class="md:block hidden" />
 
-      <section v-if="usePost.store.members_count" class="flex gap-2 justify-center">
+      <section @click="routeToRequests" v-if="usePost.store.members_count && role_ac.includes(useGroup.store.group_by_username.type)" class="flex gap-2 justify-center">
         <p class="full_flex rounded-full text-white text-xs h-6 w-6 bg-[#e74c3c]">{{usePost.store.members_count}}</p>
-        <p @click="routeToRequests" class="_c2a hover:underline cursor-pointer">membership requests pending</p>
+        <p class="_c2a hover:underline cursor-pointer">membership requests pending</p>
       </section>
       <!-- category -->
       <section class="md:text-sm text-xs whitespace-nowrap">
         <div class="flex items-start justify-between gap-3">
           <div
+          id="button-group"
             :class="store.is_show ? 'flex-wrap' : 'md:flex-nowrap'"
             class="relative flex md:flex-row flex-wrap gap-3 category_wrap w-full md:h-auto h-[80px] overflow-hidden"
           >
@@ -153,10 +154,13 @@
                                     <div class="space-y-6 px-1">
                                       <p class="b_cf2 h-[1px] w-full"></p>
                                       <ul class="space-y-3">
-<li v-for="i in setupgroup" class="flex items-center gap-3">
-  <p class="!outline outline-[#E0E0E0] rounded-full h-5 w-5"></p>
- <p>
-  {{i}}
+<li @click="i[1]" v-for="i in setupgroup" class="flex items-center gap-3">
+  <p v-if="!usePost.store.setupgroup[i[2]]" class="!outline outline-[#E0E0E0] rounded-full h-5 w-5"></p>
+  <p v-else class="full_flex rounded-full b_c2a h-5 w-5">
+    <img class="w-3 h-3" src="@/assets/svg/true.svg" alt="" />
+  </p>
+ <p class="hover:underline cursor-pointer">
+  {{i[0]}}
  </p>
 </li>
                                       </ul>
@@ -360,7 +364,7 @@
               </h2>
               <p
                 v-html="i.description"
-                class="md:text-sm text-xs min-h-[40px] leading-6 line-clamp-2 md:w-full w-[120%]"
+                class="md:text-sm text-xs min-h-[40px] leading-6 line-clamp-2 max-w-[80%]"
               ></p>
               <div v-if="i.poll_available"  @click="() => showPostData(i.id)" class="flex items-center cursor-pointer mt-4 gap-4">
                 <div
@@ -1836,10 +1840,9 @@ import {
   useAddVideoStore,
 } from "@/store";
 import { VueDraggableNext as draggable } from "vue-draggable-next";
-import { useNotification, useFormatDate } from "@/composables";
+import { useNotification, useFormatDate, role_ac } from "@/composables";
 import EmojiPicker from "vue3-emoji-picker";
 import "vue3-emoji-picker/css";
-
 const usePost = usePostStore();
 const { formatDate} = useFormatDate();
 const useChat = useChatStore();
@@ -1873,10 +1876,10 @@ usePost.store.filter.sort = router.currentRoute.value.query.sort;
 usePost.store.filter.category_id = router.currentRoute.value.query.category_id;
 
 const setupgroup = {
-  "invite": "Invite 3 people",
-  "description": "Add group description",
-  "cover": "Set cover image",
-  "post": "Write your first post",
+  "invite": ["Invite 3 people", () =>{isLoading.store.slideStep = 2; isLoading.store.inviteModal = true}, "is_three_member"],
+  "description": ["Add group description", () =>{isLoading.store.slideStep = 3; isLoading.store.inviteModal = true}, "is_description"],
+  "cover": ["Set cover image", () =>{isLoading.store.slideStep = 3; isLoading.store.inviteModal = true}, "is_image"],
+  "post": ["Write your first post", () => usePost.store.writingModal = true, "is_post"],
 }
 
 const changeVoteData = {

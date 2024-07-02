@@ -11,7 +11,10 @@
         <img v-else src="@/assets/image/picture.png" alt="" />
         <div>
           <h1>Digital Marketer</h1>
-          <p>Group settings</p>
+          <p v-if="role_ac.includes(useGroup.store.group_by_username.type)">
+            Group settings
+          </p>
+          <p v-else>Membership settings</p>
         </div>
       </div>
       <div v-else class="full_flex gap-4">
@@ -54,23 +57,29 @@
         "
         class="sm:min-w-[280px] h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto pb-5 border-r border-[#E0E0E0] duration-300 whitespace-nowrap"
       >
-        <ul v-if="!useMembers.store.manageUserRole" class="_c07 text-sm">
+        <ul
+          v-if="
+            !useMembers.store.manageUserRole &&
+            role_ac.includes(useGroup.store.group_by_username.type)
+          "
+          class="_c07 text-sm"
+        >
           <li
             @click="openData(index, i)"
             :class="
-              store.slideStep == index ? '_c2a font-medium bg-[#F0F5FA]' : ''
+              isLoading.store.slideStep == index ? '_c2a font-medium bg-[#F0F5FA]' : ''
             "
             class="flex gap-4 items-center cursor-pointer"
             v-for="(i, index) in members_sidebar"
           >
             <p
-              :class="store.slideStep == index ? 'b_c2a' : ''"
+              :class="isLoading.store.slideStep == index ? 'b_c2a' : ''"
               class="w-1 h-[44px]"
             ></p>
             <p>{{ i }}</p>
           </li>
         </ul>
-        <ul v-else class="_c07 text-sm">
+        <ul v-else-if="useMembers.store.manageUserRole" class="_c07 text-sm">
           <li
             @click="openData(0, 'Members')"
             class="flex gap-4 items-center cursor-pointer _c2a font-medium bg-[#F0F5FA]"
@@ -79,13 +88,32 @@
             <p>Members</p>
           </li>
         </ul>
+        <ul v-else class="_c07 text-sm">
+          <li
+            @click="openData(index, i)"
+            :class="
+              isLoading.store.slideStep == index ? '_c2a font-medium bg-[#F0F5FA]' : ''
+            "
+            class="flex gap-4 items-center cursor-pointer"
+            v-for="(i, index) in membership_settings"
+          >
+            <p
+              :class="isLoading.store.slideStep == index ? 'b_c2a' : ''"
+              class="w-1 h-[44px]"
+            ></p>
+            <p>{{ i }}</p>
+          </li>
+        </ul>
       </aside>
       <div
         class="w-full h-[calc(100vh_-120px)] overflow-hidden"
         :class="store.is_open ? '' : 'sm:block hidden'"
       >
         <div
-          v-if="!useMembers.store.manageUserRole"
+          v-if="
+            !useMembers.store.manageUserRole &&
+            role_ac.includes(useGroup.store.group_by_username.type)
+          "
           class="mainSlider h-[calc(100vh_-120px)] duration-700"
         >
           <section
@@ -226,12 +254,23 @@
           >
             <div class="flex flex-wrap md:gap-10 gap-4 md:mb-0 mb-2">
               <div class="flex gap-5" @click="general.filetype = 'icon'">
+                <div class="relative imagelabel" 
+                v-if="useMembers.general.icon.url"
+                >
+                <button
+                @click="() => {useMembers.general.icon.url = ''; useMembers.general.icon.file = ''}" 
+                type="button"
+                class="absolute deleteimage z-10 bg-white !hidden top-2 right-2 rounded-full w-7 h-7 full_flex border p-2"
+              >
+                <img src="@/assets/svg/x.svg" alt="" />
+              </button>
                 <img
                   v-if="useMembers.general.icon.url"
                   :src="useMembers.general.icon.url"
                   alt=""
                   class="h-[60px] w-[60px] b_cf2 r_8 object-cover"
                 />
+               </div>
                 <label
                   for="upload_icon"
                   v-else
@@ -256,12 +295,23 @@
                 />
               </div>
               <div @click="general.filetype = 'cover'" class="flex gap-5">
+                <div class="relative imagelabel" 
+                v-if="useMembers.general.image.url"
+                >
+                  <button
+                @click="() => {useMembers.general.image.url = ''; useMembers.general.image.file = ''}" 
+
+                type="button"
+                class="absolute deleteimage z-10 bg-white !hidden top-2 right-2 rounded-full w-7 h-7 full_flex border p-2"
+              >
+                <img src="@/assets/svg/x.svg" alt="" />
+              </button>
                 <img
-                  v-if="useMembers.general.image.url"
                   :src="useMembers.general.image.url"
                   alt=""
                   class="md:h-[144px] h-[105px] md:w-[271px] w-[195px] b_cf2 r_8 object-cover"
                 />
+                </div>
                 <label
                   for="upload_cover"
                   v-else
@@ -454,6 +504,827 @@
             >
               UPDATE SETTINGS
             </button>
+          </section>
+          <section
+            class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+          >
+            <h1 class="_c00 font-semibold text-xl">Subscriptions</h1>
+            <p class="md:mt-5 mt-4 md:mb-8 mb-4 font-medium">
+              Make money by charging a monthly subscription for access to your
+              community.
+            </p>
+            <div
+              class="flex md:items-center justify-between whitespace-nowrap border_cbc r_8 py-2 px-3 gap-3"
+            >
+              <div class="flex flex-wrap items-center md:gap-10 gap-4">
+                <div class="full_flex gap-1 h-9">
+                  <img src="@/assets/svg/free.svg" alt="" />
+                  <p class="font-medium">Free</p>
+                </div>
+                <p class="_c2a">1 member</p>
+                <button class="px-6 h-9 text-white b_c6f r_8 font-semibold">
+                  Current price
+                </button>
+              </div>
+              <button class="h-9">
+                <img
+                  class="rotate-90 min-w-[24px]"
+                  src="@/assets/svg/three_dot.svg"
+                  alt=""
+                />
+              </button>
+            </div>
+            <button class="px-6 b_cbc uppercase md:mt-7 mt-4 r_8 font-semibold">
+              add price
+            </button>
+          </section>
+          <section
+            v-if="!usePost.modal.create"
+            class="h-[calc(100vh_-120px)] animate-left overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+          >
+            <div class="flex items-center justify-between">
+              <h1 class="font-semibold text-xl">Categories</h1>
+              <button
+                @click="usePost.modal.create = true"
+                class="uppercase font-semibold text-sm b_cbc _c07 px-6 r_8"
+              >
+                add category
+              </button>
+            </div>
+            <div
+              v-for="(i, index) in usePost.store.categories"
+              v-loading="isLoading.isLoadingType('getPostCategories')"
+              class="flex items-center justify-between md:mt-9 mt-4"
+            >
+              <div class="space-y-2">
+                <p class="font-semibold">{{ i.name }} ({{ i.post_count }})</p>
+                <p class="text-xs">{{ i.description }}</p>
+              </div>
+              <div class="flex gap-3">
+                <button
+                  @click="editPostCategory(i)"
+                  class="full_flex gap-1 border border_cbc r_8 _c2a px-3 h-9"
+                >
+                  <img src="@/assets/svg/edit.svg" alt="" />
+                  <p>Edit</p>
+                </button>
+                <div class="border_cbc r_8 w-9 h-9">
+                  <el-dropdown placement="bottom-end" class="dropdown">
+                    <button class="full_flex w-9 h-9">
+                      <img src="@/assets/svg/three_dot_blue.svg" alt="" />
+                    </button>
+                    <template #dropdown>
+                      <el-dropdown-menu
+                        class="community_dropdown min-w-[200px] dropdown_shadow"
+                      >
+                        <el-dropdown-item
+                          @click="usePost.updatePositionCategory(index, 'up')"
+                          ><span :class="index == 0 ? '_ca1' : ''"
+                            >Move up</span
+                          ></el-dropdown-item
+                        >
+                        <el-dropdown-item
+                          @click="usePost.updatePositionCategory(index, 'down')"
+                        >
+                          <span
+                            :class="
+                              index == usePost.store.categories.length - 1
+                                ? '_ca1'
+                                : ''
+                            "
+                            >Move down</span
+                          ></el-dropdown-item
+                        >
+                        <el-dropdown-item @click="deleteFunc('post', i)"
+                          ><span
+                            :class="
+                              usePost.store.categories.length == 1 ? '_ca1' : ''
+                            "
+                            >Delete</span
+                          ></el-dropdown-item
+                        >
+                      </el-dropdown-menu>
+                    </template>
+                  </el-dropdown>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section
+            v-else
+            class="h-[calc(100vh_-120px)] animate-right overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+          >
+            <form @submit.prevent="handleAddPostCategory" class="space-y-6">
+              <h1 class="md:text-2xl text-lg pb-2 font-semibold _c07">
+                <span v-if="usePost.modal.edit">Edit</span
+                ><span v-else>Add</span> category
+              </h1>
+              <div>
+                <input
+                  @input="handleInput('input')"
+                  v-model="usePost.create_category.name"
+                  type="text"
+                  class="text-sm"
+                  placeholder="Name"
+                  required
+                />
+                <p class="text-end mt-2 _ca1 md:text-sm text-xs">
+                  {{ usePost.create_category.name?.length }}/30
+                </p>
+              </div>
+              <div>
+                <textarea
+                  @input="handleInput('textarea')"
+                  id="write_message"
+                  v-model="usePost.create_category.description"
+                  class="h-[90px] text-sm w-full rounded-[4px]"
+                  placeholder="Description"
+                ></textarea>
+                <p class="text-end mt-2 _ca1 md:text-sm text-xs">
+                  {{ usePost.create_category.description?.length }}/150
+                </p>
+              </div>
+              <div>
+                <label class="_ca1 text-xs" for="access">Permissions</label>
+                <el-select
+                  class="block w-full mt-2"
+                  v-model="usePost.create_category.permission"
+                  placeholder="Select"
+                >
+                  <el-option
+                    v-for="item in post_category_access"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                    :disabled="item.disabled"
+                  >
+                    <div class="flex items-center gap-2">
+                      {{ item.label }}
+                      <img
+                        v-if="usePost.create_category.permission == item.value"
+                        src="@/assets/svg/checked.svg"
+                        alt=""
+                      />
+                    </div>
+                  </el-option>
+                </el-select>
+              </div>
+              <div
+                v-if="!usePost.store.edit_course"
+                class="flex gap-3 text-sm font-semibold"
+              >
+                <button
+                  :class="
+                    usePost.create_category.name ? 'b_cbc _c07' : 'b_ce0 _ca1'
+                  "
+                  @click="reposrtToAdmins"
+                  class="uppercase h-10 px-6 rounded-lg"
+                  v-loading="isLoading.isLoadingType('createPostCategory')"
+                >
+                  <span v-if="!usePost.modal.edit">add</span
+                  ><span v-else>save</span>
+                </button>
+                <button
+                  type="button"
+                  @click="usePost.clearData"
+                  class="uppercase h-10 px-6 rounded-lg _ca1"
+                >
+                  cancel
+                </button>
+              </div>
+            </form>
+          </section>
+          <section
+            class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+          ></section>
+          <section
+            class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+          >
+            <h1
+              class="font-semibold md:text-xl text-[16px] leading-6 lg:px-[120px] md:px-[60px] text-center"
+            >
+              In the past 30 days, your group stayed at 1 membersand 1 members
+              (100%) were active.
+            </h1>
+            <div class="space-y-9 md:mt-10 mt-6">
+              <div class="space-y-[30px]">
+                <h1 class="font-semibold">Total members</h1>
+                <LineChart />
+              </div>
+              <div class="space-y-[30px]">
+                <div class="flex items-center justify-between">
+                  <h1 class="font-semibold">Active members</h1>
+                  <el-dropdown placement="bottom-end" class="dropdown">
+                    <div class="full_flex gap-1 _c2a text-xs font-semibold">
+                      <p class="text-xs">Monthly active</p>
+                      <img src="@/assets/svg/chat/select_arrow.svg" alt="" />
+                    </div>
+                    <template #dropdown>
+                      <el-dropdown-menu
+                        class="community_dropdown min-w-[200px] dropdown_shadow"
+                      >
+                        <el-dropdown-item>First</el-dropdown-item>
+                        <el-dropdown-item>Last</el-dropdown-item>
+                      </el-dropdown-menu>
+                    </template>
+                  </el-dropdown>
+                </div>
+                <div>developing ...</div>
+              </div>
+              <div class="space-y-[30px]">
+                <h1 class="font-semibold">Daily activity</h1>
+                <div>developing ...</div>
+              </div>
+            </div>
+          </section>
+          <section
+            v-if="!useMembers.store.editGamification"
+            class="h-[calc(100vh_-120px)] animate-left overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+          >
+            <h1 class="font-semibold text-xl">Gamification</h1>
+            <p class="md:mt-5 mt-4 md:mb-7 mb-6 md:text-[16px] text-sm">
+              Make your group fun! Personalize your group by naming your levels.
+              Incentivize engagement by unlocking courses when members reach a
+              higher level.
+            </p>
+            <div class="space-y-7">
+              <div
+                v-for="(i, index) in useMembers.store.levels"
+                v-if="!isLoading.isLoadingType('getLevels')"
+                class="flex items-center justify-between mt-9"
+              >
+                <div class="space-y-1">
+                  <p class="font-semibold">
+                    Level {{ index + 1 }} {{ i.level ? `- ${i.level}` : '' }}
+                  </p>
+                  <p class="text-xs">
+                    {{ i.points }}% of members - No courses unlock
+                  </p>
+                </div>
+                <button
+                  @click="editLevel(i, index)"
+                  class="full_flex gap-1 border border_cbc r_8 _c2a px-3 h-9"
+                >
+                  <img src="@/assets/svg/edit.svg" alt="" />
+                  <p>Edit</p>
+                </button>
+              </div>
+            </div>
+          </section>
+          <section
+            v-else
+            class="h-[calc(100vh_-120px)] animate-right overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+          >
+            <h1 class="text-xl font-semibold">Edit level</h1>
+            <form @submit.prevent="useMembers.editLevel">
+              <label for="name" class="_ca1 mb-2 block md:mt-7 mt-4"
+                >Name</label
+              >
+              <div
+                class="flex items-center px-3 whitespace-nowrap border_ce0 h-10 rounded-[4px]"
+              >
+                <p class="_ca1">{{ useMembers.level.name }}</p>
+                <p class="h-5 ml-2 w-0 !border-r-0 border_ce0"></p>
+                <input
+                  v-model="useMembers.level.custom_name"
+                  class="!px-2 h-9 !border-0"
+                  type="text"
+                  required
+                />
+              </div>
+              <p class="_ca1 text-end mt-1 mb-4">7/20</p>
+              <div class="md:mt-6">
+                <button
+                  v-loading="isLoading.isLoadingType('editLevels')"
+                  class="_c07 font-semibold b_cbc px-6 r_8 uppercase"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  @click="useMembers.store.editGamification = false"
+                  class="_ca1 font-semibold px-6 r_8 uppercase"
+                >
+                  cancel
+                </button>
+              </div>
+              <p class="font-semibold md:mt-8 mt-4 mb-4">
+                No courses unlock at this level.
+              </p>
+              <p class="_c07">
+                You can unlock courses for members at different levels from the
+                course settings menu.
+              </p>
+            </form>
+          </section>
+          <section
+            class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+          >
+            <h1 class="font-semibold text-xl">Discovery</h1>
+            <p class="md:mt-5 mt-4">
+              Get discovered by millions of active users.
+            </p>
+            <div class="flex flex-wrap gap-5 md:my-5 my-4">
+              <button
+                class="md:w-auto w-full md:text-center text-start space-x-3 border_cbc px-6 _c2a r_8 text-[16px]"
+              >
+                <span class="_ca1 font-medium">Showing in discovery</span
+                ><span class="_ceb font-semibold uppercase">No</span>
+              </button>
+              <button
+                class="md:w-auto w-full md:text-center text-start space-x-3 border_cbc px-6 _c2a r_8 text-[16px]"
+              >
+                <span class="_ca1 font-medium">Rank</span
+                ><span class="_ceb font-semibold uppercase">None</span>
+              </button>
+              <button
+                class="md:w-auto w-full md:text-center text-start space-x-3 border_cbc px-6 _c2a r_8 text-[16px]"
+              >
+                <span class="_ca1 font-medium">Category</span
+                ><span class="_ceb font-semibold uppercase">None</span>
+              </button>
+            </div>
+            <div class="leading-4 space-y-4">
+              <p>
+                <span class="font-[700]">Showing in discovery</span> — Your
+                group needs to meet a minimum threshold of members, posts, and
+                activity to show in discovery. You also need a good group
+                description, about page description, group cover image, and some
+                photos/videos on your about page.
+              </p>
+              <p>
+                <span class="font-[700]">Discovery rank</span> — Groups are
+                ranked by engagement using an algorithm that looks at member
+                growth, member activity, posts, comments, and likes. The more
+                engaged your group is, the higher your rank.
+              </p>
+              <p>If your category is wrong, please contact support.</p>
+            </div>
+          </section>
+          <section
+            v-if="!useLink.modal.create"
+            class="h-[calc(100vh_-120px)] animate-left overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+          >
+            <div>
+              <div class="flex items-center justify-between">
+                <h1 class="font-semibold text-xl">Links</h1>
+                <button
+                  @click="useLink.modal.create = true"
+                  class="md:block hidden uppercase font-semibold text-sm px-6 r_8"
+                  :class="
+                    useLink.store.links.length != 3
+                      ? '_c07 b_cbc'
+                      : '_ca1 b_ce0 pointer-events-none'
+                  "
+                >
+                  add link
+                </button>
+              </div>
+              <p class="mt-5">
+                Share important resources with your members by adding links.
+              </p>
+              <button
+                @click="useLink.modal.create = true"
+                class="md:hidden block mt-4 uppercase font-semibold text-sm px-6 r_8"
+                :class="
+                  useLink.store.links.length != 3
+                    ? '_c07 b_cbc'
+                    : '_ca1 b_ce0 pointer-events-none'
+                "
+              >
+                add link
+              </button>
+            </div>
+            <div
+              v-for="(i, index) in useLink.store.links"
+              v-loading="isLoading.isLoadingType('getPostCategories')"
+              class="flex items-center justify-between md:mt-9 mt-4"
+            >
+              <div class="space-y-2 max-w-[70%]">
+                <p class="font-semibold truncate">
+                  {{ i.label }} ({{ i.is_public ? "Public" : "Private" }})
+                </p>
+                <p class="text-xs truncate">{{ i.url }}</p>
+              </div>
+              <div class="flex gap-3">
+                <button
+                  @click="editLink(i)"
+                  class="full_flex gap-1 border min-w-fit border_cbc r_8 _c2a px-3 h-9"
+                >
+                  <img src="@/assets/svg/edit.svg" alt="" />
+                  <p>Edit</p>
+                </button>
+                <div class="border_cbc r_8 w-9 h-9">
+                  <el-dropdown placement="bottom-end" class="dropdown">
+                    <button class="full_flex w-9 h-9">
+                      <img src="@/assets/svg/three_dot_blue.svg" alt="" />
+                    </button>
+                    <template #dropdown>
+                      <el-dropdown-menu
+                        class="community_dropdown min-w-[200px] dropdown_shadow"
+                      >
+                        <el-dropdown-item
+                          @click="useLink.updatePosition(index, 'up')"
+                          ><span :class="index == 0 ? '_ca1' : ''"
+                            >Move up</span
+                          ></el-dropdown-item
+                        >
+                        <el-dropdown-item
+                          @click="useLink.updatePosition(index, 'down')"
+                        >
+                          <span
+                            :class="
+                              index == useLink.store.links.length - 1
+                                ? '_ca1'
+                                : ''
+                            "
+                            >Move down</span
+                          ></el-dropdown-item
+                        >
+                        <el-dropdown-item @click="deleteFunc('link', i)"
+                          ><span>Delete</span></el-dropdown-item
+                        >
+                      </el-dropdown-menu>
+                    </template>
+                  </el-dropdown>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section
+            v-else
+            class="h-[calc(100vh_-120px)] animate-right overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+          >
+            <h1 class="text-xl font-semibold">Add link</h1>
+            <form
+              @submit.prevent="useLink.createLink"
+              class="md:space-y-5 space-y-4"
+            >
+              <div>
+                <label for="name" class="_ca1 mb-2 block md:mt-7 mt-4"
+                  >Label</label
+                >
+                <input
+                  v-model="useLink.create.label"
+                  class=""
+                  type="text"
+                  required
+                />
+                <p class="_ca1 text-end mt-1">0/34</p>
+              </div>
+              <div>
+                <input
+                  v-model="useLink.create.url"
+                  type="url"
+                  placeholder="URL"
+                  required
+                />
+              </div>
+              <div>
+                <label for="name" class="_ca1 mb-2 block">Privacy</label>
+                <el-select
+                  class="block w-full mt-2"
+                  v-model="useLink.create.is_public"
+                  placeholder="Select"
+                >
+                  <el-option
+                    v-for="item in access_list"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                    :disabled="item.disabled"
+                  >
+                    <div class="flex items-center gap-2">
+                      {{ item.label }}
+                      <img
+                        v-if="useMembers.general.fjdkfjdf == item.value"
+                        src="@/assets/svg/checked.svg"
+                        alt=""
+                      />
+                    </div>
+                  </el-option>
+                </el-select>
+              </div>
+              <div>
+                <button
+                  :class="
+                    useLink.create.label && useLink.create.url
+                      ? '_c07 b_cbc'
+                      : '_ca1 b_ce0'
+                  "
+                  class="font-semibold px-6 r_8 md:mt-6 uppercase"
+                >
+                  Save
+                </button>
+                <button
+                  @click="
+                    () => {
+                      useLink.modal.create = false;
+                      useLink.modal.edit = false;
+                    }
+                  "
+                  class="_ca1 font-semibold px-6 r_8 uppercase"
+                >
+                  cancel
+                </button>
+              </div>
+            </form>
+          </section>
+          <section
+            v-if="!store.updatePayment"
+            class="h-[calc(100vh_-120px)] animate-left overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+          >
+            <h1 class="font-semibold text-xl">Billing</h1>
+            <div
+              class="flex md:flex-row flex-col max-w-fit md:gap-[60px] gap-4 md:mt-7 mt-4 md:mb-10 mb-4 whitespace-nowrap"
+            >
+              <button
+                @click="store.updatePayment = true"
+                class="border_cbc px-6 _c2a r_8 uppercase"
+              >
+                UPDATE PAYMENT INFO
+              </button>
+              <button class="md:px-3 _c2a r_8 md:text-center text-start">
+                Invoice history
+              </button>
+            </div>
+            <h1 class="font-semibold _C00 mb-2">Referrals</h1>
+            <p class="md:mb-7 mb-4">
+              If somebody creates a group from your group, we’ll automatically
+              pay you 40% every month. This way Skool becomes an income stream,
+              not a cost. Earnings will go to this admin:
+            </p>
+            <div class="flex items-center gap-4">
+              <img
+                class="h-10 w-10 rounded-full object-cover"
+                src="@/assets/image/user.svg"
+                alt=""
+              />
+              <p class="text-[16px] font-semibold">Xayot Sharapov</p>
+              <p class="_c2a">(Change)</p>
+            </div>
+            <h1 class="font-semibold _C00 mb-2 md:mt-7 mt-4">
+              Xayot's referral link
+            </h1>
+            <div class="flex gap-3">
+              <input
+                type="text"
+                value="https://www.skool.com/digital-marketer-3698/about"
+              />
+              <button class="b_cbc px-6 uppercase font-semibold r_8">
+                copy
+              </button>
+            </div>
+            <button class="border_cbc mt-5 px-6 _c2a r_8 uppercase">
+              SEE YOUR REFERRALS
+            </button>
+          </section>
+          <section
+            v-else
+            class="h-[calc(100vh_-120px)] animate-right overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+          >
+            <h1 class="font-semibold text-xl">Update payment info</h1>
+            <div>
+              <label for="name" class="_ca1 mb-2 block mt-10"
+                >Card number</label
+              >
+              <div class="flex items-center">
+                <input
+                  class="w-[300px]"
+                  type="text"
+                  name="credit-number"
+                  placeholder="0000 0000 0000 0000"
+                />
+                <div class="flex items-center gap-2 -ml-[108px]">
+                  <img src="@/assets/svg/billing/electron.svg" alt="" />
+                  <img src="@/assets/svg/billing/maestro.svg" alt="" />
+                  <img src="@/assets/svg/billing/mastercard.svg" alt="" />
+                </div>
+              </div>
+              <div class="flex gap-5 mt-4">
+                <div>
+                  <label for="name" class="_ca1 mb-2 block">Exp. date</label>
+                  <input
+                    class="w-[100px]"
+                    type="text"
+                    name="credit-expires"
+                    placeholder="MM/YY"
+                  />
+                </div>
+                <div>
+                  <label for="name" class="_ca1 mb-2 block">CVV</label>
+                  <input
+                    class="w-[100px]"
+                    type="number"
+                    name="credit-cvc"
+                    placeholder="123"
+                  />
+                </div>
+              </div>
+              <div class="mt-4">
+                <button class="_ca1 font-semibold b_ce0 px-6 r_8 uppercase">
+                  UPDATE
+                </button>
+                <button
+                  @click="store.updatePayment = false"
+                  class="_ca1 font-semibold px-6 r_8 uppercase"
+                >
+                  cancel
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+        <section
+          v-if="useMembers.store.manageUserRole"
+          class="h-[calc(100vh_-120px)] overflow-hidden space-y-4 overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+        >
+          <div
+            v-loading="isLoading.isLoadingType('updateRole')"
+            class="text-[16px]"
+          >
+            <span class="font-semibold">Role:</span>
+            {{ useMembers.store.member_type }}
+            <el-dropdown placement="bottom-end" class="dropdown">
+              <button class="_c2a cursor-pointer hover:underline h-5">
+                (change)
+              </button>
+              <template #dropdown>
+                <el-dropdown-menu
+                  class="community_dropdown min-w-[200px] dropdown_shadow"
+                >
+                  <el-dropdown-item @click="useMembers.updateUserRole('Member')"
+                    >Member</el-dropdown-item
+                  >
+                  <el-dropdown-item @click="useMembers.updateUserRole('Admin')"
+                    >Admin</el-dropdown-item
+                  >
+                  <el-dropdown-item
+                    @click="useMembers.updateUserRole('Moderator')"
+                    >Moderator</el-dropdown-item
+                  >
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+          <div
+            v-if="useMembers.store.member_type == 'Admin'"
+            v-loading="isLoading.isLoadingType('updateRole')"
+            class="text-[16px]"
+          >
+            <span class="font-semibold">Billing access:</span>
+            No
+            <el-dropdown placement="bottom-end" class="dropdown">
+              <button class="_c2a cursor-pointer hover:underline h-5">
+                (change)
+              </button>
+              <template #dropdown>
+                <el-dropdown-menu
+                  class="community_dropdown min-w-[200px] dropdown_shadow"
+                >
+                  <el-dropdown-item @click="useMembers.updateUserRole('Yes')"
+                    >Yes</el-dropdown-item
+                  >
+                  <el-dropdown-item @click="useMembers.updateUserRole('No')"
+                    >No</el-dropdown-item
+                  >
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+          <div v-else-if="useMembers.store.member_type != 'Moderator'">
+            <p
+              @click="
+                () => {
+                  useMembers.store.banchurned.type = 'churned';
+                  useMembers.store.banchurned.status = true;
+                  useMembers.store.user_id = useMembers.store.member_data.id;
+                }
+              "
+              class="md:mt-5 mt-4 hover:underline _ceb font-medium cursor-pointer"
+            >
+              Remove from group
+            </p>
+            <p
+              @click="
+                () => {
+                  useMembers.store.banchurned.type = 'ban';
+                  useMembers.store.banchurned.status = true;
+                }
+              "
+              class="md:mt-5 mt-4 hover:underline _ceb font-medium cursor-pointer"
+            >
+              Ban from group
+            </p>
+          </div>
+        </section>
+        <div v-else class="mainSlider h-[calc(100vh_-120px)] duration-700">
+          <section
+            class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+          >
+            <h1 class="_c00 font-semibold text-xl">Membership</h1>
+            <p class="md:my-10 my-6 font-medium">
+              You've been a member of Max Business School™ since
+              <strong>02/11/2024</strong>.
+            </p>
+            <button
+              class="uppercase font-semibold border_cbc px-3 r_8 _c2a md:ml-0 ml-[56px]"
+            >
+              LEAVE THIS GROUP
+            </button>
+          </section>
+          <section
+            class="space-y-6 h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+          >
+            <div v-for="i in notifications_membership">
+              <label class="flex gap-1 _c07 text-xs" for="follow_email2"
+                ><strong>{{i.title[0]}}</strong class="_ca1">{{i.title[1]}}</label
+              >
+              <el-select
+                id="follow_email2"
+                class="block w-full mt-2"
+                placeholder="Select"
+              >
+                <el-option
+                  v-for="item in i.select"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                >
+                  <div class="flex items-center gap-2">
+                    {{ item }}
+                    <img
+                    v-if="usePost.create_category.permission == item"
+                      src="@/assets/svg/checked.svg"
+                      alt=""
+                    />
+                  </div>
+                </el-option>
+              </el-select>
+            </div>
+          </section>
+          <section
+            class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
+          >
+            <h1 class="text-xl font-semibold">Chat</h1>
+            <p>
+              Choose whether members of this group can message you or not.
+            </p>
+            <div class="space-y-10 mt-6">
+              <div
+                class="flex items-center justify-between h-10"
+              >
+                <div class="full_flex gap-4">
+                  <div class="w-10 h-10 b_c2a r_8 full_flex" v-if="true">
+                    <p class="font-semibold text-white">DM</p>
+                  </div>
+                  <img v-else src="@/assets/image/picture.png" alt="" />
+                  <h1 class="font-semibold">Digital Marketer</h1>
+                </div>
+                <el-select
+                  id="follow_email"
+                  class="block max-w-20 mt-2"
+                  placeholder="Select"
+                >
+                  <el-option
+                    v-for="item in group_notification"
+                    :key="item.value"
+                    :label="item.value"
+                    :value="item.value"
+                    :disabled="item.disabled"
+                  >
+                    <div class="flex items-center gap-2">
+                      {{ item.label }}
+                      <img
+                        v-if="usePost.create_category.permission == item.value"
+                        src="@/assets/svg/checked.svg"
+                        alt=""
+                      />
+                    </div>
+                  </el-option>
+                </el-select>
+              </div>
+            </div>
+          </section>
+          <section
+            class="md:text-[16px] text-sm h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto _c07 md:p-5 p-3 w-full"
+          >
+            <h1 class="text-xl font-semibold _c00">Invite</h1>
+            <p class="my-5">
+              Share a link to Max Business School™ with your friends.
+            </p>
+            <div class="flex gap-3">
+              <p
+                class="flex items-center w-full truncate h-10 rounded-[4px] px-3 border_ce0 _c2a font-medium text-sm"
+              >
+                <span class="truncate"
+                  >https://www.skool.com/max-business-school/about
+                </span>
+              </p>
+              <button class="b_cbc px-6 uppercase font-semibold r_8">
+                copy
+              </button>
+            </div>
           </section>
           <section
             class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
@@ -1085,89 +1956,6 @@
             </div>
           </section>
         </div>
-        <section
-          v-if="useMembers.store.manageUserRole"
-          class="h-[calc(100vh_-120px)] overflow-hidden space-y-4 overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
-        >
-          <div
-            v-loading="isLoading.isLoadingType('updateRole')"
-            class="text-[16px]"
-          >
-            <span class="font-semibold">Role:</span>
-            {{ useMembers.store.member_type }}
-            <el-dropdown placement="bottom-end" class="dropdown">
-              <button class="_c2a cursor-pointer hover:underline h-5">
-                (change)
-              </button>
-              <template #dropdown>
-                <el-dropdown-menu
-                  class="community_dropdown min-w-[200px] dropdown_shadow"
-                >
-                  <el-dropdown-item @click="useMembers.updateUserRole('Member')"
-                    >Member</el-dropdown-item
-                  >
-                  <el-dropdown-item @click="useMembers.updateUserRole('Admin')"
-                    >Admin</el-dropdown-item
-                  >
-                  <el-dropdown-item
-                    @click="useMembers.updateUserRole('Moderator')"
-                    >Moderator</el-dropdown-item
-                  >
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </div>
-          <div 
-          v-if="useMembers.store.member_type == 'Admin'"
-            v-loading="isLoading.isLoadingType('updateRole')"
-            class="text-[16px]"
-          >
-            <span class="font-semibold">Billing access:</span>
-            No
-            <el-dropdown placement="bottom-end" class="dropdown">
-              <button class="_c2a cursor-pointer hover:underline h-5">
-                (change)
-              </button>
-              <template #dropdown>
-                <el-dropdown-menu
-                  class="community_dropdown min-w-[200px] dropdown_shadow"
-                >
-                  <el-dropdown-item @click="useMembers.updateUserRole('Yes')"
-                    >Yes</el-dropdown-item
-                  >
-                  <el-dropdown-item @click="useMembers.updateUserRole('No')"
-                    >No</el-dropdown-item
-                  >
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </div>
-          <div v-else-if="useMembers.store.member_type != 'Moderator'">
-            <p
-            @click="
-              () => {
-                useMembers.store.banchurned.type = 'churned';
-                useMembers.store.banchurned.status = true;
-                useMembers.store.user_id = useMembers.store.member_data.id;
-              }
-            "
-            class="md:mt-5 mt-4 hover:underline _ceb font-medium cursor-pointer"
-          >
-            Remove from group
-          </p>
-          <p
-            @click="
-              () => {
-                useMembers.store.banchurned.type = 'ban';
-                useMembers.store.banchurned.status = true;
-              }
-            "
-            class="md:mt-5 mt-4 hover:underline _ceb font-medium cursor-pointer"
-          >
-            Ban from group
-          </p>
-          </div>
-        </section>
       </div>
     </div>
 
@@ -1256,8 +2044,12 @@
             }}</span
             >. <br />
             Delete recent activity? <br />
-            Delete <span class="font-semibold">{{ useMembers.store.member_data.name }}'s</span> recent posts and comments from their profile here
-            before banning them. It's easier this way.
+            Delete
+            <span class="font-semibold"
+              >{{ useMembers.store.member_data.name }}'s</span
+            >
+            recent posts and comments from their profile here before banning
+            them. It's easier this way.
           </span>
         </p>
         <div class="flex justify-end gap-3 text-sm font-semibold">
@@ -1388,7 +2180,7 @@
 </template>
 
 <script setup>
-import { members_sidebar } from "@/composables";
+import { role_ac, members_sidebar, membership_settings } from "@/composables";
 import {
   useMemberStore,
   useLoadingStore,
@@ -1467,6 +2259,53 @@ const post_category_access = [
   },
 ];
 
+const group_notification = [
+  {
+    label: "Chat on",
+    value: "ON",
+  },
+  {
+    label: "Chat off",
+    value: "OFF",
+  },
+];
+
+const notifications_membership = [
+  {
+    title: ["Digest email", "summary of popular posts"],
+    select: ["Daily", "Weekly (default)", "Every 14-Days", "Monthly", "Never"],
+  },
+  {
+    title: ["Notifications email", "summary of unread notifications"],
+    select: [
+      "5-mins",
+      "Hourly (default)",
+      "3-hours",
+      "6-hours",
+      "12-hours",
+      "Daily",
+      "Every 2nd day",
+      "Weekly",
+      "Never",
+    ],
+  },
+  {
+    title: ["Likes", "when somebody likes my posts or comments"],
+    select: ["Notify me (default)", "Don't notify me"],
+  },
+  {
+title: ["Admin announcements", "get email broadcasts sent by admins"],
+select: ["Yes (default)", "No"],
+  },
+  {
+    title: [
+      "Event reminders",
+      "notify me of calendar events the day before they happen",
+    ],
+    select: ["Yes (default)", "No"],
+  },
+];
+
 function handleGeneralFile(e) {
   const file = e.target.files[0];
   const url = URL.createObjectURL(file);
@@ -1521,15 +2360,16 @@ function deleteFunc(type, data) {
   }
 }
 
-function editLevel(data) {
+function editLevel(data, index) {
+  console.log(data)
   useMembers.store.levelId = data.id;
-  useMembers.level.name = data.level;
-  useMembers.level.custom_name = data.custom_name;
+  useMembers.level.name = `Level ${index + 1}`;
+  useMembers.level.custom_name = data.level;
   useMembers.store.editGamification = true;
 }
 
 function openData(index, name) {
-  store.slideStep = index;
+  isLoading.store.slideStep = index;
   store.is_open_name = name;
   store.is_open = true;
 }
@@ -1562,15 +2402,15 @@ function editPostCategory(data) {
 }
 
 watch(
-  () => store.slideStep,
+  () => isLoading.store.slideStep,
   () => {
     try {
-      console.log(store.slideStep);
-      if (store.slideStep == 8) {
+      console.log(isLoading.store.slideStep);
+      if (isLoading.store.slideStep == 8) {
         useMembers.getLevels();
       }
       const slide = document.querySelector(".mainSlider");
-      slide.style.transform = `translateY(-${store.slideStep * 100}%)`;
+      slide.style.transform = `translateY(-${isLoading.store.slideStep * 100}%)`;
     } catch (error) {
       console.log(error);
     }

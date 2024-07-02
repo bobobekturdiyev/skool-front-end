@@ -34,7 +34,8 @@ export const useSettingsStore = defineStore("settings", () => {
         },
       })
       .then((res) => {
-        for (const [key, value] of Object.entries(res.data?.data)) {
+        console.log(res);
+        for (const [key, value] of Object.entries(res.data)) {
           if (key === "socials") {
             for (const socialKey in value) {
               isLoading.user_update_checker.socials[socialKey] =
@@ -134,8 +135,9 @@ export const useSettingsStore = defineStore("settings", () => {
         },
       })
       .then((res) => {
+        console.log(res);
         store.editNameModal = false;
-        for (const [key, value] of Object.entries(res.data?.data)) {
+        for (const [key, value] of Object.entries(res.data)) {
           if (key === "socials") {
             for (const socialKey in value) {
               isLoading.user_update_checker.socials[socialKey] =

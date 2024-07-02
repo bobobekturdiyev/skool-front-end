@@ -442,12 +442,21 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 .color_list {
-  .el-select-dropdown__item  {
+  .el-select-dropdown__item {
     width: 40px !important;
     height: 40px !important;
     span {
       display: none !important;
     }
     padding: 0 !important;
+  }
+}
+
+.my_groups {
+  img {
+    overflow: hidden !important;
+  }
+  * {
+    overflow: hidden !important;
   }
 }

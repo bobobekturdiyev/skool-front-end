@@ -14,6 +14,12 @@ export const usePostStore = defineStore("post", () => {
     posts: [],
     postData: [],
     members_count: 0,
+    setupgroup: {
+      is_description: false,
+      is_image: false,
+      is_post: false,
+      is_three_member: false,
+    },
     categories: [],
     deleteCategoryData: "",
     isCheckConfirm: false,
@@ -118,6 +124,11 @@ export const usePostStore = defineStore("post", () => {
         console.log(res, "kfdlfkd");
         store.posts = res.data?.data;
         store.members_count = res.data?.members_count;
+        for (let i in store.setupgroup) {
+          console.log(i);
+          store.setupgroup[i] = res.data[i];
+        }
+        console.log(store.setupgroup)
         for (let i in isLoading.store.pagination) {
           isLoading.store.pagination[i] = res.data?.meta[i];
         }
@@ -424,7 +435,7 @@ export const usePostStore = defineStore("post", () => {
     }
     formData.append("types", JSON.stringify(types));
     if (store.comment_id[3] != isLoading.user.id) {
-      formData.append("reply_user_id", store.comment_id[3])
+      formData.append("reply_user_id", store.comment_id[3]);
     }
     for (let [key, value] of formData.entries()) {
       console.log(`${key}: ${value}`);

@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
-import { useLoadingStore, useGroupStore } from "@/store";
+import { useLoadingStore, useGroupStore, usePostStore } from "@/store";
 import axios from "axios";
 
 export const useMemberStore = defineStore("members", () => {
   const isLoading = useLoadingStore();
+  const usePost = usePostStore();
   const useGroup = useGroupStore();
   const runtime = useRuntimeConfig();
   const baseUrl = runtime.public.baseURL;
@@ -25,7 +26,7 @@ export const useMemberStore = defineStore("members", () => {
     banchurned: {
       status: false,
       data: [],
-      type: 'ban',
+      type: "ban",
     },
   });
 
@@ -55,20 +56,16 @@ export const useMemberStore = defineStore("members", () => {
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("groupMembes");
-    let url = ''
+    let url = "";
     if (router.currentRoute.value.query?.type) {
-      url = `?t=${router.currentRoute.value.query?.type}`
+      url = `?t=${router.currentRoute.value.query?.type}`;
     }
     axios
-      .get(
-        baseUrl +
-          `get-group-members/${group_username}${url}`,
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
+      .get(baseUrl + `get-group-members/${group_username}${url}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
       .then((res) => {
         console.log(res);
         store.members = res.data;
@@ -87,11 +84,15 @@ export const useMemberStore = defineStore("members", () => {
     const token = localStorage.getItem("token");
     isLoading.addLoading("editLevels");
     axios
-      .put(baseUrl + `update-leaderboard/${store.levelId}`, level, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
+      .put(
+        baseUrl + `level/${store.levelId}`,
+        { name: level.custom_name },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
       .then((res) => {
         store.editGamification = false;
         getLevels();
@@ -108,14 +109,14 @@ export const useMemberStore = defineStore("members", () => {
     const token = localStorage.getItem("token");
     isLoading.addLoading("getLevels");
     axios
-      .get(baseUrl + `get-leaderboard/${group_username}`, {
+      .get(baseUrl + `level/${group_username}`, {
         headers: {
           Authorization: "Bearer " + token,
         },
       })
       .then((res) => {
         console.log(res);
-        store.levels = res.data?.data;
+        store.levels = res.data;
         isLoading.removeLoading("getLevels");
       })
       .catch((err) => {
@@ -133,6 +134,11 @@ export const useMemberStore = defineStore("members", () => {
     }
     general.icon.url = data.icon;
     general.image.url = data.image;
+    if (!data.image) {
+      usePost.store.setupgroup.is_image = false;
+    } else {
+      usePost.store.setupgroup.is_image = true;
+    }
   }
 
   function gereralSettings() {
@@ -206,20 +212,16 @@ export const useMemberStore = defineStore("members", () => {
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("groupMembesRequest");
-    let url = ''
+    let url = "";
     if (store.request_types) {
-      url = `?t=${store.request_types}`
+      url = `?t=${store.request_types}`;
     }
     axios
-      .get(
-        baseUrl +
-          `get-member-pending/${group_username}${url}`,
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
+      .get(baseUrl + `get-member-pending/${group_username}${url}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
       .then((res) => {
         console.log(res);
         store.member_requests = res.data;

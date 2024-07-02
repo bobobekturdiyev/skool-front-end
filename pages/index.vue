@@ -76,11 +76,7 @@
             "
             class="flex items-center md:h-9 h-8 min-w-fit hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full"
           >
-            <img
-              class="w-[14px] h-[21px] object-contain"
-              :src="i.icon"
-              alt=""
-            />{{ i.name }}
+            {{ i.name }}
           </button>
           <img
             v-if="!store.is_show && useCategory.store.categories"
@@ -154,7 +150,7 @@
                         type="radio"
                         name="price"
                       />
-                      {{i.title}}
+                      {{ i.title }}
                     </el-dropdown-item>
                   </label>
                 </div>
@@ -213,11 +209,7 @@
           "
           class="flex items-center md:h-9 h-8 hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full"
         >
-          <img
-            class="w-[14px] h-[21px] object-contain"
-            :src="i.icon"
-            alt=""
-          />{{ i.name }}
+          {{ i.name }}
         </button>
       </div>
     </el-drawer>
@@ -227,6 +219,10 @@
 <script setup>
 import { useLoadingStore, useCategoryStore, useGroupStore } from "@/store";
 
+const obj = {x: 1, y: 2}
+let {x: a, y: b} = obj;
+a = 2
+console.log(obj.x, obj.y)
 const isLoading = useLoadingStore();
 const useCategory = useCategoryStore();
 const useGroup = useGroupStore();
@@ -290,10 +286,10 @@ function onFilterPrice(e) {
   if (e.target.id == "price_all") {
     useGroup.store.filter.price = "all";
   } else {
-    if (e.target.id == 'price_free') {
-      useGroup.store.filter.price = 'free';
-    } else if (e.target.id == 'price_paid') {
-      useGroup.store.filter.price = 'paid';
+    if (e.target.id == "price_free") {
+      useGroup.store.filter.price = "free";
+    } else if (e.target.id == "price_paid") {
+      useGroup.store.filter.price = "paid";
     }
   }
   isLoading.changeQuery("price", useGroup.store.filter.price);

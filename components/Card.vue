@@ -42,10 +42,16 @@
         #{{ i.id }}
       </p>
       <img
+        v-if="i.image"
         class="card w-full object-cover md:h-[180px] sm:h-[140px] h-[120px]"
         :src="i.image"
         alt=""
       />
+      <div
+        v-else
+        :style="`background: ${i.color}`"
+        class="card w-full object-cover md:h-[180px] sm:h-[140px] h-[120px]"
+      ></div>
     </div>
     <div class="md:p-4 p-3">
       <div class="flex items-center md:gap-4 gap-2">
@@ -71,7 +77,7 @@
         </h1>
       </div>
       <p class="md:mt-4 mt-3 md:mb-7 mb-3 lg:text-[16px] text-sm line-clamp-2">
-        {{ i.description }}
+        {{ i.excerpt }}
       </p>
       <div
         class="flex flex-wrap items-center whitespace-nowrap gap-2 _c07 font-bold md:text-sm text-[10px]"
@@ -79,11 +85,16 @@
         <p class="px-2 py-1 r_8 bg-[#F2F2F2]">
           {{ i.group_type == "private" ? "Private" : "Public" }}
         </p>
-        <p class="md:block hidden px-2 py-1 r_8 bg-[#F2F2F2]">226k Members</p>
+        {{ i.members_count }}
+        <p class="md:block hidden px-2 py-1 r_8 bg-[#F2F2F2]">
+          {{ i.members }} Members
+        </p>
         <p class="px-2 py-1 r_8 bg-[#F2F2F2]">
           {{ i.group_price == "free" ? "Free" : "Paid" }}
         </p>
-        <p class="md:hidden block px-2 py-1 r_8 bg-[#F2F2F2]">226k Members</p>
+        <p class="md:hidden block px-2 py-1 r_8 bg-[#F2F2F2]">
+          {{ i.members }} Members
+        </p>
       </div>
     </div>
   </div>

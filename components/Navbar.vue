@@ -79,7 +79,7 @@
                   placeholder="Search"
                 />
               </div>
-              <el-dropdown-item>
+              <el-dropdown-item @click="$router.push('/create_community')">
                 <div class="flex items-center gap-3">
                   <img src="@/assets/svg/create_community.svg" alt="" />
                   <p>{{ $t("nav.create_community") }}</p>
@@ -89,6 +89,27 @@
                 <div class="flex items-center gap-3">
                   <img src="@/assets/svg/discover.svg" alt="" />
                   <p>{{ $t("nav.discover") }}</p>
+                </div>
+              </el-dropdown-item>
+              <el-dropdown-item
+                v-for="i in useGroup.store.mygroups"
+                @click="$router.push(`/${i.username}`)"
+              >
+                <div class="flex items-center gap-3 max-w-[200px] my_groups">
+                  <img
+                    class="!w-6 !h-6 min-w-[24px] rounded-lg object-cover r_8 !overflow-hidden"
+                    v-if="i.icon"
+                    :src="i.icon"
+                    alt=""
+                  />
+                  <div
+                    v-else
+                    class="full_flex text-white uppercase w-6 h-6 min-w-[24px] md:text-[10px] text-[10px] r_8"
+                    :style="`background: ${i.color}`"
+                  >
+                    {{ i.initials }}
+                  </div>
+                  <p class="!truncate !max-w-[200px]">{{ i.name }}</p>
                 </div>
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -152,7 +173,8 @@
           v-show="isLoading.store.isLogin"
           class="sm:flex items-center hidden gap-7"
         >
-          <el-dropdown :hide-on-click="false"
+          <el-dropdown
+            :hide-on-click="false"
             class="chat_dropdown"
             placement="bottom-end"
             trigger="click"
@@ -311,7 +333,7 @@
     </el-dialog>
 
     <!-- chat -->
-    <el-dialog 
+    <el-dialog
       v-model="isLoading.store.chatModal"
       v-if="isLoading.store.chatModal"
       align-center
@@ -572,12 +594,12 @@ import en from "@/assets/svg/en.svg";
 import { useI18n } from "vue-i18n";
 
 // const { locale } = useI18n();
-
+const router = useRouter();
 const useAuth = useAuthStore();
 const useGroup = useGroupStore();
 const isLoading = useLoadingStore();
 const useChat = useChatStore();
-
+isLoading.addLoading("getByUsername");
 const search_bar = ["index", "settings", "community-about"];
 
 const store = reactive({
@@ -613,11 +635,16 @@ watch(
 onBeforeMount(() => {
   store.is_mount = true;
   useGroup.groupByUsername();
+  useGroup.getMyGroups();
 });
 
 onBeforeMount(() => {
   useAuth.getUser();
 });
+
+watch(() => router.currentRoute.value.params.community, () => {
+  useGroup.groupByUsername();
+})
 </script>
 
 <style lang="scss" scoped>

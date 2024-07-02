@@ -10,6 +10,7 @@ export const useCategoryStore = defineStore("category", () => {
   const store = reactive({
     categories: [],
   });
+
   function getCategories() {
     const token = localStorage.getItem("token");
     isLoading.addLoading("groupCategories");

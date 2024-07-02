@@ -15,7 +15,7 @@
       </p>
       <el-pagination
         v-model:current-page="isLoading.store.pagination.current_page"
-        :page-size="isLoading.store.pagination_type"
+        :page-size="isLoading.store.pagination.per_page"
         :small="small"
         :disabled="disabled"
         :background="background"
