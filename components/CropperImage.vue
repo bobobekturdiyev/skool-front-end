@@ -24,7 +24,7 @@ function cropperImage() {
     var dataURL = canvas.toDataURL();
 
     isLoading.store.croppedImage = dataURL;
-    isLoading.store.croppedFile = base64ToFile(dataURL, "upload")
+    isLoading.store.croppedFile = base64ToFile(dataURL, "upload.jpg")
     isLoading.store.cropModal = false;
 }
 

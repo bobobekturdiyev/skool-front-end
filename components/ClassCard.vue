@@ -47,16 +47,24 @@
           </el-dropdown>
         </div>
         <div>
-          <img
-            v-if="i.image"
-            class="w-full card md:h-[180px] sm:h-[140px] h-[88px] object-cover"
-            :src="i.image"
-            alt=""
-          />
-          <p
-            v-else
-            class="w-full card md:h-[180px] sm:h-[140px] h-[120px] b_cbc"
-          ></p>
+          <div>
+            <img
+              v-if="i.image"
+              class="w-full card md:h-[180px] sm:h-[140px] h-[88px] object-cover"
+              :src="i.image"
+              alt=""
+            />
+            <p
+              v-else
+              class="w-full card md:h-[180px] sm:h-[140px] h-[120px] b_cbc"
+            ></p>
+          </div>
+          <div v-if="i.access == 'private'"
+            class="absolute text-white gap-2 bg-black bg-opacity-30 top-0 full_flex flex-col w-full card md:h-[180px] sm:h-[140px] h-[88px] object-cover"
+          >
+            <img class="w-6 h-8" src="@/assets/svg/icon/lock.svg" alt="" />
+            <p>Private Course</p>
+          </div>
         </div>
         <div class="p-4">
           <div class="flex items-center gap-4">
@@ -90,7 +98,7 @@
         <p class="md:text-[16px] text-[10px]">Add new cource</p>
       </div>
     </div>
- 
+
     <!-- add course -->
     <el-dialog
       v-model="useClassroom.store.add_course"
@@ -154,7 +162,7 @@
             </el-option>
           </el-select>
         </div>
-        <div v-if="useClassroom.create.access == 'certain'">
+        <div v-if="useClassroom.create.access == 'level_lock'">
           <label class="_ca1 text-xs" for="access"
             >Access starts at level</label
           >
@@ -327,15 +335,15 @@ const store = reactive({
 const access_list = [
   {
     label: "All members have access",
-    value: "all",
+    value: "public",
   },
   {
     label: "Only some members have access",
-    value: "some",
+    value: "private",
   },
   {
     label: "Members of a certain level",
-    value: "certain",
+    value: "level_lock",
   },
 ];
 
@@ -367,11 +375,16 @@ function handleEditCourse(data) {
   for (let i in useClassroom.create) {
     useClassroom.create[i] = data[i];
   }
+  console.log(useClassroom.create.image);
+  isLoading.store.croppedImage = useClassroom.create.image;
+  isLoading.store.croppedFile = useClassroom.create.image;
 }
 
 function handleAddedPhoto(e) {
   isLoading.store.cropModal = false;
   const file = e.target.files[0];
+  console.log(file);
+  // useClassroom.create.image = file;
   isLoading.store.previewImage = URL.createObjectURL(file);
   document.getElementById("add_photo").value = "";
   setTimeout(() => {

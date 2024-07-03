@@ -36,14 +36,13 @@ export const useClassroomStore = defineStore("classroom", () => {
     title: "",
     description: "",
     image: "",
-    access: "all",
+    access: "public",
     level: null,
     published: true,
   });
 
-
   const module = reactive({
-    name: "",
+    title: "",
     video: "",
     video_content: "",
     published: true,
@@ -67,7 +66,7 @@ export const useClassroomStore = defineStore("classroom", () => {
     for (let i of Object.keys(create)) {
       create[i] = "";
     }
-    create.access = "all";
+    create.access = "public";
     create.published = true;
     store.cropperPreview = false;
     store.add_course = false;
@@ -81,16 +80,25 @@ export const useClassroomStore = defineStore("classroom", () => {
   }
 
   function create_course() {
-    if(store.edit_course) {
+    if (store.edit_course) {
       return update_course();
     }
     const formData = new FormData();
     for (let i of Object.keys(create)) {
       formData.append(i, create[i]);
     }
+    formData.delete("published");
+    if (create.access != "level_lock") {
+      formData.delete("level");
+    }
+    formData.append("published", create.published ? 1 : 0);
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("createCourse");
+    console.log(create.image);
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
 
     axios
       .post(baseUrl + `add-course/${group_username}`, formData, {
@@ -99,7 +107,7 @@ export const useClassroomStore = defineStore("classroom", () => {
         },
       })
       .then((res) => {
-        const slug = res.data?.data?.slug;
+        const slug = res.data?.slug;
         router.push(`/${group_username}/classroom/${slug}`);
         clearCreate();
         isLoading.removeLoading("createCourse");
@@ -115,19 +123,31 @@ export const useClassroomStore = defineStore("classroom", () => {
     for (let i of Object.keys(create)) {
       formData.append(i, create[i]);
     }
-    const group_username = router.currentRoute.value.params.community;
+    console.log(create.image)
+    if (!create.image || isLoading.isURL(create.image)) {
+      formData.delete("image");
+      formData.append("is_deleted", "deleted");
+    }
+    formData.delete("published");
+    if (create.access != "level_lock") {
+      formData.delete("level");
+    }
+    formData.append("published", create.published ? 1 : 0);
+    const username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("createCourse");
-
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
     axios
-      .post(baseUrl + `update-course/${create.slug}`, formData, {
+      .post(baseUrl + `${username}/update-course/${create.slug}`, formData, {
         headers: {
           Authorization: "Bearer " + token,
         },
       })
       .then((res) => {
-        const slug = res.data?.data?.slug;
-        router.push(`/${group_username}/classroom/${slug}`);
+        const slug = res.data?.slug;
+        router.push(`/${username}/classroom/${slug}`);
         clearCreate();
         isLoading.removeLoading("createCourse");
       })
@@ -144,9 +164,9 @@ export const useClassroomStore = defineStore("classroom", () => {
     const slug = router.currentRoute.value.params.id;
     const token = localStorage.getItem("token");
     isLoading.addLoading("createSet");
-    console.log(set)
+    console.log(set);
     axios
-      .post(baseUrl + `add-set/${slug}`, set, {
+      .post(baseUrl + `${slug}/add-set`, set, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -168,11 +188,15 @@ export const useClassroomStore = defineStore("classroom", () => {
     isLoading.addLoading("createSet");
 
     axios
-      .put(baseUrl + `update-set/${slug}`, { ...set, set_id: store.set_id }, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
+      .put(
+        baseUrl + `${slug}/update-set/${store.set_id}`,
+        set,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
       .then((res) => {
         clearSet();
         get_module();
@@ -189,12 +213,12 @@ export const useClassroomStore = defineStore("classroom", () => {
     for (let i of Object.keys(module)) {
       formData.append(i, module[i]);
     }
-    const course_name = router.currentRoute.value.params.id;
+    formData.delete("published");
+    formData.append("published", create.published ? 1 : 0);
     const token = localStorage.getItem("token");
     isLoading.addLoading("createModule");
-
     axios
-      .post(baseUrl + `add-module/`, formData, {
+      .post(baseUrl + `set/${module.set_id}/add-lesson`, formData, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -203,13 +227,12 @@ export const useClassroomStore = defineStore("classroom", () => {
         clearModule();
         get_module();
         isLoading.removeLoading("createModule");
-        if (type == 'new_module') {
-          local_store.moduleActiveId = res.data.data.id
-          module.name = res.data.data?.name;
+        if (type == "new_module") {
+          local_store.moduleActiveId = res.data.id;
+          module.title = res.data.name;
         } else {
           local_store.edit_card = false;
         }
-
       })
       .catch((err) => {
         console.log(err);
@@ -222,12 +245,14 @@ export const useClassroomStore = defineStore("classroom", () => {
     for (let i of Object.keys(module)) {
       formData.append(i, module[i]);
     }
+    formData.delete("published");
+    formData.append("published", create.published ? 1 : 0);
     const course_name = router.currentRoute.value.params.id;
     const token = localStorage.getItem("token");
     isLoading.addLoading("createModule");
 
     axios
-      .post(baseUrl + `update-module/${local_store.moduleActiveId}`, formData, {
+      .post(baseUrl + `set/${module.set_id}/update-lesson/${local_store.moduleActiveId}`, formData, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -236,13 +261,45 @@ export const useClassroomStore = defineStore("classroom", () => {
         clearModule();
         get_module();
         isLoading.removeLoading("createModule");
-        if (type == 'new_module') {
-          local_store.moduleActiveId = res.data.data.id
-          module.name = res.data.data?.name;
+        if (type == "new_module") {
+          local_store.moduleActiveId = res.data.data.id;
+          module.title = res.data.data?.name;
         } else {
           local_store.edit_card = false;
         }
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("createModule");
+      });
+  }
 
+  function update_set_position(type) {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("createModule");
+    const slug = router.currentRoute.value.params.id;
+    const ids = [];
+    for (let i of store.modules?.set) {
+      ids.push(i.id);
+    }
+    axios
+      .post(baseUrl + `${slug}/set-position`, {
+        ids
+      }, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        clearModule();
+        get_module();
+        isLoading.removeLoading("createModule");
+        if (type == "new_module") {
+          local_store.moduleActiveId = res.data.data.id;
+          module.title = res.data.data?.name;
+        } else {
+          local_store.edit_card = false;
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -251,14 +308,15 @@ export const useClassroomStore = defineStore("classroom", () => {
   }
 
   function get_module() {
-    const module_slug = router.currentRoute.value.params.id;
+    const slug = router.currentRoute.value.params.id;
+    const username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("getModules");
 
     axios
       .get(
         baseUrl +
-        `get-course/${module_slug}?page=${isLoading.store.pagination.current_page}`,
+          `${username}/get-course/${slug}?page=${isLoading.store.pagination.current_page}`,
         {
           headers: {
             Authorization: "Bearer " + token,
@@ -266,8 +324,8 @@ export const useClassroomStore = defineStore("classroom", () => {
         }
       )
       .then((res) => {
-        console.log(res);
-        store.modules = res.data?.data;
+        console.log(res, "slug");
+        store.modules = res.data;
         isLoading.removeLoading("getModules");
       })
       .catch((err) => {
@@ -280,13 +338,13 @@ export const useClassroomStore = defineStore("classroom", () => {
     const token = localStorage.getItem("token");
     isLoading.addLoading("deleteModule");
     axios
-      .delete(baseUrl + `delete-module/${local_store.moduleActiveId}`, {
+      .delete(baseUrl + `delete-lesson/${local_store.moduleActiveId}`, {
         headers: {
           Authorization: "Bearer " + token,
         },
       })
       .then((res) => {
-        local_store.moduleActiveId = '';
+        local_store.moduleActiveId = "";
         get_module();
         isLoading.removeLoading("deleteModule");
       })
@@ -301,7 +359,7 @@ export const useClassroomStore = defineStore("classroom", () => {
     isLoading.addLoading("deleteSet");
     const slug = router.currentRoute.value.params.id;
     axios
-      .delete(baseUrl + `delete-set/${slug}/${id}`, {
+      .delete(baseUrl + `${slug}/delete-set/${id}`, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -319,9 +377,10 @@ export const useClassroomStore = defineStore("classroom", () => {
   function delete_course(group_username) {
     const token = localStorage.getItem("token");
     isLoading.addLoading("deleteCourse");
+    const username = router.currentRoute.value.params.community;
 
     axios
-      .delete(baseUrl + `delete-course/${group_username}`, {
+      .delete(baseUrl + `${username}/delete-course/${group_username}`, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -336,7 +395,6 @@ export const useClassroomStore = defineStore("classroom", () => {
       });
   }
 
-
   function get_classroom() {
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
@@ -345,7 +403,7 @@ export const useClassroomStore = defineStore("classroom", () => {
     axios
       .get(
         baseUrl +
-        `classroom/${group_username}?page=${isLoading.store.pagination.current_page}`,
+          `${group_username}/classroom?page=${isLoading.store.pagination.current_page}`,
         {
           headers: {
             Authorization: "Bearer " + token,
@@ -353,6 +411,7 @@ export const useClassroomStore = defineStore("classroom", () => {
         }
       )
       .then((res) => {
+        console.log(res);
         store.classrooms = res.data?.data;
         for (let i in isLoading.store.pagination) {
           isLoading.store.pagination[i] = res.data.meta[i];
@@ -381,5 +440,6 @@ export const useClassroomStore = defineStore("classroom", () => {
     delete_course,
     delete_module,
     delete_set,
+    update_set_position,
   };
 });
