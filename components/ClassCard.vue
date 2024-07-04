@@ -39,7 +39,7 @@
                 >
                 <el-dropdown-item>Add set</el-dropdown-item>
                 <el-dropdown-item>Add module</el-dropdown-item>
-                <el-dropdown-item @click="useClassroom.delete_course(i.title)"
+                <el-dropdown-item @click="useClassroom.delete_course(i.slug)"
                   >Delete course</el-dropdown-item
                 >
               </el-dropdown-menu>
@@ -77,8 +77,8 @@
           >
             {{ i.description }}
           </p>
-          <el-progress class="class_progress" :percentage="45" />
-          <p class="sm:text-xs text-[10px] mt-2">45% complete</p>
+          <el-progress class="class_progress" :percentage="i.percentage" />
+          <p class="sm:text-xs text-[10px] mt-2">{{i.percentage}}% complete</p>
         </div>
         <router-link
           :to="`/${$router.currentRoute.value.params.community}/classroom/${i.slug}`"
@@ -92,7 +92,7 @@
       </div>
       <div
         @click="useClassroom.store.add_course = true"
-        class="relative border-2 border-dashed md:h-[409px] h-[300px] border-[#BCDEFF] cursor-pointer text-[#59ACFF] full_flex flex-col gap-[10px] font-semibold overflow-hidden r_16"
+        class="relative border-2 border-dashed md:h-[409px] sm:h-[356px] h-[275px] border-[#BCDEFF] cursor-pointer text-[#59ACFF] full_flex flex-col gap-[10px] font-semibold overflow-hidden r_16"
       >
         <img src="@/assets/svg/add_course.svg" alt="" />
         <p class="md:text-[16px] text-[10px]">Add new cource</p>
@@ -375,6 +375,7 @@ function handleEditCourse(data) {
   for (let i in useClassroom.create) {
     useClassroom.create[i] = data[i];
   }
+  useClassroom.create.published = data.published ? true : false;
   console.log(useClassroom.create.image);
   isLoading.store.croppedImage = useClassroom.create.image;
   isLoading.store.croppedFile = useClassroom.create.image;

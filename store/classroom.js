@@ -18,11 +18,14 @@ export const useClassroomStore = defineStore("classroom", () => {
     moduleIndex: "",
     setIndex: "",
     moduleData: "",
+    classroomReyting: 0,
+    activeTab: "",
   });
 
   const store = reactive({
     classrooms: [],
     modules: [],
+    old_modules: [],
     add_course: false,
     edit_course: false,
     cropperPreview: false,
@@ -101,7 +104,7 @@ export const useClassroomStore = defineStore("classroom", () => {
     }
 
     axios
-      .post(baseUrl + `add-course/${group_username}`, formData, {
+      .post(baseUrl + `${group_username}/add-course`, formData, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -123,7 +126,7 @@ export const useClassroomStore = defineStore("classroom", () => {
     for (let i of Object.keys(create)) {
       formData.append(i, create[i]);
     }
-    console.log(create.image)
+    console.log(create.image);
     if (!create.image || isLoading.isURL(create.image)) {
       formData.delete("image");
       formData.append("is_deleted", "deleted");
@@ -157,6 +160,76 @@ export const useClassroomStore = defineStore("classroom", () => {
       });
   }
 
+  function update_completed() {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("markAsCompleted");
+    axios
+      .post(
+        baseUrl + `lesson-completed/${local_store.moduleData.id}`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        local_store.moduleData.completed = !local_store.moduleData.completed;
+        let data;
+        for (let i = 0; i < store.modules?.set?.length; i++) {
+          data = store.modules?.set[i];
+          if (data.type == "set") {
+            for (let lesson = 0; lesson < data.lesson?.length; lesson++) {
+              if (data.lesson[lesson].id == local_store.activeName) {
+                store.modules.set[i].lesson[lesson].completed =
+                  !store.modules?.set[i].lesson[lesson].completed;
+                break;
+              }
+            }
+          } else {
+            if (store.modules.set[i].id == local_store.activeName) {
+              if (res.data.message == 'Lesson completed successfully') {
+                store.modules.set[i].completed = true;
+              } else {
+                store.modules.set[i].completed = false;
+              }
+              break;
+            }
+          }
+        }
+        store.old_modules = JSON.parse(JSON.stringify(store.modules));
+        setCourseReyting()
+        isLoading.removeLoading("markAsCompleted");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("markAsCompleted");
+      });
+  }
+
+  function setCourseReyting() {
+    let reyting = 0;
+    let lesson_count = 0;
+    for (let i of store.modules.set) {
+      if (i.type == "set" && i.lesson?.length) {
+        for (let lesson of i.lesson) {
+          if (lesson.completed) {
+            reyting++;
+          }
+          lesson_count++;
+        }
+      } else if (i.type == "lesson") {
+        if (i.completed) {
+          reyting++;
+        }
+        lesson_count++;
+      }
+    }
+    store.classroomReyting = Math.floor((reyting * 100) / lesson_count) | 0;
+  }
+
+
   function create_set() {
     if (store.setEdit) {
       return update_set();
@@ -188,15 +261,11 @@ export const useClassroomStore = defineStore("classroom", () => {
     isLoading.addLoading("createSet");
 
     axios
-      .put(
-        baseUrl + `${slug}/update-set/${store.set_id}`,
-        set,
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
+      .put(baseUrl + `${slug}/update-set/${store.set_id}`, set, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
       .then((res) => {
         clearSet();
         get_module();
@@ -209,6 +278,10 @@ export const useClassroomStore = defineStore("classroom", () => {
   }
 
   function create_module(type) {
+    if (!module.set_id) {
+      add_coursemodule();
+      return;
+    }
     const formData = new FormData();
     for (let i of Object.keys(module)) {
       formData.append(i, module[i]);
@@ -240,23 +313,61 @@ export const useClassroomStore = defineStore("classroom", () => {
       });
   }
 
-  function update_module(type) {
+  function add_coursemodule(type) {
+    const course_name = router.currentRoute.value.params.id;
     const formData = new FormData();
     for (let i of Object.keys(module)) {
       formData.append(i, module[i]);
     }
     formData.delete("published");
     formData.append("published", create.published ? 1 : 0);
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("createModule");
+    axios
+      .post(baseUrl + `course/${course_name}/add-lesson`, formData, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        clearModule();
+        get_module();
+        isLoading.removeLoading("createModule");
+        if (type == "new_module") {
+          local_store.moduleActiveId = res.data.id;
+          module.title = res.data.name;
+        } else {
+          local_store.edit_card = false;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("createModule");
+      });
+  }
+
+  function update_module(type) {
+    const formData = new FormData();
+    for (let i of Object.keys(module)) {
+      formData.append(i, module[i]);
+    }
+    formData.delete("published");
+    formData.append("published", module.published ? 1 : 0);
     const course_name = router.currentRoute.value.params.id;
     const token = localStorage.getItem("token");
     isLoading.addLoading("createModule");
 
     axios
-      .post(baseUrl + `set/${module.set_id}/update-lesson/${local_store.moduleActiveId}`, formData, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
+      .post(
+        baseUrl +
+          `course/${course_name}/update-lesson/${local_store.moduleActiveId}`,
+        formData,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
       .then((res) => {
         clearModule();
         get_module();
@@ -276,24 +387,56 @@ export const useClassroomStore = defineStore("classroom", () => {
 
   function update_set_position(type) {
     const token = localStorage.getItem("token");
-    isLoading.addLoading("createModule");
+    isLoading.addLoading("updatePosition");
     const slug = router.currentRoute.value.params.id;
     const ids = [];
+    let data;
+    let lesson_id = [];
+    let module_id = null;
     for (let i of store.modules?.set) {
-      ids.push(i.id);
+      lesson_id = [];
+      module_id = null;
+      if (i.type == "set") {
+        module_id = i.id;
+        for (let lesson of i.lesson) {
+          if (lesson.type == "set") {
+            isLoading.removeLoading("updatePosition");
+            store.modules = store.old_modules;
+            return;
+          }
+          lesson_id.push(lesson.id);
+        }
+        data = {
+          module_id,
+          lesson_id,
+          course_id: store.modules.id,
+        };
+      } else {
+        data = {
+          module_id,
+          lesson_id: [i.id],
+          course_id: store.modules.id,
+        };
+      }
+      ids.push(data);
     }
+    console.log(ids);
     axios
-      .post(baseUrl + `${slug}/set-position`, {
-        ids
-      }, {
-        headers: {
-          Authorization: "Bearer " + token,
+      .post(
+        baseUrl + `lesson-position`,
+        {
+          ids,
         },
-      })
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
       .then((res) => {
         clearModule();
         get_module();
-        isLoading.removeLoading("createModule");
+        isLoading.removeLoading("updatePosition");
         if (type == "new_module") {
           local_store.moduleActiveId = res.data.data.id;
           module.title = res.data.data?.name;
@@ -303,7 +446,8 @@ export const useClassroomStore = defineStore("classroom", () => {
       })
       .catch((err) => {
         console.log(err);
-        isLoading.removeLoading("createModule");
+        store.modules = store.old_modules;
+        isLoading.removeLoading("updatePosition");
       });
   }
 
@@ -326,6 +470,19 @@ export const useClassroomStore = defineStore("classroom", () => {
       .then((res) => {
         console.log(res, "slug");
         store.modules = res.data;
+        store.old_modules = JSON.parse(JSON.stringify(res.data));
+        
+        for (let i of res.data.set) {
+          local_store.activeName = i.id;
+          if (i.type == "set" && i.lesson?.length) {
+            local_store.moduleData = i.lesson[0];
+            break;
+          } else if (i.type == "lesson") {
+            local_store.moduleData = i;
+            break;
+          }
+        }
+        setCourseReyting()
         isLoading.removeLoading("getModules");
       })
       .catch((err) => {
@@ -441,5 +598,6 @@ export const useClassroomStore = defineStore("classroom", () => {
     delete_module,
     delete_set,
     update_set_position,
+    update_completed,
   };
 });

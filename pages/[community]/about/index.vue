@@ -10,7 +10,7 @@
       <section class="w-full bg-white md:px-7 md:py-6 p-3 r_16 overflow-hidden">
         <h1 class="font-semibold md:text-2xl text-lg mb-6">{{ useGroup.store.group_by_username.name }}</h1>
         <div class="w-full overflow-hidden r_16">
-          <div v-if="useGroup.store.group_by_username.medias.length" @click="() => {store.slideModal = true; useGroup.store.slideStep2 = useGroup.store.slideStep}"
+          <div v-if="useGroup.store.group_by_username.medias?.length" @click="() => {store.slideModal = true; useGroup.store.slideStep2 = useGroup.store.slideStep}"
             class="mainSlider cursor-pointer duration-500 lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] flex items-center w-full r_16">
             <div class="min-w-full" v-for="(post, index) in useGroup.store.group_by_username.medias">
               <div v-if="post.type == 'image'" class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] w-full min-w-[100%] object-cover">
@@ -69,7 +69,7 @@
           </div>
                 </template>
   </draggable>
-            <div v-if="useGroup.store.group_by_username.medias.length < 6 && useGroup.store.group_by_username.medias.length > 0 && role_ac.includes(useGroup.store.group_by_username.type)" @click="useGroup.store.add_media = true"
+            <div v-if="useGroup.store.group_by_username.medias?.length < 6 && useGroup.store.group_by_username.medias?.length > 0 && role_ac.includes(useGroup.store.group_by_username.type)" @click="useGroup.store.add_media = true"
               class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px]"
             >
               <img class="w-1/3" src="@/assets/svg/add_photo.svg" alt="" />
@@ -339,7 +339,7 @@ function handleMediaUpload(e) {
 
 function handleSlideChange(type) {
   if (type == "right") {
-        if (useGroup.store.slideStep2 < useGroup.store.group_by_username.medias.length - 1) {
+        if (useGroup.store.slideStep2 < useGroup.store.group_by_username.medias?.length - 1) {
           useGroup.store.slideStep2 += 1;
         }
       } else if (type == "left") {
@@ -413,7 +413,7 @@ onBeforeMount(() => {
     // Check if Ctrl key is pressed and the key pressed along with it
     if (!store.slideModal) {
       if (event.key == "ArrowRight") {
-        if (useGroup.store.slideStep < useGroup.store.group_by_username.medias.length - 1) {
+        if (useGroup.store.slideStep < useGroup.store.group_by_username.medias?.length - 1) {
           useGroup.store.slideStep += 1;
         }
       } else if (event.key == "ArrowLeft") {
@@ -423,7 +423,7 @@ onBeforeMount(() => {
       }
     } else {
       if (event.key == "ArrowRight") {
-        if (useGroup.store.slideStep2 < useGroup.store.group_by_username.medias.length - 1) {
+        if (useGroup.store.slideStep2 < useGroup.store.group_by_username.medias?.length - 1) {
           useGroup.store.slideStep2 += 1;
         }
       } else if (event.key == "ArrowLeft") {
@@ -434,6 +434,17 @@ onBeforeMount(() => {
     }
   });
 });
+
+const ids = [
+  {
+    module_id: 1,
+    lesson_ids: [2, 3, 4],
+  },
+  {
+    module_id: null,
+    lesson_ids: [2, 3, 4],
+  },
+]
 </script>
 
 <style lang="scss" scoped></style>

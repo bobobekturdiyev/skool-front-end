@@ -6,7 +6,9 @@
     >
       <div class="b_cd9 rounded-xl p-5">
         <div class="flex items-center justify-between">
-          <h1 class="text-lg font-semibold">Skool 101</h1>
+          <h1 class="text-lg font-semibold">
+            {{ useClassroom.store.modules.title }}
+          </h1>
           <el-dropdown placement="bottom-end" class="dropdown" trigger="click">
             <img src="@/assets/svg/three_dot.svg" alt="" />
             <template #dropdown>
@@ -17,18 +19,28 @@
                 <el-dropdown-item @click="useClassroom.store.setModal = true"
                   >Add set</el-dropdown-item
                 >
-                <el-dropdown-item>Add module</el-dropdown-item>
+                <el-dropdown-item @click="addModuleInSet()"
+                  >Add module</el-dropdown-item
+                >
                 <el-dropdown-item>Delete course</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
         </div>
         <div class="mt-10">
-          <el-progress class="module_progress" :percentage="45" />
-          <p class="text-xs mt-2">45% complete</p>
+          <el-progress
+            class="module_progress"
+            :percentage="useClassroom.store.classroomReyting"
+          />
+          <p class="text-xs mt-2">
+            {{ useClassroom.store.classroomReyting }}% complete
+          </p>
         </div>
       </div>
-      <aside v-if="useClassroom.store.modules?.set">
+      <aside
+        v-loading="isLoading.isLoadingType('updatePosition')"
+        v-if="useClassroom.store.modules?.set"
+      >
         <ul class="_c07 text-sm mt-5">
           <draggable
             :list="useClassroom.store.modules?.set"
@@ -37,12 +49,16 @@
             :animation="200"
             class="grid"
           >
-            <li v-for="(i, index) in useClassroom.store.modules?.set">
+            <li
+              v-for="(i, index) in useClassroom.store.modules?.set"
+              :class="i.type == 'lesson' ? 'lesson_type' : ''"
+            >
               <div class="flex items-center h-[44px] r_8 cursor-pointer">
                 <div
-                  @click="handleActive(i.id)"
+                  @click="handleActive(i)"
                   :class="
-                    useClassroom.local_store.activeName == i.id
+                    useClassroom.local_store.activeName == i.id &&
+                    useClassroom.store.activeTab == i.type
                       ? 'bg-transparent _c2a font-semibold'
                       : 'bg-white r_8'
                   "
@@ -51,16 +67,44 @@
                   <div class="flex items-center truncate max-w-[80%]">
                     <p
                       :class="
-                        useClassroom.local_store.activeName == i.id
+                        useClassroom.local_store.activeName == i.id &&
+                        useClassroom.store.activeTab == i.type
                           ? 'b_c2a'
                           : 'bg-transparent'
                       "
                       class="mr-4 w-1 h-[44px]"
                     ></p>
-                    <span class="max-w-[90%] truncate">{{ i.name }}</span>
+                    <span class="max-w-[90%] truncate">{{
+                      i.type == "lesson" ? i.title : i.name
+                    }}</span>
                   </div>
                   <div class="flex items-center gap-[10px]">
-                    <el-dropdown placement="bottom-end" class="dropdown">
+                    <el-dropdown
+                      v-if="i.type == 'lesson'"
+                      placement="bottom-end"
+                      class="dropdown"
+                      trigger="click"
+                    >
+                      <img
+                        class="rotate-90 three_dot"
+                        src="@/assets/svg/three_dot.svg"
+                        alt=""
+                      />
+                      <template #dropdown>
+                        <el-dropdown-menu
+                          class="community_dropdown min-w-[200px] dropdown_shadow"
+                        >
+                          <el-dropdown-item @click="editModule(i)"
+                            >Edit module</el-dropdown-item
+                          >
+                          <el-dropdown-item
+                            @click="useClassroom.delete_module()"
+                            >Delete module</el-dropdown-item
+                          >
+                        </el-dropdown-menu>
+                      </template>
+                    </el-dropdown>
+                    <el-dropdown v-else placement="bottom-end" class="dropdown">
                       <img
                         class="rotate-90"
                         src="@/assets/svg/three_dot.svg"
@@ -84,13 +128,20 @@
                         </el-dropdown-menu>
                       </template>
                     </el-dropdown>
+                    <p
+                      v-if="i.completed && i.type == 'lesson'"
+                      class="full_flex rounded-full b_c2a h-5 w-5"
+                    >
+                      <img class="w-3 h-3" src="@/assets/svg/true.svg" alt="" />
+                    </p>
                     <img
                       :class="
-                        useClassroom.local_store.activeName == i.id
+                        useClassroom.local_store.activeName == i.id &&
+                        useClassroom.store.activeTab == i.type
                           ? 'rotate-180'
                           : ''
                       "
-                      class="duration-500"
+                      class="duration-500 lesson_img"
                       src="@/assets/svg/select_arrow.svg"
                       alt=""
                     />
@@ -99,48 +150,69 @@
               </div>
               <ul
                 :class="
-                  useClassroom.local_store.activeName == i.id
+                  useClassroom.local_store.activeName == i.id &&
+                  useClassroom.store.activeTab == i.type
                     ? ''
                     : 'h-0 overflow-hidden'
                 "
                 class="w-full duration-1000"
               >
-                <li
-                  @click="() => activeModule(lesson.id, m_index, index)"
-                  v-for="(lesson, m_index) in i.lesson"
-                  :class="
-                    useClassroom.local_store.moduleActiveId == lesson.id
-                      ? 'b_cbc'
-                      : ''
-                  "
-                  class="flex items-center justify-between module_name text-xs pl-9 pr-2 h-8 r_8 cursor-pointer"
+                <draggable
+                  :list="useClassroom.store.modules?.set[index].lesson"
+                  @change="useClassroom.update_set_position"
+                  group="set"
+                  :animation="200"
+                  class="grid"
                 >
-                  <p class="truncate">{{ lesson.title }}</p>
-                  <el-dropdown
-                    placement="bottom-end"
-                    class="dropdown"
-                    trigger="click"
+                  <li
+                    @click="() => activeModule(lesson.id, m_index, index)"
+                    v-for="(lesson, m_index) in i.lesson"
+                    :class="
+                      useClassroom.local_store.moduleActiveId == lesson.id
+                        ? 'b_cbc'
+                        : ''
+                    "
+                    class="flex items-center justify-between module_name text-xs pl-9 pr-2 h-8 r_8 cursor-pointer"
                   >
-                    <img
-                      class="rotate-90 three_dot hidden"
-                      src="@/assets/svg/three_dot.svg"
-                      alt=""
-                    />
-                    <template #dropdown>
-                      <el-dropdown-menu
-                        class="community_dropdown min-w-[200px] dropdown_shadow"
+                    <p class="truncate">{{ lesson.title }}</p>
+                    <div class="flex gap-2 items-center">
+                      <el-dropdown
+                        placement="bottom-end"
+                        class="dropdown"
+                        trigger="click"
                       >
-                        <el-dropdown-item
-                          @click="useClassroom.local_store.edit_card = true"
-                          >Edit module</el-dropdown-item
-                        >
-                        <el-dropdown-item @click="useClassroom.delete_module()"
-                          >Delete module</el-dropdown-item
-                        >
-                      </el-dropdown-menu>
-                    </template>
-                  </el-dropdown>
-                </li>
+                        <img
+                          class="rotate-90 three_dot"
+                          src="@/assets/svg/three_dot.svg"
+                          alt=""
+                        />
+                        <template #dropdown>
+                          <el-dropdown-menu
+                            class="community_dropdown min-w-[200px] dropdown_shadow"
+                          >
+                            <el-dropdown-item @click="editModule(lesson)"
+                              >Edit module</el-dropdown-item
+                            >
+                            <el-dropdown-item
+                              @click="useClassroom.delete_module()"
+                              >Delete module</el-dropdown-item
+                            >
+                          </el-dropdown-menu>
+                        </template>
+                      </el-dropdown>
+                      <p
+                        v-if="lesson.completed && lesson.type == 'lesson'"
+                        class="full_flex rounded-full b_c2a h-5 w-5"
+                      >
+                        <img
+                          class="w-3 h-3"
+                          src="@/assets/svg/true.svg"
+                          alt=""
+                        />
+                      </p>
+                    </div>
+                  </li>
+                </draggable>
               </ul>
             </li>
           </draggable>
@@ -168,18 +240,23 @@
           <div
             class="flex items-center justify-between border-b border-[#E0E0E0] w-full h-16 px-5 bg-white"
           >
-            <h1
-              v-if="useClassroom.store.modules?.set?.length"
-              class="text-xl font-semibold truncate max-w-[250px]"
-            >
-              {{
-                useClassroom.store.modules?.set[
-                  useClassroom.local_store.setIndex
-                ]?.lesson[useClassroom.local_store.moduleIndex]?.title
-              }}
+            <h1 class="text-xl font-semibold truncate max-w-[250px]">
+              {{ useClassroom.local_store.moduleData?.title }}
             </h1>
             <div class="full_flex gap-4">
               <button
+                v-if="useClassroom.local_store.moduleData?.completed"
+                v-loading="isLoading.isLoadingType('markAsCompleted')"
+                @click="useClassroom.update_completed()"
+                class="full_flex gap-1 r_8 _c07 bg-[#BCFFC7] h-9 px-3"
+              >
+                <img src="@/assets/svg/mark_as_read_black.svg" alt="" />
+                <p class="lg:block hidden">Marked</p>
+              </button>
+              <button
+                v-else
+                v-loading="isLoading.isLoadingType('markAsCompleted')"
+                @click="useClassroom.update_completed()"
                 class="full_flex gap-1 border border-[#BCDEFF] r_8 _c2a h-9 px-3"
               >
                 <img src="@/assets/svg/mark_as_read.svg" alt="" />
@@ -256,6 +333,19 @@
           ></iframe>
         </div>
         <Editor />
+        <div>
+          <p class="font-semibold">Resources</p>
+          <ul class="max-w-fit text-sm space-y-1 mt-2 mb-4">
+            <li class="full_flex gap-2 _c2a hover:underline cursor-pointer">
+              <img class="w-5 h-5 p-0.5" src="@/assets/svg/href.svg" alt="" />
+              <p>New link</p>
+            </li>
+            <li class="full_flex gap-2 _c2a hover:underline cursor-pointer">
+              <img class="w-5 h-5" src="@/assets/svg/file.svg" alt="" />
+              <p>New link</p>
+            </li>
+          </ul>
+        </div>
 
         <div
           class="lg:flex lg:items-center lg:justify-between lg:space-y-0 space-y-4"
@@ -263,12 +353,23 @@
           <div
             class="flex items-center lg:justify-center justify-between gap-6 _c07"
           >
-            <button
-              type="button"
-              class="full_flex gap-2 text-sm border border-[#E0E0E0] rounded-[4px] px-3"
+            <el-dropdown
+              placement="bottom-start"
+              class="dropdown border border-[#E0E0E0] px-3 min-w-fit rounded-[4px]"
+              trigger="click"
             >
-              Add <img src="@/assets/svg/select_arrow.svg" alt="" />
-            </button>
+              <button type="button" class="full_flex gap-2 text-sm">
+                Add<img src="@/assets/svg/select_arrow.svg" alt="" />
+              </button>
+              <template #dropdown>
+                <el-dropdown-menu
+                  class="community_dropdown !-ml-3 min-w-[200px] dropdown_shadow"
+                >
+                  <el-dropdown-item>Add resource link</el-dropdown-item>
+                  <el-dropdown-item>Add resource file</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
             <div class="flex items-center gap-6">
               <p
                 v-if="useClassroom.module.published"
@@ -429,11 +530,30 @@ function activeModule(id, m_index, s_index) {
   useClassroom.local_store.setIndex = s_index;
   useClassroom.local_store.moduleData =
     useClassroom.store.modules.set[s_index]?.lesson[m_index];
-    console.log(useClassroom.local_store.moduleData)
+  console.log(useClassroom.local_store.moduleData);
   for (let i in useClassroom.module) {
     useClassroom.module[i] = useClassroom.local_store.moduleData[i];
   }
   store.is_open = true;
+}
+
+function handleActive(data) {
+  useClassroom.local_store.moduleActiveId = data.id;
+  useClassroom.store.activeTab = data.type;
+  if (data.type == "lesson") {
+    useClassroom.local_store.moduleData = data;
+    console.log(useClassroom.local_store.moduleData);
+    for (let i in useClassroom.module) {
+      useClassroom.module[i] = data[i];
+    }
+    console.log(useClassroom.module);
+    store.is_open = true;
+  }
+  if (useClassroom.local_store.activeName == data.id) {
+    useClassroom.local_store.activeName = "";
+  } else {
+    useClassroom.local_store.activeName = data.id;
+  }
 }
 
 function addModuleInSet(id) {
@@ -446,17 +566,15 @@ function addModuleInSet(id) {
 
 function editSet(set) {
   useClassroom.store.set_id = set.id;
+  useClassroom.set.published = set.published ? true : false;
   useClassroom.set.name = set.name;
   useClassroom.store.setEdit = true;
   useClassroom.store.setModal = true;
 }
 
-function handleActive(id) {
-  if (useClassroom.local_store.activeName == id) {
-    useClassroom.local_store.activeName = "";
-  } else {
-    useClassroom.local_store.activeName = id;
-  }
+function editModule(data) {
+  useClassroom.module.published = data.published ? true : false;
+  useClassroom.local_store.edit_card = true;
 }
 
 function handleVideoLink() {
