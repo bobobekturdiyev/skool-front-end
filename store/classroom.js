@@ -32,15 +32,29 @@ export const useClassroomStore = defineStore("classroom", () => {
     setModal: false,
     setEdit: false,
     set_id: "",
+    add_file: false,
+    file_type: "",
+    file: {
+      file: "",
+      name: "",
+      type: "",
+      is_new: "",
+      data: "",
+    },
+    files: [],
   });
+
+  const file_edit = {
+    create: false,
+    edit: false,
+    delete: false,
+  };
 
   const create = reactive({
     slug: "",
     title: "",
     description: "",
     image: "",
-    access: "public",
-    level: null,
     published: true,
   });
 
@@ -189,7 +203,7 @@ export const useClassroomStore = defineStore("classroom", () => {
             }
           } else {
             if (store.modules.set[i].id == local_store.activeName) {
-              if (res.data.message == 'Lesson completed successfully') {
+              if (res.data.message == "Lesson completed successfully") {
                 store.modules.set[i].completed = true;
               } else {
                 store.modules.set[i].completed = false;
@@ -199,7 +213,7 @@ export const useClassroomStore = defineStore("classroom", () => {
           }
         }
         store.old_modules = JSON.parse(JSON.stringify(store.modules));
-        setCourseReyting()
+        setCourseReyting();
         isLoading.removeLoading("markAsCompleted");
       })
       .catch((err) => {
@@ -228,7 +242,6 @@ export const useClassroomStore = defineStore("classroom", () => {
     }
     store.classroomReyting = Math.floor((reyting * 100) / lesson_count) | 0;
   }
-
 
   function create_set() {
     if (store.setEdit) {
@@ -353,6 +366,36 @@ export const useClassroomStore = defineStore("classroom", () => {
     }
     formData.delete("published");
     formData.append("published", module.published ? 1 : 0);
+    const positions = [];
+    const deleted = [];
+    let l_step = 1;
+    let f_step = 1;
+    let name;
+    for (let i of store.files) {
+      console.log(i);
+      if (i.is_new == "deleted") {
+        deleted.push(i.id);
+        continue;
+      }
+      if (i.type == "link") {
+        name = `link${l_step++}`;
+        if (i.is_new !== false) {
+          formData.append(name, i.file);
+        }
+      } else {
+        name = `file${f_step++}`;
+        if (i.is_new !== false) {
+          formData.append(name, i.file);
+        }
+      }
+      positions.push([i.is_new === false ? i.id : name, i.name, i.type, i.url]);
+    }
+    formData.append("positions", JSON.stringify(positions));
+    formData.append("deleted", JSON.stringify(deleted));
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+
     const course_name = router.currentRoute.value.params.id;
     const token = localStorage.getItem("token");
     isLoading.addLoading("createModule");
@@ -369,15 +412,10 @@ export const useClassroomStore = defineStore("classroom", () => {
         }
       )
       .then((res) => {
+        console.log(res);
         clearModule();
-        get_module();
+        setModuleData(res.data)
         isLoading.removeLoading("createModule");
-        if (type == "new_module") {
-          local_store.moduleActiveId = res.data.data.id;
-          module.title = res.data.data?.name;
-        } else {
-          local_store.edit_card = false;
-        }
       })
       .catch((err) => {
         console.log(err);
@@ -451,6 +489,47 @@ export const useClassroomStore = defineStore("classroom", () => {
       });
   }
 
+  function setModuleData(data) {
+    const id = +router.currentRoute.value.query.module;
+    store.modules = data;
+    store.old_modules = JSON.parse(JSON.stringify(data));
+    store.activeTab = "lesson";
+
+    if (id) {
+      for (let i of store.modules.set) {
+        local_store.activeName = id;
+        local_store.moduleActiveId = id;
+        if (i.type == "set" && i.lesson?.length) {
+          for (let lesson of i.lesson) {
+            if (lesson.id == id) {
+              local_store.moduleData = lesson;
+              break;
+            }
+          }
+        } else if (i.type == "lesson") {
+          console.log(i, '================================')
+          if (i.id == id) {
+            local_store.moduleData = i;
+            break;
+          }
+        }
+      }
+    } else {
+      for (let i of store.modules.set) {
+        local_store.activeName = i.id;
+        if (i.type == "set" && i.lesson?.length) {
+          local_store.moduleData = i.lesson[0];
+          break;
+        } else if (i.type == "lesson") {
+          local_store.moduleData = i;
+          break;
+        }
+      }
+    }
+    store.files = local_store.moduleData.set;
+    local_store.edit_card = false;
+  }
+
   function get_module() {
     const slug = router.currentRoute.value.params.id;
     const username = router.currentRoute.value.params.community;
@@ -469,20 +548,8 @@ export const useClassroomStore = defineStore("classroom", () => {
       )
       .then((res) => {
         console.log(res, "slug");
-        store.modules = res.data;
-        store.old_modules = JSON.parse(JSON.stringify(res.data));
-        
-        for (let i of res.data.set) {
-          local_store.activeName = i.id;
-          if (i.type == "set" && i.lesson?.length) {
-            local_store.moduleData = i.lesson[0];
-            break;
-          } else if (i.type == "lesson") {
-            local_store.moduleData = i;
-            break;
-          }
-        }
-        setCourseReyting()
+        setModuleData(res.data);
+        setCourseReyting();
         isLoading.removeLoading("getModules");
       })
       .catch((err) => {
@@ -587,6 +654,7 @@ export const useClassroomStore = defineStore("classroom", () => {
     create,
     module,
     set,
+    file_edit,
     get_classroom,
     create_course,
     update_course,

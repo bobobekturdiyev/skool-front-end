@@ -286,6 +286,30 @@
               v-if="useClassroom.local_store.moduleData?.video_content"
               v-html="useClassroom.local_store.moduleData?.video_content"
             ></p>
+            <div v-if="useClassroom.local_store.moduleData.media?.length">
+              <p class="font-semibold">Resources</p>
+              <ul class="max-w-fit text-sm space-y-1 mt-2 mb-4">
+                <li
+                  v-for="(media, index) in useClassroom.local_store.moduleData
+                    .media"
+                  class="full_flex !justify-start gap-2 _c2a hover:underline cursor-pointer"
+                >
+                  <img
+                    v-if="media.type == 'link'"
+                    class="w-5 h-5 p-0.5"
+                    src="@/assets/svg/href.svg"
+                    alt=""
+                  />
+                  <img
+                    v-else
+                    class="w-5 h-5"
+                    src="@/assets/svg/file.svg"
+                    alt=""
+                  />
+                  <p>{{ media.name }}</p>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -333,16 +357,56 @@
           ></iframe>
         </div>
         <Editor />
-        <div>
+        <div v-if="useClassroom.store.files?.length">
           <p class="font-semibold">Resources</p>
           <ul class="max-w-fit text-sm space-y-1 mt-2 mb-4">
-            <li class="full_flex gap-2 _c2a hover:underline cursor-pointer">
-              <img class="w-5 h-5 p-0.5" src="@/assets/svg/href.svg" alt="" />
-              <p>New link</p>
-            </li>
-            <li class="full_flex gap-2 _c2a hover:underline cursor-pointer">
-              <img class="w-5 h-5" src="@/assets/svg/file.svg" alt="" />
-              <p>New link</p>
+            <li
+              v-for="(i, index) in useClassroom.store.files"
+              v-show="i.is_new != 'deleted'"
+              class="full_flex !justify-start gap-2 _c2a hover:underline cursor-pointer"
+            >
+              <img
+                v-if="i.type == 'link'"
+                class="w-5 h-5 p-0.5"
+                src="@/assets/svg/href.svg"
+                alt=""
+              />
+              <img v-else class="w-5 h-5" src="@/assets/svg/file.svg" alt="" />
+              <p>{{ i.name }}</p>
+              <el-dropdown placement="bottom-end" class="dropdown ml-4">
+                <img
+                  class="rotate-90 three_dot"
+                  src="@/assets/svg/three_dot.svg"
+                  alt=""
+                />
+                <template #dropdown>
+                  <el-dropdown-menu
+                    class="community_dropdown min-w-[200px] dropdown_shadow"
+                  >
+                    <el-dropdown-item @click="editModuleFile(index)"
+                      >Edit</el-dropdown-item
+                    >
+                    <el-dropdown-item
+                      ><span :class="index == 0 ? '_ca1' : ''"
+                        >Move up</span
+                      ></el-dropdown-item
+                    >
+                    <el-dropdown-item>
+                      <span
+                        :class="
+                          index == useClassroom.store.files?.length - 1
+                            ? '_ca1'
+                            : ''
+                        "
+                        >Move down</span
+                      ></el-dropdown-item
+                    >
+                    <el-dropdown-item @click="deleteData('media', index)"
+                      ><span>Delete</span></el-dropdown-item
+                    >
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </li>
           </ul>
         </div>
@@ -365,8 +429,20 @@
                 <el-dropdown-menu
                   class="community_dropdown !-ml-3 min-w-[200px] dropdown_shadow"
                 >
-                  <el-dropdown-item>Add resource link</el-dropdown-item>
-                  <el-dropdown-item>Add resource file</el-dropdown-item>
+                  <el-dropdown-item @click="handleLikeUpload"
+                    >Add resource link</el-dropdown-item
+                  >
+                  <label for="upload_file">
+                    <el-dropdown-item>
+                      Add resource file
+                      <input
+                        @change="handleFileUpload"
+                        type="file"
+                        id="upload_file"
+                        class="block w-0 h-0 !p-0 overflow-hidden !border-none"
+                      />
+                    </el-dropdown-item>
+                  </label>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -506,6 +582,118 @@
         </div>
       </form>
     </el-dialog>
+
+    <!-- add label for file -->
+    <el-dialog
+      v-model="useClassroom.store.add_file"
+      width="400"
+      align-center
+      class="bg-opacity-50 !rounded-lg py-7 px-6"
+    >
+      <form @submit.prevent="handleAddFile">
+        <h1 class="text-2xl font-semibold mb-4">
+          Add {{ useClassroom.store.file_type }}
+        </h1>
+        <div
+          v-if="useClassroom.store.file_type != 'link'"
+          class="flex gap-2 _c2a mt-3 mb-4 hover:underline cursor-pointer"
+        >
+          <img class="w-5 h-5" src="@/assets/svg/file.svg" alt="" />
+          <p class="truncate">{{ useClassroom.store.file.file.name }}</p>
+        </div>
+        <input
+          @input="handleInput('label')"
+          v-model="useClassroom.store.file.name"
+          class="text-sm"
+          type="text"
+          placeholder="Label"
+          required
+        />
+        <p class="text-end mt-2 _ca1 md:text-sm text-xs">
+          {{ useClassroom.store.file.name?.length }}/34
+        </p>
+        <input
+          v-if="useClassroom.store.file_type == 'link'"
+          v-model="useClassroom.store.file.file"
+          class="text-sm mt-4"
+          type="url"
+          placeholder="Enter a URL"
+          required
+        />
+        <p
+          v-if="useClassroom.local_store.is_url"
+          class="leading-4 text-red-600 -mb-6 mt-2 vip"
+        >
+          Invalid link
+        </p>
+        <div class="flex justify-end gap-3 mt-7 text-sm font-semibold">
+          <button
+            @click="useClassroom.store.add_file = false"
+            type="button"
+            class="uppercase h-10 px-6 rounded-lg _ca1"
+          >
+            cancel
+          </button>
+          <button
+            :class="
+              useClassroom.store.file_type == 'link'
+                ? useClassroom.store.file.name?.length &&
+                  useClassroom.store.file.file?.length
+                : useClassroom.store.file.name?.length
+                ? 'b_cbc _c07'
+                : 'b_ce0 _ca1 pointer-events-none'
+            "
+            class="uppercase h-10 px-6 rounded-lg"
+            v-loading="isLoading.isLoadingType('createModule')"
+          >
+            <span v-if="useClassroom.file_edit.edit">
+              <span v-if="useClassroom.store.file_type == 'link'">Link</span>
+              <span v-else>Save</span>
+            </span>
+            <span v-else-if="useClassroom.store.file_type == 'link'">Link</span>
+            <span v-else>Save</span>
+          </button>
+        </div>
+      </form>
+    </el-dialog>
+
+    <!-- Delete -->
+    <el-dialog
+      v-model="useClassroom.file_edit.delete"
+      width="400"
+      align-center
+      class="!rounded-xl overflow-hidden px-6 py-7"
+    >
+      <div class="space-y-7">
+        <h1 class="text-2xl font-semibold">
+          {{ store.delete_data.title }}
+        </h1>
+        <p class="text-lg">{{ store.delete_data.description }}</p>
+        <div class="flex justify-end gap-3 text-sm font-semibold">
+          <button
+            @click="useClassroom.file_edit.delete = false"
+            class="uppercase h-10 px-6 rounded-lg _ca1"
+          >
+            cancel
+          </button>
+          <button
+            v-if="store.deleteType == 'media'"
+            @click="handleDeleteMedia"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            delete
+          </button>
+          <button
+            v-else-if="isLoading.membersModal.modalType == 'link'"
+            @click="useLink.deleteLink"
+            v-loading="isLoading.isLoadingType('deleteLink')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            delete
+          </button>
+        </div>
+      </div>
+    </el-dialog>
   </main>
 </template>
 
@@ -519,10 +707,103 @@ import { VueDraggableNext as draggable } from "vue-draggable-next";
 
 const isLoading = useLoadingStore();
 const useClassroom = useClassroomStore();
+const router = useRouter();
 
 const store = reactive({
   is_open: false,
+  deleteType: "",
+  delete_data: {},
 });
+
+const deleteMediaFile = {
+  title: "Delete file?",
+  description: "Are you sure you want to delete this file",
+};
+
+function deleteData(type, index) {
+  useClassroom.store.media_id = index;
+  store.deleteType = type;
+  if (type == "media") {
+    store.delete_data = deleteMediaFile;
+  }
+  useClassroom.file_edit.delete = true;
+}
+
+function handleDeleteMedia() {
+  if (useClassroom.store.files[useClassroom.store.media_id].is_new == false) {
+    useClassroom.store.files[useClassroom.store.media_id] = {
+      ...useClassroom.store.files[useClassroom.store.media_id],
+      is_new: "deleted",
+    };
+  } else {
+    useClassroom.store.files.splice(useClassroom.store.media_id, 1);
+  }
+  useClassroom.file_edit.delete = false;
+}
+
+function editModuleFile(index) {
+  const data = useClassroom.store.files[index];
+  useClassroom.store.file_type = data.type;
+  useClassroom.store.media_id = index;
+  console.log(data);
+  useClassroom.store.file = {
+    ...data,
+    file: data.type == "link" ? data.url : {},
+    name: data.name,
+    type: data.type,
+    is_new: data.id ? false : null,
+  };
+  if (data.type != "link") {
+    useClassroom.store.file.file.name = data.name;
+  }
+  useClassroom.file_edit.edit = true;
+  useClassroom.store.add_file = true;
+}
+
+function handleAddFile() {
+  if (useClassroom.file_edit.edit) {
+    console.log(useClassroom.store.file)
+    useClassroom.store.files[useClassroom.store.media_id] = {
+      ...useClassroom.store.file,
+    };
+    useClassroom.store.add_file = false;
+    return;
+  }
+  if (useClassroom.store.file_type == "link") {
+    useClassroom.store.file.type = "link";
+    useClassroom.local_store.is_url = !isLoading.isURL(
+      useClassroom.store.file.file
+    );
+    if (!useClassroom.local_store.is_url) {
+      useClassroom.store.files.push({ ...useClassroom.store.file });
+      useClassroom.local_store.is_url = false;
+      useClassroom.store.add_file = false;
+    } else {
+      useClassroom.local_store.is_url = true;
+    }
+  } else {
+    useClassroom.store.files.push({ ...useClassroom.store.file });
+    useClassroom.store.add_file = false;
+  }
+}
+
+function handleFileUpload(e) {
+  const file = e.target.files[0];
+  useClassroom.store.file = {
+    file,
+    name: "",
+    type: file.type.split("/")[0],
+    is_new: "",
+    data: "",
+  };
+  useClassroom.store.add_file = true;
+  useClassroom.store.file_type = "file";
+}
+
+function handleLikeUpload(e) {
+  useClassroom.store.file_type = "link";
+  useClassroom.store.add_file = true;
+}
 
 function activeModule(id, m_index, s_index) {
   useClassroom.local_store.moduleActiveId = id;
@@ -538,6 +819,7 @@ function activeModule(id, m_index, s_index) {
 }
 
 function handleActive(data) {
+  router.push(`?module=${data.id}`)
   useClassroom.local_store.moduleActiveId = data.id;
   useClassroom.store.activeTab = data.type;
   if (data.type == "lesson") {
@@ -574,6 +856,11 @@ function editSet(set) {
 
 function editModule(data) {
   useClassroom.module.published = data.published ? true : false;
+  // useClassroom.store.files = data.media
+  useClassroom.store.files = [];
+  for (let i of data.media) {
+    useClassroom.store.files.push({ ...i, is_new: false, data: i });
+  }
   useClassroom.local_store.edit_card = true;
 }
 
@@ -597,7 +884,11 @@ function deleteImage() {
 }
 
 function handleInput(type) {
-  useClassroom.module.title = useClassroom.module?.title?.slice(0, 50);
+  if (type == "label") {
+    useClassroom.store.file.name = useClassroom.store.file.name?.slice(0, 34);
+  } else {
+    useClassroom.module.title = useClassroom.module?.title?.slice(0, 50);
+  }
 }
 
 function handleSubmit() {
@@ -605,6 +896,23 @@ function handleSubmit() {
     // document.querySelector(".tiptap").innerHTML;
     useClassroom.update_module();
 }
+
+watch(
+  () => useClassroom.store.add_file,
+  () => {
+    if (!useClassroom.store.add_file) {
+      useClassroom.store.file_type = "";
+      useClassroom.file_edit.edit = false;
+      useClassroom.store.file = {
+        file: "",
+        name: "",
+        type: "",
+        is_new: "",
+        data: "",
+      };
+    }
+  }
+);
 
 watch(
   () => useClassroom.store.setModal,
