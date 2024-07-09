@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
-import { useLoadingStore } from "@/store";
+import { useLoadingStore, useAddVideoStore } from "@/store";
 import axios from "axios";
 
 export const useClassroomStore = defineStore("classroom", () => {
   const isLoading = useLoadingStore();
+  const addVideo = useAddVideoStore();
   const runtime = useRuntimeConfig();
   const baseUrl = runtime.public.baseURL;
   const router = useRouter();
@@ -42,6 +43,12 @@ export const useClassroomStore = defineStore("classroom", () => {
       data: "",
     },
     files: [],
+    module_id: "",
+    current_category: null,
+    change_category: false,
+    dripModal: false,
+    is_drip: false,
+    drip_day: "",
   });
 
   const file_edit = {
@@ -61,9 +68,10 @@ export const useClassroomStore = defineStore("classroom", () => {
   const module = reactive({
     title: "",
     video: "",
-    video_content: "",
+    description: "",
     published: true,
     set_id: "",
+    video_content: "",
   });
 
   const set = reactive({
@@ -364,6 +372,7 @@ export const useClassroomStore = defineStore("classroom", () => {
     for (let i of Object.keys(module)) {
       formData.append(i, module[i]);
     }
+    formData.append("description", module.video_content);
     formData.delete("published");
     formData.append("published", module.published ? 1 : 0);
     const positions = [];
@@ -392,6 +401,10 @@ export const useClassroomStore = defineStore("classroom", () => {
     }
     formData.append("positions", JSON.stringify(positions));
     formData.append("deleted", JSON.stringify(deleted));
+    if (addVideo.store.files?.length) {
+      formData.append("link", addVideo.store.files[0]?.file);
+      formData.append("link_type", addVideo.store.files[0]?.type);
+    }
     for (let [key, value] of formData.entries()) {
       console.log(`${key}: ${value}`);
     }
@@ -414,7 +427,7 @@ export const useClassroomStore = defineStore("classroom", () => {
       .then((res) => {
         console.log(res);
         clearModule();
-        setModuleData(res.data)
+        setModuleData(res.data);
         isLoading.removeLoading("createModule");
       })
       .catch((err) => {
@@ -493,11 +506,11 @@ export const useClassroomStore = defineStore("classroom", () => {
     const id = +router.currentRoute.value.query.module;
     store.modules = data;
     store.old_modules = JSON.parse(JSON.stringify(data));
-    store.activeTab = "lesson";
+    store.activeTab = "set";
 
     if (id) {
       for (let i of store.modules.set) {
-        local_store.activeName = id;
+        local_store.activeName = i.id;
         local_store.moduleActiveId = id;
         if (i.type == "set" && i.lesson?.length) {
           for (let lesson of i.lesson) {
@@ -507,7 +520,6 @@ export const useClassroomStore = defineStore("classroom", () => {
             }
           }
         } else if (i.type == "lesson") {
-          console.log(i, '================================')
           if (i.id == id) {
             local_store.moduleData = i;
             break;
@@ -558,6 +570,145 @@ export const useClassroomStore = defineStore("classroom", () => {
       });
   }
 
+  function publish_module(module_id) {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("getModules");
+    const slug = router.currentRoute.value.params.id;
+    axios
+      .post(
+        baseUrl + `${slug}/lesson-published/${module_id}`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res, "slug");
+        setModuleData(res.data);
+        setCourseReyting();
+        isLoading.removeLoading("getModules");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("getModules");
+      });
+  }
+
+  function update_drip() {
+    // const slug = router.currentRoute.value.params.id;
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("updateDrip");
+    axios
+      .post(
+        baseUrl + `lesson-drip/${store.module_id}`,
+        {
+          days: store.is_drip ? store.drip_day : null,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        get_module();
+        store.dripModal = false;
+        store.drip_day = "";
+        isLoading.removeLoading("updateDrip");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("updateDrip");
+      });
+  }
+
+  function change_folder() {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("changeFolder");
+    axios
+      .post(
+        baseUrl + `lesson/set-or-course`,
+        {
+          lesson_id: store.module_id,
+          course_id: store.modules.id,
+          set_id: store.current_category,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res, "slug");
+        setModuleData(res.data);
+        setCourseReyting();
+        store.change_category = false;
+        isLoading.removeLoading("changeFolder");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("changeFolder");
+      });
+  }
+
+  function duplicate_module(module_id) {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("changeFolder");
+    axios
+      .post(
+        baseUrl + `${store.modules.id}/duplicate-lesson/${module_id}`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res, "slug");
+        setModuleData(res.data);
+        setCourseReyting();
+        store.change_category = false;
+        isLoading.removeLoading("changeFolder");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("changeFolder");
+      });
+  }
+
+  function update_course_position(id, position) {
+    const username = router.currentRoute.value.params.community;
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("getClassrooms");
+    axios
+      .post(
+        baseUrl + `${username}/course-position`,
+        {
+          id,
+          position,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res, "slug");
+        get_classroom();
+        isLoading.removeLoading("getClassrooms");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("getClassrooms");
+      });
+  }
+
   function delete_module() {
     const token = localStorage.getItem("token");
     isLoading.addLoading("deleteModule");
@@ -570,6 +721,7 @@ export const useClassroomStore = defineStore("classroom", () => {
       .then((res) => {
         local_store.moduleActiveId = "";
         get_module();
+        file_edit.delete = false;
         isLoading.removeLoading("deleteModule");
       })
       .catch((err) => {
@@ -578,18 +730,19 @@ export const useClassroomStore = defineStore("classroom", () => {
       });
   }
 
-  function delete_set(id) {
+  function delete_set() {
     const token = localStorage.getItem("token");
     isLoading.addLoading("deleteSet");
     const slug = router.currentRoute.value.params.id;
     axios
-      .delete(baseUrl + `${slug}/delete-set/${id}`, {
+      .delete(baseUrl + `${slug}/delete-set/${store.set_id}`, {
         headers: {
           Authorization: "Bearer " + token,
         },
       })
       .then((res) => {
         get_module();
+        file_edit.delete = false;
         isLoading.removeLoading("deleteSet");
       })
       .catch((err) => {
@@ -667,5 +820,10 @@ export const useClassroomStore = defineStore("classroom", () => {
     delete_set,
     update_set_position,
     update_completed,
+    publish_module,
+    change_folder,
+    duplicate_module,
+    update_course_position,
+    update_drip,
   };
 });

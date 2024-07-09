@@ -14,18 +14,18 @@
       </div>
       <div
         v-else
-        v-for="i in useClassroom.store.classrooms"
+        v-for="(i, index) in useClassroom.store.classrooms"
         data-aos="zoom-in"
         class="w-full course_card relative bg-white md:r_16 r_12 overflow-hidden"
       >
         <div
           :class="i.id == store.activeEdit ? 'edit_button_active' : ''"
-          class="absolute right-4 top-4 bg-white w-6 h-6 r_8 p-1 edit_button cursor-pointer !hidden full_flex"
+          class="absolute right-4 top-4 bg-white w-6 h-6 r_8 z-10 p-1 _c07 edit_button cursor-pointer !hidden full_flex"
         >
           <el-dropdown placement="bottom-end" class="dropdown" trigger="click">
             <img
               @click="store.activeEdit = i.id"
-              class="w-5 h-5"
+              class="w-5 h-5 relative"
               src="@/assets/svg/three_dot.svg"
               alt=""
             />
@@ -37,8 +37,20 @@
                 <el-dropdown-item @click="handleEditCourse(i)"
                   >Edit course</el-dropdown-item
                 >
-                <el-dropdown-item>Add set</el-dropdown-item>
-                <el-dropdown-item>Add module</el-dropdown-item>
+                <el-dropdown-item
+                @click="useClassroom.update_course_position(i.id, 'up')"
+                  :class="index == 0 ? 'opacity-50 pointer-events-none' : ''"
+                  >Move ←</el-dropdown-item
+                >
+                <el-dropdown-item
+                @click="useClassroom.update_course_position(i.id, 'down')"
+                  :class="
+                    isLoading.store.pagination.total == index + 1
+                      ? 'opacity-50 pointer-events-none'
+                      : ''
+                  "
+                  >Move →</el-dropdown-item
+                >
                 <el-dropdown-item @click="useClassroom.delete_course(i.slug)"
                   >Delete course</el-dropdown-item
                 >
@@ -59,7 +71,8 @@
               class="w-full card md:h-[180px] sm:h-[140px] h-[120px] b_cbc"
             ></p>
           </div>
-          <div v-if="i.access == 'private'"
+          <div
+            v-if="i.access == 'private'"
             class="absolute text-white gap-2 bg-black bg-opacity-30 top-0 full_flex flex-col w-full card md:h-[180px] sm:h-[140px] h-[88px] object-cover"
           >
             <img class="w-6 h-8" src="@/assets/svg/icon/lock.svg" alt="" />
@@ -78,7 +91,9 @@
             {{ i.description }}
           </p>
           <el-progress class="class_progress" :percentage="i.percentage" />
-          <p class="sm:text-xs text-[10px] mt-2">{{i.percentage}}% complete</p>
+          <p class="sm:text-xs text-[10px] mt-2">
+            {{ i.percentage }}% complete
+          </p>
         </div>
         <router-link
           :to="`/${$router.currentRoute.value.params.community}/classroom/${i.slug}`"

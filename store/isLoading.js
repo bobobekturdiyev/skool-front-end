@@ -183,6 +183,19 @@ export const useLoadingStore = defineStore("loading", () => {
   //   }
   // }
 
+  function formatDripDays(date) {
+    let today = new Date().getTime();
+    const day = new Date(date).getTime();
+    console.log(today);
+    console.log(day);
+    today = day - today;
+    console.log(today);
+    if (Math.ceil(today / 86400000) > 0) {
+      return Math.floor(today / 86400000)
+    }
+    return "Off";
+  }
+
   return {
     user,
     store,
@@ -196,5 +209,6 @@ export const useLoadingStore = defineStore("loading", () => {
     changeQuery,
     isURL,
     showMessage,
+    formatDripDays,
   };
 });

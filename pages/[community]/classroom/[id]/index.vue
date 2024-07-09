@@ -75,7 +75,9 @@
                       class="mr-4 w-1 h-[44px]"
                     ></p>
                     <span class="max-w-[90%] truncate">{{
-                      i.type == "lesson" ? i.title : i.name
+                      i.type == "lesson"
+                        ? (i.published ? "" : "(Draft) ") + i.title
+                        : i.name
                     }}</span>
                   </div>
                   <div class="flex items-center gap-[10px]">
@@ -83,7 +85,6 @@
                       v-if="i.type == 'lesson'"
                       placement="bottom-end"
                       class="dropdown"
-                      trigger="click"
                     >
                       <img
                         class="rotate-90 three_dot"
@@ -98,7 +99,25 @@
                             >Edit module</el-dropdown-item
                           >
                           <el-dropdown-item
-                            @click="useClassroom.delete_module()"
+                            @click="useClassroom.publish_module(i.id)"
+                            >{{
+                              i.published ? "Revert to draft" : "Publish module"
+                            }}</el-dropdown-item
+                          >
+                          <el-dropdown-item @click="changeFolder(i)"
+                            >Change folder</el-dropdown-item
+                          >
+                          <el-dropdown-item
+                            @click="useClassroom.duplicate_module(i.id)"
+                            >Duplicate</el-dropdown-item
+                          >
+                          <el-dropdown-item @click="dripModule(i)"
+                            >Drip status:
+                            {{
+                              i.drip?.length ? isLoading.formatDripDays(i.drip) : "Off"
+                            }}</el-dropdown-item
+                          >
+                          <el-dropdown-item @click="deleteModal('module', i.id)"
                             >Delete module</el-dropdown-item
                           >
                         </el-dropdown-menu>
@@ -118,8 +137,7 @@
                           <el-dropdown-item @click="editSet(i)"
                             >Edit set</el-dropdown-item
                           >
-                          <el-dropdown-item
-                            @click="useClassroom.delete_set(i.id)"
+                          <el-dropdown-item @click="deleteModal('set', i.id)"
                             >Delete set</el-dropdown-item
                           >
                           <el-dropdown-item @click="addModuleInSet(i.id)"
@@ -174,13 +192,11 @@
                     "
                     class="flex items-center justify-between module_name text-xs pl-9 pr-2 h-8 r_8 cursor-pointer"
                   >
-                    <p class="truncate">{{ lesson.title }}</p>
+                    <p class="truncate">
+                      {{ (lesson.published ? "" : "(Draft) ") + lesson.title }}
+                    </p>
                     <div class="flex gap-2 items-center">
-                      <el-dropdown
-                        placement="bottom-end"
-                        class="dropdown"
-                        trigger="click"
-                      >
+                      <el-dropdown placement="bottom-end" class="dropdown">
                         <img
                           class="rotate-90 three_dot"
                           src="@/assets/svg/three_dot.svg"
@@ -194,7 +210,25 @@
                               >Edit module</el-dropdown-item
                             >
                             <el-dropdown-item
-                              @click="useClassroom.delete_module()"
+                              @click="useClassroom.publish_module(lesson.id)"
+                              >{{
+                                lesson.published
+                                  ? "Revert to draft"
+                                  : "Publish module"
+                              }}</el-dropdown-item
+                            >
+                            <el-dropdown-item @click="changeFolder(lesson)"
+                              >Change folder</el-dropdown-item
+                            >
+                            <el-dropdown-item
+                              @click="useClassroom.duplicate_module(lesson.id)"
+                              >Duplicate</el-dropdown-item
+                            >
+                            <el-dropdown-item @click="editModule(i)"
+                              >Drip status: Off</el-dropdown-item
+                            >
+                            <el-dropdown-item
+                              @click="deleteModal('module', lesson.id)"
                               >Delete module</el-dropdown-item
                             >
                           </el-dropdown-menu>
@@ -263,7 +297,7 @@
                 <p class="lg:block hidden">Mark as done</p>
               </button>
               <button
-                @click="useClassroom.local_store.edit_card = true"
+                @click="editModule(useClassroom.local_store.moduleData)"
                 class="full_flex gap-1 border border-[#BCDEFF] r_8 _c2a h-9 px-3"
               >
                 <img src="@/assets/svg/edit.svg" alt="" />
@@ -273,18 +307,22 @@
           </div>
           <div class="space-y-5 p-5">
             <div
-              v-if="useClassroom.local_store.moduleData?.video"
-              class="h-[332px] rounded-xl bg-[#0000004D]"
+              v-if="isLoading.isURL(useClassroom.local_store.moduleData?.link)"
+              class="rounded-xl bg-[#0000004D] md:h-[400px] h-[200px] r_8 overflow-hidden"
             >
-              <img
-                class="h-[332px] w-full object-contain object-center"
-                :src="useClassroom.local_store.moduleData?.video"
-                alt=""
-              />
+              <iframe
+                class="md:h-[400px] h-[200px] w-full object-contain object-center"
+                :src="useClassroom.local_store.moduleData?.link"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen
+              ></iframe>
             </div>
             <p
-              v-if="useClassroom.local_store.moduleData?.video_content"
-              v-html="useClassroom.local_store.moduleData?.video_content"
+              v-if="useClassroom.local_store.moduleData?.description?.length"
+              v-html="useClassroom.local_store.moduleData?.description"
             ></p>
             <div v-if="useClassroom.local_store.moduleData.media?.length">
               <p class="font-semibold">Resources</p>
@@ -331,7 +369,12 @@
         </div>
         <div
           v-if="!useClassroom.module.video"
-          @click="useClassroom.local_store.addVideoModal = true"
+          @click="
+            () => {
+              useClassroom.local_store.addVideoModal = true;
+              addVideo.store.files = [];
+            }
+          "
           class="full_flex flex-col cursor-pointer gap-1 md:h-[400px] h-[184px] r_8 mt-5 b_cf2"
         >
           <img src="@/assets/svg/add_video.svg" alt="" />
@@ -351,9 +394,12 @@
           <iframe
             disabled
             class="md:h-[400px] h-[200px] w-full object-contain object-center pointer-events-none"
-            src="https://www.youtube.com/embed/rOCy-_LDlR8?si=mGScF5aRTphGOYwB"
+            :src="useClassroom.module.video"
             title="YouTube video player"
-            allow="clipboard-write;"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
           ></iframe>
         </div>
         <Editor />
@@ -401,7 +447,7 @@
                         >Move down</span
                       ></el-dropdown-item
                     >
-                    <el-dropdown-item @click="deleteData('media', index)"
+                    <el-dropdown-item @click="deleteModal('media', index)"
                       ><span>Delete</span></el-dropdown-item
                     >
                   </el-dropdown-menu>
@@ -483,48 +529,65 @@
     </section>
 
     <!-- add Video link -->
+    <ModalAddVideo />
+
+    <!-- Change folder -->
     <el-dialog
-      v-model="useClassroom.local_store.addVideoModal"
+      v-model="useClassroom.store.change_category"
       width="400"
       align-center
-      class="bg-opacity-50 !rounded-lg py-7 px-6"
+      class="!rounded-xl overflow-hidden px-6 py-7"
     >
-      <form @submit.prevent="handleVideoLink">
-        <h1 class="text-2xl font-semibold">Add a video</h1>
-        <p class="mt-6 mb-4 font-medium">
-          Add a YouTube, Vimeo, Loom, or Wistia video link.
-        </p>
-        <input
-          v-model="useClassroom.local_store.videoLink"
-          class="text-sm"
-          type="text"
-          placeholder="Link"
-        />
-        <p
-          v-if="useClassroom.local_store.is_url"
-          class="leading-4 text-red-600 -mb-6 mt-2 vip"
+      <div class="space-y-7">
+        <h1 class="text-2xl font-semibold">Change folder</h1>
+        <el-select
+          class="block w-full mt-2"
+          v-model="useClassroom.store.current_category"
+          placeholder="Select"
         >
-          Invalid video link
-        </p>
-        <div class="flex justify-end gap-3 mt-7 text-sm font-semibold">
+          <el-option :key="'None'" :label="'None'" :value="null">
+            <div class="flex items-center gap-2">
+              None
+              <img
+                v-if="useClassroom.store.current_category == null"
+                src="@/assets/svg/checked.svg"
+                alt=""
+              />
+            </div>
+          </el-option>
+          <el-option
+            v-for="item in useClassroom.store.modules.set"
+            :key="item.name"
+            :label="item.name"
+            :value="item.id"
+            v-show="item.type == 'set'"
+          >
+            <div class="flex items-center gap-2">
+              {{ item.name }}
+              <img
+                v-if="useClassroom.store.current_category == item.id"
+                src="@/assets/svg/checked.svg"
+                alt=""
+              />
+            </div>
+          </el-option>
+        </el-select>
+        <div class="flex justify-end gap-3 text-sm font-semibold">
           <button
-            @click="useClassroom.local_store.addVideoModal = false"
-            type="button"
+            @click="useClassroom.store.change_category = false"
             class="uppercase h-10 px-6 rounded-lg _ca1"
           >
             cancel
           </button>
           <button
-            :class="
-              useClassroom.local_store.videoLink ? 'b_cbc _c07' : 'b_ce0 _ca1'
-            "
-            class="uppercase h-10 px-6 rounded-lg"
-            v-loading="isLoading.isLoadingType('createModule')"
+            @click="useClassroom.change_folder"
+            v-loading="isLoading.isLoadingType('changeFolder')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
           >
             save
           </button>
         </div>
-      </form>
+      </div>
     </el-dialog>
 
     <!-- add set -->
@@ -579,6 +642,65 @@
               save
             </button>
           </div>
+        </div>
+      </form>
+    </el-dialog>
+
+    <!-- drip off -->
+    <el-dialog
+      v-model="useClassroom.store.dripModal"
+      align-center
+      width="440"
+      class="bg-opacity-50 !rounded-lg py-7 px-6"
+    >
+      <form @submit.prevent="useClassroom.update_drip">
+        <h1 class="text-2xl mb-7 font-semibold">Edit drip</h1>
+        <div class="flex items-center gap-6">
+          <p
+            v-if="useClassroom.store.is_drip"
+            class="text-[16px] font-medium _c07"
+          >
+            Drip ON
+          </p>
+          <p v-else class="text-[16px] font-medium">Drip OFF</p>
+          <el-switch v-model="useClassroom.store.is_drip" class="ml-2" />
+        </div>
+        <div
+          v-if="useClassroom.store.is_drip"
+          class="whitespace-nowrap _c07 flex items-center gap-2 mt-4"
+        >
+          <p>Release page</p>
+          <input
+            @input="handleInput('day')"
+            v-model="useClassroom.store.drip_day"
+            max="999"
+            min="1"
+            type="number"
+            class="w-14"
+          />
+          <p>days after members join</p>
+        </div>
+        <div class="flex items-center justify-end gap-2 mt-4">
+          <button
+            @click="useClassroom.store.dripModal = false"
+            type="button"
+            class="uppercase h-10 px-6 rounded-lg _ca1"
+          >
+            cancel
+          </button>
+          <button
+            :class="
+              useClassroom.store.is_drip
+                ? useClassroom.store.drip_day
+                  ? 'b_cbc _c07'
+                  : 'b_ce0 _ca1 pointer-events-none'
+                : 'b_cbc _c07'
+            "
+            class="uppercase h-10 px-6 rounded-lg"
+            v-loading="isLoading.isLoadingType('updateDrip')"
+          >
+            save
+          </button>
         </div>
       </form>
     </el-dialog>
@@ -684,6 +806,22 @@
             delete
           </button>
           <button
+            v-else-if="store.deleteType == 'set'"
+            v-loading="isLoading.isLoadingType('deleteSet')"
+            @click="useClassroom.delete_set()"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            delete
+          </button>
+          <button
+            v-loading="isLoading.isLoadingType('deleteModule')"
+            v-else-if="store.deleteType == 'module'"
+            @click="useClassroom.delete_module()"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            delete
+          </button>
+          <button
             v-else-if="isLoading.membersModal.modalType == 'link'"
             @click="useLink.deleteLink"
             v-loading="isLoading.isLoadingType('deleteLink')"
@@ -702,13 +840,14 @@ definePageMeta({
   layout: "community",
 });
 
-import { useLoadingStore, useClassroomStore } from "@/store";
+import { useLoadingStore, useClassroomStore, useAddVideoStore } from "@/store";
 import { VueDraggableNext as draggable } from "vue-draggable-next";
 
 const isLoading = useLoadingStore();
 const useClassroom = useClassroomStore();
 const router = useRouter();
-
+const addVideo = useAddVideoStore();
+addVideo.store.files = [];
 const store = reactive({
   is_open: false,
   deleteType: "",
@@ -720,13 +859,40 @@ const deleteMediaFile = {
   description: "Are you sure you want to delete this file",
 };
 
-function deleteData(type, index) {
-  useClassroom.store.media_id = index;
+const deleteSet = {
+  title: "Delete set?",
+  description: "Are you sure you want to delete this set",
+};
+
+const deleteModule = {
+  title: "Delete module?",
+  description: "Are you sure you want to delete this module",
+};
+
+function deleteModal(type, index, data) {
   store.deleteType = type;
   if (type == "media") {
+    useClassroom.store.media_id = index;
     store.delete_data = deleteMediaFile;
+  } else if (type == "module") {
+    useClassroom.local_store.moduleActiveId = index;
+    store.delete_data = deleteModule;
+  } else if (type == "set") {
+    useClassroom.store.set_id = index;
+    store.delete_data = deleteSet;
   }
   useClassroom.file_edit.delete = true;
+}
+
+function dripModule(data) {
+  useClassroom.store.module_id = data.id;
+  useClassroom.store.dripModal = true;
+}
+
+function changeFolder(data) {
+  useClassroom.store.module_id = data.id;
+  useClassroom.store.current_category = data.set_id ? data.set_id : null;
+  useClassroom.store.change_category = true;
 }
 
 function handleDeleteMedia() {
@@ -762,7 +928,7 @@ function editModuleFile(index) {
 
 function handleAddFile() {
   if (useClassroom.file_edit.edit) {
-    console.log(useClassroom.store.file)
+    console.log(useClassroom.store.file);
     useClassroom.store.files[useClassroom.store.media_id] = {
       ...useClassroom.store.file,
     };
@@ -806,6 +972,7 @@ function handleLikeUpload(e) {
 }
 
 function activeModule(id, m_index, s_index) {
+  router.push(`?module=${id}`);
   useClassroom.local_store.moduleActiveId = id;
   useClassroom.local_store.moduleIndex = m_index;
   useClassroom.local_store.setIndex = s_index;
@@ -819,7 +986,7 @@ function activeModule(id, m_index, s_index) {
 }
 
 function handleActive(data) {
-  router.push(`?module=${data.id}`)
+  router.push(`?module=${data.id}`);
   useClassroom.local_store.moduleActiveId = data.id;
   useClassroom.store.activeTab = data.type;
   if (data.type == "lesson") {
@@ -855,26 +1022,18 @@ function editSet(set) {
 }
 
 function editModule(data) {
+  for (let i in data) {
+    useClassroom.module[i] = data[i];
+  }
+  useClassroom.store.files = [];
+  useClassroom.module.video = data.link;
+  useClassroom.module.video_content = data.description;
   useClassroom.module.published = data.published ? true : false;
-  // useClassroom.store.files = data.media
   useClassroom.store.files = [];
   for (let i of data.media) {
     useClassroom.store.files.push({ ...i, is_new: false, data: i });
   }
   useClassroom.local_store.edit_card = true;
-}
-
-function handleVideoLink() {
-  useClassroom.local_store.is_url = !isLoading.isURL(
-    useClassroom.local_store.videoLink
-  );
-  if (!useClassroom.local_store.is_url) {
-    useClassroom.module.video = useClassroom.local_store.videoLink;
-    useClassroom.local_store.addVideoModal = false;
-    const url = new URL(useClassroom.local_store.videoLink);
-  } else {
-    useClassroom.module.video = "";
-  }
 }
 
 function deleteImage() {
@@ -886,6 +1045,11 @@ function deleteImage() {
 function handleInput(type) {
   if (type == "label") {
     useClassroom.store.file.name = useClassroom.store.file.name?.slice(0, 34);
+  } else if (type == "day") {
+    useClassroom.store.drip_day = +String(useClassroom.store.drip_day)?.slice(
+      0,
+      3
+    );
   } else {
     useClassroom.module.title = useClassroom.module?.title?.slice(0, 50);
   }
@@ -919,6 +1083,15 @@ watch(
   () => {
     if (!useClassroom.store.setModal) {
       useClassroom.store.setEdit = false;
+    }
+  }
+);
+
+watch(
+  () => useClassroom.local_store.addVideoModal,
+  () => {
+    if (!useClassroom.local_store.addVideoModal) {
+      useClassroom.module.video = useClassroom.local_store.videoLink;
     }
   }
 );

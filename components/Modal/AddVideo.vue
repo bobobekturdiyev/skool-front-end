@@ -12,7 +12,7 @@
         Add a YouTube, Vimeo, Loom, or Wistia video link.
       </p>
       <input
-        v-model="useClassroom.local_store.videoLink"
+        v-model="store.videoLink"
         class="text-sm"
         type="text"
         placeholder="Link"
@@ -32,6 +32,7 @@
           cancel
         </button>
         <button
+        @click="handleSubmit"
           :class="
             useClassroom.local_store.videoLink ? 'b_cbc _c07' : 'b_ce0 _ca1'
           "
@@ -58,6 +59,8 @@ const addVideo = useAddVideoStore();
 const store = reactive({
   video_id: "",
   video_type: "",
+  is_saved: false,
+  videoLink: "",
 });
 
 const file_types = [
@@ -74,6 +77,10 @@ const file_urls = {
   vimeo: "https://player.vimeo.com/video/",
   loom: "https://www.loom.com/embed/",
 };
+
+function handleSubmit() {
+  useClassroom.local_store.videoLink = store.videoLink
+}
 
 async function handleVideoLink() {
   useClassroom.local_store.is_url = !isLoading.isURL(
@@ -97,6 +104,7 @@ async function handleVideoLink() {
   } else {
     useClassroom.local_store.is_url = true;
   }
+  console.log(addVideo.store.files)
 }
 
 async function checkYouTubeVideoAvailability(videoUrl) {
@@ -159,6 +167,16 @@ function extractWistiaVideoId(url) {
   }
   return null;
 }
+
+watch(
+  () => useClassroom.local_store.addVideoModal,
+  () => {
+    if (!useClassroom.local_store.addVideoModal) {
+      useClassroom.local_store.videoLink = "";
+      store.videoLink = "";
+    }
+  }
+);
 </script>
 
 <style lang="scss" scoped></style>

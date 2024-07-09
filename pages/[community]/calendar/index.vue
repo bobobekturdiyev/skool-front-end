@@ -238,8 +238,15 @@
         :src="store.eventInfo.image"
         alt=""
       />
-      <div v-else class="md:h-[242px] h-[190px] -mt-2 mb-1 w-full b_cf2 full_flex">
-        <img class="md:w-[100px] w-[80px]" src="@/assets/svg/calendar/calendar_img.svg" alt="" />
+      <div
+        v-else
+        class="md:h-[242px] h-[190px] -mt-2 mb-1 w-full b_cf2 full_flex"
+      >
+        <img
+          class="md:w-[100px] w-[80px]"
+          src="@/assets/svg/calendar/calendar_img.svg"
+          alt=""
+        />
       </div>
       <div class="p-5 space-y-6">
         <div class="mb-7 flex _c00 items-center justify-between">
@@ -352,7 +359,9 @@
             {{ useEvent.create.title?.length }}/50
           </p>
         </div>
-        <div class="grid md:grid-cols-5 grid-cols-2 flex-wrap items-center gap-2">
+        <div
+          class="grid md:grid-cols-5 grid-cols-2 flex-wrap items-center gap-2"
+        >
           <div class="flex items-center !min-w-full">
             <el-date-picker
               @change="checkIsActive"
@@ -369,10 +378,7 @@
             />
           </div>
           <div class="w-full">
-            <el-select
-              v-model="useEvent.create.time"
-              placeholder="Time"
-            >
+            <el-select v-model="useEvent.create.time" placeholder="Time">
               <el-option
                 v-for="item in time_list"
                 :key="item"
@@ -442,6 +448,106 @@
           v-model="useEvent.store.recurring"
           label="Recurring event"
         />
+        <div>
+          <div class="flex items-center gap-5">
+            <p>Repeat every</p>
+            <el-select
+              v-model="useEvent.create.repeat_number"
+              filterable
+              class="!w-20"
+            >
+              <el-option
+                v-for="item in repeat_data[useEvent.create.repeat]"
+                :key="item"
+                :label="item"
+                :value="item"
+              >
+                <div class="flex items-center gap-2">
+                  {{ item }}
+                  <img
+                    v-if="useEvent.create.timezone == item"
+                    src="@/assets/svg/checked.svg"
+                    alt=""
+                  />
+                </div>
+              </el-option>
+            </el-select>
+            <el-select
+              v-model="useEvent.create.repeat"
+              filterable
+              class="!w-24"
+            >
+              <el-option
+                v-for="item in Object.keys(repeat_data)"
+                :key="item"
+                :label="item"
+                :value="item"
+              >
+                <div class="flex items-center gap-2 capitalize">
+                  {{ item }}
+                  <img
+                    v-if="useEvent.create.timezone == item"
+                    src="@/assets/svg/checked.svg"
+                    alt=""
+                  />
+                </div>
+              </el-option>
+            </el-select>
+          </div>
+          <div
+            class="mt-6"
+            v-if="
+              useEvent.create.repeat == 'month' ||
+              useEvent.create.repeat == 'week'
+            "
+          >
+            <p>Repeat on</p>
+            <div class="flex items-center gap-0">
+              <el-checkbox
+                v-for="i in repeat_on"
+                v-model="useEvent.create.repeat_on[i]"
+                :label="i"
+              />
+            </div>
+          </div>
+          <div
+            class="mt-6"
+            v-if="
+              useEvent.create.repeat == 'month' ||
+              useEvent.create.repeat == 'week'
+            "
+          >
+            <p>End</p>
+            <div class="!space-y-6 mt-4">
+              <label for="never" class="flex items-center gap-4">
+                <input type="radio" name="end" id="never" />
+                <p>Never</p>
+              </label>
+              <label for="on" class="flex items-center gap-4">
+                <input type="radio" name="end" id="on" />
+                <p class="flex">
+                  <span class="block min-w-[60px]">On</span>
+                  <el-date-picker
+                    @change="checkIsActive"
+                    v-model="useEvent.create.date"
+                    type="date"
+                    class="!min-w-full !p-0 -mt-2"
+                    placeholder="Feb 23, 2024"
+                    format="MMM DD, YYYY"
+                  />
+                </p>
+              </label>
+              <label for="after" class="flex items-center gap-4">
+                <input type="radio" name="end" id="after" />
+                <p class="flex items-center">
+                  <span class="block min-w-[60px]">After</span>
+                  <input type="number" class="w-20" />
+                  <span class="block ml-2">occurrences</span>
+                </p>
+              </label>
+            </div>
+          </div>
+        </div>
         <div class="flex md:flex-row flex-col md:items-center gap-4">
           <div>
             <label class="_ca1 block mb-2 text-xs" for="location"
@@ -452,7 +558,9 @@
               class="dropdown h-10 border border-[#E0E0E0] rounded-[4px] px-3 !w-full"
               trigger="click"
             >
-              <div class="flex items-center justify-between w-full min-w-[132px]">
+              <div
+                class="flex items-center justify-between w-full min-w-[132px]"
+              >
                 <div class="flex items-center !md:w-[132px] !w-full gap-2">
                   <img :src="useEvent.create.location.value" alt="" />
                   {{ useEvent.create.location.label }}
@@ -775,6 +883,17 @@ const time_list = [
   "3:30pm",
 ];
 
+const repeat_data = {
+  day: 15,
+  week: 12,
+  month: 3,
+  year: 3,
+};
+
+const repeat_on = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+const repeat_month = ["Monthly on day 10", "Monthly on the second Wednesday"];
+
 const duration_list = [
   ["0.5 hours", 0.5],
   ["1 hour", 1],
@@ -824,7 +943,7 @@ function formatCalendarDate(data, is_short) {
     time = data.time;
     time = time.slice(0, -2);
     duration = data.duration;
-    date = new Date(+dateString);
+    date = new Date(dateString);
     options = {
       weekday: is_short ? "short" : "long",
       month: is_short ? "short" : "long",
@@ -850,7 +969,7 @@ function formatCalendarDate(data, is_short) {
 }
 
 function checkDates(date) {
-  const newDate = new Date(+date);
+  const newDate = new Date(date);
   if (newDate.getMonth() == useEvent.store.month) {
     return true;
   }
@@ -860,7 +979,7 @@ function checkDates(date) {
 function editEvent(id) {
   for (let i of Object.keys(useEvent.create)) {
     if (i == "date") {
-      useEvent.create[i] = new Date(+store.eventInfo[i]);
+      useEvent.create[i] = new Date(store.eventInfo[i]);
     } else if (i == "duration") {
       useEvent.create[i] = +store.eventInfo[i];
     } else if (i == "location") {
@@ -875,6 +994,15 @@ function editEvent(id) {
       useEvent.create[i] = store.eventInfo[i];
     }
   }
+  useEvent.create.repeat_on = {
+    Mon: false,
+    Tue: false,
+    Wed: false,
+    Thu: false,
+    Fri: false,
+    Sat: false,
+    Sun: false,
+  };
   useEvent.store.eventId = id;
   useEvent.store.eventModal = false;
   useEvent.store.add_event = true;
@@ -933,6 +1061,8 @@ function handleInput(type) {
   if (type == "input") {
     checkIsActive();
     useEvent.create.title = useEvent.create.title?.slice(0, 50);
+  }else  if (type == "after") {
+    useEvent.create.repeat_end = +String(useEvent.create.repeat_end)?.slice(0, 2);
   } else {
     useEvent.create.description = useEvent.create.description?.slice(0, 300);
   }
@@ -1067,8 +1197,8 @@ watch(
 onBeforeMount(() => {
   store.innerWidth = window.innerWidth;
   window.addEventListener("resize", () => {
-    store.innerWidth = window.innerWidth
-  })
+    store.innerWidth = window.innerWidth;
+  });
   getCalendar(store.year, useEvent.store.month);
   window.addEventListener("keyup", (e) => {
     if (e.key == "ArrowLeft") {

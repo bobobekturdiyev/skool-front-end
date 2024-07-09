@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { useLoadingStore } from "@/store";
 import axios from "axios";
 
-export const useProfileStore = defineStore("post", () => {
+export const useProfileStore = defineStore("profile", () => {
   const isLoading = useLoadingStore();
   const runtime = useRuntimeConfig();
   const baseUrl = runtime.public.baseURL;
