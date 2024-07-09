@@ -191,9 +191,29 @@ export const useLoadingStore = defineStore("loading", () => {
     today = day - today;
     console.log(today);
     if (Math.ceil(today / 86400000) > 0) {
-      return Math.floor(today / 86400000)
+      return Math.floor(today / 86400000);
     }
     return "Off";
+  }
+
+  function convertMilliseconds(ms) {
+    let day = new Date(ms).getTime();
+    const currentDate = new Date().getTime();
+    day = day - currentDate;
+    const seconds = Math.floor(day / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) {
+      return `${days} days`;
+    } else if (hours > 0) {
+      return `${hours} hours`;
+    } else if (minutes > 0) {
+      return `${minutes} minutes`;
+    } else {
+      return `${seconds} seconds`;
+    }
   }
 
   return {
@@ -210,5 +230,6 @@ export const useLoadingStore = defineStore("loading", () => {
     isURL,
     showMessage,
     formatDripDays,
+    convertMilliseconds,
   };
 });

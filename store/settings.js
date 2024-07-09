@@ -116,8 +116,6 @@ export const useSettingsStore = defineStore("settings", () => {
       }
     } else {
       data = {
-        name: isLoading.user_update_checker.name,
-        surname: isLoading.user_update_checker.surname,
         bio: isLoading.user_update_checker.bio,
         address: isLoading.user_update_checker.location,
         myers_briggs: isLoading.user_update_checker.myers_briggs,
@@ -153,10 +151,91 @@ export const useSettingsStore = defineStore("settings", () => {
         isLoading.removeLoading("updateUserData");
       })
       .catch((err) => {
-        console.log(err, '--------------------------------');
+        console.log(err, "--------------------------------");
         isLoading.removeLoading("updateUserData");
       });
   }
 
-  return { store, changepassword, getFullData, updateUserData, changePassword };
+  function updateUserImage(type) {
+    isLoading.addLoading("updateUserData");
+    const token = localStorage.getItem("token");
+    let data;
+    const formData = new FormData();
+    formData.append("image", isLoading.user_update_checker.image);
+    axios
+      .post(baseUrl + `setting-photo`, formData, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        store.editNameModal = false;
+        for (const [key, value] of Object.entries(res.data)) {
+          if (key === "socials") {
+            for (const socialKey in value) {
+              isLoading.user_update_checker.socials[socialKey] =
+                value[socialKey];
+              isLoading.user.socials[socialKey] = value[socialKey];
+            }
+          } else {
+            isLoading.user[key] = value;
+            isLoading.user_update_checker[key] = value;
+            store.is_update = false;
+          }
+        }
+        isLoading.removeLoading("updateUserData");
+      })
+      .catch((err) => {
+        console.log(err, "--------------------------------");
+        isLoading.removeLoading("updateUserData");
+      });
+  }
+
+  function updateUserName(type) {
+    isLoading.addLoading("updateUserData");
+    const token = localStorage.getItem("token");
+    let data;
+    const formData = new URLSearchParams();
+    formData.append("name", isLoading.user_update_checker.name);
+    formData.append("surname", isLoading.user_update_checker.surname);
+    axios
+      .put(baseUrl + `setting-name`, formData, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        store.editNameModal = false;
+        for (const [key, value] of Object.entries(res.data)) {
+          if (key === "socials") {
+            for (const socialKey in value) {
+              isLoading.user_update_checker.socials[socialKey] =
+                value[socialKey];
+              isLoading.user.socials[socialKey] = value[socialKey];
+            }
+          } else {
+            isLoading.user[key] = value;
+            isLoading.user_update_checker[key] = value;
+            store.is_update = false;
+          }
+        }
+        isLoading.removeLoading("updateUserData");
+      })
+      .catch((err) => {
+        console.log(err, "--------------------------------");
+        isLoading.removeLoading("updateUserData");
+      });
+  }
+
+  return {
+    store,
+    changepassword,
+    getFullData,
+    updateUserData,
+    updateUserImage,
+    changePassword,
+    updateUserName,
+  };
 });

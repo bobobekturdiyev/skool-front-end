@@ -28,7 +28,7 @@
             <el-dropdown placement="top-start" class="dropdown">
               <div class="relative max-w-fit">
                 <img
-                  class="h-10 w-10 object-cover rounded-full"
+                  class="h-10 w-10 min-w-[40px] object-cover rounded-full"
                   :src="i.user?.image"
                   alt=""
                 />

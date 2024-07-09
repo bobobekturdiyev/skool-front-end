@@ -7,6 +7,11 @@
         <p class="full_flex rounded-full text-white text-xs h-6 w-6 bg-[#e74c3c]">{{usePost.store.members_count}}</p>
         <p class="_c2a hover:underline cursor-pointer">membership requests pending</p>
       </section>
+      <section v-if="useEvent.store.fistevent.title" @click="routeToCalendar" class="flex items-center gap-2 justify-center">
+        <img src="@/assets/svg/calendar/calendar_black.svg" />
+        <p class="full_flex text-xs font-bold hover:underline cursor-pointer">{{useEvent.store.fistevent.title}}</p>
+        <p class="text-xs">is happening in {{isLoading.convertMilliseconds(useEvent.store.fistevent.date)}}</p>
+      </section>
       <!-- category -->
       <section class="md:text-sm text-xs whitespace-nowrap">
         <div class="flex items-start justify-between gap-3">
@@ -1838,6 +1843,7 @@ import {
   useGroupStore,
   useClassroomStore,
   useAddVideoStore,
+  useEventStore,
 } from "@/store";
 import { VueDraggableNext as draggable } from "vue-draggable-next";
 import { useNotification, useFormatDate, role_ac } from "@/composables";
@@ -1850,12 +1856,14 @@ const useGroup = useGroupStore();
 const isLoading = useLoadingStore();
 const useClassroom = useClassroomStore();
 const addVideo = useAddVideoStore();
+const useEvent = useEventStore();
 const { showMessage } = useNotification();
 const router = useRouter();
 isLoading.addLoading("getPosts");
 onBeforeMount(() => {
   usePost.get_categories();
   usePost.get_posts();
+  useEvent.firstevent();
 });
 const comment_step = ["First", "Second", "Third"]
 const store = reactive({
@@ -2073,6 +2081,11 @@ const filter_filter = [
     title: "No comments",
   },
 ];
+
+function routeToCalendar() {
+  const username = router.currentRoute.value.params.community;
+  router.push(`/${username}/calendar?eid=${useEvent.store.fistevent.id}`)
+}
 
 function handleChangeCategory(item) {
   console.log(usePost.create.category_id);

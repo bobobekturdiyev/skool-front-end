@@ -50,7 +50,8 @@
                                     <input disabled v-model="isLoading.user.surname"
                                         class="text-sm _ca1 placeholder-[#A1A1A1]" type="text" placeholder="Surname">
                                 </div>
-                                <p class="mt-1 _ca1 text-xs">You can only change your name once, and you must use your
+                                <p v-if="isLoading.user.is_change == 1" class="mt-1 _ca1 text-xs">You can only change your name once.</p>
+                                <p v-else class="mt-1 _ca1 text-xs">You can only change your name once, and you must use your
                                     real
                                     name. <span @click="changeName()" class="_c2a hover:underline cursor-pointer">Change
                                         name.</span></p>
@@ -174,10 +175,11 @@
                         <div class="space-y-2">
                             <label for="change_email" class="block _ca1 text-xs">Email</label>
                             <div class="flex gap-4">
-                                <input id="change_email" type="email" disabled>
+                                <input v-model="isLoading.user_update_checker.email" id="change_email" type="email" disabled>
                                 <button
-                                    class="full_flex gap-1 border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">change
-                                    email</button>
+                                    class="full_flex gap-1 border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">
+                                    change email
+                                </button>
                             </div>
                         </div>
                         <h1 class="text-xl font-semibold">Timezone</h1>
@@ -612,7 +614,7 @@ function updateTimeZone() {
 function updateuserName() {
     isLoading.user_update_checker.name = store.user_name.name
     isLoading.user_update_checker.surname = store.user_name.surname
-    useSettings.updateUserData();
+    useSettings.updateUserName();
 }
 
 function listeneerUserData() {
@@ -655,13 +657,6 @@ watch(
         } catch (error) { }
     }
 );
-
-watch(() => isLoading.store.cropModal, () => {
-  if (!isLoading.store.cropModal) {
-    isLoading.user_update_checker.image = isLoading.store.croppedFile
-  useSettings.updateUserData()
-  }
-})
 
 onBeforeMount(() => {
     useSettings.getFullData();

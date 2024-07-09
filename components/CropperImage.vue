@@ -10,9 +10,11 @@
 </template>
 
 <script setup>
-import { useLoadingStore } from '@/store';
+import { useLoadingStore, useSettingsStore } from '@/store';
 
 const isLoading = useLoadingStore();
+const useSettings = useSettingsStore();
+const router = useRouter();
 const store = reactive({
     cropper: "",
 })
@@ -26,6 +28,11 @@ function cropperImage() {
     isLoading.store.croppedImage = dataURL;
     isLoading.store.croppedFile = base64ToFile(dataURL, "upload.jpg")
     isLoading.store.cropModal = false;
+    isLoading.user_update_checker.image = isLoading.store.croppedFile;
+    console.log(router.currentRoute.value.name)
+    if (router.currentRoute.value.name == 'settings') {
+        useSettings.updateUserImage();
+    }
 }
 
 function base64ToFile(base64Url, filename) {

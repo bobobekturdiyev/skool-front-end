@@ -886,6 +886,12 @@ function deleteModal(type, index, data) {
 
 function dripModule(data) {
   useClassroom.store.module_id = data.id;
+  useClassroom.store.drip_day = data.day;
+  if (data.day) {
+    useClassroom.store.is_drip = true;
+  } else {
+    useClassroom.store.is_drip = false;
+  }
   useClassroom.store.dripModal = true;
 }
 

@@ -233,9 +233,9 @@
       align-center
     >
       <img
-        v-if="store.eventInfo.image"
+        v-if="useEvent.store.eventInfo.image"
         class="w-full -mt-2 mb-1"
-        :src="store.eventInfo.image"
+        :src="useEvent.store.eventInfo.image"
         alt=""
       />
       <div
@@ -252,11 +252,11 @@
         <div class="mb-7 flex _c00 items-center justify-between">
           <div>
             <h1 class="md:text-2xl text-xl font-semibold">
-              {{ store.eventInfo.title }}
+              {{ useEvent.store.eventInfo.title }}
             </h1>
           </div>
           <button
-            @click="editEvent(store.eventInfo.id)"
+            @click="editEvent(useEvent.store.eventInfo.id)"
             class="border_cbc w-9 h-9 r_8 full_flex"
           >
             <img src="@/assets/svg/edit.svg" alt="" />
@@ -271,28 +271,28 @@
           <div>
             <p
               class="_c00 font-medium text-[16px]"
-              v-for="i in formatCalendarDate(store.eventInfo)"
+              v-for="i in formatCalendarDate(useEvent.store.eventInfo)"
             >
-              {{ i[0] }} @ {{ store.eventInfo.time }} - {{ i[1] }}
+              {{ i[0] }} @ {{ useEvent.store.eventInfo.time }} - {{ i[1] }}
             </p>
-            <p class="_ca1 text-sm">{{ store.eventInfo.timezone }}</p>
+            <p class="_ca1 text-sm">{{ useEvent.store.eventInfo.timezone }}</p>
           </div>
         </div>
         <div
-          v-if="store.eventInfo.location_value"
+          v-if="useEvent.store.eventInfo.location_value"
           class="flex items-center gap-4"
         >
           <img class="w-6" src="@/assets/svg/calendar/zoom.svg" alt="" />
           <a
-            :href="store.eventInfo.location_value"
+            :href="useEvent.store.eventInfo.location_value"
             target="_blank"
             class="_c2a font-medium text-[16px] hover:underline cursor-pointer"
           >
-            {{ store.eventInfo.location_value }}</a
+            {{ useEvent.store.eventInfo.location_value }}</a
           >
         </div>
         <p class="text-sm">
-          {{ store.eventInfo.description }}
+          {{ useEvent.store.eventInfo.description }}
         </p>
         <el-dropdown
           class="w-full dropdown"
@@ -311,7 +311,7 @@
               class="community_dropdown min-w-[360px] dropdown_shadow"
             >
               <a
-                :href="`https://calendar.google.com/calendar/u/0/r/eventedit?text=${store.eventInfo.title}&dates=1707121058/1707121058&details=${store.eventInfo.description}&ctz=${store.eventInfo.timezone}&location=${store.eventInfo.location_value}`"
+                :href="`https://calendar.google.com/calendar/u/0/r/eventedit?text=${useEvent.store.eventInfo.title}&dates=1707121058/1707121058&details=${useEvent.store.eventInfo.description}&ctz=${useEvent.store.eventInfo.timezone}&location=${useEvent.store.eventInfo.location_value}`"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -448,7 +448,7 @@
           v-model="useEvent.store.recurring"
           label="Recurring event"
         />
-        <div>
+        <div v-if="useEvent.store.recurring">
           <div class="flex items-center gap-5">
             <p>Repeat every</p>
             <el-select
@@ -510,13 +510,7 @@
               />
             </div>
           </div>
-          <div
-            class="mt-6"
-            v-if="
-              useEvent.create.repeat == 'month' ||
-              useEvent.create.repeat == 'week'
-            "
-          >
+          <div class="mt-6">
             <p>End</p>
             <div class="!space-y-6 mt-4">
               <label for="never" class="flex items-center gap-4">
@@ -810,6 +804,7 @@ import Pagination_card from "~/components/Pagination_card.vue";
 
 const useEvent = useEventStore();
 const isLoading = useLoadingStore();
+const router = useRouter();
 isLoading.store.page_name = "calendar";
 const cal = new Calendar(1);
 const weeks = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -906,7 +901,8 @@ useEvent.create.location = location_list[0];
 useEvent.create.date = new Date();
 
 function openEventData(data) {
-  store.eventInfo = data;
+  router.push(`?eid=${data.id}`);
+  useEvent.store.eventInfo = data;
   store.event_drawer = false;
   useEvent.store.eventModal = true;
 }
@@ -979,19 +975,19 @@ function checkDates(date) {
 function editEvent(id) {
   for (let i of Object.keys(useEvent.create)) {
     if (i == "date") {
-      useEvent.create[i] = new Date(store.eventInfo[i]);
+      useEvent.create[i] = new Date(useEvent.store.eventInfo[i]);
     } else if (i == "duration") {
-      useEvent.create[i] = +store.eventInfo[i];
+      useEvent.create[i] = +useEvent.store.eventInfo[i];
     } else if (i == "location") {
       const locations = [zoom, meet, address, link];
       for (let locate of location_list) {
-        if (store.eventInfo[i] == locate.label) {
+        if (useEvent.store.eventInfo[i] == locate.label) {
           useEvent.create[i] = locate;
           break;
         }
       }
     } else {
-      useEvent.create[i] = store.eventInfo[i];
+      useEvent.create[i] = useEvent.store.eventInfo[i];
     }
   }
   useEvent.create.repeat_on = {
@@ -1061,8 +1057,11 @@ function handleInput(type) {
   if (type == "input") {
     checkIsActive();
     useEvent.create.title = useEvent.create.title?.slice(0, 50);
-  }else  if (type == "after") {
-    useEvent.create.repeat_end = +String(useEvent.create.repeat_end)?.slice(0, 2);
+  } else if (type == "after") {
+    useEvent.create.repeat_end = +String(useEvent.create.repeat_end)?.slice(
+      0,
+      2
+    );
   } else {
     useEvent.create.description = useEvent.create.description?.slice(0, 300);
   }

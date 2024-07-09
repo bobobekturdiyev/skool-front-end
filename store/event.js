@@ -10,6 +10,7 @@ export const useEventStore = defineStore("event", () => {
 
   const store = reactive({
     events: [],
+    fistevent: {},
     start_date: "",
     end_date: "",
     add_event: false,
@@ -22,6 +23,7 @@ export const useEventStore = defineStore("event", () => {
     data_events: [],
     table_events: [],
     month: "",
+    eventInfo: "",
   });
 
   const create = reactive({
@@ -36,19 +38,19 @@ export const useEventStore = defineStore("event", () => {
     image: "",
     access: "all",
     access_value: "",
-    repeat: "",
-    repeat_number: "",
-    repeat_on: {
-      Mon: false,
-      Tue: false,
-      Wed: false, 
-      Thu: false,
-      Fri: false,
-      Sat: false,
-      Sun: false,
-    },
-    repeat_end: "",
-    remind: false,
+    // repeat: "",
+    // repeat_number: "",
+    // repeat_on: {
+    //   Mon: false,
+    //   Tue: false,
+    //   Wed: false,
+    //   Thu: false,
+    //   Fri: false,
+    //   Sat: false,
+    //   Sun: false,
+    // },
+    // repeat_end: "",
+    // remind: false,
   });
 
   function get_event() {
@@ -67,6 +69,7 @@ export const useEventStore = defineStore("event", () => {
         },
       })
       .then((res) => {
+        const eid_id = router.currentRoute.value.query.eid;
         console.log(res);
         let is_true;
         let dates;
@@ -85,6 +88,12 @@ export const useEventStore = defineStore("event", () => {
                 newDate.getDate() == date[1]
               ) {
                 for (let dates of event.data) {
+                  if (eid_id) {
+                    if (dates.id == eid_id) {
+                      store.eventInfo = dates
+                      store.eventModal = true;
+                    }
+                  }
                   if (t == 0) {
                     store.data_events.push([dates]);
                   } else {
@@ -119,6 +128,26 @@ export const useEventStore = defineStore("event", () => {
         }
         console.log(err);
         isLoading.removeLoading("getEvents");
+      });
+  }
+
+  function firstevent() {
+    const group_username = router.currentRoute.value.params.community;
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("getEvent");
+    axios
+      .get(baseUrl + `show-event/${group_username}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        store.fistevent = res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("getEvent");
       });
   }
 
@@ -187,7 +216,7 @@ export const useEventStore = defineStore("event", () => {
       }
     }
 
-    if (!create.image)  {
+    if (!create.image) {
       formData.delete("image");
       formData.append("deleted", "deleted");
     }
@@ -253,5 +282,6 @@ export const useEventStore = defineStore("event", () => {
     edit_event,
     delete_event,
     setPagination,
+    firstevent,
   };
 });
