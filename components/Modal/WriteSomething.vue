@@ -33,10 +33,10 @@
           alt=""
         />
         <p class="text-sm flex flex-wrap items-start gap-1 leading-4">
-          <span class="font-semibold">Xayot Sharapov</span>
+          <span class="font-semibold">{{isLoading.user_update_checker.name}} {{isLoading.user_update_checker.surname}}</span>
           <span class="_ca1">posting in</span>
           <span class="font-semibold _c2a md:w-auto w-full"
-            >Skool community</span
+            >{{useGroup.store.group_by_username.name}}</span
           >
         </p>
       </div>

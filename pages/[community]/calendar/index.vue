@@ -1,138 +1,93 @@
 <template>
   <main class="rounded-xl">
     <div v-if="!store.table">
-      <section
-        class="flex items-center justify-between sm:py-4 sm:px-5 py-6 sm:mt-0 -mt-8"
-      >
+      <section class="flex items-center justify-between sm:py-4 sm:px-5 py-6 sm:mt-0 -mt-8">
         <div class="flex md:gap-7 gap-5">
           <div class="full_flex text-center gap-2">
-            <img
-              @click="decMonth"
-              class="h-7 w-7 hover:bg-gray-200 rounded-full rotate-180 cursor-pointer p-2"
-              src="@/assets/svg/calendar_arrow.svg"
-              alt=""
-            />
+            <img @click="decMonth" class="h-7 w-7 hover:bg-gray-200 rounded-full rotate-180 cursor-pointer p-2"
+              src="@/assets/svg/calendar_arrow.svg" alt="" />
             <div>
               <h1 class="font-semibold">{{ FormatDate() }}</h1>
               <p class="md:block hidden _c07 text-xs">06 pm Tashkent time</p>
             </div>
-            <img
-              @click="incMonth"
-              class="h-7 w-7 hover:bg-gray-200 rounded-full cursor-pointer p-2"
-              src="@/assets/svg/calendar_arrow.svg"
-              alt=""
-            />
+            <img @click="incMonth" class="h-7 w-7 hover:bg-gray-200 rounded-full cursor-pointer p-2"
+              src="@/assets/svg/calendar_arrow.svg" alt="" />
           </div>
           <button @click="getToday('today')" class="_c2a font-medium">
             Today
           </button>
         </div>
         <div class="full_flex gap-4">
-          <button
+          <button v-if="role_ac.includes(useGroup.store.group_by_username.type)"
             class="full_flex border border-[#BCDEFF] hover:bg-[#BCDEFF] h-9 w-9 r_8"
-            @click="useEvent.store.add_event = true"
-          >
+            @click="useEvent.store.add_event = true">
             <img src="@/assets/svg/plus.svg" alt="" />
           </button>
-          <button
-            class="full_flex border border-[#BCDEFF] hover:bg-[#BCDEFF] h-9 w-9 r_8"
-            @click="store.table = true"
-          >
+          <button class="full_flex border border-[#BCDEFF] hover:bg-[#BCDEFF] h-9 w-9 r_8" @click="store.table = true">
             <img src="@/assets/svg/table.svg" alt="" />
           </button>
         </div>
       </section>
       <div class="bg-white md:rounded-[16px] rounded-[8px]">
         <section class="grid grid-cols-7 font-semibold">
-          <div
-            class="flex items-center px-4 text-start font-medium sm:text-sm text-[10px] sm:h-9 h-7"
-            v-for="(i, index) in weeks"
-            :class="
-              index + 1 != weeks.length
-                ? '!border-0 sm:!border-r sm:border_cf2'
-                : ''
-            "
-          >
+          <div class="flex items-center px-4 text-start font-medium sm:text-sm text-[10px] sm:h-9 h-7"
+            v-for="(i, index) in weeks" :class="index + 1 != weeks.length
+        ? '!border-0 sm:!border-r sm:border_cf2'
+        : ''
+      ">
             {{ i }}
           </div>
         </section>
         <section class="-mt-[1px]">
           <div class="grid grid-cols-7" v-for="date in useEvent.store.calendar">
-            <div
-              @click="handleCalendarData(useEvent.store.data_events[i[2]])"
+            <div @click="handleCalendarData(useEvent.store.data_events[i[2]])"
               class="flex flex-col justify-center hover:sm:bg-transparent hover:bg-[#BCDEFF] sm:rounded-none sm:cursor-auto cursor-pointer r_12 items-center sm:border sm:border-[#F2F2F2] -ml-[1px] -mb-[1px] sm:h-[120px] h-[70px] px-4 py-[6px]"
-              v-for="i in date"
-            >
-              <p
-                :class="
-                  store.today[1] == i[1] && store.today[0] == i[0]
-                    ? 'b_cbc'
-                    : ''
-                "
-                class="full_flex text-xs font-medium _c07 p-1 h-6 -ml-1 rounded-full max-w-fit min-w-[24px]"
-              >
+              v-for="i in date">
+              <p :class="store.today[1] == i[1] && store.today[0] == i[0]
+        ? 'b_cbc'
+        : ''
+      " class="full_flex text-xs font-medium _c07 p-1 h-6 -ml-1 rounded-full max-w-fit min-w-[24px]">
                 {{ i[1] }}
               </p>
               <div class="_c07 cursor-pointer text-xs sm:w-full">
                 <div class="space-y-1 sm:block hidden">
-                  <div
-                    v-for="(e, index) in useEvent.store.data_events[i[2]]"
-                    @click="openEventData(e)"
-                  >
-                    <div
-                      v-if="index == 0"
-                      class="flex items-center pr-2 gap-[6px] rounded-[4px] b_cf0f overflow-hidden max-w-[100%]"
-                    >
+                  <div v-for="(e, index) in useEvent.store.data_events[i[2]]" @click="openEventData(e)">
+                    <div v-if="index == 0"
+                      class="flex items-center pr-2 gap-[6px] rounded-[4px] b_cf0f overflow-hidden max-w-[100%]">
                       <p class="min-w-[2px] b_c2a h-6"></p>
                       <p class="truncate max-w-[100%] overflow-hidden">
                         {{ e.time }} - {{ e.title }}
                       </p>
                     </div>
-                    <div
-                      v-if="
-                        index == 1 &&
-                        useEvent.store.data_events[i[2]]?.length == 2
-                      "
-                      class="flex items-center w-fit pr-2 gap-[6px] rounded-[4px] b_cf0f overflow-hidden max-w-[100%]"
-                    >
+                    <div v-if="index == 1 &&
+      useEvent.store.data_events[i[2]]?.length == 2
+      "
+                      class="flex items-center w-fit pr-2 gap-[6px] rounded-[4px] b_cf0f overflow-hidden max-w-[100%]">
                       <p class="min-w-[2px] b_c2a h-6"></p>
                       <p class="truncate max-w-[100%] overflow-hidden">
                         {{ e.time }} - {{ e.title }}
                       </p>
                     </div>
                   </div>
-                  <el-dropdown
-                    v-if="useEvent.store.data_events[i[2]]?.length > 2"
-                    placement="top-start"
-                    class="dropdown"
-                  >
+                  <el-dropdown v-if="useEvent.store.data_events[i[2]]?.length > 2" placement="top-start"
+                    class="dropdown">
                     <p class="_c2a text-xs font-medium">
                       +{{ useEvent.store.data_events[i[2]]?.length - 1 }} more
                     </p>
                     <template #dropdown>
-                      <el-dropdown-menu
-                        class="community_dropdown min-w-[200px] dropdown_shadow"
-                      >
+                      <el-dropdown-menu class="community_dropdown min-w-[200px] dropdown_shadow">
                         <div class="p-4 space-y-2">
                           <h1 class="_ca1 font-semibold">
                             {{ useEvent.store.data_events[i[2]]?.length - 1 }}
                             more events
                           </h1>
-                          <div
-                            class="cursor-pointer"
-                            v-for="(e, index) in useEvent.store.data_events[
-                              i[2]
-                            ]"
-                            @click="openEventData(e)"
-                          >
-                            <div
-                              v-if="index != 0"
-                              class="flex items-center w-fit pr-2 gap-[6px] hover:underline rounded-[4px] overflow-hidden max-w-[100%]"
-                            >
+                          <div class="cursor-pointer" v-for="(e, index) in useEvent.store.data_events[
+      i[2]
+    ]" @click="openEventData(e)">
+                            <div v-if="index != 0"
+                              class="flex items-center w-fit pr-2 gap-[6px] hover:underline rounded-[4px] overflow-hidden max-w-[100%]">
                               <p class="">{{ index }})</p>
-                              <p
-                                class="truncate max-w-[100%] font-semibold _c2a overflow-hidden"
-                              >
+                              <p class="truncate max-w-[100%] font-semibold _c2a overflow-hidden">
                                 {{ e.time }} - {{ e.title }}
                               </p>
                             </div>
@@ -142,10 +97,8 @@
                     </template>
                   </el-dropdown>
                 </div>
-                <p
-                  class="sm:hidden block w-[6.5px] h-[6px] b_c2a rounded-full -mb-[6px] -ml-[4px] mt-[2px]"
-                  v-if="useEvent.store.data_events[i[2]]?.length"
-                ></p>
+                <p class="sm:hidden block w-[6.5px] h-[6px] b_c2a rounded-full -mb-[6px] -ml-[4px] mt-[2px]"
+                  v-if="useEvent.store.data_events[i[2]]?.length"></p>
               </div>
             </div>
           </div>
@@ -153,54 +106,30 @@
       </div>
     </div>
 
-    <section
-      class="flex md:flex-row flex-col-reverse md:gap-6 mt-[18px]"
-      v-else
-    >
+    <section class="flex md:flex-row flex-col-reverse md:gap-6 mt-[18px]" v-else>
       <div class="w-full">
         <div class="flex items-center justify-between -ml-2">
           <div class="flex items-center text-center gap-1 pt-5 lg:pb-5 pb-8">
-            <img
-              @click="decMonth"
-              class="h-7 w-7 hover:bg-gray-200 rounded-full rotate-180 cursor-pointer p-2"
-              src="@/assets/svg/calendar_arrow.svg"
-              alt=""
-            />
+            <img @click="decMonth" class="h-7 w-7 hover:bg-gray-200 rounded-full rotate-180 cursor-pointer p-2"
+              src="@/assets/svg/calendar_arrow.svg" alt="" />
             <h1 class="font-semibold">{{ FormatDate() }}</h1>
-            <img
-              @click="incMonth"
-              class="h-7 w-7 hover:bg-gray-200 rounded-full cursor-pointer p-2"
-              src="@/assets/svg/calendar_arrow.svg"
-              alt=""
-            />
+            <img @click="incMonth" class="h-7 w-7 hover:bg-gray-200 rounded-full cursor-pointer p-2"
+              src="@/assets/svg/calendar_arrow.svg" alt="" />
           </div>
-          <button
-            class="full_flex border border-[#BCDEFF] hover:bg-[#BCDEFF] h-9 w-9 r_8"
-            @click="store.table = false"
-          >
+          <button class="full_flex border border-[#BCDEFF] hover:bg-[#BCDEFF] h-9 w-9 r_8" @click="store.table = false">
             <img src="@/assets/svg/calendar.svg" alt="" />
           </button>
         </div>
         <div>
           <div class="_c07 text-sm space-y-4">
-            <div
-              @click="openEventData(e)"
+            <div @click="openEventData(e)"
               class="flex gap-5 items-center bg-white rounded-[12px] cursor-pointer overflow-hidden"
-              v-for="(e, index) in useEvent.store.table_events"
-              v-show="checkDates(e.date)"
-              :class="
-                isLoading.store.pagination.to >= index + 1 &&
-                isLoading.store.pagination.from <= index + 1
-                  ? ''
-                  : 'hidden'
-              "
-            >
-              <img
-                v-if="e.image"
-                class="h-[140px] w-[260px] object-cover"
-                :src="e.image"
-                alt=""
-              />
+              v-for="(e, index) in useEvent.store.table_events" v-show="checkDates(e.date)" :class="isLoading.store.pagination.to >= index + 1 &&
+        isLoading.store.pagination.from <= index + 1
+        ? ''
+        : 'hidden'
+      ">
+              <img v-if="e.image" class="h-[140px] w-[260px] object-cover" :src="e.image" alt="" />
               <div v-else class="h-[140px] w-[260px] b_cf2 full_flex">
                 <img src="@/assets/svg/calendar/calendar_img.svg" alt="" />
               </div>
@@ -209,11 +138,7 @@
                   {{ i[0] }} @ {{ e.time }} - {{ i[1] }}
                 </p>
                 <p class="leading-6 text-xl font-semibold">{{ e.title }}</p>
-                <p
-                  v-show="item.label == e.location"
-                  class="flex items-center gap-2"
-                  v-for="item in location_list"
-                >
+                <p v-show="item.label == e.location" class="flex items-center gap-2" v-for="item in location_list">
                   <img :src="item.value" alt="" />
                   {{ item.label }}
                 </p>
@@ -227,26 +152,12 @@
     </section>
 
     <!-- event full info -->
-    <el-dialog
-      v-model="useEvent.store.eventModal"
-      class="!rounded-2xl overflow-hidden !p-0 max-w-[400px] min-w-[350px]"
-      align-center
-    >
-      <img
-        v-if="useEvent.store.eventInfo.image"
-        class="w-full -mt-2 mb-1"
-        :src="useEvent.store.eventInfo.image"
-        alt=""
-      />
-      <div
-        v-else
-        class="md:h-[242px] h-[190px] -mt-2 mb-1 w-full b_cf2 full_flex"
-      >
-        <img
-          class="md:w-[100px] w-[80px]"
-          src="@/assets/svg/calendar/calendar_img.svg"
-          alt=""
-        />
+    <el-dialog v-model="useEvent.store.eventModal" class="!rounded-2xl overflow-hidden !p-0 max-w-[400px] min-w-[350px]"
+      align-center>
+      <img v-if="useEvent.store.eventInfo.image" class="w-full -mt-2 mb-1" :src="useEvent.store.eventInfo.image"
+        alt="" />
+      <div v-else class="md:h-[242px] h-[190px] -mt-2 mb-1 w-full b_cf2 full_flex">
+        <img class="md:w-[100px] w-[80px]" src="@/assets/svg/calendar/calendar_img.svg" alt="" />
       </div>
       <div class="p-5 space-y-6">
         <div class="mb-7 flex _c00 items-center justify-between">
@@ -255,66 +166,39 @@
               {{ useEvent.store.eventInfo.title }}
             </h1>
           </div>
-          <button
-            @click="editEvent(useEvent.store.eventInfo.id)"
-            class="border_cbc w-9 h-9 r_8 full_flex"
-          >
+          <button v-if="role_ac.includes(useGroup.store.group_by_username.type)"
+            @click="editEvent(useEvent.store.eventInfo.id)" class="border_cbc w-9 h-9 r_8 full_flex">
             <img src="@/assets/svg/edit.svg" alt="" />
           </button>
         </div>
         <div class="flex items-center gap-4">
-          <img
-            class="w-6"
-            src="@/assets/svg/calendar/calendar_black.svg"
-            alt=""
-          />
+          <img class="w-6" src="@/assets/svg/calendar/calendar_black.svg" alt="" />
           <div>
-            <p
-              class="_c00 font-medium text-[16px]"
-              v-for="i in formatCalendarDate(useEvent.store.eventInfo)"
-            >
+            <p class="_c00 font-medium text-[16px]" v-for="i in formatCalendarDate(useEvent.store.eventInfo)">
               {{ i[0] }} @ {{ useEvent.store.eventInfo.time }} - {{ i[1] }}
             </p>
             <p class="_ca1 text-sm">{{ useEvent.store.eventInfo.timezone }}</p>
           </div>
         </div>
-        <div
-          v-if="useEvent.store.eventInfo.location_value"
-          class="flex items-center gap-4"
-        >
+        <div v-if="useEvent.store.eventInfo.location_value" class="flex items-center gap-4">
           <img class="w-6" src="@/assets/svg/calendar/zoom.svg" alt="" />
-          <a
-            :href="useEvent.store.eventInfo.location_value"
-            target="_blank"
-            class="_c2a font-medium text-[16px] hover:underline cursor-pointer"
-          >
-            {{ useEvent.store.eventInfo.location_value }}</a
-          >
+          <a :href="useEvent.store.eventInfo.location_value" target="_blank"
+            class="_c2a font-medium text-[16px] hover:underline cursor-pointer">
+            {{ useEvent.store.eventInfo.location_value }}</a>
         </div>
         <p class="text-sm">
           {{ useEvent.store.eventInfo.description }}
         </p>
-        <el-dropdown
-          class="w-full dropdown"
-          placement="bottom-end"
-          trigger="click"
-        >
-          <button
-            class="!text-sm font-semibold b_cbc _c07 w-full r_8 uppercase full_flex gap-[10px]"
-          >
+        <el-dropdown class="w-full dropdown" placement="bottom-end" trigger="click">
+          <button class="!text-sm font-semibold b_cbc _c07 w-full r_8 uppercase full_flex gap-[10px]">
             Add to calendar
             <img class="w-4" src="@/assets/svg/select_arrow.svg" alt="" />
           </button>
 
           <template #dropdown>
-            <el-dropdown-menu
-              class="community_dropdown min-w-[360px] dropdown_shadow"
-            >
-              <a
-                :href="`https://calendar.google.com/calendar/u/0/r/eventedit?text=${useEvent.store.eventInfo.title}&dates=1707121058/1707121058&details=${useEvent.store.eventInfo.description}&ctz=${useEvent.store.eventInfo.timezone}&location=${useEvent.store.eventInfo.location_value}`"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+            <el-dropdown-menu class="community_dropdown min-w-[360px] dropdown_shadow">
+              <a :href="`https://calendar.google.com/calendar/u/0/r/eventedit?text=${useEvent.store.eventInfo.title}&dates=1707121058/1707121058&details=${useEvent.store.eventInfo.description}&ctz=${useEvent.store.eventInfo.timezone}&location=${useEvent.store.eventInfo.location_value}`"
+                target="_blank" rel="noopener noreferrer">
                 <el-dropdown-item>Google</el-dropdown-item>
               </a>
               <a href="http://" target="_blank" rel="noopener noreferrer">
@@ -336,178 +220,86 @@
     </el-dialog>
 
     <!-- add event -->
-    <el-dialog
-      v-model="useEvent.store.add_event"
-      align-center
-      class="lg:min-w-[780px] min-w-[calc(100vw_-_40px)] bg-opacity-50 p-6 !rounded-lg"
-    >
+    <el-dialog v-model="useEvent.store.add_event" align-center
+      class="lg:min-w-[780px] min-w-[calc(100vw_-_40px)] bg-opacity-50 p-6 !rounded-lg">
       <form @submit.prevent="handleSubmit" class="space-y-5">
         <h1 class="text-2xl pb-2 font-semibold _c07">
           <span v-if="useEvent.store.editEventModal">Edit</span>
           <span v-else>Add</span> event
         </h1>
         <div>
-          <input
-            v-model="useEvent.create.title"
-            @input="handleInput('input')"
-            type="text"
-            class="text-sm"
-            placeholder="Title"
-            required
-          />
+          <input v-model="useEvent.create.title" @input="handleInput('input')" type="text" class="text-sm"
+            placeholder="Title" required />
           <p class="text-end mt-1 _ca1 text-sm">
             {{ useEvent.create.title?.length }}/50
           </p>
         </div>
-        <div
-          class="grid md:grid-cols-5 grid-cols-2 flex-wrap items-center gap-2"
-        >
+        <div class="grid md:grid-cols-5 grid-cols-2 flex-wrap items-center gap-2">
           <div class="flex items-center !min-w-full">
-            <el-date-picker
-              @change="checkIsActive"
-              v-model="useEvent.create.date"
-              type="date"
-              class="!min-w-full !p-0 -mt-2"
-              placeholder="Feb 23, 2024"
-              format="MMM DD, YYYY"
-            />
-            <img
-              class="-ml-8 z-10 mr-8"
-              src="@/assets/svg/select_arrow.svg"
-              alt=""
-            />
+            <el-date-picker @change="checkIsActive" v-model="useEvent.create.date" type="date"
+              class="!min-w-full !p-0 -mt-2" placeholder="Feb 23, 2024" format="MMM DD, YYYY" />
+            <img class="-ml-8 z-10 mr-8" src="@/assets/svg/select_arrow.svg" alt="" />
           </div>
           <div class="w-full">
             <el-select v-model="useEvent.create.time" placeholder="Time">
-              <el-option
-                v-for="item in time_list"
-                :key="item"
-                :label="item"
-                :value="item"
-              >
+              <el-option v-for="item in time_list" :key="item" :label="item" :value="item">
                 <div class="flex items-center gap-2">
                   {{ item }}
-                  <img
-                    v-if="useEvent.create.time == item"
-                    src="@/assets/svg/checked.svg"
-                    alt=""
-                  />
+                  <img v-if="useEvent.create.time == item" src="@/assets/svg/checked.svg" alt="" />
                 </div>
               </el-option>
             </el-select>
           </div>
           <div class="w-full md:col-span-1 col-span-2">
-            <el-select
-              @change="checkIsActive"
-              v-model="useEvent.create.duration"
-              placeholder="Duration"
-            >
-              <el-option
-                v-for="item in duration_list"
-                :key="item[0]"
-                :label="item[0]"
-                :value="item[1]"
-              >
+            <el-select @change="checkIsActive" v-model="useEvent.create.duration" placeholder="Duration">
+              <el-option v-for="item in duration_list" :key="item[0]" :label="item[0]" :value="item[1]">
                 <div class="flex items-center gap-2">
                   {{ item[0] }}
-                  <img
-                    v-if="useEvent.create.duration == item"
-                    src="@/assets/svg/checked.svg"
-                    alt=""
-                  />
+                  <img v-if="useEvent.create.duration == item" src="@/assets/svg/checked.svg" alt="" />
                 </div>
               </el-option>
             </el-select>
           </div>
           <div class="w-full col-span-2 timezone">
-            <el-select
-              v-model="useEvent.create.timezone"
-              filterable
-              class="!w-full"
-              placeholder="(GMT +05:00) Asia/Tashkent"
-            >
-              <el-option
-                v-for="item in timeZones"
-                :key="item"
-                :label="item"
-                :value="item"
-              >
+            <el-select v-model="useEvent.create.timezone" filterable class="!w-full"
+              placeholder="(GMT +05:00) Asia/Tashkent">
+              <el-option v-for="item in timeZones" :key="item" :label="item" :value="item">
                 <div class="flex items-center gap-2">
                   {{ item }}
-                  <img
-                    v-if="useEvent.create.timezone == item"
-                    src="@/assets/svg/checked.svg"
-                    alt=""
-                  />
+                  <img v-if="useEvent.create.timezone == item" src="@/assets/svg/checked.svg" alt="" />
                 </div>
               </el-option>
             </el-select>
           </div>
         </div>
-        <el-checkbox
-          v-model="useEvent.store.recurring"
-          label="Recurring event"
-        />
+        <el-checkbox v-model="useEvent.store.recurring" label="Recurring event" />
         <div v-if="useEvent.store.recurring">
           <div class="flex items-center gap-5">
             <p>Repeat every</p>
-            <el-select
-              v-model="useEvent.create.repeat_number"
-              filterable
-              class="!w-20"
-            >
-              <el-option
-                v-for="item in repeat_data[useEvent.create.repeat]"
-                :key="item"
-                :label="item"
-                :value="item"
-              >
+            <el-select v-model="useEvent.create.repeat_number" filterable class="!w-20">
+              <el-option v-for="item in repeat_data[useEvent.create.repeat]" :key="item" :label="item" :value="item">
                 <div class="flex items-center gap-2">
                   {{ item }}
-                  <img
-                    v-if="useEvent.create.timezone == item"
-                    src="@/assets/svg/checked.svg"
-                    alt=""
-                  />
+                  <img v-if="useEvent.create.timezone == item" src="@/assets/svg/checked.svg" alt="" />
                 </div>
               </el-option>
             </el-select>
-            <el-select
-              v-model="useEvent.create.repeat"
-              filterable
-              class="!w-24"
-            >
-              <el-option
-                v-for="item in Object.keys(repeat_data)"
-                :key="item"
-                :label="item"
-                :value="item"
-              >
+            <el-select v-model="useEvent.create.repeat" filterable class="!w-24">
+              <el-option v-for="item in Object.keys(repeat_data)" :key="item" :label="item" :value="item">
                 <div class="flex items-center gap-2 capitalize">
                   {{ item }}
-                  <img
-                    v-if="useEvent.create.timezone == item"
-                    src="@/assets/svg/checked.svg"
-                    alt=""
-                  />
+                  <img v-if="useEvent.create.timezone == item" src="@/assets/svg/checked.svg" alt="" />
                 </div>
               </el-option>
             </el-select>
           </div>
-          <div
-            class="mt-6"
-            v-if="
-              useEvent.create.repeat == 'month' ||
-              useEvent.create.repeat == 'week'
-            "
-          >
+          <div class="mt-6" v-if="useEvent.create.repeat == 'month' ||
+      useEvent.create.repeat == 'week'
+      ">
             <p>Repeat on</p>
             <div class="flex items-center gap-0">
-              <el-checkbox
-                v-for="i in repeat_on"
-                v-model="useEvent.create.repeat_on[i]"
-                :label="i"
-              />
+              <!-- v-model="useEvent.create.repeat_on[i]" -->
+              <el-checkbox v-for="i in repeat_on" :label="i" />
             </div>
           </div>
           <div class="mt-6">
@@ -521,14 +313,8 @@
                 <input type="radio" name="end" id="on" />
                 <p class="flex">
                   <span class="block min-w-[60px]">On</span>
-                  <el-date-picker
-                    @change="checkIsActive"
-                    v-model="useEvent.create.date"
-                    type="date"
-                    class="!min-w-full !p-0 -mt-2"
-                    placeholder="Feb 23, 2024"
-                    format="MMM DD, YYYY"
-                  />
+                  <el-date-picker @change="checkIsActive" v-model="useEvent.create.date" type="date"
+                    class="!min-w-full !p-0 -mt-2" placeholder="Feb 23, 2024" format="MMM DD, YYYY" />
                 </p>
               </label>
               <label for="after" class="flex items-center gap-4">
@@ -544,37 +330,21 @@
         </div>
         <div class="flex md:flex-row flex-col md:items-center gap-4">
           <div>
-            <label class="_ca1 block mb-2 text-xs" for="location"
-              >Location</label
-            >
-            <el-dropdown
-              placement="bottom-start"
-              class="dropdown h-10 border border-[#E0E0E0] rounded-[4px] px-3 !w-full"
-              trigger="click"
-            >
-              <div
-                class="flex items-center justify-between w-full min-w-[132px]"
-              >
+            <label class="_ca1 block mb-2 text-xs" for="location">Location</label>
+            <el-dropdown placement="bottom-start"
+              class="dropdown h-10 border border-[#E0E0E0] rounded-[4px] px-3 !w-full" trigger="click">
+              <div class="flex items-center justify-between w-full min-w-[132px]">
                 <div class="flex items-center !md:w-[132px] !w-full gap-2">
                   <img :src="useEvent.create.location.value" alt="" />
                   {{ useEvent.create.location.label }}
                 </div>
-                <img
-                  class="-mt-0.5"
-                  src="@/assets/svg/select_arrow.svg"
-                  alt=""
-                />
+                <img class="-mt-0.5" src="@/assets/svg/select_arrow.svg" alt="" />
               </div>
 
               <template #dropdown>
-                <el-dropdown-menu
-                  class="community_dropdown min-w-[200px] !-ml-3 dropdown_shadow"
-                >
-                  <el-dropdown-item
-                    @click="useEvent.create.location = item"
-                    class="flex items-center !gap-2"
-                    v-for="item in location_list"
-                  >
+                <el-dropdown-menu class="community_dropdown min-w-[200px] !-ml-3 dropdown_shadow">
+                  <el-dropdown-item @click="useEvent.create.location = item" class="flex items-center !gap-2"
+                    v-for="item in location_list">
                     <img :src="item.value" alt="" />
                     {{ item.label }}
                   </el-dropdown-item>
@@ -583,148 +353,73 @@
             </el-dropdown>
           </div>
           <div class="w-full">
-            <label class="_ca1 block mb-2 text-xs" for="location"
-              >Zoom link</label
-            >
-            <input
-              v-model="useEvent.create.location_value"
-              type="text"
-              class="!font-[400]"
-              placeholder="http"
-            />
+            <label class="_ca1 block mb-2 text-xs" for="location">Zoom link</label>
+            <input v-model="useEvent.create.location_value" type="text" class="!font-[400]" placeholder="http" />
           </div>
         </div>
         <div>
-          <textarea
-            @input="handleInput('textarea')"
-            id="write_message"
-            v-model="useEvent.create.description"
-            class="h-[90px] text-sm w-full rounded-[4px]"
-            placeholder="Course description"
-          ></textarea>
+          <textarea @input="handleInput('textarea')" id="write_message" v-model="useEvent.create.description"
+            class="h-[90px] text-sm w-full rounded-[4px]" placeholder="Course description"></textarea>
           <p class="text-end mt-2 _ca1 text-sm">
             {{ useEvent.create.description?.length }}/300
           </p>
         </div>
         <div class="sm:flex gap-4 sm:w-full w-[366px] max-w-full">
-          <label
-            v-if="!isLoading.store.croppedImage"
-            for="add_photo"
-            class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm sm:h-[188px] h-[164px] w-[366px] max-w-full"
-          >
+          <label v-if="!isLoading.store.croppedImage" for="add_photo"
+            class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm sm:h-[188px] h-[164px] w-[366px] max-w-full">
             <img src="@/assets/svg/add_photo.svg" alt="" />
             <p>Upload cover image</p>
             <p class="_ca1 text-xs font-medium">1460 x 752 px</p>
           </label>
           <label class="relative imagelabel" v-else for="add_photo">
-            <button
-              @click="deleteImage"
-              type="button"
-              class="absolute deleteimage !hidden top-2 right-2 rounded-full w-7 h-7 full_flex border p-2"
-            >
+            <button @click="deleteImage" type="button"
+              class="absolute deleteimage !hidden top-2 right-2 rounded-full w-7 h-7 full_flex border p-2">
               <img src="@/assets/svg/x.svg" alt="" />
             </button>
-            <img
-              class="sm:h-[188px] h-[164px] w-[366px] max-w-full overflow-hidden rounded-xl object-cover"
-              :src="isLoading.store.croppedImage"
-              alt=""
-            />
+            <img class="sm:h-[188px] h-[164px] w-[366px] max-w-full overflow-hidden rounded-xl object-cover"
+              :src="isLoading.store.croppedImage" alt="" />
           </label>
           <div class="py-5 space-y-5">
             <div>
-              <label class="_ca1 text-xs" for="access"
-                >Who can attend this event</label
-              >
-              <el-select
-                class="block w-full mt-2"
-                v-model="useEvent.create.access"
-                placeholder="Select"
-              >
-                <el-option
-                  v-for="item in access_list"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                  :disabled="item.disabled"
-                >
+              <label class="_ca1 text-xs" for="access">Who can attend this event</label>
+              <el-select class="block w-full mt-2" v-model="useEvent.create.access" placeholder="Select">
+                <el-option v-for="item in access_list" :key="item.value" :label="item.label" :value="item.value"
+                  :disabled="item.disabled">
                   <div class="flex items-center gap-2">
                     {{ item.label }}
-                    <img
-                      v-if="useEvent.create.access == item.value"
-                      src="@/assets/svg/checked.svg"
-                      alt=""
-                    />
+                    <img v-if="useEvent.create.access == item.value" src="@/assets/svg/checked.svg" alt="" />
                   </div>
                 </el-option>
               </el-select>
             </div>
             <div v-if="useEvent.create.access == 'level'">
-              <label class="_ca1 text-xs" for="access"
-                >Access starts at level</label
-              >
-              <el-select
-                class="block w-full mt-2 el_select"
-                v-model="useEvent.create.access_value"
-                placeholder="Select"
-              >
-                <el-option
-                  v-for="item in 9"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                >
+              <label class="_ca1 text-xs" for="access">Access starts at level</label>
+              <el-select class="block w-full mt-2 el_select" v-model="useEvent.create.access_value"
+                placeholder="Select">
+                <el-option v-for="item in 9" :key="item" :label="item" :value="item">
                   <div class="flex items-center gap-2">
                     {{ item }}
-                    <img
-                      v-if="useEvent.create.access_value == item"
-                      src="@/assets/svg/checked.svg"
-                      alt=""
-                    />
+                    <img v-if="useEvent.create.access_value == item" src="@/assets/svg/checked.svg" alt="" />
                   </div>
                 </el-option>
               </el-select>
             </div>
-            <el-checkbox
-              v-model="useEvent.create.remind"
-              label="Remind members by email 1 day before"
-            />
+            <el-checkbox v-model="useEvent.create.remind" label="Remind members by email 1 day before" />
           </div>
-          <input
-            @change="handleAddedPhoto"
-            id="add_photo"
-            type="file"
-            class="w-0 h-0 overflow-hidden !p-0"
-          />
+          <input @change="handleAddedPhoto" id="add_photo" type="file" class="w-0 h-0 overflow-hidden !p-0" />
         </div>
-        <div
-          class="flex items-center justify-between sm:pt-3 !sm:mt-8 !-mt-5 text-sm font-semibold whitespace-nowrap"
-        >
-          <button
-            v-loading="isLoading.isLoadingType('deleteEvent')"
-            v-if="useEvent.store.editEventModal"
-            type="button"
-            @click="useEvent.delete_event"
-            class="uppercase h-10 px-6 rounded-lg _ceb"
-          >
+        <div class="flex items-center justify-between sm:pt-3 !sm:mt-8 !-mt-5 text-sm font-semibold whitespace-nowrap">
+          <button v-loading="isLoading.isLoadingType('deleteEvent')" v-if="useEvent.store.editEventModal" type="button"
+            @click="useEvent.delete_event" class="uppercase h-10 px-6 rounded-lg _ceb">
             Delete event
           </button>
           <div class="flex justify-end w-full gap-3">
-            <button
-              type="button"
-              @click="useEvent.store.add_event = false"
-              class="uppercase h-10 px-6 rounded-lg _ca1"
-            >
+            <button type="button" @click="useEvent.store.add_event = false" class="uppercase h-10 px-6 rounded-lg _ca1">
               cancel
             </button>
-            <button
-              :type="
-                isLoading.isLoadingType('createCourse') ? 'button' : 'submit'
-              "
-              :class="store.is_active ? 'b_cbc _c07' : 'b_ce0 _ca1'"
-              @click="reposrtToAdmins"
-              class="uppercase h-10 px-6 rounded-lg"
-              v-loading="isLoading.isLoadingType('addEvents')"
-            >
+            <button :type="isLoading.isLoadingType('createCourse') ? 'button' : 'submit'
+      " :class="store.is_active ? 'b_cbc _c07' : 'b_ce0 _ca1'" @click="reposrtToAdmins"
+              class="uppercase h-10 px-6 rounded-lg" v-loading="isLoading.isLoadingType('addEvents')">
               <span v-if="useEvent.store.editEventModal">save</span>
               <span v-else>add</span>
             </button>
@@ -734,41 +429,24 @@
     </el-dialog>
 
     <!-- cropper image -->
-    <el-dialog
-      v-model="isLoading.store.cropModal"
-      v-if="isLoading.store.cropModal"
-      width="780"
-      align-center
-      class="bg-opacity-50 p-6 !w-[400px] !rounded-lg"
-    >
+    <el-dialog v-model="isLoading.store.cropModal" v-if="isLoading.store.cropModal" width="780" align-center
+      class="bg-opacity-50 p-6 !w-[400px] !rounded-lg">
       <cropper-image />
       <p class="_c07 text-center mt-4">
         Or, <label class="_c2a" for="add_photo">upload a different photo</label>
       </p>
     </el-dialog>
 
-    <el-drawer
-      v-model="store.event_drawer"
-      direction="btt"
-      class="!w-full !rounded-t-[16px] event_drawer !min-h-fit overflow-hidden"
-    >
-      <div
-        class="flex items-center justify-between sticky -top-[21px] bg-white z-20 pt-5 -mt-[21px] pb-5"
-      >
+    <el-drawer v-model="store.event_drawer" direction="btt"
+      class="!w-full !rounded-t-[16px] event_drawer !min-h-fit overflow-hidden">
+      <div class="flex items-center justify-between sticky -top-[21px] bg-white z-20 pt-5 -mt-[21px] pb-5">
         <h1 class="text-2xl font-semibold">Events</h1>
-        <img
-          class="w-5 h-5 cursor-pointer"
-          @click="store.event_drawer = false"
-          src="@/assets/svg/close_drawer.svg"
-          alt=""
-        />
+        <img class="w-5 h-5 cursor-pointer" @click="store.event_drawer = false" src="@/assets/svg/close_drawer.svg"
+          alt="" />
       </div>
       <div class="space-y-4 pt-1">
-        <ul
-          v-for="(e, index) in store.info_drawer"
-          @click="openEventData(e)"
-          class="flex items-center cursor-pointer gap-5 border_ce0 r_12 py-3 px-4"
-        >
+        <ul v-for="(e, index) in store.info_drawer" @click="openEventData(e)"
+          class="flex items-center cursor-pointer gap-5 border_ce0 r_12 py-3 px-4">
           <li v-for="i in formatDrawerDate(e.date)">
             <p class="font-medium text-sm">
               {{ i[0] }}
@@ -793,7 +471,7 @@ definePageMeta({
   layout: "community",
 });
 
-import { useEventStore, useLoadingStore } from "@/store";
+import { useEventStore, useLoadingStore, useGroupStore } from "@/store";
 import moment from "moment-timezone";
 import { Calendar } from "calendar";
 import zoom from "@/assets/svg/calendar/zoom.svg";
@@ -801,14 +479,26 @@ import meet from "@/assets/svg/calendar/meet.svg";
 import address from "@/assets/svg/calendar/address.svg";
 import link from "@/assets/svg/calendar/link.svg";
 import Pagination_card from "~/components/Pagination_card.vue";
+import { role_ac } from "@/composables";
 
 const useEvent = useEventStore();
 const isLoading = useLoadingStore();
+const useGroup = useGroupStore();
 const router = useRouter();
+const { start, finish } = useLoadingIndicator();
 isLoading.store.page_name = "calendar";
+
+useSeoMeta({
+  title: computed(() => `Group · ${useGroup.store.group_by_username.name}`),
+  ogTitle: computed(() => `Group · ${useGroup.store.group_by_username.name}`),
+  description: computed(() => `Group · ${useGroup.store.group_by_username.description}`),
+  ogDescription: computed(() => `Group · ${useGroup.store.group_by_username.description}`),
+  ogImage: computed(() => `${useGroup.store.group_by_username.image}`),
+  twitterCard: computed(() => `${useGroup.store.group_by_username.icon}`),
+})
+
 const cal = new Calendar(1);
 const weeks = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
 const timeZones = moment.tz.names().map((name) => {
   const offset = moment.tz(name).format("Z");
   return `(GMT${offset}) ${name}`;
@@ -953,14 +643,14 @@ function formatCalendarDate(data, is_short) {
       day === 1 || day === 21 || day === 31
         ? "st"
         : day === 2 || day === 22
-        ? "nd"
-        : day === 3 || day === 23
-        ? "rd"
-        : "th";
+          ? "nd"
+          : day === 3 || day === 23
+            ? "rd"
+            : "th";
 
     lastTime = addTime(time, duration);
     formatDate = formattedDate.replace(/\d{1,2}$/, (match) => match + suffix);
-  } catch (_) {}
+  } catch (_) { }
   return [[formatDate, lastTime]];
 }
 
@@ -990,15 +680,15 @@ function editEvent(id) {
       useEvent.create[i] = useEvent.store.eventInfo[i];
     }
   }
-  useEvent.create.repeat_on = {
-    Mon: false,
-    Tue: false,
-    Wed: false,
-    Thu: false,
-    Fri: false,
-    Sat: false,
-    Sun: false,
-  };
+  // useEvent.create.repeat_on = {
+  //   Mon: false,
+  //   Tue: false,
+  //   Wed: false,
+  //   Thu: false,
+  //   Fri: false,
+  //   Sat: false,
+  //   Sun: false,
+  // };
   useEvent.store.eventId = id;
   useEvent.store.eventModal = false;
   useEvent.store.add_event = true;
@@ -1018,7 +708,7 @@ function addTime(baseTime, hoursToAdd) {
 
     hours = date.getHours().toString().padStart(2, "0");
     minutes = date.getMinutes().toString().padStart(2, "0");
-  } catch (_) {}
+  } catch (_) { }
   return `${hours}:${minutes}`;
 }
 
@@ -1028,7 +718,7 @@ function FormatDate() {
     const options = { month: "long", year: "numeric" };
     const formattedDate = date.toLocaleString("en-US", options);
     return formattedDate;
-  } catch (error) {}
+  } catch (error) { }
 }
 
 function getToday(type) {
@@ -1044,6 +734,12 @@ function getToday(type) {
 }
 
 getToday();
+
+start();
+await useAsyncData("calendar", async () => {
+  await  getCalendar(store.year, useEvent.store.month);
+  finish();
+}, { server: false })
 
 function incMonth() {
   if (useEvent.store.month == 11) {
@@ -1090,7 +786,7 @@ function decMonth() {
   getCalendar(store.year, useEvent.store.month);
 }
 
-function getCalendar(year, month) {
+async function getCalendar(year, month) {
   useEvent.store.calendar = [];
   store.startAndEndDate = [];
   let t = -1;
@@ -1124,7 +820,7 @@ function getCalendar(year, month) {
     day: "2-digit",
   });
 
-  useEvent.get_event();
+  return useEvent.get_event();
 }
 
 function checkIsActive() {
@@ -1198,7 +894,6 @@ onBeforeMount(() => {
   window.addEventListener("resize", () => {
     store.innerWidth = window.innerWidth;
   });
-  getCalendar(store.year, useEvent.store.month);
   window.addEventListener("keyup", (e) => {
     if (e.key == "ArrowLeft") {
       decMonth();

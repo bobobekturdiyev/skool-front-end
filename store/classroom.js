@@ -1,8 +1,10 @@
 import { defineStore } from "pinia";
 import { useLoadingStore, useAddVideoStore } from "@/store";
 import axios from "axios";
+import { useApiRequest } from "@/composables";
 
 export const useClassroomStore = defineStore("classroom", () => {
+  const apiRequest = useApiRequest();
   const isLoading = useLoadingStore();
   const addVideo = useAddVideoStore();
   const runtime = useRuntimeConfig();
@@ -49,6 +51,9 @@ export const useClassroomStore = defineStore("classroom", () => {
     dripModal: false,
     is_drip: false,
     drip_day: "",
+    is_active: false,
+    delete: false,
+    username: "",
   });
 
   const file_edit = {
@@ -150,8 +155,12 @@ export const useClassroomStore = defineStore("classroom", () => {
     }
     console.log(create.image);
     if (!create.image || isLoading.isURL(create.image)) {
-      formData.delete("image");
-      formData.append("is_deleted", "deleted");
+      if (!isLoading.isURL(create.image)) {
+        formData.delete("image");
+        formData.append("is_deleted", "deleted");
+      } else {
+        formData.delete("image");
+      }
     }
     formData.delete("published");
     if (create.access != "level_lock") {
@@ -171,6 +180,9 @@ export const useClassroomStore = defineStore("classroom", () => {
         },
       })
       .then((res) => {
+        if (router.currentRoute.value.params.id) {
+          get_module();
+        }
         const slug = res.data?.slug;
         router.push(`/${username}/classroom/${slug}`);
         clearCreate();
@@ -751,19 +763,19 @@ export const useClassroomStore = defineStore("classroom", () => {
       });
   }
 
-  function delete_course(group_username) {
+  function delete_course() {
     const token = localStorage.getItem("token");
     isLoading.addLoading("deleteCourse");
     const username = router.currentRoute.value.params.community;
-
     axios
-      .delete(baseUrl + `${username}/delete-course/${group_username}`, {
+      .delete(baseUrl + `${username}/delete-course/${store.username}`, {
         headers: {
           Authorization: "Bearer " + token,
         },
       })
       .then((res) => {
-        get_classroom();
+        router.push(`/${username}/classroom`);
+        store.delete = false;
         isLoading.removeLoading("deleteCourse");
       })
       .catch((err) => {
@@ -772,33 +784,21 @@ export const useClassroomStore = defineStore("classroom", () => {
       });
   }
 
-  function get_classroom() {
+  async function get_classroom() {
+    console.log("data", '=========')
     const group_username = router.currentRoute.value.params.community;
-    const token = localStorage.getItem("token");
     isLoading.addLoading("getClassrooms");
-
-    axios
-      .get(
-        baseUrl +
-          `${group_username}/classroom?page=${isLoading.store.pagination.current_page}`,
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-        store.classrooms = res.data?.data;
-        for (let i in isLoading.store.pagination) {
-          isLoading.store.pagination[i] = res.data.meta[i];
-        }
-        isLoading.removeLoading("getClassrooms");
-      })
-      .catch((err) => {
-        console.log(err);
-        isLoading.removeLoading("getClassrooms");
-      });
+    const data = await apiRequest.get(
+      `${group_username}/classroom?page=${isLoading.store.pagination.current_page}`
+    );
+    console.log(data.data, '=========')
+    isLoading.removeLoading("getClassrooms");
+    if (data.status == 200) {
+      store.classrooms = data.data?.data;
+      for (let i in isLoading.store.pagination) {
+        isLoading.store.pagination[i] = data.data.meta[i];
+      }
+    }
   }
 
   return {

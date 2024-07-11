@@ -1,10 +1,10 @@
 <template>
   <nav class="fixed top-0 w-full z-50 bg-white navbar h-[64px]">
     <div
-      class="flex justify-between items-center h-[64px] mx-auto xl:px-[200px] lg:px-[100px] md:px-[50px] sm:px-[50px] px-5 max-w-[1536px]"
+      class="flex justify-between items-center h-[64px] mx-auto xl:px-[200px] lg:px-[100px] md:px-[100px] sm:px-[50px] px-5 max-w-[1536px]"
     >
       <div class="flex items-center sm:gap-5 gap-3 cursor-pointer">
-        <router-link to="/">
+        <router-link :to="$router.currentRoute.value.params.community ? `/${$router.currentRoute.value.params.community}` : '/'">
           <img
             v-if="$router.currentRoute.value.name == 'index'"
             src="/logo.svg"
@@ -32,20 +32,19 @@
               </div>
             </div>
             <div v-else class="full_flex gap-5">
-              <p class="bg-gray-600 h-10 w-10 rounded-full"></p>
-              <p class="bg-gray-600 w-[120px] h-5 rounded"></p>
+              <LoadingDiv class="h-10 w-10 rounded-full"/>
+              <LoadingDiv class="w-[120px] h-5 rounded"/>
             </div>
           </div>
           <img v-else src="/icon.svg" alt="" />
         </router-link>
-        <client-only>
-          <router-link
+        <client-only v-if="!isLoading.isLoadingType('getByUsername')">
+          <p
             v-if="$router.currentRoute.value.name.indexOf('community') == 0"
             class="sm:text-lg tr text-sm font-semibold whitespace-nowrap max-w-[150px] truncate"
-            :to="`/${$router.currentRoute.value.params.community}`"
           >
             {{ useGroup.store.group_by_username.name }}
-          </router-link>
+          </p>
         </client-only>
         <router-link
           v-show="

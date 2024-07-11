@@ -1,8 +1,10 @@
 import { defineStore } from "pinia";
 import { useLoadingStore } from "@/store";
 import axios from "axios";
+import { useApiRequest } from "@/composables";
 
 export const useEventStore = defineStore("event", () => {
+  const apiRequest = useApiRequest();
   const isLoading = useLoadingStore();
   const runtime = useRuntimeConfig();
   const baseUrl = runtime.public.baseURL;
@@ -53,7 +55,7 @@ export const useEventStore = defineStore("event", () => {
     // remind: false,
   });
 
-  function get_event() {
+  async function get_event() {
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("getEvents");
@@ -62,18 +64,16 @@ export const useEventStore = defineStore("event", () => {
     store.data_events = [];
     store.table_events = [];
     let t;
-    axios
-      .get(baseUrl + `get-event/${group_username}/${start_date}/${end_date}`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        const eid_id = router.currentRoute.value.query.eid;
-        console.log(res);
+    const data = await apiRequest.get(
+      `get-event/${group_username}/${start_date}/${end_date}`
+    );
+    isLoading.removeLoading("getEvents");
+    if (data.status == 200) {
+      const eid_id = router.currentRoute.value.query.eid;
+        console.log(data);
         let is_true;
         let dates;
-        store.events = res.data;
+        store.events = data.data;
         store.table_events = [];
         isLoading.removeLoading("getEvents");
         for (let month of store.calendar) {
@@ -121,15 +121,12 @@ export const useEventStore = defineStore("event", () => {
           store.table_events.length / 2
         );
         setPagination();
-      })
-      .catch((err) => {
-        if (err.response?.data?.message == "Events not found") {
-          store.events = [];
-        }
-        console.log(err);
-        isLoading.removeLoading("getEvents");
-      });
-  }
+    }else {
+      if (data.response?.data?.message == "Events not found") {
+        store.events = [];
+      }
+    }
+  } 
 
   function firstevent() {
     const group_username = router.currentRoute.value.params.community;

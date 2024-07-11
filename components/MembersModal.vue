@@ -5,12 +5,22 @@
       :class="store.is_open ? 'sm:flex hidden' : ''"
     >
       <div v-if="!useMembers.store.manageUserRole" class="full_flex gap-4">
-        <div class="w-10 h-10 b_c2a r_8 full_flex" v-if="true">
+        <!-- <div class="w-10 h-10 b_c2a r_8 full_flex" v-if="true">
           <p class="font-semibold text-white">DM</p>
-        </div>
-        <img v-else src="@/assets/image/picture.png" alt="" />
+        </div> -->
+        <!-- <img v-else src="@/assets/image/picture.png" alt="" /> -->
+        <div class="flex items-center justify-between h-10">
+                    <div class="full_flex items-start gap-4">
+                        <img class="!w-10 !h-10 min-w-[40px] object-cover r_8 !overflow-hidden" v-if="useGroup.store.group_by_username.icon"
+                            :src="useGroup.store.group_by_username.icon" alt="" />
+                        <div v-else class="full_flex uppercase w-10 h-10 min-w-[40px] r_8"
+                            :style="`background: ${useGroup.store.group_by_username.color}`">
+                            {{ useGroup.store.group_by_username.initials }}
+                        </div>
+                    </div>
+                </div>
         <div>
-          <h1>Digital Marketer</h1>
+          <h1>{{ useGroup.store.group_by_username.name }}</h1>
           <p v-if="role_ac.includes(useGroup.store.group_by_username.type)">
             Group settings
           </p>
@@ -20,13 +30,13 @@
       <div v-else class="full_flex gap-4">
         <img
           class="h-10 w-10 rounded-full object-cover"
-          :src="useMembers.store.member_data.image"
+          :src="useMembers.store.member_data.user.image"
           alt=""
         />
         <div>
           <h1>
-            {{ useMembers.store.member_data.name }}
-            {{ useMembers.store.member_data.surname }}
+            {{ useMembers.store.member_data.user.name }}
+            {{ useMembers.store.member_data.user.surname }}
           </h1>
           <p>Membership settings</p>
         </div>
@@ -137,7 +147,7 @@
           <section
             class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full"
           >
-            <h1 class="_c00 font-semibold text-xl">🎉 Happy Monday, Xayot</h1>
+            <h1 class="_c00 font-semibold text-xl">🎉 Happy Monday, {{isLoading.user_update_checker.name}}</h1>
             <p class="md:my-10 my-6 font-medium">Subscriptions</p>
             <div class="md:flex grid grid-cols-2 gap-8">
               <div
@@ -1078,11 +1088,11 @@
                 src="@/assets/image/user.svg"
                 alt=""
               />
-              <p class="text-[16px] font-semibold">Xayot Sharapov</p>
+              <p class="text-[16px] font-semibold">{{isLoading.user_update_checker.name}} {{isLoading.user_update_checker.surname}}</p>
               <p class="_c2a">(Change)</p>
             </div>
             <h1 class="font-semibold _C00 mb-2 md:mt-7 mt-4">
-              Xayot's referral link
+              {{isLoading.user_update_checker.name}}'s referral link
             </h1>
             <div class="flex gap-3">
               <input
@@ -1161,10 +1171,12 @@
         >
           <div
             v-loading="isLoading.isLoadingType('updateRole')"
-            class="text-[16px]"
+            class="text-[16px] flex gap-1"
           >
             <span class="font-semibold">Role:</span>
-            {{ useMembers.store.member_type }}
+            <div v-if="useMembers.store.member_data.is_banned == 0 && useMembers.store.member_data.status == 'churned'">Nonmember</div>
+            <div v-else>
+              {{ useMembers.store.member_type }}
             <el-dropdown placement="bottom-end" class="dropdown">
               <button class="_c2a cursor-pointer hover:underline h-5">
                 (change)
@@ -1186,6 +1198,7 @@
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
+            </div>
           </div>
           <div
             v-if="useMembers.store.member_type == 'Admin'"
@@ -1212,20 +1225,20 @@
               </template>
             </el-dropdown>
           </div>
-          <div v-else-if="useMembers.store.member_type != 'Moderator'">
-            <p
+          <div v-else-if="useMembers.store.member_type != 'Moderator' && (useMembers.store.member_data.is_banned != 1 && useMembers.store.member_data.status != 'churned')">
+            <p v-if="useMembers.store.member_data.is_banned != 1"
               @click="
                 () => {
                   useMembers.store.banchurned.type = 'churned';
                   useMembers.store.banchurned.status = true;
-                  useMembers.store.user_id = useMembers.store.member_data.id;
+                  useMembers.store.user_id = useMembers.store.member_data.user.id;
                 }
               "
               class="md:mt-5 mt-4 hover:underline _ceb font-medium cursor-pointer"
             >
               Remove from group
             </p>
-            <p
+            <p v-if="useMembers.store.member_data.is_banned != 1"
               @click="
                 () => {
                   useMembers.store.banchurned.type = 'ban';
@@ -1235,6 +1248,17 @@
               class="md:mt-5 mt-4 hover:underline _ceb font-medium cursor-pointer"
             >
               Ban from group
+            </p>
+            <p v-else
+              @click="
+                () => {
+                  useMembers.store.banchurned.type = 'unban';
+                  useMembers.store.banchurned.status = true;
+                }
+              "
+              class="md:mt-5 mt-4 hover:underline _ceb font-medium cursor-pointer"
+            >
+              Unban from group
             </p>
           </div>
         </section>
@@ -1281,7 +1305,7 @@
           >
             <h1 class="_c00 font-semibold text-xl">Membership</h1>
             <p class="md:my-10 my-6 font-medium">
-              You've been a member of Max Business School™ since
+              You've been a member of {{useGroup.store.group_by_username.name}} since
               <strong>02/11/2024</strong>.
             </p>
             <button
@@ -1332,11 +1356,17 @@
                 class="flex items-center justify-between h-10"
               >
                 <div class="full_flex gap-4">
-                  <div class="w-10 h-10 b_c2a r_8 full_flex" v-if="true">
-                    <p class="font-semibold text-white">DM</p>
-                  </div>
-                  <img v-else src="@/assets/image/picture.png" alt="" />
-                  <h1 class="font-semibold">Digital Marketer</h1>
+                  <div class="flex items-center justify-between h-10">
+                    <div class="full_flex items-start gap-4">
+                        <img class="!w-10 !h-10 min-w-[40px] object-cover r_8 !overflow-hidden" v-if="useGroup.store.group_by_username.icon"
+                            :src="useGroup.store.group_by_username.icon" alt="" />
+                        <div v-else class="full_flex uppercase w-10 h-10 min-w-[40px] r_8"
+                            :style="`background: ${useGroup.store.group_by_username.color}`">
+                            {{ useGroup.store.group_by_username.initials }}
+                        </div>
+                    </div>
+                </div>
+                  <h1 class="font-semibold">{{ useGroup.store.group_by_username.name }}</h1>
                 </div>
                 <el-select
                   id="follow_email"
@@ -1368,14 +1398,14 @@
           >
             <h1 class="text-xl font-semibold _c00">Invite</h1>
             <p class="my-5">
-              Share a link to Max Business School™ with your friends.
+              Share a link to {{useGroup.store.group_by_username.name}} with your friends.
             </p>
             <div class="flex gap-3">
               <p
                 class="flex items-center w-full truncate h-10 rounded-[4px] px-3 border_ce0 _c2a font-medium text-sm"
               >
                 <span class="truncate"
-                  >https://www.skool.com/max-business-school/about
+                  >https://www.skool.com/{{useGroup.store.group_by_username.username}}/about
                 </span>
               </p>
               <button class="b_cbc px-6 uppercase font-semibold r_8">
@@ -1445,14 +1475,16 @@
         <h1 class="text-2xl font-semibold">
           <span v-if="useMembers.store.banchurned.type == 'churned'"
             >Remove from group?</span
-          ><span v-else>Ban from group?</span>
+          ><span v-else>
+            <span v-if="useMembers.store.member_data">Ban from group?</span>
+          </span>
         </h1>
         <p class="text-lg">
           <span v-if="useMembers.store.banchurned.type == 'churned'">
             Are you sure you want to remove
             <span class="font-semibold"
-              >{{ useMembers.store.member_data.name }}
-              {{ useMembers.store.member_data.surname }}</span
+              >{{ useMembers.store.member_data.user.name }}
+              {{ useMembers.store.member_data.user.surname }}</span
             >
             from
             <span class="font-semibold">{{
@@ -1463,8 +1495,8 @@
           <span v-else>
             You're banning
             <span class="font-semibold"
-              >{{ useMembers.store.member_data.name }}
-              {{ useMembers.store.member_data.surname }}</span
+              >{{ useMembers.store.member_data.user.name }}
+              {{ useMembers.store.member_data.user.surname }}</span
             >
             from
             <span class="font-semibold">{{
@@ -1474,7 +1506,7 @@
             Delete recent activity? <br />
             Delete
             <span class="font-semibold"
-              >{{ useMembers.store.member_data.name }}'s</span
+              >{{ useMembers.store.member_data.user.name }}'s</span
             >
             recent posts and comments from their profile here before banning
             them. It's easier this way.
@@ -1492,7 +1524,7 @@
             @click="
               () => {
                 useMembers.store.status = 'churned';
-                useMembers.store.user_id = useMembers.store.member_data.id;
+                useMembers.store.user_id = useMembers.store.member_data.user.id;
                 useMembers.setMemberJoinType();
               }
             "
@@ -1503,11 +1535,27 @@
           </button>
           <button
             v-else-if="useMembers.store.banchurned.type == 'ban'"
-            @click="useLink.deleteLink"
-            v-loading="isLoading.isLoadingType('deleteLink')"
+            @click="() => {
+                useMembers.store.status = 'banned';
+                useMembers.store.user_id = useMembers.store.member_data.user.id;
+                useMembers.setMemberJoinType();
+              }"
+            v-loading="isLoading.isLoadingType('groupMembesRequest')"
             class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
           >
             ban
+          </button>
+          <button
+            v-else-if="useMembers.store.banchurned.type == 'unban'"
+            @click="() => {
+                useMembers.store.status = 'unbanned';
+                useMembers.store.user_id = useMembers.store.member_data.user.id;
+                useMembers.setMemberJoinType();
+              }"
+            v-loading="isLoading.isLoadingType('groupMembesRequest')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
+            unban
           </button>
           <!-- <button
             v-else-if="isLoading.membersModal.modalType == 'changeVote'"

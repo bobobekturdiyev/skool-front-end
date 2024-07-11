@@ -159,7 +159,7 @@
               Approve
             </button>
             <button
-              @click="handleRequest('cancel', i.user?.id)"
+              @click="handleRequest('cancelling', i.user?.id)"
               class="uppercase border border_ce0 r_8 px-4"
             >
               Decline

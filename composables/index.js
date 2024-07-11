@@ -3,6 +3,8 @@ import { useNotification } from "./notifications";
 import { settings_sidebar, membership_settings } from "./settings";
 import { useFormatDate } from "./formatDate";
 import { role_ac } from "./roles";
+import { useApiRequest } from "./request";
+
 export {
   members_sidebar,
   useNotification,
@@ -10,4 +12,5 @@ export {
   membership_settings,
   useFormatDate,
   role_ac,
+  useApiRequest,
 };

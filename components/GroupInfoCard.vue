@@ -15,7 +15,7 @@
           alt=""
         />
         <div
-          v-else
+          v-else-if="role_ac.includes(useGroup.store.group_by_username.type)"
           @click="
             () => {
               isLoading.store.slideStep = 3;
@@ -27,6 +27,11 @@
         >
           Upload cover photo
         </div>
+        <div
+          v-else
+          class="full_flex hover:underline cursor-pointer w-full h-[150px] text-white"
+          :style="`background: ${useGroup.store.group_by_username?.color}`"
+        ></div>
         <div class="p-4 space-y-4">
           <h1 class="font-medium text-lg">
             {{ useGroup.store.group_by_username?.name }}
@@ -221,6 +226,7 @@ import {
   usePaymentStore,
   useMemberStore,
 } from "@/store";
+import { role_ac } from "@/composables";
 
 const router = useRouter();
 const isLoading = useLoadingStore();

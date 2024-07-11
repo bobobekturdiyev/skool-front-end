@@ -12,7 +12,10 @@ export const useGroupStore = defineStore("group", () => {
   const store = reactive({
     groups: [],
     mygroups: [],
-    group_by_username: {},
+    group_pinned: [],
+    group_by_username: {
+      name: '',
+    },
     add_media: false,
     delete_media: false,
     media_id: "",
@@ -56,7 +59,7 @@ export const useGroupStore = defineStore("group", () => {
     isLoading.addLoading("getMyGroups");
 
     axios
-      .get(baseUrl + 'get-join-group', {
+      .get(baseUrl + "get-join-group", {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -92,7 +95,7 @@ export const useGroupStore = defineStore("group", () => {
       })
       .then((res) => {
         console.log(res);
-        router.push(`/${res.data.username}`)
+        router.push(`/${res.data.username}`);
         isLoading.removeLoading("createCommunity");
       })
       .catch((err) => {
@@ -285,6 +288,59 @@ export const useGroupStore = defineStore("group", () => {
       });
   }
 
+  function pinGroupPinned(group) {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("getGroupPinned");
+    const formData = new URLSearchParams();
+    formData.append("system_pinned", group.pinned == 1 ? 0 : 1);
+    axios
+      .put(baseUrl + `update-group-pinned/${group.id}`, formData, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        getMyGroups();
+        // store.group_pinned = res.data;
+        isLoading.removeLoading("getGroupPinned");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.removeLoading("getGroupPinned");
+      });
+  }
+
+  function update_group_position() {
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("positionGroup");
+    let ids = [];
+    for (let i of store.mygroups) {
+      ids.push(i.id);
+    }
+    axios
+      .post(
+        baseUrl + `update-group-position`,
+        { ids },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res, 'data');
+        store.mygroups = res.data;
+        isLoading.removeLoading("positionGroup");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.showMessage(err.response.data.message[0]);
+        isLoading.removeLoading("positionGroup");
+      });
+  }
+
+
   return {
     store,
     media,
@@ -298,5 +354,7 @@ export const useGroupStore = defineStore("group", () => {
     groupByUsername,
     updateGroupDescription,
     getMyGroups,
+    pinGroupPinned,
+    update_group_position,
   };
 });

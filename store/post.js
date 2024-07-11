@@ -1,8 +1,10 @@
 import { defineStore } from "pinia";
 import { useLoadingStore, useAddVideoStore, useClassroomStore } from "@/store";
 import axios from "axios";
+import { useApiRequest } from "@/composables";
 
 export const usePostStore = defineStore("post", () => {
+  const apiRequest = useApiRequest();
   const isLoading = useLoadingStore();
   const addVideo = useAddVideoStore();
   const useClassroom = useClassroomStore();
@@ -92,7 +94,7 @@ export const usePostStore = defineStore("post", () => {
     modal.edit = false;
   }
 
-  function get_posts() {
+  async function get_posts() {
     const token = localStorage.getItem("token");
     console.log(router.currentRoute.value.query);
     const group_username = router.currentRoute.value.params.community;
@@ -110,37 +112,21 @@ export const usePostStore = defineStore("post", () => {
     }
 
     isLoading.addLoading("getPosts");
-    axios
-      .get(
-        baseUrl +
-          `get-post/${group_username}?page=${isLoading.store.pagination.current_page}${filter_url}`,
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res, "kfdlfkd");
-        store.posts = res.data?.data;
-        store.members_count = res.data?.members_count;
+    const data = await apiRequest.get(`get-post/${group_username}?page=${isLoading.store.pagination.current_page}${filter_url}`);
+    isLoading.removeLoading("getPosts");
+    if (data.status == 200) {
+           store.posts = data.data?.data;
+        store.members_count = data.data?.members_count;
         for (let i in store.setupgroup) {
           console.log(i);
-          store.setupgroup[i] = res.data[i];
+          store.setupgroup[i] = data.data[i];
         }
         console.log(store.setupgroup)
         for (let i in isLoading.store.pagination) {
-          isLoading.store.pagination[i] = res.data?.meta[i];
+          isLoading.store.pagination[i] = data.data?.meta[i];
         }
         isLoading.removeLoading("getPosts");
-      })
-      .catch((err) => {
-        if (err.response?.data?.message == "Posts not found") {
-          store.events = [];
-        }
-        console.log(err);
-        isLoading.removeLoading("getPosts");
-      });
+    }
   }
 
   function getPostById() {
@@ -229,28 +215,32 @@ export const usePostStore = defineStore("post", () => {
       });
   }
 
-  function get_categories() {
+  async function get_categories() {
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("getPostCategories");
-    axios
-      .get(baseUrl + `group/${group_username}/post/categories`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        store.categories = res.data;
-        isLoading.removeLoading("getPostCategories");
-      })
-      .catch((err) => {
-        if (err.response?.data?.message == "Posts not found") {
-          store.categories = [];
-        }
-        console.log(err);
-        isLoading.removeLoading("getPostCategories");
-      });
+    const data = await apiRequest.get(`group/${group_username}/post/categories`);
+    isLoading.removeLoading("getPostCategories");
+    if (data.status == 200) {
+      store.categories = data.data;
+    }
+    // axios
+    //   .get(baseUrl + `group/${group_username}/post/categories`, {
+    //     headers: {
+    //       Authorization: "Bearer " + token,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //     isLoading.removeLoading("getPostCategories");
+    //   })
+    //   .catch((err) => {
+    //     if (err.response?.data?.message == "Posts not found") {
+    //       store.categories = [];
+    //     }
+    //     console.log(err);
+    //     isLoading.removeLoading("getPostCategories");
+    //   });
   }
 
   function get_likes() {

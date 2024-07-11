@@ -1,8 +1,10 @@
 import { defineStore } from "pinia";
 import { useLoadingStore, useGroupStore, usePostStore } from "@/store";
 import axios from "axios";
+import { useApiRequest } from "@/composables";
 
 export const useMemberStore = defineStore("members", () => {
+  const apiRequest = useApiRequest();
   const isLoading = useLoadingStore();
   const usePost = usePostStore();
   const useGroup = useGroupStore();
@@ -28,6 +30,7 @@ export const useMemberStore = defineStore("members", () => {
       data: [],
       type: "ban",
     },
+    activities: "",
   });
 
   const general = reactive({
@@ -52,7 +55,7 @@ export const useMemberStore = defineStore("members", () => {
     completed: "",
   });
 
-  function getMembers() {
+  async function getMembers() {
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("groupMembes");
@@ -60,24 +63,17 @@ export const useMemberStore = defineStore("members", () => {
     if (router.currentRoute.value.query?.type) {
       url = `?t=${router.currentRoute.value.query?.type}`;
     }
-    axios
-      .get(baseUrl + `get-group-members/${group_username}${url}`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        store.members = res.data;
-        for (let i in isLoading.store.pagination) {
-          isLoading.store.pagination[i] = res.data.meta[i];
-        }
-        isLoading.removeLoading("groupMembes");
-      })
-      .catch((err) => {
-        console.log(err);
-        isLoading.removeLoading("groupMembes");
-      });
+    const data = await apiRequest.get(
+      `get-group-members/${group_username}${url}`
+    );
+    console.log(data);
+    isLoading.removeLoading("groupMembes");
+    if (data.status == 200) {
+      store.members = data.data;
+      for (let i in isLoading.store.pagination) {
+        isLoading.store.pagination[i] = data.data.meta[i];
+      }
+    }
   }
 
   function editLevel() {
@@ -104,25 +100,26 @@ export const useMemberStore = defineStore("members", () => {
       });
   }
 
-  function getLevels() {
+  async function getActivity() {
+    const username = router.currentRoute.value.params.community;
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("getActivity");
+    const data = await apiRequest.get(`get-leaderboard/${username}`);
+    isLoading.removeLoading("getActivity");
+    if (data.status == 200) {
+      store.activities = data.data[0];
+    }
+  }
+
+  async function getLevels() {
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("getLevels");
-    axios
-      .get(baseUrl + `level/${group_username}`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        store.levels = res.data;
-        isLoading.removeLoading("getLevels");
-      })
-      .catch((err) => {
-        console.log(err);
-        isLoading.removeLoading("getLevels");
-      });
+    const data = await apiRequest.get(`level/${group_username}`);
+    isLoading.removeLoading("getLevels");
+    if (data.status == 200) {
+      store.levels = data.data;
+    }
   }
 
   // general settings
@@ -165,6 +162,7 @@ export const useMemberStore = defineStore("members", () => {
       })
       .then((res) => {
         console.log(res);
+        useGroup.getMyGroups();
         setGeneralSettings(res.data);
         useGroup.store.group_by_username = res.data;
         isLoading.removeLoading("updateSettings");
@@ -208,7 +206,7 @@ export const useMemberStore = defineStore("members", () => {
       });
   }
 
-  function getMemberRequests() {
+  async function getMemberRequests() {
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("groupMembesRequest");
@@ -216,21 +214,13 @@ export const useMemberStore = defineStore("members", () => {
     if (store.request_types) {
       url = `?t=${store.request_types}`;
     }
-    axios
-      .get(baseUrl + `get-member-pending/${group_username}${url}`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        store.member_requests = res.data;
-        isLoading.removeLoading("groupMembesRequest");
-      })
-      .catch((err) => {
-        console.log(err);
-        isLoading.removeLoading("groupMembesRequest");
-      });
+    const data = await apiRequest.get(
+      `get-member-pending/${group_username}${url}`
+    );
+    isLoading.removeLoading("getActivity");
+    if (data.status == 200) {
+      store.member_requests = data.data;
+    }
   }
 
   function setMemberJoinType() {
@@ -253,13 +243,11 @@ export const useMemberStore = defineStore("members", () => {
       .then((res) => {
         console.log(res);
         store.member_requests = res.data;
+        store.banchurned.status = false;
+        isLoading.store.inviteModal = false;
         isLoading.removeLoading("groupMembesRequest");
         getMemberRequests();
-        if (store.status == "churned") {
-          isLoading.store.inviteModal = false;
-          store.banchurned.status = false;
-          getMembers();
-        }
+        getMembers();
       })
       .catch((err) => {
         console.log(err);
@@ -310,5 +298,6 @@ export const useMemberStore = defineStore("members", () => {
     getMemberRequests,
     setMemberJoinType,
     updateUserRole,
+    getActivity,
   };
 });

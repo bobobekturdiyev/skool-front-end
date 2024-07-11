@@ -1,37 +1,21 @@
 <template>
   <main class="mt-[10px]">
     <section class="bg-white rounded-xl p-5 pb-[60px]">
-      <img
-        @click="
-          () => {
-            isLoading.store.slideStep = 8;
-            isLoading.store.inviteModal = true;
-          }
-        "
-        class="mb-4 cursor-pointer"
-        src="@/assets/svg/leaderboards/settings.svg"
-        alt=""
-      />
+      <img @click="() => {
+        isLoading.store.slideStep = 8;
+        isLoading.store.inviteModal = true;
+      }
+        " class="mb-4 cursor-pointer" src="@/assets/svg/leaderboards/settings.svg" alt="" />
       <div class="sm:flex lg:gap-20 gap-10">
         <div class="flex flex-col items-center relative min-w-[240px]">
           <el-progress :stroke-width="11" type="circle" :percentage="5" />
           <div class="absolute mx-auto top-[14.5px]">
             <div class="relative max-w-fit">
-              <img
-                class="h-[138px] w-[138px] rounded-full object-cover"
-                :src="isLoading.user.image"
-                alt=""
-              />
+              <img class="h-[138px] w-[138px] rounded-full object-cover" :src="isLoading.user.image" alt="" />
               <div class="full_flex absolute -bottom-[2px] -right-[16px] z-10">
                 <div class="relative">
-                  <img
-                    class="h-10 w-10"
-                    src="@/assets/svg/community/user_messages.svg"
-                    alt=""
-                  />
-                  <p
-                    class="absolute full_flex bottom-0 h-10 w-10 pb-1 text-[22px] text-white font-medium"
-                  >
+                  <img class="h-10 w-10" src="@/assets/svg/community/user_messages.svg" alt="" />
+                  <p class="absolute full_flex bottom-0 h-10 w-10 pb-1 text-[22px] text-white font-medium">
                     1
                   </p>
                 </div>
@@ -41,9 +25,7 @@
           <h1 class="text-xl font-semibold mt-5 w-full text-center truncate">
             {{ isLoading.user?.name }} {{ isLoading.user?.surname }}
           </h1>
-          <button
-            class="my-5 mb-3 _c2a font-semibold text-xs b_cd9 h-8 px-[10px] rounded-full"
-          >
+          <button class="my-5 mb-3 _c2a font-semibold text-xs b_cd9 h-8 px-[10px] rounded-full">
             Level 1 - STARTER
           </button>
           <div class="flex items-center gap-1 text-xs">
@@ -54,29 +36,15 @@
         </div>
         <div class="md:grid grid-cols-2 gap-5 w-full sm:mt-0 mt-8">
           <div>
-            <div
-              v-show="index < 5"
-              class="max-w-[310px]"
-              v-for="(i, index) in useMembers.store.levels"
-            >
+            <div v-show="index < 5" class="max-w-[310px]" v-for="(i, index) in useMembers.store.levels">
               <div v-if="index != 0" class="h-6 w-[42px] overflow-hidden my-1">
-                <img
-                  class="mx-auto"
-                  src="@/assets/svg/leaderboards/line.svg"
-                  alt=""
-                />
+                <img class="mx-auto" src="@/assets/svg/leaderboards/line.svg" alt="" />
               </div>
               <div class="flex items-center gap-5">
-                <p
-                  v-if="i.completed"
-                  class="full_flex font-medium min-w-[42px] h-[42px] r_8 b_cbc"
-                >
+                <p v-if="i.completed" class="full_flex font-medium min-w-[42px] h-[42px] r_8 b_cbc">
                   {{ index + 1 }}
                 </p>
-                <p
-                  v-else
-                  class="full_flex font-medium min-w-[42px] h-[42px] r_8 b_cf2"
-                >
+                <p v-else class="full_flex font-medium min-w-[42px] h-[42px] r_8 b_cf2">
                   <img src="@/assets/svg/members/private.svg" alt="" />
                 </p>
                 <div class="_c07 space-y-1">
@@ -84,43 +52,25 @@
                     Level {{ index + 1 }} {{ i.level ? `- ${i.level}` : '' }}
                   </p>
                   <p class="text-xs leading-[14px]">
-                    {{ i.points }}% of members
+                    {{ i.members }}% of members
                   </p>
                 </div>
               </div>
             </div>
           </div>
           <div class="sm:hidden block h-6 w-[42px] overflow-hidden my-1">
-            <img
-              class="mx-auto"
-              src="@/assets/svg/leaderboards/line.svg"
-              alt=""
-            />
+            <img class="mx-auto" src="@/assets/svg/leaderboards/line.svg" alt="" />
           </div>
           <div>
-            <div
-              v-show="index > 4"
-              class="max-w-[310px]"
-              v-for="(i, index) in useMembers.store.levels"
-            >
+            <div v-show="index > 4" class="max-w-[310px]" v-for="(i, index) in useMembers.store.levels">
               <div v-if="index != 5" class="h-6 w-[42px] overflow-hidden my-1">
-                <img
-                  class="mx-auto"
-                  src="@/assets/svg/leaderboards/line.svg"
-                  alt=""
-                />
+                <img class="mx-auto" src="@/assets/svg/leaderboards/line.svg" alt="" />
               </div>
               <div class="flex items-center gap-5">
-                <p
-                  v-if="i.completed"
-                  class="full_flex font-medium min-w-[42px] h-[42px] r_8 b_cbc"
-                >
+                <p v-if="i.completed" class="full_flex font-medium min-w-[42px] h-[42px] r_8 b_cbc">
                   {{ index + 6 }}
                 </p>
-                <p
-                  v-else
-                  class="full_flex font-medium min-w-[42px] h-[42px] r_8 b_cf2"
-                >
+                <p v-else class="full_flex font-medium min-w-[42px] h-[42px] r_8 b_cf2">
                   <img src="@/assets/svg/members/private.svg" alt="" />
                 </p>
                 <div class="_c07 space-y-1">
@@ -128,7 +78,7 @@
                     Level {{ index + 1 }} {{ i.level ? `- ${i.level}` : '' }}
                   </p>
                   <p class="text-xs leading-[14px]">
-                    {{ i.points }}% of members
+                    {{ i.members }}% of members
                   </p>
                 </div>
               </div>
@@ -139,44 +89,35 @@
     </section>
     <section>
       <p class="py-6 _c07">
-        Leaderboards will be updated when there is more activity
+        <span
+          v-if="useMembers.store.activities.data_7?.length || useMembers.store.activities.data_30?.length || useMembers.store.activities.data_all?.length">
+          Last updated: {{ formatCustomDate(useMembers.store.activities.leaderboard_date) }}</span>
+        <span v-else>Leaderboards will be updated when there is more activity</span>
       </p>
       <div class="grid md:grid-cols-3 gap-5">
-        <div class="bg-white r_8 text-center">
-          <h1 class="font-semibold py-5">Leaderboard (7-day)</h1>
+        <div v-for="i in activity_step" class="bg-white r_8 text-center">
+          <h1 class="font-semibold py-5">Leaderboard ({{ i[0] }})</h1>
           <hr class="border_ce0" />
-          <div class="space-y-2 py-6 _ca1 text-xs">
-            <img
-              class="mx-auto"
-              src="@/assets/svg/leaderboards/pending.svg"
-              alt=""
-            />
+          <div v-if="!useMembers.store.activities[i[1]]?.length" class="space-y-2 py-6 _ca1 text-xs">
+            <img class="mx-auto" src="@/assets/svg/leaderboards/pending.svg" alt="" />
             <p>No activity yet</p>
           </div>
-        </div>
-        <div class="bg-white r_8 text-center">
-          <h1 class="font-semibold py-5">Leaderboard (30-day)</h1>
-          <hr class="border_ce0" />
-          <div class="space-y-2 py-6 _ca1 text-xs">
-            <img
-              class="mx-auto"
-              src="@/assets/svg/leaderboards/pending.svg"
-              alt=""
-            />
-            <p>No activity yet</p>
-          </div>
-        </div>
-        <div class="bg-white r_8 text-center">
-          <h1 class="font-semibold py-5">Leaderboard (all-time)</h1>
-          <hr class="border_ce0" />
-          <div class="space-y-2 py-6 _ca1 text-xs">
-            <img
-              class="mx-auto"
-              src="@/assets/svg/leaderboards/pending.svg"
-              alt=""
-            />
-            <p>No activity yet</p>
-          </div>
+          <ul v-else class="space-y-4 overflow-auto max-h-[300px] p-6">
+            <li v-for="(i, index) in useMembers.store.activities[i[1]]" :key="i.id"
+              class="flex items-center gap-4 w-full">
+              <div class="relative full_flex" v-if="index < 3">
+                <p class="z-10 h-7 w-7 min-w-[28px] mx-2 full_flex rounded-full"
+                  :style="{ 'background': step[index][0] }">{{ index + 1 }}</p>
+                <IconStep class="absolute bottom-[-8px]" :fill="step[index][1]" />
+              </div>
+              <p v-else class="h-7 w-7 min-w-[28px] mx-2 full_flex rounded-full">{{ index + 1 }}</p>
+              <img class="h-10 w-10 min-w-[40px] rounded-full object-cover" :src="i.user.image" title="user" />
+              <p class="truncate font-semibold w-[50%] text-start">
+                {{ i.user.name }} {{ i.user.surname }}
+              </p>
+              <p class="_c2a text-sm">+{{ i.like_count }}</p>
+            </li>
+          </ul>
         </div>
       </div>
     </section>
@@ -187,17 +128,77 @@
 definePageMeta({
   layout: "community",
 });
-
-import { useAuthStore, useMemberStore, useLoadingStore } from "~/store";
+import { useAuthStore, useMemberStore, useLoadingStore, useGroupStore } from "~/store";
 
 const useAuth = useAuthStore();
 const useMembers = useMemberStore();
 const isLoading = useLoadingStore();
+const useGroup = useGroupStore();
+const { start, finish } = useLoadingIndicator();
 
-onBeforeMount(() => {
-  useAuth.getUser();
-  useMembers.getLevels();
-});
+useSeoMeta({
+  title: computed(() => `Leaderboard · ${useGroup.store.group_by_username.name}`),
+  ogTitle: computed(() => `Leaderboard · ${useGroup.store.group_by_username.name}`),
+  description: computed(() => `Leaderboard · ${useGroup.store.group_by_username.description}`),
+  ogDescription: computed(() => `Leaderboard · ${useGroup.store.group_by_username.description}`),
+  ogImage: computed(() => `${useGroup.store.group_by_username.image}`),
+  twitterCard: computed(() => `${useGroup.store.group_by_username.icon}`),
+})
+
+start();
+await useAsyncData("leaderboard", async () => {
+  await useAuth.getUser();
+  await useMembers.getLevels();
+  await useMembers.getActivity();
+  finish();
+}, { server: false })
+
+const step = [
+  ["#f8d481", "#F8CA60"],
+  ["#909090", "#909090"],
+  ["#a77b53", "#a77b53"],
+]
+
+const activity_step = [
+  ["7-day", "data_7"],
+  ["30-day", "data_30"],
+  ["all-time", "data_all"],
+]
+
+function formatCustomDate(date) {
+  date = new Date();
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const month = months[date.getMonth()];
+  const day = date.getDate();
+  const year = date.getFullYear();
+
+  let hours = date.getHours();
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // 0 ni 12 ga o'zgartiramiz
+
+  // Tegishli qo'shimchalarni topish
+  const getOrdinalSuffix = (day) => {
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
+  }
+
+  const dayWithSuffix = day + getOrdinalSuffix(day);
+
+  return `${month} ${dayWithSuffix} ${year} ${hours}:${minutes}${ampm}`;
+}
+
+// onBeforeMount(() => {
+  // useAuth.getUser();
+  // useMembers.getLevels();
+  // useMembers.getActivity();
+// });
 </script>
 
 <style lang="scss" scoped></style>

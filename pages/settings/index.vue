@@ -1,23 +1,17 @@
 <template>
     <main class="sm:-mt-2 -mt-5 -mb-[80px]">
-        <nav
-        v-show="store.is_open"
-      @click="store.is_open = false"
-      class="sm:hidden flex items-center cursor-pointer -mt-10 mb-[10px] h-[60px] px-5"
-    >
-      <div class="full_flex gap-4 font-semibold _c07">
-        <img src="@/assets/svg/icon/back_route.svg" alt="" />
-        <p>{{ store.is_open_name }}</p>
-      </div>
-    </nav>
+        <nav v-show="store.is_open" @click="store.is_open = false"
+            class="sm:hidden flex items-center cursor-pointer -mt-10 mb-[10px] h-[60px] px-5">
+            <div class="full_flex gap-4 font-semibold _c07">
+                <img src="@/assets/svg/icon/back_route.svg" alt="" />
+                <p>{{ store.is_open_name }}</p>
+            </div>
+        </nav>
         <div class="flex gap-6">
-            <aside 
-            :class="store.is_open ? 'sm:block hidden' : 'min-w-full'"
-            class="md:min-w-[280px] sm:min-w-[200px] h-[calc(100vh_-140px)] overflow-hidden overflow-y-auto !duration-300"
-            >
+            <aside :class="store.is_open ? 'sm:block hidden' : 'min-w-full'"
+                class="md:min-w-[280px] sm:min-w-[200px] h-[calc(100vh_-140px)] overflow-hidden overflow-y-auto !duration-300">
                 <ul class="_c07 text-sm">
-                    <li
-            @click="openData(index, i)"
+                    <li @click="openData(index, i)"
                         :class="store.slideStep == index ? '_c2a font-medium bg-[#F0F5FA]' : 'bg-white'"
                         class="flex gap-4 items-center cursor-pointer r_8 overflow-hidden"
                         v-for="(i, index) in settings_sidebar">
@@ -26,22 +20,24 @@
                     </li>
                 </ul>
             </aside>
-            <div 
-            class="w-full bg-white r_16 h-[calc(100vh_-140px)] overflow-hidden profile_accordion"
-        :class="store.is_open ? '' : 'sm:block hidden'"
-            >
+            <div class="w-full bg-white r_16 h-[calc(100vh_-140px)] overflow-hidden profile_accordion"
+                :class="store.is_open ? '' : 'sm:block hidden'">
                 <div class="mainSlider h-[calc(100vh_-140px)] duration-700">
                     <form @submit.prevent="useSettings.updateUserData()"
                         class="h-[calc(100vh_-140px)] overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full">
                         <h1 class="text-xl font-semibold">Profile</h1>
                         <div class="space-y-6">
-                            <div v-loading="isLoading.isLoadingType('updateUserData') || isLoading.isLoadingType('getUserData')" class="flex items-center md:gap-8 gap-4 mt-6">
-                                <img  class="h-[100px] w-[100px] rounded-full object-cover" :src="isLoading.user.image"
+                            <div v-loading="isLoading.isLoadingType('updateUserData') || isLoading.isLoadingType('getUserData')"
+                                class="flex items-center md:gap-8 gap-4 mt-6">
+                                <img class="h-[100px] w-[100px] rounded-full object-cover" :src="isLoading.user.image"
                                     alt="">
-                                <label for="profile_img" class="md:text-[16px] text-sm border_cbc lg:px-4 sm:px-2 px-4 md:py-3 py-2 _c2a r_8 font-semibold text-center uppercase block full_flex">change profile
+                                <label for="profile_img"
+                                    class="md:text-[16px] text-sm border_cbc lg:px-4 sm:px-2 px-4 md:py-3 py-2 _c2a r_8 font-semibold text-center uppercase block full_flex">change
+                                    profile
                                     photo
                                 </label>
-                                <input @change="handlePhotoImage" type="file" id="profile_img" class="h-0 w-0 overflow-hidden !p-0">
+                                <input @change="handlePhotoImage" type="file" id="profile_img"
+                                    class="h-0 w-0 overflow-hidden !p-0">
                             </div>
                             <div>
                                 <div class="grid grid-cols-2 gap-6">
@@ -50,8 +46,10 @@
                                     <input disabled v-model="isLoading.user.surname"
                                         class="text-sm _ca1 placeholder-[#A1A1A1]" type="text" placeholder="Surname">
                                 </div>
-                                <p v-if="isLoading.user.is_change == 1" class="mt-1 _ca1 text-xs">You can only change your name once.</p>
-                                <p v-else class="mt-1 _ca1 text-xs">You can only change your name once, and you must use your
+                                <p v-if="isLoading.user.is_change == 1" class="mt-1 _ca1 text-xs">You can only change
+                                    your name once.</p>
+                                <p v-else class="mt-1 _ca1 text-xs">You can only change your name once, and you must use
+                                    your
                                     real
                                     name. <span @click="changeName()" class="_c2a hover:underline cursor-pointer">Change
                                         name.</span></p>
@@ -122,7 +120,7 @@
                                                     <div class="w-10 h-10 b_c2a r_8 full_flex overflow-hidden"
                                                         v-if="true">
                                                         <p v-if="!i.image" class="font-semibold text-white">{{
-                            createLogo(i.name) }}</p>
+            createLogo(i.name) }}</p>
                                                         <img v-else class="w-10 h-10 object-cover" :src="i.image"
                                                             alt="">
                                                     </div>
@@ -175,7 +173,8 @@
                         <div class="space-y-2">
                             <label for="change_email" class="block _ca1 text-xs">Email</label>
                             <div class="flex gap-4">
-                                <input v-model="isLoading.user_update_checker.email" id="change_email" type="email" disabled>
+                                <input v-model="isLoading.user_update_checker.email" id="change_email" type="email"
+                                    disabled>
                                 <button
                                     class="full_flex gap-1 border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">
                                     change email
@@ -184,8 +183,8 @@
                         </div>
                         <h1 class="text-xl font-semibold">Timezone</h1>
                         <div class="w-full timezone">
-                            <el-select @change="changedTimeZone"  v-model="isLoading.user_update_checker.location" filterable class="!w-full"
-                                placeholder="(GMT +05:00) Asia/Tashkent">
+                            <el-select @change="changedTimeZone" v-model="isLoading.user_update_checker.location"
+                                filterable class="!w-full" placeholder="(GMT +05:00) Asia/Tashkent">
                                 <el-option v-for="item in timeZones" :key="item" :label="item" :value="item">
                                     <div class="flex items-center gap-2">
                                         {{ item }}
@@ -195,7 +194,10 @@
                                 </el-option>
                             </el-select>
                         </div>
-                        <button v-loading="isLoading.isLoadingType('updateUserData')" @click="updateTimeZone" :class="store.updateTimeZone ? '_c07 b_cbc':'_ca1 b_ce0'" class=" font-semibold px-6 r_8 mt-6 uppercase">update account</button>
+                        <button v-loading="isLoading.isLoadingType('updateUserData')" @click="updateTimeZone"
+                            :class="store.updateTimeZone ? '_c07 b_cbc' : '_ca1 b_ce0'"
+                            class=" font-semibold px-6 r_8 mt-6 uppercase">update
+                            account</button>
                         <h1 class="text-xl font-semibold">Sessions</h1>
                         <button
                             class="full_flex gap-1 border border_ce0 r_8 _ca1 px-4 h-10 uppercase whitespace-nowrap font-semibold">log
@@ -206,14 +208,17 @@
                         <h1 class="text-xl font-semibold">Change password</h1>
                         <input @input="listenerChangePassword" v-model="useSettings.changepassword.old_password"
                             type="password" placeholder="Old password">
-                        <p v-if="useSettings.store.passwordError?.length && useSettings.store.passwordError[0] == 0" class="_c2a !mt-1 !-mb-3">{{useSettings.store.passwordError[1]}}</p>
+                        <p v-if="useSettings.store.passwordError?.length && useSettings.store.passwordError[0] == 0"
+                            class="_c2a !mt-1 !-mb-3">{{ useSettings.store.passwordError[1] }}</p>
                         <input @input="listenerChangePassword" v-model="useSettings.changepassword.password"
                             type="password" placeholder="New password">
-                        <p v-if="useSettings.store.passwordError?.length && useSettings.store.passwordError[0] == 1" class="_c2a !mt-1 !-mb-3">{{useSettings.store.passwordError[1]}}</p>
+                        <p v-if="useSettings.store.passwordError?.length && useSettings.store.passwordError[0] == 1"
+                            class="_c2a !mt-1 !-mb-3">{{ useSettings.store.passwordError[1] }}</p>
                         <input @input="listenerChangePassword"
                             v-model="useSettings.changepassword.password_confirmation" type="password"
                             placeholder="Confirm new password">
-                        <p v-if="useSettings.store.passwordError?.length && useSettings.store.passwordError[0] == 2" class="_c2a !mt-1 !-mb-3">{{useSettings.store.passwordError[1]}}</p>
+                        <p v-if="useSettings.store.passwordError?.length && useSettings.store.passwordError[0] == 2"
+                            class="_c2a !mt-1 !-mb-3">{{ useSettings.store.passwordError[1] }}</p>
                         <button :type="useSettings.store.is_changepass ? 'submit' : 'button'"
                             :class="useSettings.store.is_changepass ? 'b_cbc _c07' : 'b_ce0 _ca1'"
                             class=" font-semibold px-6 r_8 mt-6 uppercase">change
@@ -325,49 +330,50 @@
                         class="h-[calc(100vh_-140px)] animate-left overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full">
                         <div class="space-y-6 r_8">
                             <h1 class="text-xl font-semibold">Communities</h1>
-                            <p>Drag and drop to reorder your communities. Changes here will reflect in your switcher.</p>
-                            <div class="space-y-10 mt-6">
-                                <div v-for="i in 3">
-                                    <div class="flex items-center justify-between h-10">
-                                        <div class="full_flex gap-4">
-                                        <div class="w-10 h-10 min-w-[40px] b_c2a r_8 full_flex" v-if="true">
-                                            <p class="font-semibold text-white">DM</p>
+                            <p>Drag and drop to reorder your communities. Changes here will reflect in your switcher.
+                            </p>
+                            <div class="space-y-6 pt-6" v-loading="isLoading.isLoadingType('positionGroup')">
+                                <draggable class="space-y-6" :list="useGroup.store.mygroups" group="grid" :animation="500" @change="useGroup.update_group_position">
+                                    <div class="cursor-grab" v-for="i in useGroup.store.mygroups">
+                                        <div class="flex items-center justify-between">
+                                            <div class="full_flex items-start gap-4">
+                                                <img class="!w-10 !h-10 min-w-[40px] object-cover r_8 !overflow-hidden"
+                                                    v-if="i.icon" :src="i.icon" alt="" />
+                                                <div v-else class="full_flex uppercase w-10 h-10 min-w-[40px] r_8"
+                                                    :style="`background: ${i.color}`">
+                                                    {{ i.initials }}
+                                                </div>
+                                                <div>
+                                                    <h1 class="font-semibold">{{ i.name }}</h1>
+                                                    <p><span class="capitalize">{{ i.group_type }}</span> • <span
+                                                            class="capitalize">
+                                                            {{i.group_price }}
+                                                    </span></p>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center gap-4">
+                                                <button @click="() => routeToGroupSettings(i.username)"
+                                                    class="xl:flex hidden items-center justify-center gap-[10px] border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">
+                                                    {{ i.type }}
+                                                    <img src="@/assets/svg/settings/settings.svg" alt="">
+                                                </button>
+                                                <div @click="useGroup.pinGroupPinned(i)"
+                                                    class="flex items-center gap-4 cursor-pointer">
+                                                    <p class="h-8 w-[1px] b_ce0"></p>
+                                                    <img v-if="i.pinned" src="@/assets/svg/settings/pinned.svg" alt="">
+                                                    <img v-else src="@/assets/svg/settings/unpinned.svg" alt="">
+                                                </div>
+                                            </div>
                                         </div>
-                                        <img v-else src="@/assets/image/picture.png" alt="">
-                                        <div>
-                                            <h1 class="font-semibold">Digital Marketer</h1>
-                                            <p>Private • Free</p>
+                                        <div class="md:flex grid grid-cols-2 gap-4 md:!mt-4 !mt-[10px]">
+                                            <button @click="() => routeToGroupSettings(i.username)"
+                                                class="xl:hidden flex items-center justify-center gap-[10px] border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">
+                                                {{ i.type }}
+                                                <img src="@/assets/svg/settings/settings.svg" alt="">
+                                            </button>
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-4">
-                                        <button
-                                            class="xl:flex hidden items-center justify-center gap-[10px] border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">
-                                            Admin
-                                            <img src="@/assets/svg/settings/settings.svg" alt="">
-                                        </button>
-                                        <button
-                                            class="xl:flex hidden items-center justify-center gap-[10px] border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">
-                                            Membership
-                                            <img src="@/assets/svg/settings/settings.svg" alt="">
-                                        </button>
-                                        <p class="h-8 w-[1px] b_ce0"></p>
-                                        <img v-if="true" src="@/assets/svg/settings/pinned.svg" alt="">
-                                        <img v-else src="@/assets/svg/settings/unpinned.svg" alt="">
-                                    </div>
-                                    </div>
-                                    <div class="md:flex grid grid-cols-2 gap-4 md:mt-4 mt-[10px]">
-                                        <button
-                                            class="xl:hidden flex items-center justify-center gap-[10px] border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">
-                                            Admin
-                                            <img src="@/assets/svg/settings/settings.svg" alt="">
-                                        </button>
-                                        <button
-                                            class="xl:hidden flex items-center justify-center gap-[10px] border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">
-                                            Membership
-                                            <img src="@/assets/svg/settings/settings.svg" alt="">
-                                        </button>
-                                    </div>
-                                </div>
+                                </draggable>
                             </div>
                         </div>
                     </section>
@@ -511,12 +517,13 @@
             </form>
         </el-dialog>
 
-         <!-- cropper image -->
-  <el-dialog v-model="isLoading.store.cropModal" v-if="isLoading.store.cropModal" width="780" align-center
-    class="bg-opacity-50 p-6 !w-[400px] !rounded-lg">
-    <cropper-image />
-    <p class="_c07 text-center mt-4">Or, <label class="_c2a" for="add_photo">upload a different photo</label></p>
-  </el-dialog>
+        <!-- cropper image -->
+        <el-dialog v-model="isLoading.store.cropModal" v-if="isLoading.store.cropModal" width="780" align-center
+            class="bg-opacity-50 p-6 !w-[400px] !rounded-lg">
+            <cropper-image />
+            <p class="_c07 text-center mt-4">Or, <label class="_c2a" for="add_photo">upload a different photo</label>
+            </p>
+        </el-dialog>
     </main>
 </template>
 
@@ -524,14 +531,16 @@
 <script setup>
 import { settings_sidebar } from "@/composables";
 import moment from 'moment-timezone';
-import { useLoadingStore, useSettingsStore } from "@/store";
-
+import { useLoadingStore, useSettingsStore, useGroupStore } from "@/store";
+import { VueDraggableNext as draggable } from "vue-draggable-next";
 const timeZones = moment.tz.names().map((name) => {
     const offset = moment.tz(name).format('Z');
     return `(GMT${offset}) ${name}`;
 });
 const useSettings = useSettingsStore();
+const useGroup = useGroupStore();
 const isLoading = useLoadingStore();
+const router = useRouter();
 isLoading.addLoading("getUserData");
 
 const store = reactive({
@@ -575,6 +584,11 @@ const group_notification = [
 
 const myers_briggs = ["Don't show", "ISTJ", "ISTP", "ISFJ"];
 
+function routeToGroupSettings(username) {
+    isLoading.store.inviteModal = true;
+    router.push(`/${username}`)
+}
+
 function changeName() {
     store.user_name.name = isLoading.user_update_checker.name
     store.user_name.surname = isLoading.user_update_checker.surname
@@ -584,12 +598,12 @@ function changeName() {
 function handlePhotoImage(e) {
     // isLoading.user_update_checker.image = file;
     isLoading.store.cropModal = false;
-  const file = e.target.files[0];
-  isLoading.store.previewImage = URL.createObjectURL(file);
-  document.getElementById("profile_img").value = "";
-  setTimeout(() => {
-    isLoading.store.cropModal = true;
-  }, 100);
+    const file = e.target.files[0];
+    isLoading.store.previewImage = URL.createObjectURL(file);
+    document.getElementById("profile_img").value = "";
+    setTimeout(() => {
+        isLoading.store.cropModal = true;
+    }, 100);
 }
 
 function changedTimeZone() {
@@ -632,9 +646,9 @@ function listeneerUserData() {
 }
 
 function openData(index, name) {
-  store.slideStep = index;
-  store.is_open_name = name;
-  store.is_open = true;
+    store.slideStep = index;
+    store.is_open_name = name;
+    store.is_open = true;
 }
 
 
@@ -660,6 +674,7 @@ watch(
 
 onBeforeMount(() => {
     useSettings.getFullData();
+    useGroup.getMyGroups();
 })
 </script>
 
