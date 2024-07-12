@@ -7,11 +7,9 @@ export const useProfileStore = defineStore("profile", () => {
   const runtime = useRuntimeConfig();
   const baseUrl = runtime.public.baseURL;
   const router = useRouter();
-
   const store = reactive({
     profile: [],
   });
-
   function get_profile() {
     const token = localStorage.getItem("token");
     isLoading.addLoading("getProfile");
@@ -22,6 +20,7 @@ export const useProfileStore = defineStore("profile", () => {
         }
       })
       .then((res) => {
+        console.log(res);
         store.profile = res.data?.message?.reverse();
         isLoading.removeLoading("getProfile");
       })

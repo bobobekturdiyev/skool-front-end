@@ -499,7 +499,7 @@ function getActivity() {
   for (let i = 0; i < 12; i++) {
     getCalendar(endDate.getFullYear(), endDate.getMonth());
     endDate.setMonth(endDate.getMonth() + 1);
-  }
+  };
 }
 
 function getCalendar(year, month) {

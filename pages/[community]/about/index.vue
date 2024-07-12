@@ -276,6 +276,7 @@ definePageMeta({
 import { role_ac } from "@/composables";
 import { useGroupStore, useLoadingStore, usePaymentStore } from "@/store";
 import { VueDraggableNext as draggable } from 'vue-draggable-next';
+const { start, finish } = useLoadingIndicator();
 const isLoading = useLoadingStore();
 const useGroup = useGroupStore();
 const usePayment = usePaymentStore();
@@ -284,10 +285,26 @@ const videoIframe = ref("");
 const store = reactive({
   slideModal: false,
 });
+isLoading.store.page_name = "calendar";
 
-await useAsyncData(() => {
-  useGroup.groupByUsername();
+useSeoMeta({
+  title: computed(() => `About · ${useGroup.store.group_by_username.name}`),
+  ogTitle: computed(() => `About · ${useGroup.store.group_by_username.name}`),
+  description: computed(() => `About · ${useGroup.store.group_by_username.description}`),
+  ogDescription: computed(() => `About · ${useGroup.store.group_by_username.description}`),
+  ogImage: computed(() => `${useGroup.store.group_by_username.image}`),
+  twitterCard: computed(() => `${useGroup.store.group_by_username.icon}`),
 })
+
+start()
+await useAsyncData("about", async () => {
+  await useGroup.groupByUsername();
+finish();
+}, { server: false })
+// await useAsyncData(() => {
+//   useGroup.groupByUsername();
+//   finish();
+// })
 
 function deleteMedia(id) {
   useGroup.store.media_id = id;

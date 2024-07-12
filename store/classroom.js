@@ -775,6 +775,7 @@ export const useClassroomStore = defineStore("classroom", () => {
       })
       .then((res) => {
         router.push(`/${username}/classroom`);
+        get_classroom();
         store.delete = false;
         isLoading.removeLoading("deleteCourse");
       })

@@ -115,13 +115,12 @@ export const usePostStore = defineStore("post", () => {
     const data = await apiRequest.get(`get-post/${group_username}?page=${isLoading.store.pagination.current_page}${filter_url}`);
     isLoading.removeLoading("getPosts");
     if (data.status == 200) {
+      console.log(data.data)
            store.posts = data.data?.data;
         store.members_count = data.data?.members_count;
         for (let i in store.setupgroup) {
-          console.log(i);
           store.setupgroup[i] = data.data[i];
         }
-        console.log(store.setupgroup)
         for (let i in isLoading.store.pagination) {
           isLoading.store.pagination[i] = data.data?.meta[i];
         }
@@ -425,6 +424,8 @@ export const usePostStore = defineStore("post", () => {
     }
     formData.append("types", JSON.stringify(types));
     if (store.comment_id[3] != isLoading.user.id) {
+    }
+    if (store.comment_id[3] && store.comment_id[3] == undefined) {
       formData.append("reply_user_id", store.comment_id[3]);
     }
     for (let [key, value] of formData.entries()) {

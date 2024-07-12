@@ -31,6 +31,7 @@ export const useMemberStore = defineStore("members", () => {
       type: "ban",
     },
     activities: "",
+    activities30: "",
   });
 
   const general = reactive({
@@ -73,6 +74,8 @@ export const useMemberStore = defineStore("members", () => {
       for (let i in isLoading.store.pagination) {
         isLoading.store.pagination[i] = data.data.meta[i];
       }
+    } else {
+      console.log(data);
     }
   }
 
@@ -111,11 +114,23 @@ export const useMemberStore = defineStore("members", () => {
     }
   }
 
+  async function getActivity30() {
+    const username = router.currentRoute.value.params.community;
+    const token = localStorage.getItem("token");
+    isLoading.addLoading("getActivity");
+    const data = await apiRequest.get(`get-leaderboard-30-day/${username}`);
+    isLoading.removeLoading("getActivity");
+    if (data.status == 200) {
+      store.activities30 = data.data;
+    }
+  }
+
   async function getLevels() {
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("getLevels");
     const data = await apiRequest.get(`level/${group_username}`);
+    console.log(data);
     isLoading.removeLoading("getLevels");
     if (data.status == 200) {
       store.levels = data.data;
@@ -217,7 +232,7 @@ export const useMemberStore = defineStore("members", () => {
     const data = await apiRequest.get(
       `get-member-pending/${group_username}${url}`
     );
-    isLoading.removeLoading("getActivity");
+    isLoading.removeLoading("groupMembesRequest");
     if (data.status == 200) {
       store.member_requests = data.data;
     }
@@ -258,13 +273,14 @@ export const useMemberStore = defineStore("members", () => {
   function updateUserRole(type) {
     const token = localStorage.getItem("token");
     isLoading.addLoading("updateRole");
+    console.log(store.member_data)
     const username = router.currentRoute.value.params.community;
     axios
       .put(
         baseUrl + `update-member-type/${username}`,
         {
           type,
-          user_id: store.member_data.id,
+          user_id: store.member_data.user.id,
         },
         {
           headers: {
@@ -299,5 +315,6 @@ export const useMemberStore = defineStore("members", () => {
     setMemberJoinType,
     updateUserRole,
     getActivity,
+    getActivity30,
   };
 });

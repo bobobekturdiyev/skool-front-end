@@ -51,9 +51,15 @@
                   <p class="font-semibold leading-[19px]">
                     Level {{ index + 1 }} {{ i.level ? `- ${i.level}` : '' }}
                   </p>
-                  <p class="text-xs leading-[14px]">
-                    {{ i.members }}% of members
-                  </p>
+                  <div class="text-xs leading-[14px] line-clamp-2">
+                    <div class="flex gap-1 flex-wrap" v-if="i.courses?.length">
+                      <p>Unlock</p>
+                      <div>
+                        <a target="_blank" :href="getLink(course)" class="_c2a font-bold hover:underline" v-for="(course, index) in i.courses">"{{ course.title }}" <span
+                            v-if="index < i.courses?.length - 1" class="_c07">,</span></a>
+                        </div>
+                    </div> {{ i.members }}% of members
+                  </div>
                 </div>
               </div>
             </div>
@@ -77,9 +83,15 @@
                   <p class="font-semibold leading-[19px]">
                     Level {{ index + 1 }} {{ i.level ? `- ${i.level}` : '' }}
                   </p>
-                  <p class="text-xs leading-[14px]">
-                    {{ i.members }}% of members
-                  </p>
+                  <div class="text-xs leading-[14px] line-clamp-2">
+                    <div class="flex gap-1 flex-wrap" v-if="i.courses?.length">
+                      <p>Unlock</p>
+                      <div>
+                        <a target="_blank" :href="getLink(course)" class="_c2a font-bold hover:underline" v-for="(course, index) in i.courses">"{{ course.title }}" <span
+                            v-if="index < i.courses?.length - 1" class="_c07">,</span></a>
+                        </div>
+                    </div> {{ i.members }}% of members
+                  </div>
                 </div>
               </div>
             </div>
@@ -134,6 +146,7 @@ const useAuth = useAuthStore();
 const useMembers = useMemberStore();
 const isLoading = useLoadingStore();
 const useGroup = useGroupStore();
+const router = useRouter();
 const { start, finish } = useLoadingIndicator();
 
 useSeoMeta({
@@ -165,6 +178,10 @@ const activity_step = [
   ["all-time", "data_all"],
 ]
 
+function getLink(course) {
+  const username = router.currentRoute.value.params.community;
+  return `/${username}/classroom/${course.slug}`
+}
 function formatCustomDate(date) {
   date = new Date();
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -193,12 +210,6 @@ function formatCustomDate(date) {
 
   return `${month} ${dayWithSuffix} ${year} ${hours}:${minutes}${ampm}`;
 }
-
-// onBeforeMount(() => {
-  // useAuth.getUser();
-  // useMembers.getLevels();
-  // useMembers.getActivity();
-// });
 </script>
 
 <style lang="scss" scoped></style>

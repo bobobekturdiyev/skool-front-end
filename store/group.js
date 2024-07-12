@@ -1,8 +1,10 @@
 import { defineStore } from "pinia";
 import { useLoadingStore, useMemberStore } from "@/store";
 import axios from "axios";
+import { useApiRequest } from "@/composables";
 
 export const useGroupStore = defineStore("group", () => {
+  const apiRequest = useApiRequest();
   const isLoading = useLoadingStore();
   const runtime = useRuntimeConfig();
   const baseUrl = runtime.public.baseURL;
@@ -250,22 +252,19 @@ export const useGroupStore = defineStore("group", () => {
       });
   }
 
-  function groupByUsername(type) {
+  async function groupByUsername(type) {
     const username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     if (type != "no_load") {
       isLoading.addLoading("getByUsername");
     }
 
-    axios
-      .get(baseUrl + `get-group/` + username, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        store.group_by_username = res.data;
+    const data = await apiRequest.get(
+      `get-group/` + username
+    );
+    isLoading.removeLoading("getByUsername");
+    if (data.status == 200) {
+      store.group_by_username = data.data;
         if (!store.group_by_username.links?.length) {
           store.showLinksPublic = false;
         }
@@ -279,13 +278,8 @@ export const useGroupStore = defineStore("group", () => {
         } else {
           store.showLinksPublic = false;
         }
-        useMembers.setGeneralSettings(res.data);
-        isLoading.removeLoading("getByUsername");
-      })
-      .catch((err) => {
-        console.log(err);
-        isLoading.removeLoading("getByUsername");
-      });
+        useMembers.setGeneralSettings(data.data);
+    }
   }
 
   function pinGroupPinned(group) {

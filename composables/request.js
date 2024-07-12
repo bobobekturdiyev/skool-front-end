@@ -31,6 +31,7 @@ export const useApiRequest = () => {
             resolve(res);
           })
           .catch((e) => {
+            console.log(e);
             reject(e);
           });
       });

@@ -159,23 +159,23 @@
                       <div class="flex">
                         <div class="border-r border-[#F2F2F2] min-w-[192px] p-4 space-y-3">
                           <div class="relative user_img max-w-fit">
-                            <img class="h-[160px] w-[160px] object-cover rounded-full" :src="i.user_id?.image" alt="" />
+                            <img class="h-[160px] w-[160px] object-cover rounded-full" :src="i.user?.image" alt="" />
                             <div class="full_flex absolute -bottom-[2px] -right-[5px] z-10">
                               <div class="relative">
                                 <img class="h-10 w-10" src="@/assets/svg/community/user_messages.svg" alt="" />
                                 <p
                                   class="absolute full_flex bottom-0 w-10 h-10 pb-2 text-[22px] text-white font-medium">
-                                  1
+                                  {{i.user.level}}
                                 </p>
                               </div>
                             </div>
                           </div>
                           <p
                             class="full_flex max-w-fit mx-auto text-xs font-semibold h-8 px-[10px] bg-[#D9ECFF] _c2a rounded-full">
-                            Level 2 - Contributer
+                            Level {{i.user.level}} {{i.user.level_name ? ' - ' + i.user.level_name : ''}}
                           </p>
                           <div class="full_flex gap-1 text-xs">
-                            <span class="_c2a font-semibold">40</span> points to
+                            <span class="_c2a font-semibold">{{i.user.points}}</span> points to
                             level up
                             <img src="@/assets/svg/level_up.svg" alt="" />
                           </div>
@@ -183,26 +183,25 @@
                         <div>
                           <div class="space-y-4 px-5 py-5 v border-b border-[#F2F2F2]">
                             <h1 class="font-semibold text-xl leading-6">
-                              Gerry Gonzalez
+                              {{i.user.name}} {{i.user.surname}}
                             </h1>
                             <ul class="space-y-2">
                               <li class="flex items-center gap-2 leading-[14px] _ca1">
                                 <img src="@/assets/svg/clock.svg" alt="" />
-                                <p>Active 19d ago</p>
+                                <p>Active {{ isLoading.convertMilliseconds(i.user.updated_at) }}</p>
                               </li>
-                              <li class="flex items-center gap-2 _ca1">
+                              <li v-if="i.user.address" class="flex items-center gap-2 _ca1">
                                 <img src="@/assets/svg/location.svg" alt="" />
-                                <p>San Jose, Costa Rica</p>
+                                <p>{{ i.user.address }}</p>
                               </li>
                             </ul>
                             <p class="line-clamp-3 overflow_hidden leading-[18px] text-[16px]">
-                              We the descendants of old, chained up and confined
-                              within bars, are free spirited and apple apple
+                              {{i.user.bio}}
                             </p>
                           </div>
                           <div class="space-y-2 leading-[14px] p-4 font-semibold">
-                            <p>2 Memberships</p>
-                            <p>Creator of 2 groups</p>
+                            <p v-if="i.user.membership">{{i.user.membership <= 1 ? i.user.membership + ' Membership' : i.user.membership + ' Memberships'}} <span v-if="i.user.common">({{i.user.common}} in common)</span></p>
+                            <p v-if="i.user.creator">Creator of {{i.user.creator <= 1 ? i.user.creator + ' group' : i.user.creator + ' groups'}}</p>
                           </div>
                         </div>
                       </div>
@@ -268,7 +267,7 @@
                   </el-tooltip>
                 </div>
                 <p @click="() => showPostData(i.id)" class="_c2a md:text-sm text-xs font-semibold cursor-pointer">
-                  New comment 10h ago
+                  {{ formatLastCommentDate(i.post_comment_date) }}
                 </p>
               </div>
             </div>
@@ -1028,8 +1027,7 @@
             </li>
             <button @click="load" v-if="!isLoading.isLoadingType('getLikes') &&
           isLoading.store.pagination_two.current_page !=
-          isLoading.store.pagination_two.last_page
-          " class="border border-[#BCDEFF] mt-4 _c2a rounded-lg w-full font-semibold text-sm uppercase">
+          isLoading.store.pagination_two.last_page" class="border border-[#BCDEFF] mt-4 _c2a rounded-lg w-full font-semibold text-sm uppercase">
               Load more
             </button>
           </ul>
@@ -1185,6 +1183,15 @@ const deletePostPoll = {
 function routeToRequests() {
   const username = router.currentRoute.value.params.community;
   router.push(`/${username}/-/pending`)
+}
+
+function formatLastCommentDate(date) {
+  const data = formatDate(date);
+  if (data == 'just now' || data.includes('h ago')) {
+    return 'New comment ' + data;
+  } else {
+    return "Last comment " + data;
+  }
 }
 
 function deletePost() {

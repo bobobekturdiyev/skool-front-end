@@ -12,10 +12,10 @@ import { useClassroomStore, useLoadingStore, useGroupStore } from "@/store";
 const useClassroom = useClassroomStore();
 const useGroup = useGroupStore();
 useSeoMeta({
-  title: computed(() => `Calendar · ${useGroup.store.group_by_username.name}`),
-  ogTitle: computed(() => `Calendar · ${useGroup.store.group_by_username.name}`),
-  description: computed(() => `Calendar · ${useGroup.store.group_by_username.description}`),
-  ogDescription: computed(() => `Calendar · ${useGroup.store.group_by_username.description}`),
+  title: computed(() => `Classroom · ${useGroup.store.group_by_username.name}`),
+  ogTitle: computed(() => `Classroom · ${useGroup.store.group_by_username.name}`),
+  description: computed(() => `Classroom · ${useGroup.store.group_by_username.description}`),
+  ogDescription: computed(() => `Classroom · ${useGroup.store.group_by_username.description}`),
   ogImage: computed(() => `${useGroup.store.group_by_username.image}`),
   twitterCard: computed(() => `${useGroup.store.group_by_username.icon}`),
 })

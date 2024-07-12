@@ -204,17 +204,29 @@ const useMembers = useMemberStore();
 const useGroup = useGroupStore();
 const isLoading = useLoadingStore();
 const router = useRouter();
+const { start, finish } = useLoadingIndicator();
 isLoading.addLoading("groupMembesRequest");
+
+useSeoMeta({
+  title: computed(() => `Membership requests · ${useGroup.store.group_by_username.name}`),
+  ogTitle: computed(() => `Membership requests · ${useGroup.store.group_by_username.name}`),
+  description: computed(() => `Membership requests · ${useGroup.store.group_by_username.description}`),
+  ogDescription: computed(() => `Membership requests · ${useGroup.store.group_by_username.description}`),
+  ogImage: computed(() => `${useGroup.store.group_by_username.image}`),
+  twitterCard: computed(() => `${useGroup.store.group_by_username.icon}`),
+})
+
+start();
+await useAsyncData("requested_members", async () => {
+  await useMembers.getMemberRequests();
+  finish();
+}, { server: false })
 
 function handleRequest(type, id) {
   useMembers.store.user_id = id;
   useMembers.store.status = type;
   useMembers.setMemberJoinType();
 }
-
-onBeforeMount(() => {
-  useMembers.getMemberRequests();
-});
 </script>
 
 <style lang="scss" scoped>

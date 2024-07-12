@@ -103,7 +103,7 @@
             <p>Members</p>
           </li>
           <li
-          v-if="useMembers.store.member_type == 'Admin' || useMembers.store.member_type == 'Creator'"
+          v-if="useGroup.store.group_by_username.type == 'Admin' || useGroup.store.group_by_username.type == 'Creator'"
             @click="openData(1, 'Courses')"
             :class="
               isLoading.store.slideStep == 1 ? '_c2a font-medium bg-[#F0F5FA]' : ''
@@ -1225,9 +1225,9 @@
               </template>
             </el-dropdown>
           </div>
-          <div v-else-if="useMembers.store.member_type != 'Moderator' && (useMembers.store.member_data.is_banned != 1 && useMembers.store.member_data.status != 'churned')">
+          <div v-else-if="useMembers.store.member_type == 'Member' && (useMembers.store.member_data.is_banned != 1 && useMembers.store.member_data.status != 'churned')">
             <p v-if="useMembers.store.member_data.is_banned != 1"
-              @click="
+            @click="
                 () => {
                   useMembers.store.banchurned.type = 'churned';
                   useMembers.store.banchurned.status = true;
@@ -1235,7 +1235,7 @@
                 }
               "
               class="md:mt-5 mt-4 hover:underline _ceb font-medium cursor-pointer"
-            >
+              >
               Remove from group
             </p>
             <p v-if="useMembers.store.member_data.is_banned != 1"
