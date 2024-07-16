@@ -65,7 +65,7 @@
                           <el-dropdown-item @click="useClassroom.duplicate_module(i.id)">Duplicate</el-dropdown-item>
                           <el-dropdown-item @click="dripModule(i)">Drip status:
                             {{
-      i.drip?.length ? isLoading.formatDripDays(i.drip) : "Off"
+      i.day > 0 ? i.day : "Off"
     }}</el-dropdown-item>
                           <el-dropdown-item @click="deleteModal('module', i.id)">Delete module</el-dropdown-item>
                         </el-dropdown-menu>
@@ -124,7 +124,10 @@
                             <el-dropdown-item @click="changeFolder(lesson)">Change folder</el-dropdown-item>
                             <el-dropdown-item
                               @click="useClassroom.duplicate_module(lesson.id)">Duplicate</el-dropdown-item>
-                            <el-dropdown-item @click="editModule(i)">Drip status: Off</el-dropdown-item>
+                            <el-dropdown-item @click="dripModule(lesson)">Drip status:
+                              {{
+      lesson.day > 0 ? lesson.day : "Off"
+    }}</el-dropdown-item>
                             <el-dropdown-item @click="deleteModal('module', lesson.id)">Delete module</el-dropdown-item>
                           </el-dropdown-menu>
                         </template>
@@ -142,7 +145,8 @@
         </ul>
       </aside>
     </section>
-    <section class="w-full" :class="store.is_open ? '' : 'md:block hidden'">
+    <section v-if="useClassroom.local_store.moduleData.title" class="w-full"
+      :class="store.is_open ? '' : 'md:block hidden'">
       <div @click="store.is_open = false" class="md:hidden flex items-center mb-[45px] gap-3 cursor-pointer">
         <img src="@/assets/svg/icon/back.svg" alt="" />
         <p>Back to the course</p>
@@ -176,7 +180,11 @@
               </button>
             </div>
           </div>
-          <div class="space-y-5 p-5">
+          <div v-if="checkDates(useClassroom.local_store.moduleData.drip) && !role_ac.includes(useGroup.store.group_by_username.type)" class="full_flex flex-col gap-2 b_cf2 m-5 r_8 h-[250px]">
+            <img class="h-7 w-7" src="@/assets/svg/clock.svg" alt="">
+            <p>Unlock in {{useClassroom.local_store.moduleData.day}} days</p>
+          </div>
+          <div v-else class="space-y-5 p-5">
             <div v-if="isLoading.isURL(useClassroom.local_store.moduleData?.link)"
               class="rounded-xl bg-[#0000004D] md:h-[400px] h-[200px] r_8 overflow-hidden">
               <iframe class="md:h-[400px] h-[200px] w-full object-contain object-center"
@@ -343,7 +351,7 @@
           Edit set
         </h1>
         <h1 v-else class="text-2xl mb-7 font-semibold">Add set</h1>
-        <input v-model="useClassroom.set.name" class="text-sm" type="text" placeholder="Creating a group" required />
+        <input v-model="useClassroom.set.name" class="text-sm" type="text" placeholder="Creating a set" required />
         <p class="text-end mt-2 _ca1 text-sm">
           {{ useClassroom.set.name?.length }}/50
         </p>
@@ -497,7 +505,6 @@ const useClassroom = useClassroomStore();
 const useGroup = useGroupStore();
 const router = useRouter();
 const addVideo = useAddVideoStore();
-
 useSeoMeta({
   title: computed(() => `${useClassroom.store.modules.title} · ${useGroup.store.group_by_username.name}`),
   ogTitle: computed(() => `Classroom · ${useGroup.store.group_by_username.name}`),
@@ -553,6 +560,12 @@ function dripModule(data) {
     useClassroom.store.is_drip = false;
   }
   useClassroom.store.dripModal = true;
+}
+
+function checkDates(date) {
+  date = new Date(date).getTime();
+  const now_date = new Date().getTime()
+  return now_date > date;
 }
 
 function handleEditCourse() {

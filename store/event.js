@@ -67,66 +67,64 @@ export const useEventStore = defineStore("event", () => {
     const data = await apiRequest.get(
       `get-event/${group_username}/${start_date}/${end_date}`
     );
+    console.log(data);
     isLoading.removeLoading("getEvents");
     if (data.status == 200) {
       const eid_id = router.currentRoute.value.query.eid;
-        console.log(data);
-        let is_true;
-        let dates;
-        store.events = data.data;
-        store.table_events = [];
-        isLoading.removeLoading("getEvents");
-        for (let month of store.calendar) {
-          for (let date of month) {
-            is_true = false;
-            t = 0;
-            for (let event of store.events) {
-              const newDate = new Date(event.date);
-              console.log(newDate);
-              if (
-                newDate.getMonth() == date[0] &&
-                newDate.getDate() == date[1]
-              ) {
-                for (let dates of event.data) {
-                  if (eid_id) {
-                    if (dates.id == eid_id) {
-                      store.eventInfo = dates
-                      store.eventModal = true;
-                    }
+      console.log(data);
+      store.table_events = [];
+      let is_true;
+      let dates;
+      store.events = data.data;
+      for (let month of store.calendar) {
+        for (let date of month) {
+          is_true = false;
+          t = 0;
+          for (let event of store.events) {
+            const newDate = new Date(event.date);
+            console.log(newDate);
+            if (newDate.getMonth() == date[0] && newDate.getDate() == date[1]) {
+              for (let dates of event.data) {
+                if (eid_id) {
+                  if (dates.id == eid_id) {
+                    store.eventInfo = dates;
+                    store.eventModal = true;
                   }
-                  if (t == 0) {
-                    store.data_events.push([dates]);
-                  } else {
-                    store.data_events[store.data_events.length - 1].push(dates);
-                  }
-                  t++;
                 }
-                is_true = true;
-              }
-              if (
-                newDate.getMonth() == store.month &&
-                newDate.getDate() == date[1]
-              ) {
-                for (let dates of event.data) {
-                  store.table_events.push(dates);
+                if (t == 0) {
+                  store.data_events.push([dates]);
+                } else {
+                  store.data_events[store.data_events.length - 1].push(dates);
                 }
+                t++;
               }
+              is_true = true;
             }
-            if (!is_true) {
-              store.data_events.push([]);
+            if (
+              newDate.getMonth() == store.month &&
+              newDate.getDate() == date[1]
+            ) {
+              for (let dates of event.data) {
+                console.log(dates, "==============-");
+                store.table_events.push(dates);
+              }
             }
           }
+          if (!is_true) {
+            store.data_events.push([]);
+          }
         }
-        store.table_events = store.table_events.splice(
-          store.table_events.length / 2
-        );
-        setPagination();
-    }else {
+      }
+      // store.table_events = store.table_events.splice(
+      //   store.table_events.length / 2
+      // );
+      setPagination();
+    } else {
       if (data.response?.data?.message == "Events not found") {
         store.events = [];
       }
     }
-  } 
+  }
 
   function firstevent() {
     const group_username = router.currentRoute.value.params.community;
@@ -149,6 +147,7 @@ export const useEventStore = defineStore("event", () => {
   }
 
   function add_event() {
+    router.push(`?`);
     if (store.editEventModal) {
       return edit_event();
     }
@@ -261,10 +260,14 @@ export const useEventStore = defineStore("event", () => {
 
   function setPagination() {
     isLoading.store.pagination_type = 4;
+    isLoading.store.pagination.per_page = 4;
     isLoading.store.pagination.current_page = 1;
     isLoading.store.pagination.from =
       (isLoading.store.pagination.current_page - 1) * 4 + 1;
-    isLoading.store.pagination.to = isLoading.store.pagination.current_page * 4;
+    isLoading.store.pagination.to =
+      store.table_events?.length > 4
+        ? isLoading.store.pagination.current_page * 4
+        : store.table_events?.length;
     isLoading.store.pagination.total = store.table_events?.length;
     isLoading.store.pagination.last_page = Math.ceil(
       isLoading.store.pagination.total / 4

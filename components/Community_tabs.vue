@@ -33,6 +33,15 @@ onBeforeMount(() => {
     store.activeName = ""
   }
 })
+
+watch(() => router.currentRoute.value, () => {
+  const route_name = router.currentRoute.value.name?.split('-')[1];
+  if (route_name) {
+    store.activeName = route_name;
+  }else {
+    store.activeName = ""
+  }
+}) 
 </script>
 
 <style lang="scss" scoped></style>

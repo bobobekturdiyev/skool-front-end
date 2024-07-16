@@ -167,13 +167,13 @@
                         <button class="uppercase border border-[#BCDEFF] r_8">
                           profile
                         </button>
-                        <button class="uppercase border border-[#BCDEFF] r_8">
+                        <!-- <button class="uppercase border border-[#BCDEFF] r_8">
                           follow
                         </button>
                         <button class="full_flex gap-[10px] uppercase b_ce0 _ca1 r_8">
                           chat
                           <img src="@/assets/svg/chat_x.svg" alt="" />
-                        </button>
+                        </button> -->
                       </div>
                     </el-dropdown-menu>
                   </template>
@@ -194,10 +194,10 @@
                       {{ member.user?.bio }}
                     </h1>
                     <div class="grid md:grid-cols-4 gap-3 whitespace-nowrap mt-3 text-sm">
-                        <button class="full_flex col-span-2 truncate max-w-fit gap-1 b_cf2 h-7 px-2 r_8">
+                        <!-- <button class="full_flex col-span-2 truncate max-w-fit gap-1 b_cf2 h-7 px-2 r_8">
                           <img class="h-3 w-3" src="@/assets/svg/online.svg" alt="" />
                           Online now
-                        </button>
+                        </button> -->
                         <button class="full_flex col-span-2 truncate max-w-fit gap-1 b_cf2 h-7 px-2 r_8">
                           <img class="h-4 w-4" src="@/assets/svg/calendar_black.svg" alt="" />
                           <span class="max-w-[80%]">Joined {{ formatDate(member.created_at) }}</span>
@@ -223,10 +223,10 @@
                 </div>
               </div>
               <div class="full_flex gap-2">
-                <button v-if="isLoading.user.id != member.user?.id" class="full_flex gap-3 h-10 b_ce0 _ca1 px-4 r_8">
+                <!-- <button v-if="isLoading.user.id != member.user?.id" class="full_flex gap-3 h-10 b_ce0 _ca1 px-4 r_8">
                   Chat
                   <img src="@/assets/svg/chat_cross.svg" alt="" />
-                </button>
+                </button> -->
                 <button @click="userManageRole(member)" v-if="isLoading.user.id != member.user?.id"
                   class="full_flex gap-[10px] border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">
                   MEMBERSHIP

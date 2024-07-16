@@ -1,7 +1,8 @@
 <template>
-  <main class="flex md:flex-row flex-col-reverse md:gap-6 mt-[18px]">
+  <main v-if="useGroup.store.group_by_username.status == 'active'"
+    class="flex md:flex-row flex-col-reverse md:gap-6 mt-[18px]">
     <div class="overflow-hidden w-full md:space-y-8 space-y-6">
-      <ModalWriteSomething class="md:block hidden" />
+      <ModalWriteSomething v-if="useGroup.store.group_by_username.status == 'active'" class="md:block hidden" />
 
       <section @click="routeToRequests"
         v-if="usePost.store.members_count && role_ac.includes(useGroup.store.group_by_username.type)"
@@ -9,10 +10,10 @@
         <p class="full_flex rounded-full text-white text-xs h-6 w-6 bg-[#e74c3c]">{{ usePost.store.members_count }}</p>
         <p class="_c2a hover:underline cursor-pointer">membership requests pending</p>
       </section>
-      <section v-if="useEvent.store.fistevent.title" @click="routeToCalendar"
+      <section v-if="useEvent.store.fistevent.title"
         class="flex items-center gap-2 justify-center">
         <img src="@/assets/svg/calendar/calendar_black.svg" />
-        <p class="full_flex text-xs font-bold hover:underline cursor-pointer">{{ useEvent.store.fistevent.title }}</p>
+        <p class="full_flex text-xs font-bold hover:underline cursor-pointer" @click="routeToCalendar">{{ useEvent.store.fistevent.title }}</p>
         <p class="text-xs">is happening in {{ isLoading.convertMilliseconds(useEvent.store.fistevent.date) }}</p>
       </section>
       <!-- category -->
@@ -21,14 +22,14 @@
           <div id="button-group" :class="store.is_show ? 'flex-wrap' : 'md:flex-nowrap'"
             class="relative flex md:flex-row flex-wrap gap-3 category_wrap w-full md:h-auto h-[80px] overflow-hidden">
             <button @click="handleCategory()" :class="usePost.store.filter.category_id != 'all' ? 'bg-white' : 'b_cbc'
-          " class="py-2 px-3 rounded-full md:h-9 h-8 hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700">
+    " class="py-2 px-3 rounded-full md:h-9 h-8 hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700">
               All
             </button>
             <LoadingDiv v-if="isLoading.isLoadingType('getPostCategories')" v-for="i in 10"
               class="flex items-center md:h-9 h-8 w-28 animate-pulse hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full bg-gray-900" />
             <button v-else-if="usePost.store.categories?.length" @click="handleCategory(i.id)"
               v-for="i in usePost.store.categories" :class="usePost.store.filter.category_id == i.id ? 'b_cbc' : 'bg-white'
-          " class="flex md:flex-row flex-wrap items-center md:h-9 h-8 min-w-fit hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full">
+    " class="flex md:flex-row flex-wrap items-center md:h-9 h-8 min-w-fit hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full">
               <!-- <img
                 class="w-[14px] h-[21px] object-contain"
                 :src="i.icon"
@@ -59,7 +60,7 @@
                     <label @click="handleCategory(i.type, 'filter')" :for="i.type" v-for="i in filter_filter">
                       <el-dropdown-item class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs">
                         <input :id="i.type" class="rounded-full" type="radio" name="filter" :checked="usePost.store.filter.filter == i.type ? true : false
-          " />
+    " />
                         {{ i.title }}
                       </el-dropdown-item>
                     </label>
@@ -69,7 +70,7 @@
                     <label @click="handleCategory(i.type, 'sort')" :for="i.type" v-for="i in filter_sort">
                       <el-dropdown-item class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs">
                         <input :id="i.type" class="rounded-full" type="radio" name="sort" :checked="usePost.store.filter.sort == i.type ? true : false
-          " />
+    " />
                         {{ i.title }}
                       </el-dropdown-item>
                     </label>
@@ -85,7 +86,8 @@
         </div>
       </section>
 
-      <section class="r_16 overflow-hidden bg-white px-4 community_data">
+      <section v-if="role_ac.includes(useGroup.store.group_by_username.type)"
+        class="r_16 overflow-hidden bg-white px-4 community_data">
         <el-collapse v-model="store.activeCollapse" class="space-y-6 !w-full">
           <el-collapse-item name="open">
             <template #title>
@@ -165,17 +167,17 @@
                                 <img class="h-10 w-10" src="@/assets/svg/community/user_messages.svg" alt="" />
                                 <p
                                   class="absolute full_flex bottom-0 w-10 h-10 pb-2 text-[22px] text-white font-medium">
-                                  {{i.user.level}}
+                                  {{ i.user.level }}
                                 </p>
                               </div>
                             </div>
                           </div>
                           <p
                             class="full_flex max-w-fit mx-auto text-xs font-semibold h-8 px-[10px] bg-[#D9ECFF] _c2a rounded-full">
-                            Level {{i.user.level}} {{i.user.level_name ? ' - ' + i.user.level_name : ''}}
+                            Level {{ i.user.level }} {{ i.user.level_name ? ' - ' + i.user.level_name : '' }}
                           </p>
                           <div class="full_flex gap-1 text-xs">
-                            <span class="_c2a font-semibold">{{i.user.points}}</span> points to
+                            <span class="_c2a font-semibold">{{ i.user.points }}</span> points to
                             level up
                             <img src="@/assets/svg/level_up.svg" alt="" />
                           </div>
@@ -183,7 +185,7 @@
                         <div>
                           <div class="space-y-4 px-5 py-5 v border-b border-[#F2F2F2]">
                             <h1 class="font-semibold text-xl leading-6">
-                              {{i.user.name}} {{i.user.surname}}
+                              {{ i.user.name }} {{ i.user.surname }}
                             </h1>
                             <ul class="space-y-2">
                               <li class="flex items-center gap-2 leading-[14px] _ca1">
@@ -196,12 +198,15 @@
                               </li>
                             </ul>
                             <p class="line-clamp-3 overflow_hidden leading-[18px] text-[16px]">
-                              {{i.user.bio}}
+                              {{ i.user.bio }}
                             </p>
                           </div>
                           <div class="space-y-2 leading-[14px] p-4 font-semibold">
-                            <p v-if="i.user.membership">{{i.user.membership <= 1 ? i.user.membership + ' Membership' : i.user.membership + ' Memberships'}} <span v-if="i.user.common">({{i.user.common}} in common)</span></p>
-                            <p v-if="i.user.creator">Creator of {{i.user.creator <= 1 ? i.user.creator + ' group' : i.user.creator + ' groups'}}</p>
+                            <p v-if="i.user.membership">{{ i.user.membership <= 1 ? i.user.membership + ' Membership' :
+    i.user.membership + ' Memberships' }} <span v-if="i.user.common">({{ i.user.common }} in
+                                common)</span></p>
+                            <p v-if="i.user.creator">Creator of {{ i.user.creator <= 1 ? i.user.creator + ' group' :
+    i.user.creator + ' groups' }}</p>
                           </div>
                         </div>
                       </div>
@@ -209,13 +214,13 @@
                         <button class="uppercase border border-[#BCDEFF] r_8">
                           profile
                         </button>
-                        <button class="uppercase border border-[#BCDEFF] r_8">
+                        <!-- <button class="uppercase border border-[#BCDEFF] r_8">
                           follow
                         </button>
                         <button @click="openChatModal(i.user)" class="full_flex gap-[10px] uppercase b_ce0 _ca1 r_8">
                           chat
                           <img src="@/assets/svg/chat_x.svg" alt="" />
-                        </button>
+                        </button> -->
                       </div>
                     </el-dropdown-menu>
                   </template>
@@ -266,7 +271,8 @@
                       :src="user.image" alt="" :style="`z-index: ${7 - index}`" />
                   </el-tooltip>
                 </div>
-                <p @click="() => showPostData(i.id)" class="_c2a md:text-sm text-xs font-semibold cursor-pointer">
+                <p v-if="i.comment_count" @click="() => showPostData(i.id)"
+                  class="_c2a md:text-sm text-xs font-semibold cursor-pointer">
                   {{ formatLastCommentDate(i.post_comment_date) }}
                 </p>
               </div>
@@ -292,10 +298,10 @@
                 </video>
               </div>
               <iframe v-else-if="i.media_files.type == 'youtube' ||
-          i.media_files.type == 'wistia' ||
-          i.media_files.type == 'vimeo' ||
-          i.media_files.type == 'loom'
-          " class="rounded-tl-xl max-w-[140px] max-h-[140px] object-contain" :src="i.media_files.url"></iframe>
+    i.media_files.type == 'wistia' ||
+    i.media_files.type == 'vimeo' ||
+    i.media_files.type == 'loom'
+    " class="rounded-tl-xl max-w-[140px] max-h-[140px] object-contain" :src="i.media_files.url"></iframe>
             </li>
           </ul>
         </article>
@@ -304,17 +310,17 @@
     </div>
     <GroupInfoCard />
 
-    <ModalWriteSomething class="md:hidden block mb-6" />
+    <ModalWriteSomething v-if="useGroup.store.group_by_username.status == 'active'" class="md:hidden block mb-6" />
 
     <!-- card info -->
     <el-dialog v-model="usePost.store.card_info" width="780" align-center
       class="bg-opacity-50 !rounded-lg p-5 overflow-hidden">
       <div v-if="usePost.modal.change_category
-          ? true
-          : usePost.modal.edit
-            ? false
-            : true
-          ">
+    ? true
+    : usePost.modal.edit
+      ? false
+      : true
+    ">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
             <div class="relative max-w-fit">
@@ -340,9 +346,9 @@
             </div>
           </div>
           <div class="flex gap-2">
-            <button class="border border-[#BCDEFF] r_8 px-3 h-9">
+            <!-- <button class="border border-[#BCDEFF] r_8 px-3 h-9">
               Watch (134)
-            </button>
+            </button> -->
             <el-dropdown placement="bottom-end" class="dropdown" trigger="click">
               <button class="full_flex comment_menu r_8 w-9 h-9">
                 <img src="@/assets/svg/three_dot.svg" alt="" />
@@ -353,13 +359,13 @@
                   <el-dropdown-item @click="editPostData('category')" class="!text-xs font-medium h-10 px-3">Change
                     category</el-dropdown-item>
                   <el-dropdown-item @click="deletePost" class="!text-xs font-medium h-10 px-3">Delete</el-dropdown-item>
-                  <el-dropdown-item @click="copyLink" class="!text-xs font-medium h-10 px-3">Copy
-                    link</el-dropdown-item>
+                  <!-- <el-dropdown-item @click="copyLink" class="!text-xs font-medium h-10 px-3">Copy
+                    link</el-dropdown-item> -->
                   <el-dropdown-item @click="pinToFeed(usePost.store.postData.id)"
                     class="!text-xs font-medium h-10 px-3"><span v-if="usePost.store.postData.group_pinned">Unpin from
                       feed</span><span v-else>Pin to feed</span></el-dropdown-item>
-                  <el-dropdown-item @click="store.reportAdmin = true" class="!text-xs font-medium h-10 px-3">Report to
-                    admins</el-dropdown-item>
+                  <!-- <el-dropdown-item @click="store.reportAdmin = true" class="!text-xs font-medium h-10 px-3">Report to
+                    admins</el-dropdown-item> -->
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -368,11 +374,14 @@
         <h2 class="mb-4 md:mt-8 mt-6 md:text-2xl text-lg font-semibold md:w-full">
           {{ usePost.store.postData.title }}
         </h2>
-        <pre v-html="usePost.store.postData.description" class="text-sm float-left w-full whitespace-pre-line"
-          :class="store.see_more ? '' : 'line-clamp-[11]'"></pre>
-        <button @click="store.see_more" v-if="usePost.store.postData.description" class="text-sm _c2a h-4">See
-          more</button>
-        <div>
+        <div class="block">
+          <pre v-html="usePost.store.postData.description" class="text-sm float-left w-full whitespace-pre-line"
+            :class="store.see_more ? '' : 'line-clamp-[11]'"></pre>
+          <button @click="store.see_more = true" v-if="usePost.store.postData.description && !store.see_more"
+            class="text-sm _c2a h-4">See
+            more</button>
+        </div>
+        <div class="border border-transparent">
           <div class="mt-8 text-sm space-y-3">
             <div v-for="(poll, index) in usePost.store.postData.polls" class="flex items-center gap-3 h-10">
               <label @click="() => changeVote(poll)" class="flex items-center gap-3" :for="`poll${index}`">
@@ -390,9 +399,10 @@
               </div>
             </div>
           </div>
-          <button v-if="!usePost.store.userIsVoted" class="flex justify-between mt-4 _ca1 text-sm font-bold w-full">
-            <p>View results</p>
-            <p>63 votes</p>
+          <button v-if="!usePost.store.userIsVoted && usePost.store.postData.polls?.length"
+            class="flex justify-between mt-4 _ca1 text-sm font-bold w-full">
+            <p>Results</p>
+            <p>{{ usePost.store.postData.poll_count }} votes</p>
           </button>
         </div>
         <div class="w-full mt-4 mb-5">
@@ -401,10 +411,10 @@
               <img v-if="i.type == 'image'" class="max-h-[210px] min-h-[210px] rounded-[12px] object-cover" :src="i.url"
                 alt="" />
               <iframe v-else-if="i.type == 'youtube' ||
-          i.type == 'wistia' ||
-          i.type == 'vimeo' ||
-          i.type == 'loom'
-          " class="max-h-[210px] min-h-[210px] rounded-[12px] object-cover text-[#0000]" :src="i.url"></iframe>
+    i.type == 'wistia' ||
+    i.type == 'vimeo' ||
+    i.type == 'loom'
+    " class="max-h-[210px] min-h-[210px] rounded-[12px] object-cover text-[#0000]" :src="i.url"></iframe>
             </li>
           </ul>
         </div>
@@ -446,16 +456,16 @@
                     :class="usePost.store.userIsVoted ? 'b_cf2' : ''" v-model="usePost.store.polls[i]"
                     @input="addVideo.editPoll(index)" type="text" :placeholder="`Option ${index + 1}`" />
                   <img v-if="Object.keys(usePost.store.polls).length > 2 &&
-          !usePost.store.userIsVoted
-          " @click="addVideo.deletePoll(i, index)" class="opacity-50 hover:bg-gray-300 cursor-pointer rounded-full p-2"
+    !usePost.store.userIsVoted
+    " @click="addVideo.deletePoll(i, index)" class="opacity-50 hover:bg-gray-300 cursor-pointer rounded-full p-2"
                     src="@/assets/svg/x.svg" alt="" />
                 </li>
               </ul>
               <button v-if="!usePost.store.userIsVoted" @click="addVideo.addPoll" type="button"
                 class="uppercase border_ce0 px-3 rounded-md mt-2" :class="Object.keys(usePost.store.polls).length >= 10
-          ? 'b_ce0 _ca1'
-          : ''
-          ">
+    ? 'b_ce0 _ca1'
+    : ''
+    ">
                 Add option
               </button>
               <p class="mt-2">
@@ -485,10 +495,10 @@
                     </video>
                   </div>
                   <iframe v-else-if="i.type == 'youtube' ||
-          i.type == 'wistia' ||
-          i.type == 'vimeo' ||
-          i.type == 'loom'
-          " class="w-40 h-40 min-w-[160px] border rounded-xl object-cover text-[#0000]" :src="i.url"></iframe>
+    i.type == 'wistia' ||
+    i.type == 'vimeo' ||
+    i.type == 'loom'
+    " class="w-40 h-40 min-w-[160px] border rounded-xl object-cover text-[#0000]" :src="i.url"></iframe>
                 </li>
               </draggable>
               <li>
@@ -535,16 +545,16 @@
             </div>
             <div class="flex items-center justify-between">
               <el-dropdown @command="(command) => {
-          usePost.store.category_id = command;
-        }
-          " placement="bottom-end" class="dropdown" trigger="click">
+    usePost.store.category_id = command;
+  }
+    " placement="bottom-end" class="dropdown" trigger="click">
                 <div class="flex items-center gap-1 mx-4 font-medium text-sm">
                   <p class="whitespace-nowrap max-w-[100px] truncate">
                     {{
-          usePost.store.category_id
-            ? usePost.store.category_id.name
-            : "Select category"
-        }}
+    usePost.store.category_id
+      ? usePost.store.category_id.name
+      : "Select category"
+  }}
                   </p>
                   <img src="@/assets/svg/textarea/select_arrow.svg" alt="" />
                 </div>
@@ -563,7 +573,7 @@
                   cancel
                 </button>
                 <button v-loading="isLoading.isLoadingType('writePost')" :type="isLoading.isLoadingType('writePost') ? 'button' : 'submit'
-          " class="uppercase h-10 px-6 rounded-lg" :class="usePost.create.title ? 'b_cbc _c07' : 'b_ce0 _ca1'">
+    " class="uppercase h-10 px-6 rounded-lg" :class="usePost.create.title ? 'b_cbc _c07' : 'b_ce0 _ca1'">
                   Post
                 </button>
               </div>
@@ -621,8 +631,8 @@
                       class="!text-xs font-medium h-10 px-3">Edit</el-dropdown-item>
                     <el-dropdown-item @click="deleteReply(comment.id)" usePost.store.comment_id="id"
                       class="!text-xs font-medium h-10 px-3">Delete</el-dropdown-item>
-                    <el-dropdown-item @click="copyLink" class="!text-xs font-medium h-10 px-3">Copy
-                      link</el-dropdown-item>
+                    <!-- <el-dropdown-item @click="copyLink" class="!text-xs font-medium h-10 px-3">Copy
+                      link</el-dropdown-item> -->
                     <el-dropdown-item @click="store.reportAdmin = true" class="!text-xs font-medium h-10 px-3">Report to
                       admins</el-dropdown-item>
                   </el-dropdown-menu>
@@ -638,10 +648,10 @@
                       <img v-if="i.type == 'image'" class="max-h-[40px] min-h-[40px] r_8 object-cover" :src="i.url"
                         alt="" />
                       <iframe v-else-if="i.type == 'youtube' ||
-          i.type == 'wistia' ||
-          i.type == 'vimeo' ||
-          i.type == 'loom'
-          " class="max-h-[40px] min-h-[40px] r_8 max-w-[40px] object-cover text-[#0000]" :src="i.url"></iframe>
+    i.type == 'wistia' ||
+    i.type == 'vimeo' ||
+    i.type == 'loom'
+    " class="max-h-[40px] min-h-[40px] r_8 max-w-[40px] object-cover text-[#0000]" :src="i.url"></iframe>
                     </li>
                     <div class="relative max-w-fit">
                       <img class="max-h-[40px] r_8" src="@/assets/image/photo.svg" alt="" />
@@ -664,8 +674,8 @@
                 </button>
               </div>
               <div v-if="usePost.store.comment_id[0] == comment.id &&
-          usePost.store.comment_id[1] == 1
-          " class="flex w-full pt-1 md:gap-[14px] gap-[10px] md:ml-0 -ml-[92px]">
+    usePost.store.comment_id[1] == 1
+    " class="flex w-full pt-1 md:gap-[14px] gap-[10px] md:ml-0 -ml-[92px]">
                 <img class="h-6 w-6 mt-1 object-cover rounded-full" :src="isLoading.user.image" alt="" />
                 <WriteInlineComment class="w-full" />
               </div>
@@ -714,7 +724,7 @@
                     <el-dropdown placement="top-start" class="dropdown">
                       <div>
                         <p v-if="reply.reply_user?.username" class="_c2a border-b border-[#2A85FF]">@{{
-          reply.reply_user?.username }}</p>
+    reply.reply_user?.username }}</p>
                       </div>
                       <template #dropdown>
                         <el-dropdown-menu class="min-w-[440px] max-w-[440px] !-ml-1 dropdown_shadow">
@@ -804,8 +814,8 @@
                     </button>
                   </div>
                   <div v-if="usePost.store.comment_id[0] == comment.id &&
-          usePost.store.comment_id[1] == 2
-          " class="flex pt-1 md:gap-[14px] gap-[10px] md:ml-0 -ml-[92px]">
+    usePost.store.comment_id[1] == 2
+    " class="flex pt-1 md:gap-[14px] gap-[10px] md:ml-0 -ml-[92px]">
                     <img class="h-6 w-6 mt-1 object-cover rounded-full" :src="isLoading.user.image" alt="" />
                     <WriteInlineComment />
                   </div>
@@ -842,10 +852,10 @@
                     </video>
                   </div>
                   <iframe v-else-if="i.type == 'youtube' ||
-          i.type == 'wistia' ||
-          i.type == 'vimeo' ||
-          i.type == 'loom'
-          " class="w-40 h-40 min-w-[160px] border rounded-xl object-cover text-[#0000]" :src="i.url"></iframe>
+    i.type == 'wistia' ||
+    i.type == 'vimeo' ||
+    i.type == 'loom'
+    " class="w-40 h-40 min-w-[160px] border rounded-xl object-cover text-[#0000]" :src="i.url"></iframe>
                 </li>
                 <li>
                   <label for="add_image"
@@ -891,15 +901,15 @@
                   cancel
                 </button>
                 <button @click="() => {
-          usePost.store.writecomment_type = 'comment';
-          usePost.write_comment();
-        }
-          " class="uppercase h-10 px-6 rounded-lg" v-loading="isLoading.isLoadingType('writeComment') &&
-          usePost.store.writecomment_type != 'inline'
-          " :class="useClassroom.module.video_content
-          ? 'b_cbc _c07'
-          : 'b_ce0 _ca1'
-          ">
+    usePost.store.writecomment_type = 'comment';
+    usePost.write_comment();
+  }
+    " class="uppercase h-10 px-6 rounded-lg" v-loading="isLoading.isLoadingType('writeComment') &&
+    usePost.store.writecomment_type != 'inline'
+    " :class="useClassroom.module.video_content
+    ? 'b_cbc _c07'
+    : 'b_ce0 _ca1'
+    ">
                   Post
                 </button>
               </div>
@@ -1026,15 +1036,16 @@
               </button>
             </li>
             <button @click="load" v-if="!isLoading.isLoadingType('getLikes') &&
-          isLoading.store.pagination_two.current_page !=
-          isLoading.store.pagination_two.last_page" class="border border-[#BCDEFF] mt-4 _c2a rounded-lg w-full font-semibold text-sm uppercase">
+    isLoading.store.pagination_two.current_page !=
+    isLoading.store.pagination_two.last_page"
+              class="border border-[#BCDEFF] mt-4 _c2a rounded-lg w-full font-semibold text-sm uppercase">
               Load more
             </button>
           </ul>
         </div>
         <div v-else-if="!isLoading.isLoadingType('getLikes') &&
-          !usePost.store.likeModalData.length
-          " class="full_flex py-5">
+    !usePost.store.likeModalData.length
+    " class="full_flex py-5">
           No likes yet
         </div>
         <div v-if="isLoading.isLoadingType('getLikes')" class="my-2 text-center chat_loading">
@@ -1059,11 +1070,11 @@
       </div>
       <div class="flex gap-3 whitespace-nowrap flex-wrap items-center">
         <button @click="handleCategory('all')" :class="usePost.store.filter.category_id != 'all' ? 'bg-[#F0F5FA]' : 'b_cbc'
-          " class="px-3 rounded-full md:h-9 h-8 hover:bg-[#F0F5FA] hover:bg-opacity-30 duration-700">
+    " class="px-3 rounded-full md:h-9 h-8 hover:bg-[#F0F5FA] hover:bg-opacity-30 duration-700">
           All
         </button>
         <button @click="handleCategory(i.id)" store.drawer="false" v-for="i in usePost.store.categories" :class="usePost.store.filter.category_id == i.id ? 'b_cbc' : 'bg-[#F0F5FA]'
-          " class="flex items-center md:h-9 h-8 hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full">
+    " class="flex items-center md:h-9 h-8 hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full">
           <img class="w-[14px] h-[21px] object-contain" :src="i.icon" alt="" />{{ i.name }}
         </button>
       </div>
@@ -1144,10 +1155,13 @@ usePost.store.filter.sort = router.currentRoute.value.query.sort;
 usePost.store.filter.category_id = router.currentRoute.value.query.category_id;
 
 const setupgroup = {
-  "invite": ["Invite 3 people", () => { isLoading.store.slideStep = 2; isLoading.store.inviteModal = true }, "is_three_member"],
-  "description": ["Add group description", () => { isLoading.store.slideStep = 3; isLoading.store.inviteModal = true }, "is_description"],
-  "cover": ["Set cover image", () => { isLoading.store.slideStep = 3; isLoading.store.inviteModal = true }, "is_image"],
-  "post": ["Write your first post", () => usePost.store.writingModal = true, "is_post"],
+  "invite": ["Invite 3 people", () => isLoading.openDrawer(2), "is_three_member"],
+  "description": ["Add group description", () => isLoading.openDrawer(3), "is_description"],
+  "cover": ["Set cover image", () => isLoading.openDrawer(3), "is_image"],
+  "post": ["Write your first post", () => {
+    // window.scrollTop();
+    usePost.store.writingModal = true
+  }, "is_post"],
 }
 
 const changeVoteData = {
@@ -1247,15 +1261,21 @@ function changeVote(poll) {
 }
 
 function editPostData(type) {
+  const polls = JSON.parse(JSON.stringify(usePost.store.postData.polls));
   if (type == "category") {
     usePost.modal.change_category = true;
     usePost.modal.edit = true;
   } else {
     usePost.modal.edit = true;
   }
+  usePost.create.polls = [];
   for (let i in usePost.create) {
-    usePost.create[i] = usePost.store.postData[i];
+    console.log(i);
+    if (i != 'polls') {
+      usePost.create[i] = usePost.store.postData[i] ? JSON.parse(JSON.stringify(usePost.store.postData[i])) : null;
+    }
   }
+  console.log(usePost.create);
   usePost.create.video_link = [];
   let t = 0;
   usePost.store.polls = {};
@@ -1288,6 +1308,7 @@ function editPostData(type) {
       is_new: false,
     });
   }
+  usePost.store.postData.polls = JSON.parse(JSON.stringify(polls));
 }
 
 function copyLink() {
@@ -1453,6 +1474,13 @@ watch(
     }
   }
 );
+
+watch(() => usePost.store.card_info, () => {
+  store.see_more = false;
+  if (!usePost.store.card_info) {
+    usePost.clearData();
+  }
+})
 
 watch(
   () => useClassroom.local_store.addVideoModal,

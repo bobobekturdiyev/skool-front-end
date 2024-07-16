@@ -1,5 +1,5 @@
 <template>
-  <footer
+  <footer v-if="isLoading.store.pagination.total"
     class="flex lg:flex-row flex-col gap-5 items-center justify-between mx-auto xl:px-[200px] lg::px-[100px] md:px-[50px] sm:px-[50px] px-5 max-w-[1536px]"
   >
     <div class="flex items-center gap-[14px]">

@@ -32,8 +32,8 @@
         <section class="grid grid-cols-7 font-semibold">
           <div class="flex items-center px-4 text-start font-medium sm:text-sm text-[10px] sm:h-9 h-7"
             v-for="(i, index) in weeks" :class="index + 1 != weeks.length
-        ? '!border-0 sm:!border-r sm:border_cf2'
-        : ''
+      ? '!border-0 sm:!border-r sm:border_cf2'
+      : ''
       ">
             {{ i }}
           </div>
@@ -44,8 +44,8 @@
               class="flex flex-col justify-center hover:sm:bg-transparent hover:bg-[#BCDEFF] sm:rounded-none sm:cursor-auto cursor-pointer r_12 items-center sm:border sm:border-[#F2F2F2] -ml-[1px] -mb-[1px] sm:h-[120px] h-[70px] px-4 py-[6px]"
               v-for="i in date">
               <p :class="store.today[1] == i[1] && store.today[0] == i[0]
-        ? 'b_cbc'
-        : ''
+      ? 'b_cbc'
+      : ''
       " class="full_flex text-xs font-medium _c07 p-1 h-6 -ml-1 rounded-full max-w-fit min-w-[24px]">
                 {{ i[1] }}
               </p>
@@ -61,8 +61,7 @@
                     </div>
                     <div v-if="index == 1 &&
       useEvent.store.data_events[i[2]]?.length == 2
-      "
-                      class="flex items-center w-fit pr-2 gap-[6px] rounded-[4px] b_cf0f overflow-hidden max-w-[100%]">
+      " class="flex items-center w-fit pr-2 gap-[6px] rounded-[4px] b_cf0f overflow-hidden max-w-[100%]">
                       <p class="min-w-[2px] b_c2a h-6"></p>
                       <p class="truncate max-w-[100%] overflow-hidden">
                         {{ e.time }} - {{ e.title }}
@@ -121,13 +120,16 @@
           </button>
         </div>
         <div>
-          <div class="_c07 text-sm space-y-4">
+          <div class="space-y-4" v-if="isLoading.isLoadingType('getEvents')">
+            <LoadingDiv v-for="i in 4" class="h-[140px] r_8" />
+          </div>
+          <div v-else-if="useEvent.store.table_events?.length" class="_c07 text-sm space-y-4">
             <div @click="openEventData(e)"
               class="flex gap-5 items-center bg-white rounded-[12px] cursor-pointer overflow-hidden"
               v-for="(e, index) in useEvent.store.table_events" v-show="checkDates(e.date)" :class="isLoading.store.pagination.to >= index + 1 &&
-        isLoading.store.pagination.from <= index + 1
-        ? ''
-        : 'hidden'
+      isLoading.store.pagination.from <= index + 1
+      ? ''
+      : 'hidden'
       ">
               <img v-if="e.image" class="h-[140px] w-[260px] object-cover" :src="e.image" alt="" />
               <div v-else class="h-[140px] w-[260px] b_cf2 full_flex">
@@ -144,6 +146,9 @@
                 </p>
               </div>
             </div>
+          </div>
+          <div v-else>
+            No events
           </div>
         </div>
         <Pagination_card class="mt-7" />
@@ -201,7 +206,7 @@
                 target="_blank" rel="noopener noreferrer">
                 <el-dropdown-item>Google</el-dropdown-item>
               </a>
-              <a href="http://" target="_blank" rel="noopener noreferrer">
+              <!-- <a href="http://" target="_blank" rel="noopener noreferrer">
                 <el-dropdown-item>Apple</el-dropdown-item>
               </a>
               <a href="http://" target="_blank" rel="noopener noreferrer">
@@ -212,7 +217,7 @@
               </a>
               <a href="http://" target="_blank" rel="noopener noreferrer">
                 <el-dropdown-item>Yahoo</el-dropdown-item>
-              </a>
+              </a> -->
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -228,8 +233,7 @@
           <span v-else>Add</span> event
         </h1>
         <div>
-          <input v-model="useEvent.create.title" @input="handleInput('input')" type="text" class="text-sm"
-            placeholder="Title" required />
+            <FloatingInput v-model="useEvent.create.title" @input="handleInput('input')" label="Title" required />
           <p class="text-end mt-1 _ca1 text-sm">
             {{ useEvent.create.title?.length }}/50
           </p>
@@ -272,7 +276,7 @@
             </el-select>
           </div>
         </div>
-        <el-checkbox v-model="useEvent.store.recurring" label="Recurring event" />
+        <!-- <el-checkbox v-model="useEvent.store.recurring" label="Recurring event" />
         <div v-if="useEvent.store.recurring">
           <div class="flex items-center gap-5">
             <p>Repeat every</p>
@@ -298,7 +302,6 @@
       ">
             <p>Repeat on</p>
             <div class="flex items-center gap-0">
-              <!-- v-model="useEvent.create.repeat_on[i]" -->
               <el-checkbox v-for="i in repeat_on" :label="i" />
             </div>
           </div>
@@ -327,7 +330,7 @@
               </label>
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="flex md:flex-row flex-col md:items-center gap-4">
           <div>
             <label class="_ca1 block mb-2 text-xs" for="location">Location</label>
@@ -353,13 +356,13 @@
             </el-dropdown>
           </div>
           <div class="w-full">
-            <label class="_ca1 block mb-2 text-xs" for="location">Zoom link</label>
-            <input v-model="useEvent.create.location_value" type="text" class="!font-[400]" placeholder="http" />
+            <label class="_ca1 block mb-2 text-xs" for="location">{{useEvent.create.location.label != "Link" ? useEvent.create.location?.label + ' link' : useEvent.create.location?.label}}</label>
+            <input v-model="useEvent.create.location_value" type="text" class="!font-[400]" placeholder="Enter a url" />
           </div>
         </div>
         <div>
           <textarea @input="handleInput('textarea')" id="write_message" v-model="useEvent.create.description"
-            class="h-[90px] text-sm w-full rounded-[4px]" placeholder="Course description"></textarea>
+            class="h-[90px] text-sm w-full rounded-[4px]" placeholder="Description"></textarea>
           <p class="text-end mt-2 _ca1 text-sm">
             {{ useEvent.create.description?.length }}/300
           </p>
@@ -408,7 +411,7 @@
           </div>
           <input @change="handleAddedPhoto" id="add_photo" type="file" class="w-0 h-0 overflow-hidden !p-0" />
         </div>
-        <div class="flex items-center justify-between sm:pt-3 !sm:mt-8 !-mt-5 text-sm font-semibold whitespace-nowrap">
+        <div class="flex items-center justify-between sm:pt-3 !sm:mt-8 !mt-5 text-sm font-semibold whitespace-nowrap">
           <button v-loading="isLoading.isLoadingType('deleteEvent')" v-if="useEvent.store.editEventModal" type="button"
             @click="useEvent.delete_event" class="uppercase h-10 px-6 rounded-lg _ceb">
             Delete event
@@ -417,7 +420,7 @@
             <button type="button" @click="useEvent.store.add_event = false" class="uppercase h-10 px-6 rounded-lg _ca1">
               cancel
             </button>
-            <button :type="isLoading.isLoadingType('createCourse') ? 'button' : 'submit'
+            <button :type="isLoading.isLoadingType('addEvents') ? 'button' : 'submit'
       " :class="store.is_active ? 'b_cbc _c07' : 'b_ce0 _ca1'" @click="reposrtToAdmins"
               class="uppercase h-10 px-6 rounded-lg" v-loading="isLoading.isLoadingType('addEvents')">
               <span v-if="useEvent.store.editEventModal">save</span>
@@ -737,7 +740,7 @@ getToday();
 
 start();
 await useAsyncData("calendar", async () => {
-  await  getCalendar(store.year, useEvent.store.month);
+  await getCalendar(store.year, useEvent.store.month);
   finish();
 }, { server: false })
 
@@ -869,6 +872,13 @@ watch(
     }
   }
 );
+
+watch(() => useEvent.create.access, () => {
+  console.log(useEvent.create.access);
+  if (useEvent.create.access == 'level') {
+    useEvent.create.access_value  = 1;
+  }
+})
 
 watch(
   () => isLoading.store.pagination.current_page,

@@ -57,12 +57,17 @@ export const useAddVideoStore = defineStore("addvideo", () => {
   }
 
   function deletePoll(poll_name, index) {
-    console.log(usePost.store.postData.polls[index]);
-    usePost.store.isNewPoll.splice(index, 1);
-    if (usePost.store.postData.polls[index].id) {
-      usePost.store.poll_deleted.push(usePost.store.postData.polls[index].id);
+    console.log(index);
+    console.log(poll_name)
+    // console.log(usePost.store.postData.polls[index]);
+    if (index) {
+      if (usePost.store.postData.polls[index]?.id) {
+        usePost.store.isNewPoll.splice(index, 1);
+        usePost.store.poll_deleted.push(usePost.store.postData.polls[index].id);
+      }
+      usePost.store.postData.polls.splice(index, 1);
     }
-    usePost.store.postData.polls.splice(index, 1);
+    console.log(usePost.store.polls)
     delete usePost.store.polls[poll_name];
   }
 
@@ -98,6 +103,7 @@ export const useAddVideoStore = defineStore("addvideo", () => {
   }
 
   function handleSubmit() {
+    console.log("Hi")
     if (usePost.store.writecomment_type == "inline") {
       usePost.write_comment();
     } else {

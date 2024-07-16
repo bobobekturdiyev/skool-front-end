@@ -1,8 +1,7 @@
 <template>
   <section>
     <div class="grid md:grid-cols-3 grid-cols-2 gap-6 justify-between my-8 mt-[18px]">
-      <LoadingDiv v-if="isLoading.isLoadingType('getClassrooms')" v-for="i in 10"
-        class="w-full h-[400px] r_16">
+      <LoadingDiv v-if="isLoading.isLoadingType('getClassrooms')" v-for="i in 10" class="w-full h-[400px] r_16">
       </LoadingDiv>
       <div v-else v-for="(i, index) in useClassroom.store.classrooms" data-aos="zoom-in"
         class="w-full course_card relative bg-white md:r_16 r_12 overflow-hidden">
@@ -33,10 +32,11 @@
               alt="" />
             <p v-else class="w-full card md:h-[180px] sm:h-[140px] h-[120px] b_cbc"></p>
           </div>
-          <div v-if="i.access == 'private'"
+          <div v-if="access_list.includes(i.access)"
             class="absolute text-white gap-2 bg-black bg-opacity-30 top-0 full_flex flex-col w-full card md:h-[180px] sm:h-[140px] h-[88px] object-cover">
             <img class="w-6 h-8" src="@/assets/svg/icon/lock.svg" alt="" />
-            <p>Private Course</p>
+            <p v-if="i.access == 'private'">Private Course</p>
+            <p v-if="i.access == 'level_lock'">Unlock at Level {{i.level}}</p>
           </div>
         </div>
         <div class="p-4">
@@ -64,10 +64,8 @@
         <p class="md:text-[16px] text-[10px]">Add new cource</p>
       </div>
     </div>
-
-
   </section>
-
+  <input @change="handleAddedPhoto" id="add_photo" type="file" class="w-0 h-0 overflow-hidden !p-0" />
   <!-- cropper image -->
   <el-dialog v-model="isLoading.store.cropModal" v-if="isLoading.store.cropModal" width="780" align-center
     class="bg-opacity-50 p-6 !w-[400px] !rounded-lg">
@@ -88,6 +86,25 @@ const store = reactive({
   activeEdit: "",
 });
 
+const access_list = ["private", "level_lock"]
+
+function handleAddedPhoto(e) {
+  isLoading.store.cropModal = false;
+  const file = e.target.files[0];
+  console.log(file);
+  // useClassroom.create.image = file;
+  isLoading.store.previewImage = URL.createObjectURL(file);
+  document.getElementById("add_photo").value = "";
+  setTimeout(() => {
+    isLoading.store.cropModal = true;
+  }, 100);
+}
+
+function deleteImage() {
+  useClassroom.create.image = "";
+  isLoading.store.croppedImage = "";
+}
+
 function handleEditCourse(data) {
   useClassroom.store.add_course = true;
   useClassroom.store.edit_course = true;
@@ -103,7 +120,7 @@ function handleEditCourse(data) {
 watch(
   () => useClassroom.create.access,
   () => {
-    if (useClassroom.create.access == "certain") {
+    if (useClassroom.create.access == "level_lock") {
       useClassroom.create.level = 1;
     } else {
       useClassroom.create.level = null;

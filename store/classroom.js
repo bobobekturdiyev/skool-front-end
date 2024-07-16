@@ -62,13 +62,16 @@ export const useClassroomStore = defineStore("classroom", () => {
     delete: false,
   };
 
-  const create = reactive({
+  const create_data = {
     slug: "",
     title: "",
     description: "",
     image: "",
     published: true,
-  });
+    access: "public",
+  };
+
+  const create = reactive(JSON.parse(JSON.stringify(create_data)));
 
   const module = reactive({
     title: "",
@@ -94,22 +97,22 @@ export const useClassroomStore = defineStore("classroom", () => {
 
   function clearCreate() {
     for (let i of Object.keys(create)) {
-      create[i] = "";
+      create[i] = create_data[i];
     }
-    create.access = "public";
-    create.published = true;
+    isLoading.store.previewImage = "";
+    isLoading.store.croppedImage = "";
     store.cropperPreview = false;
     store.add_course = false;
   }
 
   function clearModule() {
-    for (let i of Object.keys(module)) {
-      // module[i] = "";
-    }
     module.published = true;
   }
 
   function create_course() {
+    if (!create.title) {
+      return;
+    }
     if (store.edit_course) {
       return update_course();
     }
@@ -125,7 +128,6 @@ export const useClassroomStore = defineStore("classroom", () => {
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("createCourse");
-    console.log(create.image);
     for (let [key, value] of formData.entries()) {
       console.log(`${key}: ${value}`);
     }
@@ -138,6 +140,9 @@ export const useClassroomStore = defineStore("classroom", () => {
       })
       .then((res) => {
         const slug = res.data?.slug;
+        for (let i in create) {
+          create[i] = create_data[i];
+        }
         router.push(`/${group_username}/classroom/${slug}`);
         clearCreate();
         isLoading.removeLoading("createCourse");
@@ -153,7 +158,6 @@ export const useClassroomStore = defineStore("classroom", () => {
     for (let i of Object.keys(create)) {
       formData.append(i, create[i]);
     }
-    console.log(create.image);
     if (!create.image || isLoading.isURL(create.image)) {
       if (!isLoading.isURL(create.image)) {
         formData.delete("image");
@@ -270,7 +274,6 @@ export const useClassroomStore = defineStore("classroom", () => {
     const slug = router.currentRoute.value.params.id;
     const token = localStorage.getItem("token");
     isLoading.addLoading("createSet");
-    console.log(set);
     axios
       .post(baseUrl + `${slug}/add-set`, set, {
         headers: {
@@ -393,7 +396,6 @@ export const useClassroomStore = defineStore("classroom", () => {
     let f_step = 1;
     let name;
     for (let i of store.files) {
-      console.log(i);
       if (i.is_new == "deleted") {
         deleted.push(i.id);
         continue;
@@ -437,7 +439,6 @@ export const useClassroomStore = defineStore("classroom", () => {
         }
       )
       .then((res) => {
-        console.log(res);
         clearModule();
         setModuleData(res.data);
         isLoading.removeLoading("createModule");
@@ -483,7 +484,6 @@ export const useClassroomStore = defineStore("classroom", () => {
       }
       ids.push(data);
     }
-    console.log(ids);
     axios
       .post(
         baseUrl + `lesson-position`,
@@ -519,7 +519,7 @@ export const useClassroomStore = defineStore("classroom", () => {
     store.modules = data;
     store.old_modules = JSON.parse(JSON.stringify(data));
     store.activeTab = "set";
-
+    local_store.moduleData = [];
     if (id) {
       for (let i of store.modules.set) {
         local_store.activeName = i.id;
@@ -571,13 +571,17 @@ export const useClassroomStore = defineStore("classroom", () => {
         }
       )
       .then((res) => {
-        console.log(res, "slug");
+        console.log(res);
         setModuleData(res.data);
         setCourseReyting();
         isLoading.removeLoading("getModules");
       })
       .catch((err) => {
         console.log(err);
+        if (err.response.data.message == "You do not have access to this course") {
+          isLoading.showMessage("You do not have access to this course")
+          router.push(`/${username}/classroom`);
+        }
         isLoading.removeLoading("getModules");
       });
   }
@@ -597,7 +601,6 @@ export const useClassroomStore = defineStore("classroom", () => {
         }
       )
       .then((res) => {
-        console.log(res, "slug");
         setModuleData(res.data);
         setCourseReyting();
         isLoading.removeLoading("getModules");
@@ -625,7 +628,6 @@ export const useClassroomStore = defineStore("classroom", () => {
         }
       )
       .then((res) => {
-        console.log(res);
         get_module();
         store.dripModal = false;
         store.drip_day = "";
@@ -655,7 +657,6 @@ export const useClassroomStore = defineStore("classroom", () => {
         }
       )
       .then((res) => {
-        console.log(res, "slug");
         setModuleData(res.data);
         setCourseReyting();
         store.change_category = false;
@@ -681,7 +682,6 @@ export const useClassroomStore = defineStore("classroom", () => {
         }
       )
       .then((res) => {
-        console.log(res, "slug");
         setModuleData(res.data);
         setCourseReyting();
         store.change_category = false;
@@ -711,7 +711,6 @@ export const useClassroomStore = defineStore("classroom", () => {
         }
       )
       .then((res) => {
-        console.log(res, "slug");
         get_classroom();
         isLoading.removeLoading("getClassrooms");
       })
@@ -786,13 +785,12 @@ export const useClassroomStore = defineStore("classroom", () => {
   }
 
   async function get_classroom() {
-    console.log("data", '=========')
     const group_username = router.currentRoute.value.params.community;
     isLoading.addLoading("getClassrooms");
     const data = await apiRequest.get(
       `${group_username}/classroom?page=${isLoading.store.pagination.current_page}`
     );
-    console.log(data.data, '=========')
+    console.log(data);
     isLoading.removeLoading("getClassrooms");
     if (data.status == 200) {
       store.classrooms = data.data?.data;
@@ -809,6 +807,7 @@ export const useClassroomStore = defineStore("classroom", () => {
     module,
     set,
     file_edit,
+    clearCreate,
     get_classroom,
     create_course,
     update_course,

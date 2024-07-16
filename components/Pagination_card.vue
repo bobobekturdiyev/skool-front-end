@@ -1,5 +1,5 @@
 <template>
-  <footer class="flex md:flex-wrap-reverse md:flex-row flex-col-reverse md:items-center justify-between">
+  <footer v-if="isLoading.store.pagination.total" class="flex md:flex-wrap-reverse md:flex-row flex-col-reverse md:items-center justify-between">
     <div class="flex items-center gap-[14px]">
       <p
         @click="changePage('dec')"

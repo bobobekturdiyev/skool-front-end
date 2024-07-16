@@ -46,13 +46,18 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   ::-webkit-scrollbar {
-    width: 0px;
+    max-width: 12px;
+    height: 0;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: $CBC;
+    border-radius: 50px;
   }
 }
 
 html *,
 body *,
-pre {
+pre, input {
   font-family: Inter !important;
 }
 

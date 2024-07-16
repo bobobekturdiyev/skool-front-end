@@ -6,54 +6,21 @@
       <LoadingDiv class="h-[429px] min-w-[280px] r_16" />
     </section>
     <div v-else class="flex sm:flex-row flex-col-reverse gap-6 community_page">
-      <section class="w-full bg-white md:px-7 md:py-6 p-3 r_16 overflow-hidden">
-        <h1 class="font-semibold md:text-2xl text-lg mb-6">{{ useGroup.store.group_by_username.name }}</h1>
-        <div class="w-full overflow-hidden r_16">
-          <div v-if="useGroup.store.group_by_username.medias?.length"
-            @click="() => { store.slideModal = true; useGroup.store.slideStep2 = useGroup.store.slideStep }"
-            class="mainSlider cursor-pointer duration-500 lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] flex items-center w-full r_16">
-            <div class="min-w-full" v-for="(post, index) in useGroup.store.group_by_username.medias">
-              <div v-if="post.type == 'image'"
-                class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] w-full min-w-[100%] object-cover">
-                <img class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] w-full min-w-[100%] object-cover"
-                  @click="useGroup.store.slideStep = index" :src="post.link" />
-              </div>
-              <div v-else @click="useGroup.store.slideStep = index" class="relative">
-                <iframe class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] min-w-full" :src="embedLink(post.link)">
-                </iframe>
-                <div
-                  class="absolute top-0 min-w-full h-full cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex">
-                  <img src="@/assets/svg/video_btn.svg" alt="" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-else-if="role_ac.includes(useGroup.store.group_by_username.type)"
-            @click="useGroup.store.add_media = true"
-            class="full_flex bg-[#F2F2F2] cursor-pointer duration-500 lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] flex items-center w-full r_16">
-
-            <p>Upload images / videos</p>
-          </div>
-        </div>
-        <div v-loading="isLoading.isLoadingType('positionMedia')"
-          class="flex gap-4 mt-4 md:mb-6 mb-4 overflow-hidden overflow-x-auto">
-          <draggable @change="useGroup.update_media_position" :list="useGroup.store.group_by_username.medias"
-            group="grid" :animation="200" class="flex gap-4 overflow-hidden overflow-x-auto min-w-fit">
-            <template v-for="(post, index) in useGroup.store.group_by_username.medias" :key="post.id">
-              <div class="relative" :class="useGroup.store.slideStep == index ? 'border p-[1px] rounded-xl' : ''">
-                <button @click="() => deleteMedia(post.id)" type="button"
-                  class="absolute deleteimage top-1 right-1 z-20 rounded-full w-6 h-6 full_flex border bg-white"
-                  :class="role_ac.includes(useGroup.store.group_by_username.type) ? '' : '!hidden'">
-                  <img class="m-auto" src="@/assets/svg/x.svg" alt="" />
-                </button>
-                <div v-if="post.type == 'image'">
-                  <img @click="useGroup.store.slideStep = index"
-                    class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px] h-[56px] cursor-pointer object-cover rounded-xl"
-                    :src="post.link" />
+      <div class="w-full">
+        <section class="w-full bg-white md:px-7 md:py-6 p-3 r_16 overflow-hidden">
+          <h1 class="font-semibold md:text-2xl text-lg mb-6">{{ useGroup.store.group_by_username.name }}</h1>
+          <div class="w-full overflow-hidden r_16">
+            <div v-if="useGroup.store.group_by_username.medias?.length"
+              @click="() => { store.slideModal = true; useGroup.store.slideStep2 = useGroup.store.slideStep }"
+              class="mainSlider cursor-pointer duration-500 lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] flex items-center w-full r_16">
+              <div class="min-w-full" v-for="(post, index) in useGroup.store.group_by_username.medias">
+                <div v-if="post.type == 'image'"
+                  class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] w-full min-w-[100%] object-cover">
+                  <img class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] w-full min-w-[100%] object-cover"
+                    @click="useGroup.store.slideStep = index" :src="post.link" />
                 </div>
                 <div v-else @click="useGroup.store.slideStep = index" class="relative">
-                  <iframe
-                    class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px] cursor-pointer object-cover rounded-xl"
+                  <iframe class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] min-w-full"
                     :src="embedLink(post.link)">
                   </iframe>
                   <div
@@ -62,63 +29,99 @@
                   </div>
                 </div>
               </div>
-            </template>
-          </draggable>
-          <div
-            v-if="useGroup.store.group_by_username.medias?.length < 6 && useGroup.store.group_by_username.medias?.length > 0 && role_ac.includes(useGroup.store.group_by_username.type)"
-            @click="useGroup.store.add_media = true"
-            class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px]">
-            <img class="w-1/3" src="@/assets/svg/add_photo.svg" alt="" />
+            </div>
+            <div v-else-if="role_ac.includes(useGroup.store.group_by_username.type)"
+              @click="useGroup.store.add_media = true"
+              class="full_flex bg-[#F2F2F2] cursor-pointer duration-500 lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] flex items-center w-full r_16">
+
+              <p>Upload images / videos</p>
+            </div>
           </div>
-        </div>
-        <div class="flex flex-wrap gap-4 text-sm font-medium whitespace-nowrap">
-          <p class="full_flex h-9 px-3 gap-1 rounded-lg bg-[#F2F2F2]">
-            <img src="@/assets/svg/community/private.svg" alt="" />
-            {{ useGroup.store.group_by_username.group_type == "private" ? "Private group" : "Public group" }}
-          </p>
-          <p class="full_flex h-9 px-3 gap-1 rounded-lg bg-[#F2F2F2]">
-            <img src="@/assets/svg/community/members.svg" alt="" />
-            226k members
-          </p>
-          <p class="full_flex h-9 px-3 gap-1 rounded-lg bg-[#F2F2F2]">
-            <img src="@/assets/svg/community/paid.svg" alt="" />
-            {{ useGroup.store.group_by_username.group_price == "free" ? "Free" : "Paid" }}
-          </p>
-          <p class="full_flex h-9 px-3 gap-1 rounded-lg bg-[#F2F2F2]">
-            <img v-if="useGroup.store.group_by_username.user?.image"
-              class="h-5 w-5 rounded-full bg_loading object-cover" :src="useGroup.store.group_by_username.user?.image"
-              alt="" />
-          <p v-else class="h-5 w-5 rounded-full bg_loading"></p>
-          By {{ useGroup.store.group_by_username.user.name }} {{ useGroup.store.group_by_username.user.surname }}
-          </p>
-        </div>
-        <pre v-if="role_ac.includes(useGroup.store.group_by_username.type) && !useGroup.store.description_modal"
-          :class="role_ac.includes(useGroup.store.group_by_username.type) ? '' : 'pointer-events-none'"
-          @click="editDescription"
-          class="md:mt-8 mt-4 text-sm leading-[21px] whitespace-pre-line hover:bg-[#F2F2F2] cursor-pointer p-4 -m-4 r_8">{{
+          <div v-loading="isLoading.isLoadingType('positionMedia')"
+            class="flex gap-4 mt-4 md:mb-6 mb-4 overflow-hidden overflow-x-auto">
+            <draggable @change="useGroup.update_media_position" :list="useGroup.store.group_by_username.medias"
+              group="grid" :animation="200" class="flex gap-4 overflow-hidden overflow-x-auto min-w-fit">
+              <template v-for="(post, index) in useGroup.store.group_by_username.medias" :key="post.id">
+                <div class="relative" :class="useGroup.store.slideStep == index ? 'border p-[1px] rounded-xl' : ''">
+                  <button @click="() => deleteMedia(post.id)" type="button"
+                    class="absolute deleteimage top-1 right-1 z-20 rounded-full w-6 h-6 full_flex border bg-white"
+                    :class="role_ac.includes(useGroup.store.group_by_username.type) ? '' : '!hidden'">
+                    <img class="m-auto" src="@/assets/svg/x.svg" alt="" />
+                  </button>
+                  <div v-if="post.type == 'image'">
+                    <img @click="useGroup.store.slideStep = index"
+                      class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px] h-[56px] cursor-pointer object-cover rounded-xl"
+                      :src="post.link" />
+                  </div>
+                  <div v-else @click="useGroup.store.slideStep = index" class="relative">
+                    <iframe
+                      class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px] cursor-pointer object-cover rounded-xl"
+                      :src="embedLink(post.link)">
+                    </iframe>
+                    <div
+                      class="absolute top-0 min-w-full h-full cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex">
+                      <img src="@/assets/svg/video_btn.svg" alt="" />
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </draggable>
+            <div
+              v-if="useGroup.store.group_by_username.medias?.length < 6 && useGroup.store.group_by_username.medias?.length > 0 && role_ac.includes(useGroup.store.group_by_username.type)"
+              @click="useGroup.store.add_media = true"
+              class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px]">
+              <img class="w-1/3" src="@/assets/svg/add_photo.svg" alt="" />
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-4 text-sm font-medium whitespace-nowrap">
+            <p class="full_flex h-9 px-3 gap-1 rounded-lg bg-[#F2F2F2]">
+              <img v-if="useGroup.store.group_by_username.group_type == 'private'" src="@/assets/svg/community/private.svg" alt="" />
+              <img v-else src="@/assets/svg/members/public.svg" alt="" />
+              {{ useGroup.store.group_by_username.group_type == "private" ? "Private group" : "Public group" }}
+            </p>
+            <p class="full_flex h-9 px-3 gap-1 rounded-lg bg-[#F2F2F2]">
+              <img src="@/assets/svg/community/members.svg" alt="" />
+              {{useGroup.store.group_by_username.members_count}} members
+            </p>
+            <p class="full_flex h-9 px-3 gap-1 rounded-lg bg-[#F2F2F2]">
+              <img src="@/assets/svg/community/paid.svg" alt="" />
+              {{ useGroup.store.group_by_username.group_price == "free" ? "Free" : "Paid" }}
+            </p>
+            <p class="full_flex h-9 px-3 gap-1 rounded-lg bg-[#F2F2F2]">
+              <img v-if="useGroup.store.group_by_username.user?.image"
+                class="h-5 w-5 rounded-full bg_loading object-cover" :src="useGroup.store.group_by_username.user?.image"
+                alt="" />
+            <p v-else class="h-5 w-5 rounded-full bg_loading"></p>
+            By {{ useGroup.store.group_by_username.user.name }} {{ useGroup.store.group_by_username.user.surname }}
+            </p>
+          </div>
+          <pre v-if="role_ac.includes(useGroup.store.group_by_username.type) && !useGroup.store.description_modal"
+            :class="role_ac.includes(useGroup.store.group_by_username.type) ? '' : 'pointer-events-none'"
+            @click="editDescription"
+            class="md:mt-8 mt-4 text-sm leading-[21px] whitespace-pre-line hover:bg-[#F2F2F2] cursor-pointer p-4 -m-4 r_8">{{
       useGroup.store.group_by_username.description ? useGroup.store.group_by_username.description : 'Add a description...'
     }}</pre>
-        <div v-else-if="role_ac.includes(useGroup.store.group_by_username.type)" class="md:mt-8 mt-4">
-          <el-input v-model="useGroup.store.description" @input="handleInput" class="w-full"
-            :autosize="{ minRows: 2, maxRows: 20 }" type="textarea" placeholder="Please input" />
-          <p class="text-end mt-2 _ca1 md:text-sm text-xs">
-            {{ useGroup.store.description?.length }}/1000
-          </p>
-          <div class="flex justify-end md:mt-6">
-            <button type="button"
-              @click="() => { useGroup.store.description_modal = false; useGroup.store.description = '' }"
-              class="_ca1 font-semibold px-6 r_8 uppercase">
-              cancel
-            </button>
-            <button v-loading="isLoading.isLoadingType('changeGroupDescription')"
-              class=" font-semibold px-6 r_8 uppercase"
-              :class="useGroup.store.description?.length ? '_c07 b_cbc' : '_ca1 b_ce0'"
-              @click="useGroup.updateGroupDescription">
-              Save
-            </button>
+          <div v-else-if="role_ac.includes(useGroup.store.group_by_username.type)" class="md:mt-8 mt-4">
+            <el-input v-model="useGroup.store.description" @input="handleInput" class="w-full"
+              :autosize="{ minRows: 2, maxRows: 20 }" type="textarea" placeholder="Add a description ..." />
+            <p class="text-end mt-2 _ca1 md:text-sm text-xs">
+              {{ useGroup.store.description?.length }}/1000
+            </p>
+            <div class="flex justify-end md:mt-6">
+              <button type="button"
+                @click="() => { useGroup.store.description_modal = false; useGroup.store.description = '' }"
+                class="_ca1 font-semibold px-6 r_8 uppercase">
+                cancel
+              </button>
+              <button v-loading="isLoading.isLoadingType('changeGroupDescription')"
+                class="_c07 b_cbc font-semibold px-6 r_8 uppercase"
+                @click="useGroup.updateGroupDescription">
+                Save
+              </button>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
       <!-- info card -->
       <GroupInfoCard class="md:max-w-[280px] sm:max-w-[200px]" />
     </div>
@@ -299,12 +302,8 @@ useSeoMeta({
 start()
 await useAsyncData("about", async () => {
   await useGroup.groupByUsername();
-finish();
+  finish();
 }, { server: false })
-// await useAsyncData(() => {
-//   useGroup.groupByUsername();
-//   finish();
-// })
 
 function deleteMedia(id) {
   useGroup.store.media_id = id;

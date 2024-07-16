@@ -58,27 +58,35 @@ export const usePostStore = defineStore("post", () => {
     deleteReplyData: [],
   });
 
-  const inline_comment = reactive({
-    comment: "",
-    files: [],
-  });
-
-  const create = reactive({
+  const create_data = {
     title: "",
     description: "",
     category_id: "",
     files: [],
     video_link: [],
     polls: [],
-  });
+  };
 
-  const create_category = reactive({
+  const create_category_data = {
     name: "",
     description: "",
     permission: true,
     username: "",
-  });
+  };
 
+  const inline_comment_data = {
+    comment: "",
+    files: [],
+  };
+
+  const create = reactive(JSON.parse(JSON.stringify(create_data)));
+  const create_category = reactive(
+    JSON.parse(JSON.stringify(create_category_data))
+  );
+  const inline_comment = reactive(
+    JSON.parse(JSON.stringify(inline_comment_data))
+  );
+  
   const modal = reactive({
     create: false,
     edit: false,
@@ -87,9 +95,17 @@ export const usePostStore = defineStore("post", () => {
 
   function clearData() {
     for (let i in create_category) {
-      create_category[i] = "";
+      create_category[i] = create_category_data[i];
     }
-    create_category.permission = true;
+    for (let i in create) {
+      create[i] = create_data[i];
+    }
+    for (let i in inline_comment) {
+      inline_comment[i] = inline_comment_data[i];
+    }
+    store.polls = {};
+    addVideo.store.files = [];
+    useClassroom.module.video_content = "";
     modal.create = false;
     modal.edit = false;
   }
@@ -112,19 +128,21 @@ export const usePostStore = defineStore("post", () => {
     }
 
     isLoading.addLoading("getPosts");
-    const data = await apiRequest.get(`get-post/${group_username}?page=${isLoading.store.pagination.current_page}${filter_url}`);
+    const data = await apiRequest.get(
+      `get-post/${group_username}?page=${isLoading.store.pagination.current_page}${filter_url}`
+    );
     isLoading.removeLoading("getPosts");
     if (data.status == 200) {
-      console.log(data.data)
-           store.posts = data.data?.data;
-        store.members_count = data.data?.members_count;
-        for (let i in store.setupgroup) {
-          store.setupgroup[i] = data.data[i];
-        }
-        for (let i in isLoading.store.pagination) {
-          isLoading.store.pagination[i] = data.data?.meta[i];
-        }
-        isLoading.removeLoading("getPosts");
+      console.log(data.data);
+      store.posts = data.data?.data;
+      store.members_count = data.data?.members_count;
+      for (let i in store.setupgroup) {
+        store.setupgroup[i] = data.data[i];
+      }
+      for (let i in isLoading.store.pagination) {
+        isLoading.store.pagination[i] = data.data?.meta[i];
+      }
+      isLoading.removeLoading("getPosts");
     }
   }
 
@@ -218,28 +236,13 @@ export const usePostStore = defineStore("post", () => {
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     isLoading.addLoading("getPostCategories");
-    const data = await apiRequest.get(`group/${group_username}/post/categories`);
+    const data = await apiRequest.get(
+      `group/${group_username}/post/categories`
+    );
     isLoading.removeLoading("getPostCategories");
     if (data.status == 200) {
       store.categories = data.data;
     }
-    // axios
-    //   .get(baseUrl + `group/${group_username}/post/categories`, {
-    //     headers: {
-    //       Authorization: "Bearer " + token,
-    //     },
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //     isLoading.removeLoading("getPostCategories");
-    //   })
-    //   .catch((err) => {
-    //     if (err.response?.data?.message == "Posts not found") {
-    //       store.categories = [];
-    //     }
-    //     console.log(err);
-    //     isLoading.removeLoading("getPostCategories");
-    //   });
   }
 
   function get_likes() {
@@ -361,6 +364,7 @@ export const usePostStore = defineStore("post", () => {
       })
       .then((res) => {
         console.log(res);
+        clearData();
         store.postData = res.data;
         store.post_id = res.data.id;
         store.card_info = true;
@@ -440,12 +444,12 @@ export const usePostStore = defineStore("post", () => {
       })
       .then((res) => {
         console.log(res);
+        clearData();
         store.postData = res.data;
         store.card_info = true;
         isLoading.removeLoading("writeComment");
         store.writingModal = false;
         store.category_id = "";
-        inline_comment.comment = "";
         store.comment_id = "";
         get_posts();
       })

@@ -108,6 +108,7 @@ export const useMemberStore = defineStore("members", () => {
     const token = localStorage.getItem("token");
     isLoading.addLoading("getActivity");
     const data = await apiRequest.get(`get-leaderboard/${username}`);
+    console.log(data);
     isLoading.removeLoading("getActivity");
     if (data.status == 200) {
       store.activities = data.data[0];

@@ -4,12 +4,14 @@
       <img src="/logo.svg" alt="" />
     </router-link>
     <h1 class="_c07 text-2xl font-semibold">Create your Skool account</h1>
-    <form class="space-y-5">
-      <input type="text" placeholder="First name" required />
-      <input type="text" placeholder="Last name" required />
-      <input type="email" placeholder="Email"  required/>
-      <input type="password" placeholder="Password" required />
-      <button @click="register" class="b_ce0 _ca1 font-semibold w-full rounded-[4px]">
+    <form class="space-y-5" @submit.prevent="useAuth.authRegister">
+      <input v-model="useAuth.register.name" type="text" placeholder="First name" required />
+      <input v-model="useAuth.register.surname" type="text" placeholder="Last name" required />
+      <input v-model="useAuth.register.email" type="email" placeholder="Email" required />
+      <input v-model="useAuth.register.password" type="password" placeholder="Password" required />
+      <p class="text-start text-red-600 font-medium">{{ useAuth.store.errorMessage }}</p>
+      <button v-loading="isLoading.isLoadingType('register')" @click="register"
+        class="b_ce0 _ca1 font-semibold w-full rounded-[4px]">
         Sign up
       </button>
     </form>
@@ -28,10 +30,11 @@
 </template>
 
 <script setup>
-import { useAuthStore } from "@/store";
+import { useAuthStore, useLoadingStore } from "@/store";
 
 const router = useRouter();
 const useAuth = useAuthStore();
+const isLoading = useLoadingStore();
 
 function register() {
   localStorage.setItem("token", "token");

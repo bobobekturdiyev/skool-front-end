@@ -24,9 +24,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         }
       } else {
         isLoading.store.isLogin = false;
+        localStorage.removeItem("token");
       }
     }
   } catch (error) {
+    localStorage.removeItem("token");
     isLoading.store.isLogin = false;
   }
 });

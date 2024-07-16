@@ -16,7 +16,7 @@ export const useGroupStore = defineStore("group", () => {
     mygroups: [],
     group_pinned: [],
     group_by_username: {
-      name: '',
+      name: "",
     },
     add_media: false,
     delete_media: false,
@@ -171,9 +171,6 @@ export const useGroupStore = defineStore("group", () => {
   }
 
   function updateGroupDescription() {
-    if (!store.description?.length) {
-      return;
-    }
     const token = localStorage.getItem("token");
     isLoading.addLoading("changeGroupDescription");
     const username = router.currentRoute.value.params.community;
@@ -251,34 +248,36 @@ export const useGroupStore = defineStore("group", () => {
         isLoading.removeLoading("groupGroups");
       });
   }
-
+  
   async function groupByUsername(type) {
     const username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     if (type != "no_load") {
       isLoading.addLoading("getByUsername");
     }
-
-    const data = await apiRequest.get(
-      `get-group/` + username
-    );
+    
+    const data = await apiRequest.get(`get-group/` + username);
     isLoading.removeLoading("getByUsername");
+    console.log(data)
     if (data.status == 200) {
       store.group_by_username = data.data;
-        if (!store.group_by_username.links?.length) {
-          store.showLinksPublic = false;
-        }
-        for (let i of store.group_by_username?.links) {
-          if (i.is_public) {
-            store.showLinksPublic = true;
-          }
-        }
-        if (store.group_by_username.status == "active") {
+      if (store.group_by_username.status != "active") {
+        router.push(`/${username}/about`);
+      }
+      if (!store.group_by_username.links?.length) {
+        store.showLinksPublic = false;
+      }
+      for (let i of store.group_by_username?.links) {
+        if (i.is_public) {
           store.showLinksPublic = true;
-        } else {
-          store.showLinksPublic = false;
         }
-        useMembers.setGeneralSettings(data.data);
+      }
+      if (store.group_by_username.status == "active") {
+        store.showLinksPublic = true;
+      } else {
+        store.showLinksPublic = false;
+      }
+      useMembers.setGeneralSettings(data.data);
     }
   }
 
@@ -323,7 +322,7 @@ export const useGroupStore = defineStore("group", () => {
         }
       )
       .then((res) => {
-        console.log(res, 'data');
+        console.log(res, "data");
         store.mygroups = res.data;
         isLoading.removeLoading("positionGroup");
       })
@@ -333,7 +332,6 @@ export const useGroupStore = defineStore("group", () => {
         isLoading.removeLoading("positionGroup");
       });
   }
-
 
   return {
     store,

@@ -7,7 +7,10 @@
     <form @submit.prevent="useAuth.authLogin" class="space-y-5">
       <input v-model="useAuth.login.email" autofocus type="email" placeholder="Email" required />
       <input v-model="useAuth.login.password" type="password" placeholder="Password" required />
-      <p class="_c2a text-start font-medium">Forgot password?</p>
+      <p class="_c2a text-start font-medium cursor-pointer hover:underline" @click="() => {
+        useAuth.modal.login = false;
+        useAuth.modal.forgot_modal = true;
+      }">Forgot password?</p>
       <button :type="isLoading.isLoadingType('logging')?'button':'submit'" v-loading="isLoading.isLoadingType('logging')" class="b_ce0 _ca1 font-semibold w-full rounded-[4px]">
         LOG IN
       </button>
@@ -17,7 +20,7 @@
     <div class="space-y-5">
       <p class="text-sm">
         Don’t have an account?
-        <button type="button" @click="register" class="_c2a font-medium">
+        <button type="button" @click="register" class="_c2a font-medium hover:underline">
           Sign up for free
         </button>
       </p>

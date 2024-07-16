@@ -317,6 +317,7 @@ function watchQuery() {
 watch(
   () => router.currentRoute.value,
   () => {
+    if (router.currentRoute.value.params.community) return;
     watchQuery();
   }
 );

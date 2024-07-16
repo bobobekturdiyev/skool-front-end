@@ -76,8 +76,24 @@ export const useLoadingStore = defineStore("loading", () => {
     modalType: "",
   };
 
+  function openDrawer(step) {
+    store.slideStep = 0;
+    store.inviteModal = true;
+    setTimeout(() => {
+      store.slideStep = step;
+      const slide = document.querySelector(".mainSlider");
+      slide.style.transform = `translateY(-${
+        isLoading.store.slideStep * 100
+      }%)`;
+    }, 100);
+  }
+
   const user_update_checker = reactive({
     id: "",
+    level: "",
+    level_name: "",
+    percent: "",
+    points: "",
     name: "",
     surname: "",
     username: "",
@@ -199,7 +215,7 @@ export const useLoadingStore = defineStore("loading", () => {
   function convertMilliseconds(ms) {
     let day = new Date(ms).getTime();
     const currentDate = new Date().getTime();
-    day = day - currentDate;
+    day = currentDate - day;
     const seconds = Math.floor(day / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
@@ -231,5 +247,6 @@ export const useLoadingStore = defineStore("loading", () => {
     showMessage,
     formatDripDays,
     convertMilliseconds,
+    openDrawer,
   };
 });
