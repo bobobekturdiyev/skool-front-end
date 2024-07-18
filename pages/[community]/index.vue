@@ -10,10 +10,10 @@
         <p class="full_flex rounded-full text-white text-xs h-6 w-6 bg-[#e74c3c]">{{ usePost.store.members_count }}</p>
         <p class="_c2a hover:underline cursor-pointer">membership requests pending</p>
       </section>
-      <section v-if="useEvent.store.fistevent.title"
-        class="flex items-center gap-2 justify-center">
+      <section v-if="useEvent.store.fistevent.title" class="flex items-center gap-2 justify-center">
         <img src="@/assets/svg/calendar/calendar_black.svg" />
-        <p class="full_flex text-xs font-bold hover:underline cursor-pointer" @click="routeToCalendar">{{ useEvent.store.fistevent.title }}</p>
+        <p class="full_flex text-xs font-bold hover:underline cursor-pointer" @click="routeToCalendar">{{
+    useEvent.store.fistevent.title }}</p>
         <p class="text-xs">is happening in {{ isLoading.convertMilliseconds(useEvent.store.fistevent.date) }}</p>
       </section>
       <!-- category -->
@@ -119,10 +119,10 @@
         <div v-else-if="!usePost.store.posts.length" class="min-h-[30vh] full_flex col-span-4">
           No data
         </div>
-        <article v-else v-for="i in usePost.store.posts" data-aos="zoom-in"
-          class="relative md:flex r_16 overflow-hidden bg-white">
+        <article @click="(e) => handleClick(e, i.id)" v-else v-for="i in usePost.store.posts" data-aos="zoom-in"
+          class="relative cursor-pointer md:flex r_16 overflow-hidden bg-white">
           <!-- hide -->
-          <div
+          <div v-if="i.group_pinned"
             class="md:!flex !hidden full_flex gap-1 _c2a absolute right-0 top-0 h-9 w-[88px] border-l border-b border-[#BCDEFF] hide_show rounded-bl-2xl">
             <img class="show_blue" src="@/assets/svg/show.svg" alt="" />
             <img class="show_black hidden" src="@/assets/svg/show_black.svg" alt="" />
@@ -146,11 +146,12 @@
               <div class="flex items-center gap-4">
                 <el-dropdown placement="top-start" class="dropdown">
                   <div class="relative max-w-fit">
-                    <img class="h-10 w-10 object-cover rounded-full" :src="i.user?.image" alt="" />
-                    <div class="full_flex absolute -bottom-[2px] -right-[5px] z-10">
-                      <div class="relative">
-                        <img src="@/assets/svg/community/user_messages.svg" alt="" />
-                        <p class="absolute full_flex bottom-0 w-5 h-5 pb-0.5 text-[10px] text-white font-medium">
+                    <img class="h-10 w-10 object-cover rounded-full not_open" :src="i.user?.image" alt="" />
+                    <div class="full_flex absolute -bottom-[2px] -right-[5px] z-10 not_open">
+                      <div class="relative not_open">
+                        <img src="@/assets/svg/community/user_messages.svg" alt="" class="not_open" />
+                        <p
+                          class="absolute not_open full_flex bottom-0 w-5 h-5 pb-0.5 text-[10px] text-white font-medium">
                           1
                         </p>
                       </div>
@@ -190,7 +191,7 @@
                             <ul class="space-y-2">
                               <li class="flex items-center gap-2 leading-[14px] _ca1">
                                 <img src="@/assets/svg/clock.svg" alt="" />
-                                <p>Active {{ isLoading.convertMilliseconds(i.user.updated_at) }}</p>
+                                <p>Active {{ formatDate(i.user.updated_at) }}</p>
                               </li>
                               <li v-if="i.user.address" class="flex items-center gap-2 _ca1">
                                 <img src="@/assets/svg/location.svg" alt="" />
@@ -230,7 +231,7 @@
                     {{ i.user?.name }} {{ i.user?.surname }}
                   </h1>
                   <p class="text-xs">
-                    {{ formatDate(i.created_at) }} in <span class="_c59">Announcements</span>
+                    {{ formatDate(i.created_at) }} in <span class="_c59">{{ i.category_name }}</span>
                   </p>
                 </div>
               </div>
@@ -251,9 +252,10 @@
               </div>
               <div class="flex items-center _c59 gap-4 md:text-[16px] text-sm md:mt-3 mt-4">
                 <p class="full_flex gap-1 cursor-pointer">
-                  <img @click="usePost.setLike(i.id)" v-show="i.is_liked" src="@/assets/svg/like_active.svg" alt="" />
-                  <img @click="usePost.setLike(i.id)" v-show="!i.is_liked" src="@/assets/svg/community/like.svg"
-                    alt="" />
+                  <img class="not_open" @click="usePost.setLike(i.id)" v-show="i.is_liked"
+                    src="@/assets/svg/like_active.svg" alt="" />
+                  <img class="not_open" @click="usePost.setLike(i.id)" v-show="!i.is_liked"
+                    src="@/assets/svg/community/like.svg" alt="" />
                   <span @click="handleLikeModal('Likes', i)">
                     {{ i.like_count }}
                   </span>
@@ -278,15 +280,6 @@
               </div>
             </div>
           </div>
-          <!-- <div
-            class=""
-          >
-            <img
-              class="max-w-[140px] max-h-[140px] max-w-fit object-contain"
-              src="@/assets/image/photo.svg"
-              alt=""
-            />
-          </div> -->
           <ul v-if="i.media_files" class="flex gap-5 absolute bottom-0 right-0 min-w-fit max-w-[400px] overflow-hidden">
             <li class="relative imagelabel">
               <img v-if="i.media_files.type == 'image'" class="max-w-[140px] max-h-[140px] rounded-tl-xl object-contain"
@@ -315,7 +308,7 @@
     <!-- card info -->
     <el-dialog v-model="usePost.store.card_info" width="780" align-center
       class="bg-opacity-50 !rounded-lg p-5 overflow-hidden">
-      <div v-if="usePost.modal.change_category
+      <div v-loading="isLoading.isLoadingType('getPostById')" v-if="usePost.modal.change_category
     ? true
     : usePost.modal.edit
       ? false
@@ -341,7 +334,8 @@
                 {{ usePost.store.postData.user?.surname }}
               </h1>
               <p class="text-xs">
-                {{ formatDate(usePost.store.postData.created_at) }} in <span class="_c59">Announcements</span>
+                {{ formatDate(usePost.store.postData.created_at) }} in <span class="_c59">{{
+    usePost.store.postData.category_name }}</span>
               </p>
             </div>
           </div>
@@ -407,14 +401,22 @@
         </div>
         <div class="w-full mt-4 mb-5">
           <ul v-if="usePost.store.postData.media_files?.length" class="flex gap-5 min-w-fit w-full overflow-x-auto">
-            <li class="relative imagelabel min-w-fit" v-for="(i, index) in usePost.store.postData.media_files">
+            <li @click="handleMediaShow(usePost.store.postData.media_files, index)"
+              class="relative imagelabel min-w-fit" v-for="(i, index) in usePost.store.postData.media_files">
               <img v-if="i.type == 'image'" class="max-h-[210px] min-h-[210px] rounded-[12px] object-cover" :src="i.url"
                 alt="" />
-              <iframe v-else-if="i.type == 'youtube' ||
+              <div v-else-if="i.type == 'youtube' ||
     i.type == 'wistia' ||
     i.type == 'vimeo' ||
     i.type == 'loom'
-    " class="max-h-[210px] min-h-[210px] rounded-[12px] object-cover text-[#0000]" :src="i.url"></iframe>
+    " class="relative">
+                <iframe class="max-h-[210px] min-h-[210px] rounded-[12px] object-cover text-[#0000]"
+                  :src="i.url"></iframe>
+                <div
+                  class="absolute top-0 min-w-full h-full cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex">
+                  <img src="@/assets/svg/video_btn.svg" alt="" />
+                </div>
+              </div>
             </li>
           </ul>
         </div>
@@ -434,7 +436,7 @@
             <p class="text-sm flex flex-wrap items-start gap-1 leading-4">
               <span class="font-semibold">Xayot Sharapov</span>
               <span class="_ca1">posting in</span>
-              <span class="font-semibold _c2a md:w-auto w-full">Skool community</span>
+              <span class="font-semibold _c2a md:w-auto w-full">{{ usePost.store.postData.category_name }}</span>
             </p>
           </div>
           <div class="md:p-5 p-3 space-y-5 bg-white">
@@ -468,7 +470,7 @@
     ">
                 Add option
               </button>
-              <p class="mt-2">
+              <p v-if="usePost.store.userIsVoted" class="mt-2">
                 You cannot edit or remove a poll that already has votes
               </p>
             </div>
@@ -539,9 +541,6 @@
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
-              <div class="icon full_flex h-10 w-10">
-                <img src="@/assets/svg/textarea/gif.svg" alt="" />
-              </div>
             </div>
             <div class="flex items-center justify-between">
               <el-dropdown @command="(command) => {
@@ -598,8 +597,8 @@
         </p>
       </div>
       <!-- comment -->
-      <section class="mt-4">
-        <div v-for="comment in usePost.store.postData.comments"
+      <section v-if="!usePost.modal.edit" class="mt-4">
+        <div v-for="(comment, c_index) in usePost.store.postData.comments"
           class="flex items-start gap-4 border-y border-[#F0F5FA] w-full py-5">
           <div class="relative max-w-fit">
             <img class="h-10 w-10 min-w-[40px] min-h-[40px] rounded-full object-cover" :src="comment.user.image"
@@ -613,21 +612,25 @@
               </div>
             </div>
           </div>
+
           <div class="w-full">
-            <div class="flex items-center justify-between">
+            <div
+              v-if="usePost.store.editComment[0] != comment.id || usePost.store.editComment[1] != comment.user.id || usePost.store.editComment[2] != c_index"
+              class="flex items-center justify-between">
               <div class="space-y-[2px] h-10">
                 <h1 class="font-semibold text-[16px]">
                   {{ comment.user.name }} {{ comment.user.surname }}
                 </h1>
                 <p class="text-xs _ca1">{{ formatDate(comment.created_at) }}</p>
               </div>
-              <el-dropdown placement="bottom-end" class="dropdown" trigger="click">
+              <el-dropdown v-if="isLoading.user.id == comment.user.id" placement="bottom-end" class="dropdown"
+                trigger="click">
                 <button class="full_flex comment_menu r_8 w-9 h-9">
                   <img src="@/assets/svg/three_dot.svg" alt="" />
                 </button>
                 <template #dropdown>
                   <el-dropdown-menu class="min-w-[140px] dropdown_shadow">
-                    <el-dropdown-item @click="editPostData"
+                    <el-dropdown-item @click="editComment(comment, c_index)"
                       class="!text-xs font-medium h-10 px-3">Edit</el-dropdown-item>
                     <el-dropdown-item @click="deleteReply(comment.id)" usePost.store.comment_id="id"
                       class="!text-xs font-medium h-10 px-3">Delete</el-dropdown-item>
@@ -640,26 +643,32 @@
               </el-dropdown>
             </div>
             <div class="space-y-3 mt-3">
-              <div class="space-y-3">
+              <div
+                v-if="usePost.store.editComment[0] != comment.id || usePost.store.editComment[1] != comment.user.id || usePost.store.editComment[2] != c_index"
+                class="space-y-3">
                 <p v-html="comment.comment" class="text-sm leading-4 text-black"></p>
                 <div class="w-full mt-4 mb-5">
                   <ul v-if="comment.media_files?.length" class="flex gap-5 min-w-fit w-full overflow-x-auto">
-                    <li class="relative imagelabel min-w-fit" v-for="(i, index) in comment.media_files">
+                    <li @click="handleMediaShow(comment.media_files, index)" class="relative imagelabel min-w-fit" v-for="(i, index) in comment.media_files">
                       <img v-if="i.type == 'image'" class="max-h-[40px] min-h-[40px] r_8 object-cover" :src="i.url"
                         alt="" />
-                      <iframe v-else-if="i.type == 'youtube' ||
+                        <div v-else-if="i.type == 'youtube' ||
     i.type == 'wistia' ||
     i.type == 'vimeo' ||
     i.type == 'loom'
-    " class="max-h-[40px] min-h-[40px] r_8 max-w-[40px] object-cover text-[#0000]" :src="i.url"></iframe>
+    " class="relative">
+<iframe class="max-h-[40px] min-h-[40px] r_8 max-w-[40px] object-cover text-[#0000]" :src="i.url"></iframe>                <div
+                  class="absolute top-0 min-w-full h-full cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex">
+                  <img src="@/assets/svg/video_btn.svg" alt="" />
+                </div>
+              </div>
                     </li>
-                    <div class="relative max-w-fit">
-                      <img class="max-h-[40px] r_8" src="@/assets/image/photo.svg" alt="" />
-                      <img class="absolute z-10 tblr m-auto" src="@/assets/svg/gif.svg" alt="" />
-                    </div>
                   </ul>
                 </div>
               </div>
+              <WriteInlineComment
+                v-if="usePost.store.editComment[0] == comment.id && usePost.store.editComment[1] == comment.user.id && usePost.store.editComment[2] == c_index"
+                class="w-full" />
               <div class="flex items-center gap-3 h-[18px] text-xs">
                 <p class="full_flex gap-1 _c2a">
                   <img class="cursor-pointer" @click="usePost.setLike(comment.id, 'comment', 1)"
@@ -668,7 +677,9 @@
                     v-show="!comment.is_liked" src="@/assets/svg/community/like.svg" alt="" />
                   {{ comment.like_count }}
                 </p>
-                <button @click="usePost.store.comment_id = [comment.id, 1, comment.user.username, comment.user.id]"
+                <button @click="() => {usePost.store.comment_id = [comment.id, 1, comment.user.username, comment.user.id]; 
+    usePost.inline_comment.files = [];
+                }"
                   class="_ca1 font-semibold">
                   Reply
                 </button>
@@ -680,7 +691,7 @@
                 <WriteInlineComment class="w-full" />
               </div>
             </div>
-            <div v-for="reply in comment.replies" class="flex items-start w-full gap-4 mt-5">
+            <div v-for="(reply, r_index) in comment.replies" class="flex items-start w-full gap-4 mt-5">
               <div class="relative max-w-fit">
                 <img class="h-6 w-6 min-w-[24px] min-h-[24px] rounded-full object-cover" :src="reply.user?.image"
                   alt="" />
@@ -694,7 +705,9 @@
                 </div>
               </div>
               <div class="w-full">
-                <div class="flex items-center justify-between">
+                <div
+                  v-if="usePost.store.editComment[0] != reply.id || usePost.store.editComment[1] != reply.user.id || usePost.store.editComment[2] != r_index"
+                  class="flex items-center justify-between">
                   <div class="space-y-[2px] h-10">
                     <h1 class="font-semibold text-[16px]">
                       {{ comment.user.name }} {{ comment.user.surname }}
@@ -707,7 +720,7 @@
                     </button>
                     <template #dropdown>
                       <el-dropdown-menu class="min-w-[140px] dropdown_shadow">
-                        <el-dropdown-item @click="editPostData"
+                        <el-dropdown-item @click="editComment(reply, r_index)"
                           class="!text-xs font-medium h-10 px-3">Edit</el-dropdown-item>
                         <el-dropdown-item @click="deleteReply(reply.id, comment.id)" usePost.store.comment_id="id"
                           class="!text-xs font-medium h-10 px-3">Delete</el-dropdown-item>
@@ -720,7 +733,9 @@
                   </el-dropdown>
                 </div>
                 <div class="space-y-3 mt-4">
-                  <div class="flex gap-1">
+                  <div
+                    v-if="usePost.store.editComment[0] != reply.id || usePost.store.editComment[1] != reply.user.id || usePost.store.editComment[2] != r_index"
+                    class="flex gap-1">
                     <el-dropdown placement="top-start" class="dropdown">
                       <div>
                         <p v-if="reply.reply_user?.username" class="_c2a border-b border-[#2A85FF]">@{{
@@ -800,6 +815,28 @@
                       <span v-html="reply.comment"></span>
                     </p>
                   </div>
+                  <ul
+                    v-if="reply.media_files?.length && usePost.store.editComment[0] != reply.id || usePost.store.editComment[1] != reply.user.id || usePost.store.editComment[2] != r_index"
+                    class="flex gap-5 min-w-fit w-full overflow-x-auto">
+                    <li  @click="handleMediaShow(reply.media_files, index)" class="relative imagelabel min-w-fit" v-for="(i, index) in reply.media_files">
+                      <img v-if="i.type == 'image'" class="max-h-[40px] min-h-[40px] r_8 object-cover" :src="i.url"
+                        alt="" />
+                        <div v-else-if="i.type == 'youtube' ||
+    i.type == 'wistia' ||
+    i.type == 'vimeo' ||
+    i.type == 'loom'
+    " class="relative">
+                <iframe class="max-h-[40px] min-h-[40px] r_8 max-w-[40px] object-cover text-[#0000]" :src="i.url"></iframe>
+                <div
+                  class="absolute top-0 min-w-full h-full cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex">
+                  <img src="@/assets/svg/video_btn.svg" alt="" />
+                </div>
+              </div>
+            </li>
+                  </ul>
+                  <WriteInlineComment
+                    v-if="usePost.store.editComment[0] == reply.id && usePost.store.editComment[1] == reply.user.id && usePost.store.editComment[2] == r_index"
+                    class="w-full -mt-4" />
                   <div class="flex items-center gap-3 h-[18px] text-xs">
                     <p class="full_flex gap-1 _ca1">
                       <img class="cursor-pointer" @click="usePost.setLike(reply.id, 'comment', 2)"
@@ -808,13 +845,16 @@
                         v-show="!reply.is_liked" src="@/assets/svg/community/like.svg" alt="" />
                       {{ reply.like_count }}
                     </p>
-                    <button @click="usePost.store.comment_id = [comment.id, 2, reply.user.username, reply.user.id]"
+                    <button
+                      @click="() => {usePost.store.comment_id = [comment.id, 2, reply.user.username, reply.user.id, reply.id]; 
+    usePost.inline_comment.files = [];
+                      }"
                       class="_ca1 font-semibold">
                       Reply
                     </button>
                   </div>
                   <div v-if="usePost.store.comment_id[0] == comment.id &&
-    usePost.store.comment_id[1] == 2
+    usePost.store.comment_id[1] == 2 && reply.id == usePost.store.comment_id[4]
     " class="flex pt-1 md:gap-[14px] gap-[10px] md:ml-0 -ml-[92px]">
                     <img class="h-6 w-6 mt-1 object-cover rounded-full" :src="isLoading.user.image" alt="" />
                     <WriteInlineComment />
@@ -827,7 +867,7 @@
       </section>
 
       <!-- writing input -->
-      <div class="b_cf0f relative z-50 -mx-5 -mb-7 overflow-hidden">
+      <div v-if="!usePost.modal.edit" class="b_cf0f relative z-50 -mx-5 -mb-7 overflow-hidden">
         <div class="flex items-start py-3 px-5 gap-[14px]" :class="addVideo.store.files.length ? '' : 'h-[112px]'">
           <img class="h-10 w-10 object-cover rounded-full" :src="isLoading.user.image" alt="" />
           <div class="w-full">
@@ -838,7 +878,8 @@
             <ul v-if="addVideo.store.files.length" class="flex gap-5 py-5 overflow-x-auto">
               <draggable :list="addVideo.store.files" group="grid" :animation="200"
                 class="flex gap-4 overflow-hidden overflow-x-auto min-w-fit">
-                <li class="relative imagelabel" v-for="(i, index) in addVideo.store.files">
+                <li class="relative imagelabel"
+                  v-for="(i, index) in addVideo.store.files">
                   <button @click="addVideo.deleteImage(index)" type="button"
                     class="absolute deleteimage z-10 bg-white !hidden top-2 right-2 rounded-full w-7 h-7 full_flex border p-2">
                     <img src="@/assets/svg/x.svg" alt="" />
@@ -892,9 +933,6 @@
                     </el-dropdown-menu>
                   </template>
                 </el-dropdown>
-                <div class="icon full_flex h-10 w-10">
-                  <img src="@/assets/svg/textarea/gif_black.svg" alt="" />
-                </div>
               </div>
               <div class="flex gap-3 font-semibold">
                 <button @click="usePost.store.card_info = false" class="uppercase h-10 px-6 rounded-lg _ca1">
@@ -1082,6 +1120,55 @@
 
     <ModalAddVideo />
     <ModalAddLink />
+
+    <!-- post media modal -->
+    <el-dialog v-model="store.postMediaModal"
+      class="!p-0 !bg-transparent w-full fixed top-0 !shadow-none bg-black bg-opacity-10 full_flex" style="width: 100%;"
+      align-center>
+      <!-- {{store.postMediaList}} -->
+      <div class="min-w-[80vw] md:min-h-[80vh] full_flex overflow-hidden md:max-h-[80vh] md:max-w-[80vw]">
+        <div class="postmainSlider bg-black bg-opacity-10 max-w-[80vw] duration-500 flex items-center w-full">
+          <div class="full_flex min-w-[100%] min-h-full" v-for="(media, index) in store.postMediaList">
+            <div class="relative w-full imagelabel full_flex">
+              <img v-if="media.type == 'image'" class="full_flex" :src="media.url" alt="" />
+              <div v-else-if="media.type == 'video'">
+                <video class="md:max-h-[80vh] max-w-[80vw] min-w-full md:min-h-[80vh] min-h-[50vh]" controls>
+                  <source :src="media.url" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div class="w-full full_flex">
+              <iframe v-else-if="media.type == 'youtube' ||
+    media.type == 'wistia' ||
+    media.type == 'vimeo' ||
+    media.type == 'loom'
+    " class="md:max-h-[80vh] max-w-[80vw] min-w-full md:min-h-[80vh] min-h-[50vh]" :src="media.url"></iframe>
+            </div>
+            <!-- <div v-if="post.type == 'image'" class="full_flex">
+              <img :src="post.link" />
+            </div>
+            <div v-else class="relative h-full w-full">
+              <iframe ref="videoIframe" id="video_control"
+                class="md:max-h-[80vh] max-w-[80vw] min-w-full md:min-h-[80vh] min-h-[50vh]" :src="post.link">
+              </iframe>
+            </div> -->
+          </div>
+        </div>
+      </div>
+
+      <!-- buttons -->
+      <button @click="() => handleMediaSlide('plus')"
+        class="bg-black z-50 bg-opacity-20 backdrop-blur-lg absolute sm:right-5 right-3 top-0 bottom-0 my-auto full_flex rounded-full w-12 h-12 border border-white">
+        <img src="@/assets/svg/slide_arrow.svg" alt="" />
+      </button>
+      <button @click="() => handleMediaSlide('minus')"
+        class="bg-black z-50 bg-opacity-20 backdrop-blur-lg absolute sm:left-5 left-3 top-0 bottom-0 my-auto full_flex rotate-180 rounded-full w-12 h-12 border border-white">
+        <img src="@/assets/svg/slide_arrow.svg" alt="" />
+      </button>
+      <button @click="store.postMediaModal = false"
+        class="bg-black z-50 bg-opacity-20 backdrop-blur-lg absolute sm:right-5 right-3 sm:top-5 top-3 my-auto full_flex rotate-180 rounded-full w-12 h-12 border border-white">
+        <img src="@/assets/svg/slide_x.svg" alt="" />
+      </button>
+    </el-dialog>
   </main>
 </template>
 
@@ -1147,7 +1234,10 @@ const store = reactive({
   is_emoji: false,
   media_index: "",
   see_more: false,
+  postMediaModal: false,
+  postMediaList: [],
   activeCollapse: 'open',
+  slideStep: 0,
 });
 
 usePost.store.filter.filter = router.currentRoute.value.query.filter;
@@ -1193,6 +1283,16 @@ const deletePostPoll = {
   title: "Remove poll?",
   description: "Are you sure you want to remove this poll",
 };
+
+function handleMediaShow(media, index) {
+  store.postMediaList = media;
+  store.postMediaModal = true;
+  store.slideStep = index;
+  setTimeout(() => {
+    const image = document.querySelector(".postmainSlider");
+    image.style.transform = `translateX(-${store.slideStep * 100}%)`;
+  }, 100)
+}
 
 function routeToRequests() {
   const username = router.currentRoute.value.params.community;
@@ -1272,14 +1372,14 @@ function editPostData(type) {
   for (let i in usePost.create) {
     console.log(i);
     if (i != 'polls') {
-      usePost.create[i] = usePost.store.postData[i] ? JSON.parse(JSON.stringify(usePost.store.postData[i])) : null;
+      console.log(i)
+      usePost.create[i] = usePost.store.postData[i];
     }
   }
-  console.log(usePost.create);
   usePost.create.video_link = [];
   let t = 0;
   usePost.store.polls = {};
-  for (let i of usePost.store.postData.polls) {
+  for (let i of polls) {
     usePost.store.polls[`option${t}`] = i.option;
     t++;
   }
@@ -1291,7 +1391,8 @@ function editPostData(type) {
   }
   for (let category of usePost.store.categories) {
     console.log(category);
-    if (usePost.store.postData.category_id == category.id) {
+    console.log(usePost.store.postData)
+    if (usePost.store.postData.category_name == category.name) {
       usePost.store.category_id = category;
     }
   }
@@ -1377,6 +1478,35 @@ function routeToCalendar() {
   router.push(`/${username}/calendar?eid=${useEvent.store.fistevent.id}`)
 }
 
+function handleMediaSlide(type) {
+  if (type == "plus") {
+        if (store.slideStep < store.postMediaList?.length - 1) {
+          store.slideStep += 1;
+        }
+      } else {
+        if (store.slideStep > 0) {
+          store.slideStep -= 1;
+        }
+      }
+}
+
+function editComment(comment, c_index) {
+  usePost.inline_comment.comment = comment.comment;
+  usePost.store.editComment = [comment.id, comment.user.id, c_index];
+  usePost.inline_comment.files = [];
+  console.log(comment.media_files);
+  for (let i of comment.media_files) {
+    usePost.inline_comment.files.push({
+      id: i.id,
+      url: i.url,
+      file: i.url,
+      type: i.type,
+      is_new: false,
+    });
+  }
+  console.log(usePost.inline_comment.files)
+}
+
 function handleChangeCategory(item) {
   console.log(usePost.create.category_id);
   for (let i of usePost.store.categories) {
@@ -1389,6 +1519,13 @@ function handleChangeCategory(item) {
 }
 
 function showPostData(id) {
+  usePost.store.card_info = true;
+  usePost.store.post_id = id;
+  usePost.getPostById();
+}
+
+function handleClick(e, id) {
+  if (e.target.classList.contains('not_open')) return;
   usePost.store.card_info = true;
   usePost.store.post_id = id;
   usePost.getPostById();
@@ -1436,19 +1573,6 @@ function handleCategory(id, type) {
   usePost.get_posts();
 }
 
-function handlePhotoImage(e) {
-  const file = e.target.files[0];
-  const url = URL.createObjectURL(file);
-  document.getElementById("add_image").value = "";
-  usePost.store.files_url.push(url);
-  usePost.create.files.push(file);
-}
-
-function deleteImage(index) {
-  usePost.store.files_url.splice(index, 1);
-  usePost.create.files.splice(index, 1);
-}
-
 const load = () => {
   isLoading.store.pagination_two.current_page += 1;
   if (usePost.store.likeModalType == 'Votes') {
@@ -1494,6 +1618,71 @@ watch(
     }
   }
 );
+
+watch(() => usePost.modal.edit, () => {
+  if (!usePost.modal.edit) {
+    addVideo.store.files = [];
+  }
+})
+
+watch(() => usePost.store.comment_id, () => {
+  try {
+    usePost.store.editComment[0] = -1
+  } catch (_) {
+    usePost.store.editComment = [];
+    usePost.store.editComment[0] = -1
+  }
+})
+
+watch(() => usePost.modal.edit, () => {
+  if (!usePost.store.edit) {
+    usePost.getPostById();
+  }
+})
+
+watch(() => usePost.store.editComment, () => {
+  try {
+    usePost.store.comment_id[0] = -1
+  } catch (_) {
+    usePost.store.comment_id = []
+    usePost.store.comment_id[0] = -1
+  }
+})
+
+
+watch(
+  () => store.slideStep,
+  () => {
+    try {
+      const image = document.querySelector(".postmainSlider");
+      image.style.transform = `translateX(-${store.slideStep * 100}%)`;
+    } catch (error) { }
+  }
+);
+
+
+onBeforeMount(() => {
+  document.addEventListener("keydown", function (event) {
+    // Check if Ctrl key is pressed and the key pressed along with it
+    if (store.postMediaModal) {
+      if (event.key == "ArrowRight") {
+        if (store.slideStep < store.postMediaList?.length - 1) {
+          store.slideStep += 1;
+        }
+      } else if (event.key == "ArrowLeft") {
+        if (store.slideStep > 0) {
+          store.slideStep -= 1;
+        }
+      }
+    }
+  });
+});
+
+onUnmounted(() => {
+  try {
+    document.removeEventListener("keydown");
+  } catch (_) { }
+})
 </script>
 
 <style lang="scss" scoped>

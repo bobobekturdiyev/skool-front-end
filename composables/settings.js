@@ -2,10 +2,10 @@ export const settings_sidebar = [
   "Profile",
   "Account",
   "Password",
-  "Notifications",
-  "Chat",
+  // "Notifications",
+  // "Chat",
   "Communities",
-  "Referrals",
+  // "Referrals",
   "Payment methods",
   "Payment history",
 ];

@@ -55,6 +55,14 @@ export const useEventStore = defineStore("event", () => {
     // remind: false,
   });
 
+  function clearData() {
+    for (let i in create) {
+      create[i] = "";
+    }
+    isLoading.store.croppedImage = "";
+    isLoading.store.croppedFile = ""
+  }
+
   async function get_event() {
     const group_username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
@@ -206,15 +214,16 @@ export const useEventStore = defineStore("event", () => {
           if (create.repeat_number) {
             formData.append(i, create[i]);
           }
-        } else {
+        } else if(create[i]) {
           formData.append(i, create[i]);
         }
       }
     }
-
     if (!create.image) {
       formData.delete("image");
       formData.append("deleted", "deleted");
+    } else if (isLoading.isURL(create.image)) {
+      formData.delete("image");
     }
 
     for (let [key, value] of formData.entries()) {
@@ -283,5 +292,6 @@ export const useEventStore = defineStore("event", () => {
     delete_event,
     setPagination,
     firstevent,
+    clearData,
   };
 });

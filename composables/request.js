@@ -31,9 +31,10 @@ export const useApiRequest = () => {
             resolve(res);
           })
           .catch((err) => {
+            console.log(err);
             if (err.response.status == 401) {
               isLoading.store.isLogin = false;
-              localStorage.removeItem("token");
+              // localStorage.removeItem("token");
             }
             isLoading.store.loadingTypes = [];
             isLoading.store.pagination.total = 0;

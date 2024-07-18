@@ -56,6 +56,12 @@ function handleLink() {
     useClassroom.local_store.is_url = true;
   }
 }
+
+watch(() => isLoading.modal.add_link, () => {
+  if (!isLoading.modal.add_link) {
+    isLoading.store.is_inline = false;
+  }
+})
 </script>
 
 <style lang="scss" scoped></style>

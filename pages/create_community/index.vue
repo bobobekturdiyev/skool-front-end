@@ -77,9 +77,6 @@ import { useGroupStore, usePaymentStore, useLoadingStore } from "@/store"
 const isLoading = useLoadingStore();
 const usePayment = usePaymentStore();
 const useGroup = useGroupStore();
-function handleSubmit(e) {
-  console.log(e);
-}
 </script>
 
 <style lang="scss" scoped></style>

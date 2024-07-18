@@ -12,7 +12,7 @@
           <div class="w-full overflow-hidden r_16">
             <div v-if="useGroup.store.group_by_username.medias?.length"
               @click="() => { store.slideModal = true; useGroup.store.slideStep2 = useGroup.store.slideStep }"
-              class="mainSlider cursor-pointer duration-500 lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] flex items-center w-full r_16">
+              class="aboutmainSlider cursor-pointer duration-500 lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] flex items-center w-full r_16">
               <div class="min-w-full" v-for="(post, index) in useGroup.store.group_by_username.medias">
                 <div v-if="post.type == 'image'"
                   class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] w-full min-w-[100%] object-cover">
@@ -20,8 +20,7 @@
                     @click="useGroup.store.slideStep = index" :src="post.link" />
                 </div>
                 <div v-else @click="useGroup.store.slideStep = index" class="relative">
-                  <iframe class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] min-w-full"
-                    :src="embedLink(post.link)">
+                  <iframe class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] min-w-full" :src="post.link">
                   </iframe>
                   <div
                     class="absolute top-0 min-w-full h-full cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex">
@@ -48,21 +47,36 @@
                     :class="role_ac.includes(useGroup.store.group_by_username.type) ? '' : '!hidden'">
                     <img class="m-auto" src="@/assets/svg/x.svg" alt="" />
                   </button>
+                  <!-- {{post.type}} -->
                   <div v-if="post.type == 'image'">
                     <img @click="useGroup.store.slideStep = index"
                       class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px] h-[56px] cursor-pointer object-cover rounded-xl"
                       :src="post.link" />
                   </div>
-                  <div v-else @click="useGroup.store.slideStep = index" class="relative">
+                  <div v-else-if="post.type == 'video'">
+                    <video
+                      class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px] cursor-pointer object-cover rounded-xl"
+                      controls>
+                      <source :src="post.link" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                  <iframe v-else-if="post.type == 'youtube' ||
+      post.type == 'wistia' ||
+      post.type == 'vimeo' ||
+      post.type == 'loom'
+      " :src="post.link"
+                    class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px] cursor-pointer object-cover rounded-xl"></iframe>
+                  <!-- <div v-else @click="useGroup.store.slideStep = index" class="relative">
                     <iframe
                       class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px] cursor-pointer object-cover rounded-xl"
-                      :src="embedLink(post.link)">
+                      :src="post.link">
                     </iframe>
                     <div
                       class="absolute top-0 min-w-full h-full cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex">
                       <img src="@/assets/svg/video_btn.svg" alt="" />
                     </div>
-                  </div>
+                  </div> -->
                 </div>
               </template>
             </draggable>
@@ -75,13 +89,14 @@
           </div>
           <div class="flex flex-wrap gap-4 text-sm font-medium whitespace-nowrap">
             <p class="full_flex h-9 px-3 gap-1 rounded-lg bg-[#F2F2F2]">
-              <img v-if="useGroup.store.group_by_username.group_type == 'private'" src="@/assets/svg/community/private.svg" alt="" />
+              <img v-if="useGroup.store.group_by_username.group_type == 'private'"
+                src="@/assets/svg/community/private.svg" alt="" />
               <img v-else src="@/assets/svg/members/public.svg" alt="" />
               {{ useGroup.store.group_by_username.group_type == "private" ? "Private group" : "Public group" }}
             </p>
             <p class="full_flex h-9 px-3 gap-1 rounded-lg bg-[#F2F2F2]">
               <img src="@/assets/svg/community/members.svg" alt="" />
-              {{useGroup.store.group_by_username.members_count}} members
+              {{ useGroup.store.group_by_username.members_count }} members
             </p>
             <p class="full_flex h-9 px-3 gap-1 rounded-lg bg-[#F2F2F2]">
               <img src="@/assets/svg/community/paid.svg" alt="" />
@@ -114,8 +129,7 @@
                 cancel
               </button>
               <button v-loading="isLoading.isLoadingType('changeGroupDescription')"
-                class="_c07 b_cbc font-semibold px-6 r_8 uppercase"
-                @click="useGroup.updateGroupDescription">
+                class="_c07 b_cbc font-semibold px-6 r_8 uppercase" @click="useGroup.updateGroupDescription">
                 Save
               </button>
             </div>
@@ -131,7 +145,7 @@
       class="!p-0 !bg-transparent w-full fixed top-0 !shadow-none bg-black bg-opacity-10 full_flex" style="width: 100%;"
       align-center>
       <div class="min-w-[80vw] md:min-h-[80vh] full_flex overflow-hidden md:max-h-[80vh] md:max-w-[80vw]">
-        <div class="mainSlider2 bg-black bg-opacity-10 max-w-[80vw] duration-500 flex items-center w-full">
+        <div class="aboutmainSlider2 bg-black bg-opacity-10 max-w-[80vw] duration-500 flex items-center w-full">
           <div class="full_flex min-w-[100%] min-h-full"
             v-for="(post, index) in useGroup.store.group_by_username.medias">
             <div v-if="post.type == 'image'" class="full_flex">
@@ -139,8 +153,7 @@
             </div>
             <div v-else class="relative h-full w-full">
               <iframe ref="videoIframe" id="video_control"
-                class="md:max-h-[80vh] max-w-[80vw] min-w-full md:min-h-[80vh] min-h-[50vh]"
-                :src="embedLink(post.link)">
+                class="md:max-h-[80vh] max-w-[80vw] min-w-full md:min-h-[80vh] min-h-[50vh]" :src="post.link">
               </iframe>
             </div>
           </div>
@@ -240,7 +253,7 @@
 
     <!-- add media -->
     <el-dialog v-model="useGroup.store.add_media" width="400" align-center class="bg-opacity-50 !rounded-lg py-7 px-6">
-      <form @submit.prevent="useGroup.create_media">
+      <form @submit.prevent="handleVideoLink">
         <h1 class="text-2xl font-semibold">Add media</h1>
         <p class="mt-6 font-medium">
           Upload an image (1400 x 790 recommended).
@@ -281,12 +294,18 @@ import { useGroupStore, useLoadingStore, usePaymentStore } from "@/store";
 import { VueDraggableNext as draggable } from 'vue-draggable-next';
 const { start, finish } = useLoadingIndicator();
 const isLoading = useLoadingStore();
+import getVideoId from "get-video-id";
+import urlParser from "js-video-url-parser";
 const useGroup = useGroupStore();
 const usePayment = usePaymentStore();
 isLoading.addLoading("getByUsername");
 const videoIframe = ref("");
 const store = reactive({
   slideModal: false,
+  video_id: "",
+  video_type: "",
+  is_saved: false,
+  videoLink: "",
 });
 isLoading.store.page_name = "calendar";
 
@@ -304,6 +323,22 @@ await useAsyncData("about", async () => {
   await useGroup.groupByUsername();
   finish();
 }, { server: false })
+
+
+const file_types = [
+  "youtu.be",
+  "loom.com",
+  "wistia.com",
+  "vimeo.com",
+  "youtube.com",
+];
+
+const file_urls = {
+  youtube: "https://www.youtube.com/embed/",
+  wistia: "https://fast.wistia.com/embed/iframe/",
+  vimeo: "https://player.vimeo.com/video/",
+  loom: "https://www.loom.com/embed/",
+};
 
 function deleteMedia(id) {
   useGroup.store.media_id = id;
@@ -339,22 +374,96 @@ function handleInput() {
     useGroup.store.description?.slice(0, 1000);
 }
 
-function embedLink(link) {
-  const url = new URL(link);
-  let videoId = '';
-  if (url.hostname === 'youtu.be') {
-    videoId = url.pathname.split('/')[1];
-  } else if (url.hostname === 'www.youtube.com' && url.pathname === '/watch') {
-    videoId = url.searchParams.get('v');
+async function handleVideoLink() {
+  useGroup.store.is_url = !isLoading.isURL(
+    useGroup.media.link
+  );
+  if (!useGroup.store.is_url) {
+    useGroup.store.is_url = await checkYouTubeVideoAvailability(
+      useGroup.media.link
+    );
+    console.log(useGroup.store.is_url)
+    if (!useGroup.store.is_url) {
+      useGroup.media.link = file_urls[store.video_type] + store.video_id
+      useGroup.create_media();
+    }
+  } else {
+    useGroup.store.is_url = true;
   }
+}
 
-  return `https://www.youtube.com/embed/${videoId}`;
+async function checkYouTubeVideoAvailability(videoUrl) {
+  try {
+    let isAviableFile = false;
+    for (let i of file_types) {
+      if (videoUrl.includes(i)) {
+        isAviableFile = true;
+        break;
+      }
+    }
+    let { id, service } = getVideoId(videoUrl);
+    console.log(id, service);
+    store.video_id = id;
+    store.video_type = service;
+    if (videoUrl.includes("wistia")) {
+      store.video_id = extractWistiaVideoId(videoUrl);
+      store.video_type = "wistia";
+    } else if (videoUrl.includes("youtube")) {
+      videoUrl = `https://youtu.be/${id}`;
+    }
+    if (!isAviableFile) {
+      return true;
+    } else if (!videoUrl.includes("loom.com")) {
+      const data = urlParser.parse(videoUrl);
+      console.log(data);
+      if (data != undefined) {
+        return false;
+      }
+      return true;
+    }
+
+    store.video_type = "loom";
+    store.video_id = extractLoomVideoId(videoUrl);
+
+    const response = await axios.get(videoUrl);
+    if (response.status === 200) {
+      return false;
+    } else {
+      return true;
+    }
+  } catch (error) {
+    return true;
+  }
+}
+
+function extractLoomVideoId(url) {
+  const urlParts = url.split("/share/");
+  if (urlParts.length > 1) {
+    const idPart = urlParts[1].split("?")[0]; // This removes any query parameters
+    return idPart;
+  }
+  return null;
+}
+
+function extractWistiaVideoId(url) {
+  const urlParts = url.split("/medias/");
+  if (urlParts.length > 1) {
+    return urlParts[1];
+  }
+  return null;
 }
 
 watch(
   () => store.slideModal,
   () => {
     useGroup.store.slideStep2 = useGroup.store.slideStep;
+
+    if (store.slideModal) {
+      setTimeout(() => {
+        const image = document.querySelector(".aboutmainSlider2");
+        image.style.transform = `translateX(-${useGroup.store.slideStep2 * 100}%)`;
+      }, 100)
+    }
 
     const video = document.getElementById("math_video");
     try {
@@ -367,8 +476,8 @@ watch(
   () => useGroup.store.slideStep,
   () => {
     try {
-      useGroup.store.slideStep2 = useGroup.store.slideStep;
-      const image = document.querySelector(".mainSlider");
+      // useGroup.store.slideStep2 = useGroup.store.slideStep;
+      const image = document.querySelector(".aboutmainSlider");
       image.style.transform = `translateX(-${useGroup.store.slideStep * 100}%)`;
     } catch (error) { }
   }
@@ -382,7 +491,7 @@ watch(
       video.pause();
     } catch (error) { }
     try {
-      const image = document.querySelector(".mainSlider2");
+      const image = document.querySelector(".aboutmainSlider2");
       image.style.transform = `translateX(-${useGroup.store.slideStep2 * 100}%)`;
     } catch (error) { }
   }
@@ -414,6 +523,12 @@ onBeforeMount(() => {
     }
   });
 });
+
+onUnmounted(() => {
+  try {
+    document.removeEventListener("keydown");
+  } catch (_) { }
+})
 
 const ids = [
   {

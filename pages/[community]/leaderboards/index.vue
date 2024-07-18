@@ -2,6 +2,7 @@
   <main class="mt-[10px]">
     <section class="bg-white rounded-xl p-5 pb-[60px]">
       <img
+      v-if="role_ac.includes(useGroup.store.group_by_username.type)"
         @click="isLoading.openDrawer(8)"
         class="mb-4 cursor-pointer"
         src="@/assets/svg/leaderboards/settings.svg"
@@ -259,6 +260,7 @@ import {
   useLoadingStore,
   useGroupStore,
 } from "~/store";
+import { role_ac } from "@/composables";
 
 const useAuth = useAuthStore();
 const useMembers = useMemberStore();

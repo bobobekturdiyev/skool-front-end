@@ -11,7 +11,9 @@
         useAuth.modal.login = false;
         useAuth.modal.forgot_modal = true;
       }">Forgot password?</p>
-      <button :type="isLoading.isLoadingType('logging')?'button':'submit'" v-loading="isLoading.isLoadingType('logging')" class="b_ce0 _ca1 font-semibold w-full rounded-[4px]">
+      <button :type="isLoading.isLoadingType('logging')?'button':'submit'" v-loading="isLoading.isLoadingType('logging')" class="font-semibold w-full rounded-[4px]"
+      :class="useAuth.login.email && useAuth.login.password ? '_c07 b_cbc': 'b_ce0 _ca1'"
+      >
         LOG IN
       </button>
       <!-- store.errorMessage -->
@@ -37,7 +39,7 @@ const isLoading = useLoadingStore();
 
 function register() {
   if (router.currentRoute.value.name == "login") {
-    router.push("/register");
+    router.push("/signup");
   } else {
     useAuth.modal.login = false;
     useAuth.modal.register = true;

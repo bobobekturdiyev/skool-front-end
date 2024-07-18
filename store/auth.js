@@ -54,6 +54,9 @@ export const useAuthStore = defineStore("auth", () => {
           isLoading.store.isLogin = true;
           modal.login = false;
           store.errorMessage = "";
+          if(router.currentRoute.value.name == "login") {
+            router.push('/');
+          }
         } else {
           store.errorMessage = res.data.message;
         }

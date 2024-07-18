@@ -5,6 +5,7 @@ import axios from "axios";
 export const useAddVideoStore = defineStore("addvideo", () => {
   const usePost = usePostStore();
   const useClassroom = useClassroomStore();
+  const isLoading = useLoadingStore();
 
   const store = reactive({
     files: [],
@@ -13,7 +14,6 @@ export const useAddVideoStore = defineStore("addvideo", () => {
 
   function handleImage(e) {
     const file = e.target.files[0];
-    console.log(file);
     const url = URL.createObjectURL(file);
     let type = file.type.split("/")[0];
     store.files.push({ url, file, type, is_new: true });
@@ -29,7 +29,7 @@ export const useAddVideoStore = defineStore("addvideo", () => {
   }
 
   function deleteImage(index) {
-    if (usePost.store.writecomment_type == "inline") {
+    if (isLoading.store.is_inline) {
       if (usePost.inline_comment.files[index]?.is_new) {
         usePost.inline_comment.files.splice(index, 1);
         usePost.modal.delete = false;
@@ -38,15 +38,45 @@ export const useAddVideoStore = defineStore("addvideo", () => {
         usePost.deleteMediaFile(index);
       }
     } else {
-      if (store.files[index]?.is_new) {
-        store.files.splice(index, 1);
-        usePost.modal.delete = false;
+      if (usePost.store.writecomment_type == "inline") {
+        if (usePost.inline_comment.files[index]?.is_new) {
+          usePost.inline_comment.files.splice(index, 1);
+          usePost.modal.delete = false;
+        } else {
+          usePost.store.media_id = usePost.inline_comment.files[index].id;
+          usePost.deleteMediaFile(index);
+        }
       } else {
-        usePost.store.media_id = store.files[index].id;
-        usePost.deleteMediaFile(index);
+        if (store.files[index]?.is_new) {
+          store.files.splice(index, 1);
+          usePost.modal.delete = false;
+        } else {
+          usePost.store.media_id = store.files[index].id;
+          usePost.deleteMediaFile(index);
+        }
       }
     }
   }
+
+  // function deleteInlineImage(index) {
+  //   if (usePost.store.writecomment_type == "inline") {
+  //     if (usePost.inline_comment.files[index]?.is_new) {
+  //       usePost.inline_comment.files.splice(index, 1);
+  //       usePost.modal.delete = false;
+  //     } else {
+  //       usePost.store.media_id = usePost.inline_comment.files[index].id;
+  //       usePost.deleteMediaFile(index);
+  //     }
+  //   } else {
+  //     if (store.files[index]?.is_new) {
+  //       store.files.splice(index, 1);
+  //       usePost.modal.delete = false;
+  //     } else {
+  //       usePost.store.media_id = store.files[index].id;
+  //       usePost.deleteMediaFile(index);
+  //     }
+  //   }
+  // }
 
   function onSelectEmoji(emoji) {
     if (usePost.store.writecomment_type == "inline") {
@@ -58,7 +88,7 @@ export const useAddVideoStore = defineStore("addvideo", () => {
 
   function deletePoll(poll_name, index) {
     console.log(index);
-    console.log(poll_name)
+    console.log(poll_name);
     // console.log(usePost.store.postData.polls[index]);
     if (index) {
       if (usePost.store.postData.polls[index]?.id) {
@@ -67,7 +97,7 @@ export const useAddVideoStore = defineStore("addvideo", () => {
       }
       usePost.store.postData.polls.splice(index, 1);
     }
-    console.log(usePost.store.polls)
+    console.log(usePost.store.polls);
     delete usePost.store.polls[poll_name];
   }
 
@@ -103,7 +133,7 @@ export const useAddVideoStore = defineStore("addvideo", () => {
   }
 
   function handleSubmit() {
-    console.log("Hi")
+    console.log("Hi");
     if (usePost.store.writecomment_type == "inline") {
       usePost.write_comment();
     } else {

@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { useClassroomStore, useLoadingStore, useAddVideoStore } from "~/store";
+import { useClassroomStore, useLoadingStore, useAddVideoStore,usePostStore } from "~/store";
 import youtubeUrl from "youtube-url";
 import getVideoId from "get-video-id";
 import urlParser from "js-video-url-parser";
@@ -55,6 +55,7 @@ const useClassroom = useClassroomStore();
 import axios from "axios";
 const isLoading = useLoadingStore();
 const addVideo = useAddVideoStore();
+const usePost = usePostStore();
 
 const store = reactive({
   video_id: "",
@@ -92,14 +93,24 @@ async function handleVideoLink() {
     );
     console.log(useClassroom.local_store.is_url);
     if (!useClassroom.local_store.is_url) {
-      addVideo.store.files.push({
-        url: file_urls[store.video_type] + store.video_id,
-        file: file_urls[store.video_type] + store.video_id,
-        type: store.video_type,
-        is_new: true,
-      });
-      console.log(addVideo.store.files);
-      useClassroom.local_store.addVideoModal = false;
+      if (!isLoading.store.is_inline) {
+        addVideo.store.files.push({
+          url: file_urls[store.video_type] + store.video_id,
+          file: file_urls[store.video_type] + store.video_id,
+          type: store.video_type,
+          is_new: true,
+        });
+        useClassroom.local_store.addVideoModal = false;
+      } else{
+        usePost.inline_comment.files.push({
+          url: file_urls[store.video_type] + store.video_id,
+          file: file_urls[store.video_type] + store.video_id,
+          type: store.video_type,
+          is_new: true,
+        });
+        useClassroom.local_store.addVideoModal = false;
+        isLoading.store.is_inline = false;
+      }
     }
   } else {
     useClassroom.local_store.is_url = true;
@@ -174,6 +185,7 @@ watch(
     if (!useClassroom.local_store.addVideoModal) {
       useClassroom.local_store.videoLink = "";
       store.videoLink = "";
+      // isLoading.store.is_inline = false;
     }
   }
 );

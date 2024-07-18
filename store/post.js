@@ -53,9 +53,10 @@ export const usePostStore = defineStore("post", () => {
     poll_deleted: [],
     isNewPoll: [],
     media_id: "",
-    comment_id: "",
+    comment_id: [-1],
     writecomment_type: "",
     deleteReplyData: [],
+    editComment: [-1],
   });
 
   const create_data = {
@@ -86,7 +87,7 @@ export const usePostStore = defineStore("post", () => {
   const inline_comment = reactive(
     JSON.parse(JSON.stringify(inline_comment_data))
   );
-  
+
   const modal = reactive({
     create: false,
     edit: false,
@@ -131,6 +132,7 @@ export const usePostStore = defineStore("post", () => {
     const data = await apiRequest.get(
       `get-post/${group_username}?page=${isLoading.store.pagination.current_page}${filter_url}`
     );
+    console.log(data, ".=================");
     isLoading.removeLoading("getPosts");
     if (data.status == 200) {
       console.log(data.data);
@@ -320,8 +322,8 @@ export const usePostStore = defineStore("post", () => {
   }
 
   function write_post() {
-    console.log(modal.edit);
     create.category_id = store.category_id?.id;
+    console.log("create.category_id");
     create.polls = [];
     for (let i in store.polls) {
       create.polls.push(store.polls[i]);
@@ -335,9 +337,6 @@ export const usePostStore = defineStore("post", () => {
       return;
     }
     store.error = "";
-    if (modal.edit) {
-      return update_post();
-    }
     const formData = new FormData();
     for (let i of Object.keys(create)) {
       formData.append(i, create[i]);
@@ -383,8 +382,6 @@ export const usePostStore = defineStore("post", () => {
   }
 
   function write_comment() {
-    console.log(inline_comment.comment);
-    console.log(useClassroom.module.video_content);
     if (store.writecomment_type == "inline") {
       if (!inline_comment.comment) {
         return;
@@ -394,9 +391,6 @@ export const usePostStore = defineStore("post", () => {
     }
     isLoading.addLoading("writeComment");
     const token = localStorage.getItem("token");
-    if (modal.edit) {
-      return update_post();
-    }
     const formData = new FormData();
     for (let i of Object.keys(create)) {
       formData.append(i, create[i]);
@@ -450,7 +444,75 @@ export const usePostStore = defineStore("post", () => {
         isLoading.removeLoading("writeComment");
         store.writingModal = false;
         store.category_id = "";
-        store.comment_id = "";
+        store.comment_id = [-1];
+        get_posts();
+      })
+      .catch((err) => {
+        if (err.response?.data?.message == "Posts not found") {
+          store.events = [];
+        }
+        console.log(err);
+        isLoading.removeLoading("writeComment");
+      });
+  }
+
+  function update_comment() {
+    isLoading.addLoading("writeComment");
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    for (let i of Object.keys(create)) {
+      formData.append(i, create[i]);
+    }
+    let t = 1;
+    const types = [];
+    const is_uploaded = [];
+    if (store.writecomment_type == "inline") {
+      for (let i of inline_comment.files) {
+        formData.append(`file${t}`, i.file);
+        types.push(i.type);
+        is_uploaded.push(i.is_new == true ? true : false);
+        t++;
+      }
+      formData.append("file_number", t - 1);
+    } else {
+      for (let i of addVideo.store.files) {
+        formData.append(`file${t}`, i.file);
+        is_uploaded.push(i.is_new == true ? true : false);
+        types.push(i.type);
+        t++;
+      }
+      formData.append("file_number", t - 1);
+    }
+    formData.append("is_uploaded", JSON.stringify(is_uploaded));
+
+    formData.append("post_id", store.post_id);
+    if (store.writecomment_type == "inline") {
+      formData.append("comment", inline_comment.comment);
+      formData.append("comment_id", store.comment_id[0]);
+    } else {
+      formData.append("comment", useClassroom.module.video_content);
+    }
+    formData.append("types", JSON.stringify(types));
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+
+    axios
+      .post(baseUrl + `edit-post-comment/${store.editComment[0]}`, formData, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        clearData();
+        console.log(res);
+        store.editComment = [-1];
+        store.postData = res.data;
+        store.card_info = true;
+        isLoading.removeLoading("writeComment");
+        store.writingModal = false;
+        store.category_id = "";
+        store.comment_id = [-1];
         get_posts();
       })
       .catch((err) => {
@@ -493,7 +555,6 @@ export const usePostStore = defineStore("post", () => {
     let t = 1;
     const types = [];
     const is_uploaded = [];
-    console.log(addVideo.store.files);
     for (let i of addVideo.store.files) {
       formData.append(`file${t}`, i.file);
       types.push(i.type);
@@ -827,7 +888,13 @@ export const usePostStore = defineStore("post", () => {
       })
       .then((res) => {
         console.log(res);
-        addVideo.store.files.splice(index, 1);
+        console.log(isLoading.store.is_inline);
+        if (isLoading.store.is_inline) {
+          inline_comment.files.splice(index, 1);
+          isLoading.store.is_inline = false;
+        } else {
+          addVideo.store.files.splice(index, 1);
+        }
         modal.delete = false;
         isLoading.removeLoading("deleteMedia");
         get_posts();
@@ -932,6 +999,7 @@ export const usePostStore = defineStore("post", () => {
     create,
     clearData,
     inline_comment,
+    update_comment,
     get_posts,
     getPostById,
     create_category,

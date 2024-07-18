@@ -39,6 +39,8 @@ export const useLoadingStore = defineStore("loading", () => {
     chatModal: false,
     chatDialog: false,
     slideStep: 0,
+    front_url: "",
+    is_inline: false,
   });
 
   const user = reactive({
@@ -83,7 +85,7 @@ export const useLoadingStore = defineStore("loading", () => {
       store.slideStep = step;
       const slide = document.querySelector(".mainSlider");
       slide.style.transform = `translateY(-${
-        isLoading.store.slideStep * 100
+        store.slideStep * 100
       }%)`;
     }, 100);
   }
@@ -215,7 +217,7 @@ export const useLoadingStore = defineStore("loading", () => {
   function convertMilliseconds(ms) {
     let day = new Date(ms).getTime();
     const currentDate = new Date().getTime();
-    day = currentDate - day;
+    day = day - currentDate;
     const seconds = Math.floor(day / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
@@ -230,6 +232,11 @@ export const useLoadingStore = defineStore("loading", () => {
     } else {
       return `${seconds} seconds`;
     }
+  }
+
+  function copyLink(copyText) {  
+    navigator.clipboard.writeText(copyText);
+    showMessage("Link copied to clipboard");
   }
 
   return {
@@ -248,5 +255,6 @@ export const useLoadingStore = defineStore("loading", () => {
     formatDripDays,
     convertMilliseconds,
     openDrawer,
+    copyLink,
   };
 });

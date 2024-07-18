@@ -16,8 +16,8 @@
             : 'bg-white'
             " @click="isLoading.changeQuery('type', i[0])"
             class="py-2 px-3 rounded-full hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700">
-            <soan class="capitalize">{{ i[0] }}</soan>
-            <span>{{ useMembers.store.members[i[1]] }}</span>
+            <span class="capitalize">{{ i[0] }}</span>
+            <span>{{ ' ' + useMembers.store.members[i[1]] }}</span>
           </button>
         </div>
         <div class="flex gap-3 ml-auto">
@@ -79,7 +79,7 @@
             <img src="@/assets/svg/export.svg" alt="" />
             <span>Export</span>
           </button>
-          <button @click="isLoading.store.inviteModal = true"
+          <button @click="isLoading.openDrawer(2)"
             class="gap-1 uppercase py-2 px-6 r_8 b_cbc _c07 bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700">
             invite
           </button>
@@ -194,30 +194,33 @@
                       {{ member.user?.bio }}
                     </h1>
                     <div class="grid md:grid-cols-4 gap-3 whitespace-nowrap mt-3 text-sm">
-                        <!-- <button class="full_flex col-span-2 truncate max-w-fit gap-1 b_cf2 h-7 px-2 r_8">
+                      <!-- <button class="full_flex col-span-2 truncate max-w-fit gap-1 b_cf2 h-7 px-2 r_8">
                           <img class="h-3 w-3" src="@/assets/svg/online.svg" alt="" />
                           Online now
                         </button> -->
-                        <button class="full_flex col-span-2 truncate max-w-fit gap-1 b_cf2 h-7 px-2 r_8">
-                          <img class="h-4 w-4" src="@/assets/svg/calendar_black.svg" alt="" />
-                          <span class="max-w-[80%]">Joined {{ formatDate(member.created_at) }}</span>
-                        </button>
-                        <button v-if="member.user.address" class="full_flex col-span-2 truncate max-w-fit gap-1 b_cf2 h-7 px-2 r_8">
-                          <img class="h-4 w-4" src="@/assets/svg/location_black.svg" alt="" />
-                          <span class="max-w-[95%] truncate">{{ member.user.address }}</span>
-                        </button>
-                        <button class="full_flex col-span-2 truncate max-w-fit gap-1 b_cf2 h-7 px-2 r_8">
-                          <img class="h-4 w-4" src="@/assets/svg/free.svg" alt="" />
-                          {{ member.group_price == "free" ? "Free" : "Paid" }}
-                        </button>
-                        <button class="full_flex col-span-2 truncate max-w-fit gap-1 b_cf2 h-7 px-2 r_8">
-                          <img class="h-4 w-4" src="@/assets/svg/access.svg" alt="" />
-                          Lifetime access
-                        </button>
-                        <button v-if="member.status == 'churned'" class="_ceb full_flex col-span-2 truncate max-w-fit gap-1 b_cf2 h-7 px-2 r_8">
-                          <img class="h-4 w-4 border border-[#eb5757] rounded-full p-[4px]" src="@/assets/svg/red_x.svg" alt="" />
-                          Churned {{formatDate(member.churned_date)}}
-                        </button>
+                      <button class="full_flex col-span-2 truncate max-w-fit gap-1 b_cf2 h-7 px-2 r_8">
+                        <img class="h-4 w-4" src="@/assets/svg/calendar_black.svg" alt="" />
+                        <span class="max-w-[80%]">Joined {{ formatDate(member.created_at) }}</span>
+                      </button>
+                      <button v-if="member.user.address"
+                        class="full_flex col-span-2 truncate max-w-fit gap-1 b_cf2 h-7 px-2 r_8">
+                        <img class="h-4 w-4" src="@/assets/svg/location_black.svg" alt="" />
+                        <span class="max-w-[95%] truncate">{{ member.user.address }}</span>
+                      </button>
+                      <button class="full_flex col-span-2 truncate max-w-fit gap-1 b_cf2 h-7 px-2 r_8">
+                        <img class="h-4 w-4" src="@/assets/svg/free.svg" alt="" />
+                        {{ member.group_price == "free" ? "Free" : "Paid" }}
+                      </button>
+                      <button class="full_flex col-span-2 truncate max-w-fit gap-1 b_cf2 h-7 px-2 r_8">
+                        <img class="h-4 w-4" src="@/assets/svg/access.svg" alt="" />
+                        Lifetime access
+                      </button>
+                      <button v-if="member.status == 'churned'"
+                        class="_ceb full_flex col-span-2 truncate max-w-fit gap-1 b_cf2 h-7 px-2 r_8">
+                        <img class="h-4 w-4 border border-[#eb5757] rounded-full p-[4px]" src="@/assets/svg/red_x.svg"
+                          alt="" />
+                        Churned {{ formatDate(member.churned_date) }}
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -227,7 +230,8 @@
                   Chat
                   <img src="@/assets/svg/chat_cross.svg" alt="" />
                 </button> -->
-                <button @click="userManageRole(member)" v-if="isLoading.user.id != member.user?.id"
+                <button
+               @click="userManageRole(member)" v-if="isLoading.user.id != member.user?.id && user_roles.includes(useMembers.store.members.type)"
                   class="full_flex gap-[10px] border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">
                   MEMBERSHIP
                   <img src="@/assets/svg/settings/settings.svg" alt="" />
@@ -287,7 +291,7 @@ const categories = [
 const categories_members = [
   ["member", "member_count"],
   ["admin", "admin_count"],
-  ["online", "online"],
+  // ["online", "online"],
 ];
 
 function userManageRole(user) {

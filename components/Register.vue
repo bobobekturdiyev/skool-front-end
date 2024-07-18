@@ -41,7 +41,8 @@ function register() {
 }
 
 function login() {
-  if (router.currentRoute.value.name == "register") {
+  console.log("Register")
+  if (router.currentRoute.value.name == "signup") {
     router.push("/login");
   } else {
     useAuth.modal.login = true;

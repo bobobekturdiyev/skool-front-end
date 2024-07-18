@@ -83,12 +83,12 @@
 <script setup>
 import { useClassroomStore } from "@/store";
 import Editor from "primevue/editor";
-
 const useClassroom = useClassroomStore();
 const store = reactive({
   editor_w: 0,
 });
 
+useClassroom.module.video_content = "";
 const value = ref(
   "<div>Hello World!</div><div>PrimeVue <b>Editor</b> Rocks</div><div><br></div>"
 );

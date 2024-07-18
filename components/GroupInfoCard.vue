@@ -18,7 +18,7 @@
         />
         <div
           v-else-if="role_ac.includes(useGroup.store.group_by_username.type)"
-          @click="isLoading.openDrawer(3)"
+          @click="() => isLoading.openDrawer(3)"
           class="full_flex hover:underline cursor-pointer w-full h-[150px] text-white"
           :style="`background: ${useGroup.store.group_by_username?.color}`"
         >
@@ -41,9 +41,7 @@
                 : "Public group"
             }}
           </p>
-          <pre class="text-sm leading-[21px] whitespace-pre-line">{{
-            useGroup.store.group_by_username?.excerpt
-          }}</pre>
+          <pre class="text-sm leading-[21px] whitespace-pre-line" v-html="useGroup.store.group_by_username?.excerpt"></pre>
           <ul
             v-if="
               useGroup.store.showLinksPublic &&

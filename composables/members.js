@@ -5,7 +5,7 @@ export const members_sidebar = [
     "General",
     "Subscriptions",
     "Categories",
-    "Plugins",
+    // "Plugins",
     "Metrics",
     "Gamification",
     "Discovery",

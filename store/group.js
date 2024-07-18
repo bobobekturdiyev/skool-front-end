@@ -109,6 +109,7 @@ export const useGroupStore = defineStore("group", () => {
 
   function create_media() {
     const formData = new FormData();
+    console.log(media.link)
     if (!media.image) {
       if (!isLoading.isURL(media.link)) {
         isLoading.showMessage("Please enter a valid video link");
@@ -175,7 +176,7 @@ export const useGroupStore = defineStore("group", () => {
     isLoading.addLoading("changeGroupDescription");
     const username = router.currentRoute.value.params.community;
     const formData = new FormData();
-    formData.append("description", store.description);
+    formData.append("description", store.description == null ? "" : store.description);
     axios
       .post(baseUrl + `update-group-description/${username}`, formData, {
         headers: {

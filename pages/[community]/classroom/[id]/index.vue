@@ -180,9 +180,11 @@
               </button>
             </div>
           </div>
-          <div v-if="checkDates(useClassroom.local_store.moduleData.drip) && !role_ac.includes(useGroup.store.group_by_username.type)" class="full_flex flex-col gap-2 b_cf2 m-5 r_8 h-[250px]">
+          <div
+            v-if="checkDates(useClassroom.local_store.moduleData.drip) && !role_ac.includes(useGroup.store.group_by_username.type)"
+            class="full_flex flex-col gap-2 b_cf2 m-5 r_8 h-[250px]">
             <img class="h-7 w-7" src="@/assets/svg/clock.svg" alt="">
-            <p>Unlock in {{useClassroom.local_store.moduleData.day}} days</p>
+            <p>Unlock in {{ useClassroom.local_store.moduleData.day }} days</p>
           </div>
           <div v-else class="space-y-5 p-5">
             <div v-if="isLoading.isURL(useClassroom.local_store.moduleData?.link)"
@@ -232,10 +234,24 @@
             class="absolute deleteimage !hidden top-5 right-5 rounded-full w-10 h-10 full_flex border bg-white">
             <img class="m-auto" src="@/assets/svg/x.svg" alt="" />
           </button>
-          <iframe disabled class="md:h-[400px] h-[200px] w-full object-contain object-center pointer-events-none"
+          <div class="w-full h-full" v-for="(i, index) in addVideo.store.files">
+            <img v-if="i.type == 'image'" class="w-full h-full rounded-xl object-cover" :src="i.url" alt="" />
+            <div v-else-if="i.type == 'video'">
+              <video class="w-full h-full border rounded-xl object-cover" controls>
+                <source :src="i.url" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <iframe v-else-if="i.type == 'youtube' ||
+      i.type == 'wistia' ||
+      i.type == 'vimeo' ||
+      i.type == 'loom'
+      " class="w-full h-full rounded-xl object-cover text-[#0000]" :src="i.url"></iframe>
+          </div>
+          <!-- <iframe disabled class="md:h-[400px] h-[200px] w-full object-contain object-center pointer-events-none"
             :src="useClassroom.module.video" title="YouTube video player" frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> -->
         </div>
         <Editor />
         <div v-if="useClassroom.store.files?.length">

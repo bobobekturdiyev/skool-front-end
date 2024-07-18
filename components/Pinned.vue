@@ -1,6 +1,6 @@
 <template>
     <nav class="md:block hidden">
-        <div class="space-y-4 mt-[104px]">
+        <div class="pinned_groups space-y-4 mt-[104px] overflow-hidden overflow-y-auto max-h-[calc(100vh_-_110px)]">
             <div class="flex gap-2 cursor-pointer" v-for="i in useGroup.store.mygroups" v-show="i.pinned == 1"
                 @click="$router.push(`/${i.username}`)">
                 <p :class="$router.currentRoute.value.params.community == i.username ? 'b_c2a' : ''"

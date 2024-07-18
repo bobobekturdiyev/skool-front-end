@@ -145,6 +145,13 @@ label {
   cursor: pointer;
 }
 
+a {
+  color: $C2A;
+  &:hover {
+    text-decoration: underline !important;
+  }
+}
+
 .r_16 {
   border-radius: 16px;
 }
@@ -464,4 +471,8 @@ input[type="color"]::-webkit-color-swatch {
   * {
     overflow: hidden !important;
   }
+}
+
+.pinned_groups::-webkit-scrollbar{
+  width: 5px;
 }

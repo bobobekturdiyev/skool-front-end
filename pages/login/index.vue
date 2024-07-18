@@ -1,8 +1,8 @@
 <template>
   <main
-    class="flex items-center justify-center overflow-hidden overflow-y-auto bg-black bg-opacity-60 min-h-screen max-h-screen"
+    class="flex items-center justify-center overflow-hidden overflow-y-auto min-h-screen max-h-screen"
   >
-    <Login />
+    <Login  class="max-w-sm" />
   </main>
 </template>
 
