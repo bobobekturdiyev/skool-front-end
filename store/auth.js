@@ -189,7 +189,7 @@ export const useAuthStore = defineStore("auth", () => {
       })
       .catch((err) => {
         console.log(err);
-        if (err.response.status == 401) {
+        if (err.response?.status == 401) {
           isLoading.store.isLogin = false;
           localStorage.removeItem("token");
         }

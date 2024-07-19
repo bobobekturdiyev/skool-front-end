@@ -57,7 +57,8 @@ body {
 
 html *,
 body *,
-pre, input {
+pre,
+input {
   font-family: Inter !important;
 }
 
@@ -149,6 +150,13 @@ a {
   color: $C2A;
   &:hover {
     text-decoration: underline !important;
+  }
+}
+
+.routerlinks * {
+  color: #000 !important;
+  &:hover {
+    text-decoration: underline transparent !important;
   }
 }
 
@@ -473,6 +481,10 @@ input[type="color"]::-webkit-color-swatch {
   }
 }
 
-.pinned_groups::-webkit-scrollbar{
+.pinned_groups::-webkit-scrollbar {
   width: 5px;
+}
+
+.list-desc {
+  list-style-type: disc !important;
 }

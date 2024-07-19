@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
-import { useLoadingStore, useMemberStore } from "@/store";
+import { useLoadingStore, useMemberStore, useAddVideoStore } from "@/store";
 import axios from "axios";
 import { useApiRequest } from "@/composables";
 
 export const useGroupStore = defineStore("group", () => {
   const apiRequest = useApiRequest();
+  const addVideo = useAddVideoStore();
   const isLoading = useLoadingStore();
   const runtime = useRuntimeConfig();
   const baseUrl = runtime.public.baseURL;
@@ -47,6 +48,7 @@ export const useGroupStore = defineStore("group", () => {
   const media = reactive({
     image: "",
     link: "",
+    type: "",
     group_id: "",
   });
 
@@ -108,8 +110,9 @@ export const useGroupStore = defineStore("group", () => {
   }
 
   function create_media() {
+    console.log(addVideo.store.files);
     const formData = new FormData();
-    console.log(media.link)
+    console.log(media.link);
     if (!media.image) {
       if (!isLoading.isURL(media.link)) {
         isLoading.showMessage("Please enter a valid video link");
@@ -176,7 +179,10 @@ export const useGroupStore = defineStore("group", () => {
     isLoading.addLoading("changeGroupDescription");
     const username = router.currentRoute.value.params.community;
     const formData = new FormData();
-    formData.append("description", store.description == null ? "" : store.description);
+    formData.append(
+      "description",
+      store.description == null ? "" : store.description
+    );
     axios
       .post(baseUrl + `update-group-description/${username}`, formData, {
         headers: {
@@ -221,8 +227,7 @@ export const useGroupStore = defineStore("group", () => {
       });
   }
 
-  function filterGroups() {
-    const token = localStorage.getItem("token");
+  async function filterGroups() {
     isLoading.addLoading("groupGroups");
     let url = `get-group?page=${isLoading.store.pagination.current_page}`;
     for (let i in store.filter) {
@@ -230,36 +235,27 @@ export const useGroupStore = defineStore("group", () => {
         url += `&${i}=${store.filter[i]}`;
       }
     }
-    axios
-      .get(baseUrl + url, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        store.groups = res.data?.data;
-        for (let i in isLoading.store.pagination) {
-          isLoading.store.pagination[i] = res.data.meta[i];
-        }
-        isLoading.removeLoading("groupGroups");
-      })
-      .catch((err) => {
-        console.log(err);
-        isLoading.removeLoading("groupGroups");
-      });
+    const data = await apiRequest.get(url);
+    console.log(data);
+    isLoading.removeLoading("groupGroups");
+    if (data.status == 200) {
+      store.groups = data.data?.data;
+      for (let i in isLoading.store.pagination) {
+        isLoading.store.pagination[i] = data.data.meta[i];
+      }
+    }
   }
-  
+
   async function groupByUsername(type) {
     const username = router.currentRoute.value.params.community;
     const token = localStorage.getItem("token");
     if (type != "no_load") {
       isLoading.addLoading("getByUsername");
     }
-    
+
     const data = await apiRequest.get(`get-group/` + username);
     isLoading.removeLoading("getByUsername");
-    console.log(data)
+    console.log(data);
     if (data.status == 200) {
       store.group_by_username = data.data;
       if (store.group_by_username.status != "active") {

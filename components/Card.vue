@@ -105,7 +105,6 @@ import { useLoadingStore, useGroupStore } from "@/store";
 
 const isLoading = useLoadingStore();
 const useGroup = useGroupStore();
-isLoading.addLoading("groupGroups");
 </script>
 
 <style lang="scss" scoped></style>

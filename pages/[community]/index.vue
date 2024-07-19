@@ -116,7 +116,7 @@
       <section class="md:space-y-5 space-y-4">
         <LoadingDiv v-if="isLoading.isLoadingType('getPosts')" v-for="i in 10"
           class="min-h-[250px] w-full r_16 overflow-hidden" />
-        <div v-else-if="!usePost.store.posts.length" class="min-h-[30vh] full_flex col-span-4">
+        <div v-else-if="!usePost.store.posts?.length" class="min-h-[30vh] full_flex col-span-4">
           No data
         </div>
         <article @click="(e) => handleClick(e, i.id)" v-else v-for="i in usePost.store.posts" data-aos="zoom-in"
@@ -284,17 +284,27 @@
             <li class="relative imagelabel">
               <img v-if="i.media_files.type == 'image'" class="max-w-[140px] max-h-[140px] rounded-tl-xl object-contain"
                 :src="i.media_files.url" alt="" />
-              <div v-else-if="i.media_files.type == 'video'">
+              <div class="relative" v-else-if="i.media_files.type == 'video'">
                 <video class="max-w-[140px] max-h-[140px] rounded-tl-xl object-contain" controls>
                   <source :src="i.media_files.url" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
+                <div
+                  class="absolute top-0 min-w-full h-full cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex">
+                  <img src="@/assets/svg/video_btn.svg" alt="" />
+                </div>
               </div>
-              <iframe v-else-if="i.media_files.type == 'youtube' ||
+    <div v-else-if="i.media_files.type == 'youtube' ||
     i.media_files.type == 'wistia' ||
     i.media_files.type == 'vimeo' ||
     i.media_files.type == 'loom'
-    " class="rounded-tl-xl max-w-[140px] max-h-[140px] object-contain" :src="i.media_files.url"></iframe>
+    " class="relative">
+<iframe class="rounded-tl-xl max-w-[140px] max-h-[140px] object-contain" :src="i.media_files.url"></iframe>  
+              <div
+                  class="absolute top-0 min-w-full h-full cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex">
+                  <img src="@/assets/svg/video_btn.svg" alt="" />
+                </div>
+              </div>
             </li>
           </ul>
         </article>
@@ -371,7 +381,7 @@
         <div class="block">
           <pre v-html="usePost.store.postData.description" class="text-sm float-left w-full whitespace-pre-line"
             :class="store.see_more ? '' : 'line-clamp-[11]'"></pre>
-          <button @click="store.see_more = true" v-if="usePost.store.postData.description && !store.see_more"
+          <button @click="store.see_more = true" :class="usePost.store.postData.description && !store.see_more ? '':'!h-0 p-0 overflow-hidden'"
             class="text-sm _c2a h-4">See
             more</button>
         </div>
@@ -444,7 +454,7 @@
             <div class="community_editor border h-[120px] whitespace-pre-wrap">
               <Editor />
             </div>
-            <div v-if="Object.keys(usePost.store.polls).length" class="border_ce0 rounded-lg p-4">
+            <div v-if="Object.keys(usePost.store.polls)?.length" class="border_ce0 rounded-lg p-4">
               <div class="flex items-center justify-between">
                 <p class="font-medium">Poll</p>
                 <p v-if="!usePost.store.userIsVoted" @click="removePoll"
@@ -457,14 +467,14 @@
                   <input :disabled="usePost.store.userIsVoted ? true : false"
                     :class="usePost.store.userIsVoted ? 'b_cf2' : ''" v-model="usePost.store.polls[i]"
                     @input="addVideo.editPoll(index)" type="text" :placeholder="`Option ${index + 1}`" />
-                  <img v-if="Object.keys(usePost.store.polls).length > 2 &&
+                  <img v-if="Object.keys(usePost.store.polls)?.length > 2 &&
     !usePost.store.userIsVoted
     " @click="addVideo.deletePoll(i, index)" class="opacity-50 hover:bg-gray-300 cursor-pointer rounded-full p-2"
                     src="@/assets/svg/x.svg" alt="" />
                 </li>
               </ul>
               <button v-if="!usePost.store.userIsVoted" @click="addVideo.addPoll" type="button"
-                class="uppercase border_ce0 px-3 rounded-md mt-2" :class="Object.keys(usePost.store.polls).length >= 10
+                class="uppercase border_ce0 px-3 rounded-md mt-2" :class="Object.keys(usePost.store.polls)?.length >= 10
     ? 'b_ce0 _ca1'
     : ''
     ">
@@ -474,7 +484,7 @@
                 You cannot edit or remove a poll that already has votes
               </p>
             </div>
-            <ul v-if="addVideo.store.files.length" class="flex gap-5 overflow-x-auto">
+            <ul v-if="addVideo.store.files?.length" class="flex gap-5 overflow-x-auto">
               <draggable :list="addVideo.store.files" group="grid" :animation="200"
                 class="flex gap-4 z-20 overflow-hidden overflow-x-auto min-w-fit">
                 <li class="relative imagelabel" v-for="(i, index) in addVideo.store.files">
@@ -484,17 +494,15 @@
                   </button>
                   <img v-if="i.type == 'image'" class="w-40 h-40 min-w-[160px] border rounded-xl object-cover"
                     :src="i.url" alt="" />
-                  <div v-else-if="i.type == 'video'">
+                  <div v-else-if="i.type == 'video'" class="relative">
                     <video class="w-40 h-40 min-w-[160px] border rounded-xl object-cover" controls>
                       <source :src="i.url" type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
-                  </div>
-                  <div v-else-if="i.type == 'video'">
-                    <video class="w-40 h-40 min-w-[160px] border rounded-xl object-cover" controls>
-                      <source :src="i.url" type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
+                    <div
+                  class="absolute top-0 min-w-full h-full cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex">
+                  <img src="@/assets/svg/video_btn.svg" alt="" />
+                </div>
                   </div>
                   <iframe v-else-if="i.type == 'youtube' ||
     i.type == 'wistia' ||
@@ -868,14 +876,14 @@
 
       <!-- writing input -->
       <div v-if="!usePost.modal.edit" class="b_cf0f relative z-50 -mx-5 -mb-7 overflow-hidden">
-        <div class="flex items-start py-3 px-5 gap-[14px]" :class="addVideo.store.files.length ? '' : 'h-[112px]'">
+        <div class="flex items-start py-3 px-5 gap-[14px]" :class="addVideo.store.files?.length ? '' : 'h-[112px]'">
           <img class="h-10 w-10 object-cover rounded-full" :src="isLoading.user.image" alt="" />
           <div class="w-full">
             <!-- <input class="text-sm !border-0" placeholder="Your comment" /> -->
             <div class="comment_editor h-10 whitespace-pre-wrap">
               <Editor />
             </div>
-            <ul v-if="addVideo.store.files.length" class="flex gap-5 py-5 overflow-x-auto">
+            <ul v-if="addVideo.store.files?.length" class="flex gap-5 py-5 overflow-x-auto">
               <draggable :list="addVideo.store.files" group="grid" :animation="200"
                 class="flex gap-4 overflow-hidden overflow-x-auto min-w-fit">
                 <li class="relative imagelabel"
@@ -886,11 +894,15 @@
                   </button>
                   <img v-if="i.type == 'image'" class="w-40 h-40 min-w-[160px] border rounded-xl object-cover"
                     :src="i.url" alt="" />
-                  <div v-else-if="i.type == 'video'">
+                  <div v-else-if="i.type == 'video'" class="relative">
                     <video class="w-40 h-40 min-w-[160px] border rounded-xl object-cover" controls>
                       <source :src="i.url" type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
+                    <div
+                  class="absolute top-0 min-w-full h-full cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex">
+                  <img src="@/assets/svg/video_btn.svg" alt="" />
+                </div>
                   </div>
                   <iframe v-else-if="i.type == 'youtube' ||
     i.type == 'wistia' ||
@@ -1082,7 +1094,7 @@
           </ul>
         </div>
         <div v-else-if="!isLoading.isLoadingType('getLikes') &&
-    !usePost.store.likeModalData.length
+    !usePost.store.likeModalData?.length
     " class="full_flex py-5">
           No likes yet
         </div>
@@ -1143,14 +1155,6 @@
     media.type == 'loom'
     " class="md:max-h-[80vh] max-w-[80vw] min-w-full md:min-h-[80vh] min-h-[50vh]" :src="media.url"></iframe>
             </div>
-            <!-- <div v-if="post.type == 'image'" class="full_flex">
-              <img :src="post.link" />
-            </div>
-            <div v-else class="relative h-full w-full">
-              <iframe ref="videoIframe" id="video_control"
-                class="md:max-h-[80vh] max-w-[80vw] min-w-full md:min-h-[80vh] min-h-[50vh]" :src="post.link">
-              </iframe>
-            </div> -->
           </div>
         </div>
       </div>
@@ -1673,6 +1677,10 @@ onBeforeMount(() => {
         if (store.slideStep > 0) {
           store.slideStep -= 1;
         }
+      }
+    }else {
+      if (usePost.store.writingModal && event.key == "Enter") {
+        event.preventDefault();
       }
     }
   });

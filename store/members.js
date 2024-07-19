@@ -181,6 +181,7 @@ export const useMemberStore = defineStore("members", () => {
         useGroup.getMyGroups();
         setGeneralSettings(res.data);
         useGroup.store.group_by_username = res.data;
+        isLoading.showMessage("Updated successfully");
         isLoading.removeLoading("updateSettings");
       })
       .catch((err) => {

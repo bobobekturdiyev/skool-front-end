@@ -12,8 +12,8 @@
         <h1 class="md:text-[45px] text-2xl">Discover communities</h1>
         <p>
           or
-          <span class="_c2a cursor-pointer hover:opacity-70"
-            >create your own</span
+          <router-link to="/signup" class="_c2a cursor-pointer hover:opacity-70"
+            >create your own</router-link
           >
         </p>
       </div>
@@ -219,16 +219,44 @@
 <script setup>
 import { useLoadingStore, useCategoryStore, useGroupStore } from "@/store";
 
-const obj = {x: 1, y: 2}
-let {x: a, y: b} = obj;
-a = 2
-console.log(obj.x, obj.y)
+useSeoMeta({
+  title: "Skool: Discover Communities or Create your own",
+  ogTitle: "Skool: Discover Communities or Create your own",
+  description: "Skool: Discover Communities or Create your own",
+  ogDescription: "Skool: Discover Communities or Create your own",
+  ogImage: "/logo.svg",
+  twitterCard: "/logo.svg",
+});
+
+const obj = { x: 1, y: 2 };
+let { x: a, y: b } = obj;
+a = 2;
+console.log(obj.x, obj.y);
 const isLoading = useLoadingStore();
 const useCategory = useCategoryStore();
 const useGroup = useGroupStore();
 const router = useRouter();
+const { start, finish } = useLoadingIndicator();
 
 isLoading.addLoading("groupCategories");
+isLoading.changeQuery();
+const currentQueries = { ...router.currentRoute.value.query };
+for (let i in currentQueries) {
+  if (currentQueries[i]) {
+    useGroup.store.filter[i] = currentQueries[i];
+  }
+}
+start();
+await useAsyncData(
+  "skool",
+  async () => {
+    await useGroup.filterGroups();
+    await useCategory.getCategories();
+    finish();
+  },
+  { server: false }
+);
+
 isLoading.store.page_name = "group";
 
 const filter_type = [
@@ -304,14 +332,14 @@ function onFilterType(e) {
   isLoading.changeQuery("type", useGroup.store.filter.type);
 }
 
-function watchQuery() {
+async function watchQuery() {
   const currentQueries = { ...router.currentRoute.value.query };
   for (let i in currentQueries) {
     if (currentQueries[i]) {
       useGroup.store.filter[i] = currentQueries[i];
     }
   }
-  useGroup.filterGroups();
+  await useGroup.filterGroups();
 }
 
 watch(
@@ -323,9 +351,6 @@ watch(
 );
 
 onBeforeMount(() => {
-  useCategory.getCategories();
-  isLoading.changeQuery();
-  watchQuery();
   window.addEventListener("resize", () => {
     if (window.innerWidth < 768) {
       store.is_show = true;

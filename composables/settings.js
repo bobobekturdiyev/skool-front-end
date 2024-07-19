@@ -16,3 +16,12 @@ export const membership_settings = [
   "Chat",
   "Invite",
 ];
+
+export const legal_tabs = [
+  ["Skool rules", "rules"],
+  ["Privacy policy", "privacy"],
+  ["Terms and conditions", "terms"],
+  ["Cookie policy", "cookies"],
+  ["Transaction terms", "transaction"],
+  ["Acceptable use", "acceptable-use"],
+];

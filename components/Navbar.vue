@@ -12,7 +12,7 @@
           "
         >
           <img
-            v-if="$router.currentRoute.value.name == 'index'"
+            v-if="skool_logo.includes($router.currentRoute.value.name)"
             src="/logo.svg"
             alt=""
           />
@@ -43,7 +43,8 @@
               </div>
               <p
                 v-if="$router.currentRoute.value.name.indexOf('community') == 0"
-                class="sm:text-lg tr text-sm font-semibold whitespace-nowrap max-w-[150px] truncate"
+                class="sm:text-lg !text-black tr text-sm font-semibold whitespace-nowrap max-w-[150px] truncate"
+                style="text-decoration: underline white !important;"
               >
                 {{ useGroup.store.group_by_username.name }}
               </p>
@@ -60,8 +61,9 @@
             $router.currentRoute.value.name.indexOf('community') != 0 &&
             $router.currentRoute.value.name != 'index'
           "
-          class="md:text-lg text-sm whitespace-nowrap font-semibold"
+          class="md:text-lg !text-black text-sm whitespace-nowrap font-semibold"
           to="/"
+          style="text-decoration: underline white !important;"
           >Skool community</router-link
         >
         <el-dropdown placement="bottom-end" class="dropdown" trigger="click">
@@ -205,7 +207,7 @@
           v-show="isLoading.store.isLogin"
           class="sm:flex items-center hidden gap-7"
         >
-          <el-dropdown
+          <!-- <el-dropdown
             :hide-on-click="false"
             class="chat_dropdown"
             placement="bottom-end"
@@ -224,8 +226,8 @@
                 <Chat />
               </el-dropdown-menu>
             </template>
-          </el-dropdown>
-          <img src="@/assets/svg/nav/notification.svg" alt="" />
+          </el-dropdown> -->
+          <!-- <img src="@/assets/svg/nav/notification.svg" alt="" /> -->
           <el-dropdown v-if="store.is_mount" placement="bottom-end">
             <img
               class="h-10 w-10 rounded-full min-w-[40px] object-cover"
@@ -829,7 +831,8 @@ const useGroup = useGroupStore();
 const isLoading = useLoadingStore();
 const useChat = useChatStore();
 isLoading.addLoading("getByUsername");
-const search_bar = ["index", "settings", "community-about"];
+const search_bar = ["index", "settings", "community-about", "affiliate-program", "careers", "legal", "pricing"];
+const skool_logo = ["index", "affiliate-program", "careers", "legal", "pricing"];
 
 const store = reactive({
   lang: {

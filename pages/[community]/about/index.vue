@@ -19,6 +19,14 @@
                   <img class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] w-full min-w-[100%] object-cover"
                     @click="useGroup.store.slideStep = index" :src="post.link" />
                 </div>
+                <div v-else-if="post.type == 'video'">
+                    <video
+                    class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] w-full min-w-[100%] object-cover">
+                      controls>
+                      <source :src="post.link" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
                 <div v-else @click="useGroup.store.slideStep = index" class="relative">
                   <iframe class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] min-w-full" :src="post.link">
                   </iframe>
@@ -47,7 +55,6 @@
                     :class="role_ac.includes(useGroup.store.group_by_username.type) ? '' : '!hidden'">
                     <img class="m-auto" src="@/assets/svg/x.svg" alt="" />
                   </button>
-                  <!-- {{post.type}} -->
                   <div v-if="post.type == 'image'">
                     <img @click="useGroup.store.slideStep = index"
                       class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px] h-[56px] cursor-pointer object-cover rounded-xl"
@@ -61,22 +68,18 @@
                       Your browser does not support the video tag.
                     </video>
                   </div>
-                  <iframe v-else-if="post.type == 'youtube' ||
+                  <div v-else-if="post.type == 'youtube' ||
       post.type == 'wistia' ||
       post.type == 'vimeo' ||
       post.type == 'loom'
-      " :src="post.link"
+      " @click="useGroup.store.slideStep = index" class="relative">
+                    <iframe :src="post.link"
                     class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px] cursor-pointer object-cover rounded-xl"></iframe>
-                  <!-- <div v-else @click="useGroup.store.slideStep = index" class="relative">
-                    <iframe
-                      class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px] cursor-pointer object-cover rounded-xl"
-                      :src="post.link">
-                    </iframe>
                     <div
                       class="absolute top-0 min-w-full h-full cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex">
                       <img src="@/assets/svg/video_btn.svg" alt="" />
                     </div>
-                  </div> -->
+                  </div>
                 </div>
               </template>
             </draggable>
@@ -148,14 +151,27 @@
         <div class="aboutmainSlider2 bg-black bg-opacity-10 max-w-[80vw] duration-500 flex items-center w-full">
           <div class="full_flex min-w-[100%] min-h-full"
             v-for="(post, index) in useGroup.store.group_by_username.medias">
-            <div v-if="post.type == 'image'" class="full_flex">
-              <img :src="post.link" />
-            </div>
-            <div v-else class="relative h-full w-full">
-              <iframe ref="videoIframe" id="video_control"
-                class="md:max-h-[80vh] max-w-[80vw] min-w-full md:min-h-[80vh] min-h-[50vh]" :src="post.link">
-              </iframe>
-            </div>
+            <div v-if="post.type == 'image'">
+                    <img @click="useGroup.store.slideStep = index"
+                    class="full_flex"
+                    :src="post.link" />
+                  </div>
+                  <div v-else-if="post.type == 'video'">
+                    <video
+                      class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px] cursor-pointer object-cover rounded-xl"
+                      controls>
+                      <source :src="post.link" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                  <div v-else-if="post.type == 'youtube' ||
+      post.type == 'wistia' ||
+      post.type == 'vimeo' ||
+      post.type == 'loom'
+      " @click="useGroup.store.slideStep = index" class="relative h-full w-full">
+                    <iframe
+                    class="md:max-h-[80vh] max-w-[80vw] min-w-full md:min-h-[80vh] min-h-[50vh]" :src="post.link"></iframe>
+                </div>
           </div>
         </div>
       </div>
@@ -384,6 +400,7 @@ async function handleVideoLink() {
     );
     console.log(useGroup.store.is_url)
     if (!useGroup.store.is_url) {
+      useGroup.media.type =  store.video_type;
       useGroup.media.link = file_urls[store.video_type] + store.video_id
       useGroup.create_media();
     }

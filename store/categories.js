@@ -1,8 +1,9 @@
 import { defineStore } from "pinia";
 import { useLoadingStore } from "@/store";
-import axios from "axios";
+import { useApiRequest } from "@/composables";
 
 export const useCategoryStore = defineStore("category", () => {
+  const apiRequest = useApiRequest();
   const isLoading = useLoadingStore();
   const runtime = useRuntimeConfig();
   const baseUrl = runtime.public.baseURL;
@@ -11,24 +12,14 @@ export const useCategoryStore = defineStore("category", () => {
     categories: [],
   });
 
-  function getCategories() {
-    const token = localStorage.getItem("token");
+  async function getCategories() {
     isLoading.addLoading("groupCategories");
-    axios
-      .get(baseUrl + "get-group-categories", {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        console.log(res)
-        store.categories = res.data;
-        isLoading.removeLoading("groupCategories");
-      })
-      .catch((err) => {
-        console.log(err);
-        isLoading.removeLoading("groupCategories");
-      });
+    const data = await apiRequest.get("get-group-categories");
+    isLoading.removeLoading("groupCategories");
+    console.log(data, '================================================');
+    if (data.status == 200) {
+      store.categories = data.data;
+    }
   }
 
   return { store, getCategories };

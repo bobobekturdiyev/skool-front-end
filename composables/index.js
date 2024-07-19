@@ -6,6 +6,7 @@ import { role_ac } from "./roles";
 import { useApiRequest } from "./request";
 
 export {
+  legal_tabs,
   members_sidebar,
   useNotification,
   settings_sidebar,

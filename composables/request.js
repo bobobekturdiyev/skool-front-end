@@ -32,13 +32,12 @@ export const useApiRequest = () => {
           })
           .catch((err) => {
             console.log(err);
-            if (err.response.status == 401) {
+            if (err.response?.status == 401) {
               isLoading.store.isLogin = false;
               // localStorage.removeItem("token");
             }
-            isLoading.store.loadingTypes = [];
-            isLoading.store.pagination.total = 0;
-            reject(err);
+            // isLoading.store.loadingTypes = [];
+            resolve(err);
           });
       });
     }

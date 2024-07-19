@@ -13,6 +13,7 @@ export const usePostStore = defineStore("post", () => {
   const router = useRouter();
 
   const store = reactive({
+    is_not_found: false,  
     posts: [],
     postData: [],
     members_count: 0,
@@ -133,6 +134,10 @@ export const usePostStore = defineStore("post", () => {
       `get-post/${group_username}?page=${isLoading.store.pagination.current_page}${filter_url}`
     );
     console.log(data, ".=================");
+    if (data.response?.status == 404){
+      isLoading.showMessage("Group not found");
+      router.push("/");
+    }
     isLoading.removeLoading("getPosts");
     if (data.status == 200) {
       console.log(data.data);
