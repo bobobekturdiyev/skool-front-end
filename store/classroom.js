@@ -156,7 +156,7 @@ export const useClassroomStore = defineStore("classroom", () => {
   function update_course() {
     const formData = new FormData();
     for (let i of Object.keys(create)) {
-      formData.append(i, create[i]);
+      formData.append(i, create[i] || '');
     }
     if (!create.image || isLoading.isURL(create.image)) {
       if (!isLoading.isURL(create.image)) {
@@ -422,7 +422,7 @@ export const useClassroomStore = defineStore("classroom", () => {
     for (let [key, value] of formData.entries()) {
       console.log(`${key}: ${value}`);
     }
-
+    const lesson_id = router.currentRoute.value.query.module;
     const course_name = router.currentRoute.value.params.id;
     const token = localStorage.getItem("token");
     isLoading.addLoading("createModule");
@@ -430,7 +430,7 @@ export const useClassroomStore = defineStore("classroom", () => {
     axios
       .post(
         baseUrl +
-          `course/${course_name}/update-lesson/${local_store.moduleActiveId}`,
+          `course/${course_name}/update-lesson/${lesson_id}`,
         formData,
         {
           headers: {
@@ -439,6 +439,7 @@ export const useClassroomStore = defineStore("classroom", () => {
         }
       )
       .then((res) => {
+        console.log(res);
         clearModule();
         setModuleData(res.data);
         isLoading.removeLoading("createModule");

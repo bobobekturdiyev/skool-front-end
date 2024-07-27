@@ -62,7 +62,7 @@
                                     class="text-sm"
                                     :class="isLoading.user_update_checker.is_change_username ? '' : '_ca1 placeholder-[#A1A1A1]'"
                                     type="text">
-                                <p v-if="isLoading.user_update_checker.is_change_username" class="mt-1 _ca1 text-xs">You
+                                <p v-if="!isLoading.user_update_checker.is_change_username" class="mt-1 _ca1 text-xs">You
                                     can change your URL once you’ve got 90 contributions,
                                     30 followers, and been using it for 90 days.</p>
                             </div>

@@ -155,6 +155,7 @@ a {
 
 .routerlinks * {
   color: #000 !important;
+  text-decoration: underline transparent !important;
   &:hover {
     text-decoration: underline transparent !important;
   }

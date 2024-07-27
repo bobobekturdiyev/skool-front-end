@@ -44,6 +44,7 @@
     "nuxt-facebook-pixel-module": "^1.6.0",
     "nuxt-i18n": "^6.28.1",
     "nuxt-swiper": "^1.2.2",
+    "pdfjs-dist": "^4.4.168",
     "pinia": "^2.1.6",
     "primevue": "^3.49.1",
     "pusher-js": "^8.4.0-rc2",

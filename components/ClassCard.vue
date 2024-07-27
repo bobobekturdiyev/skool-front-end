@@ -4,7 +4,7 @@
       <LoadingDiv v-if="isLoading.isLoadingType('getClassrooms')" v-for="i in 10" class="w-full h-[400px] r_16">
       </LoadingDiv>
       <div v-else v-for="(i, index) in useClassroom.store.classrooms" data-aos="zoom-in"
-        class="w-full course_card relative bg-white md:r_16 r_12 overflow-hidden">
+        class="w-full course_card relative bg-white routerlinks md:r_16 r_12 overflow-hidden">
         <div v-if="role_ac.includes(useGroup.store.group_by_username.type)"
           :class="i.id == store.activeEdit ? 'edit_button_active' : ''"
           class="absolute right-4 top-4 bg-white w-6 h-6 r_8 z-10 p-1 _c07 edit_button cursor-pointer full_flex">

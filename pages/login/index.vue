@@ -2,7 +2,8 @@
   <main
     class="flex items-center justify-center overflow-hidden overflow-y-auto min-h-screen max-h-screen"
   >
-    <Login  class="max-w-sm" />
+    <NuxtLoadingIndicator height="4" color="#2a85ff" />
+    <Login class="max-w-sm" />
   </main>
 </template>
 

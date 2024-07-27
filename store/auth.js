@@ -14,6 +14,7 @@ export const useAuthStore = defineStore("auth", () => {
     userData: [],
     userImage: "",
     bio: "",
+    is_matched: false,
   });
 
   const modal = reactive({
@@ -24,6 +25,11 @@ export const useAuthStore = defineStore("auth", () => {
     complete: false,
   });
 
+  const changepassword = reactive({
+    new_password: "",
+    confirm_password: "",
+  })
+
   const login = reactive({
     email: "",
     password: "",
@@ -32,6 +38,11 @@ export const useAuthStore = defineStore("auth", () => {
   const verification = reactive({
     email: "",
     verify_code: "",
+  });
+
+  const complete = reactive({
+    image: "",
+    bio: "",
   });
 
   const register = reactive({
@@ -54,9 +65,10 @@ export const useAuthStore = defineStore("auth", () => {
           isLoading.store.isLogin = true;
           modal.login = false;
           store.errorMessage = "";
-          if(router.currentRoute.value.name == "login") {
-            router.push('/');
+          if (router.currentRoute.value.name == "login") {
+            router.push("/");
           }
+          window.location.reload();
         } else {
           store.errorMessage = res.data.message;
         }
@@ -75,7 +87,7 @@ export const useAuthStore = defineStore("auth", () => {
       .post(baseUrl + "register", register)
       .then((res) => {
         console.log(res);
-        if (res.data?.code == 200) {
+        if (res.status == 200) {
           modal.register = false;
           modal.verification = true;
           verification.email = register.email;
@@ -98,13 +110,15 @@ export const useAuthStore = defineStore("auth", () => {
       .post(baseUrl + "activate-user", verification)
       .then((res) => {
         console.log(res);
-        modal.complete = true;
         modal.verification = false;
-        if (res.data?.code == 200) {
+        if (res.status == 200) {
+          modal.complete = true;
           modal.register = false;
-          modal.verification = true;
+          modal.verification = false;
+          localStorage.setItem("token", res.data?.data?.token);
           verification.email = register.email;
           store.errorMessage = "";
+          router.push("/");
         } else {
           store.errorMessage = res.data.message;
         }
@@ -118,17 +132,28 @@ export const useAuthStore = defineStore("auth", () => {
 
   function authComplete() {
     isLoading.addLoading("complete");
-    modal.complete = false;
-    // axios
-    //   .post(baseUrl + "complete-user", {})
-    //   .then((res) => {
-    //     console.log(res);
-    //     isLoading.removeLoading("complete");
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     isLoading.removeLoading("complete");
-    //   });
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    for (let i in complete) {
+      formData.append(i, complete[i]);
+    }
+    axios
+      .post(baseUrl + "update-user/photo-bio", formData, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        modal.complete = false;
+        console.log(res);
+        getUser();
+        isLoading.removeLoading("complete");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.showMessage("Something went wrong");
+        isLoading.removeLoading("complete");
+      });
   }
 
   function authResend() {
@@ -161,6 +186,38 @@ export const useAuthStore = defineStore("auth", () => {
     //   });
   }
 
+  function authChangePassword() {
+    store.passwordError = [];
+    store.is_matched = false;
+    if (changepassword.new_password.length < 6) {
+      return store.passwordError = [0, "Password must be at least 6 characters"]
+    } else if (changepassword.confirm_password.length < 6) {
+      return store.passwordError = [1, "Password must be at least 6 characters"]
+    } else if (changepassword.confirm_password != changepassword.new_password) {
+      return store.passwordError = [1, "Passwords did not match"]
+    }  
+    store.passwordError = [];
+    store.is_matched = true;
+    isLoading.removeLoading("changePass");
+    axios
+      .post(baseUrl + "update-user", changepassword, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        isLoading.showMessage("Your password updated successfully!")
+        router.push('/login');
+        isLoading.removeLoading("changePass");
+      })
+      .catch((err) => {
+        console.log(err);
+        isLoading.showMessage("Something went wrong");
+        isLoading.removeLoading("changePass");
+      });
+  }
+
   function getUser() {
     const token = localStorage.getItem("token");
     isLoading.addLoading("getUser");
@@ -171,7 +228,10 @@ export const useAuthStore = defineStore("auth", () => {
         },
       })
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
+        if (!res.data.image || !res.data.bio) {
+          modal.complete = true;
+        }
         for (const [key, value] of Object.entries(res.data)) {
           if (key === "socials") {
             for (const socialKey in value) {
@@ -186,6 +246,11 @@ export const useAuthStore = defineStore("auth", () => {
           }
         }
         isLoading.removeLoading("getUser");
+        if (!isLoading.user.image || !isLoading.user.bio) {
+          modal.complete = true;
+        } else {
+          modal.complete = false;
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -222,6 +287,8 @@ export const useAuthStore = defineStore("auth", () => {
     store,
     modal,
     login,
+    complete,
+    changepassword,
     register,
     verification,
     authLogin,
@@ -232,5 +299,6 @@ export const useAuthStore = defineStore("auth", () => {
     authForgotPass,
     authComplete,
     getUserWithGroup,
+    authChangePassword,
   };
 });

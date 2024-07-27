@@ -1,140 +1,281 @@
 <template>
   <main class="flex gap-6 mt-[18px]">
-    <section class="md:min-w-[280px] md:w-[280px] w-full" :class="store.is_open ? 'md:block hidden' : ''">
+    <section
+      class="md:min-w-[280px] md:w-[280px] w-full"
+      :class="store.is_open ? 'md:block hidden' : ''"
+    >
       <div class="b_cd9 rounded-xl p-5">
         <div class="flex items-center justify-between">
           <h1 class="text-lg font-semibold">
             {{ useClassroom.store.modules.title }}
           </h1>
-          <el-dropdown v-if="role_ac.includes(useGroup.store.group_by_username.type)" placement="bottom-end"
-            class="dropdown">
+          <el-dropdown
+            v-if="role_ac.includes(useGroup.store.group_by_username.type)"
+            placement="bottom-end"
+            class="dropdown"
+          >
             <img src="@/assets/svg/three_dot.svg" alt="" />
             <template #dropdown>
-              <el-dropdown-menu class="community_dropdown min-w-[200px] dropdown_shadow">
-                <el-dropdown-item @click="handleEditCourse">Edit course</el-dropdown-item>
-                <el-dropdown-item @click="useClassroom.store.setModal = true">Add set</el-dropdown-item>
-                <el-dropdown-item @click="addModuleInSet()">Add module</el-dropdown-item>
+              <el-dropdown-menu
+                class="community_dropdown min-w-[200px] dropdown_shadow"
+              >
+                <el-dropdown-item @click="handleEditCourse"
+                  >Edit course</el-dropdown-item
+                >
+                <el-dropdown-item @click="useClassroom.store.setModal = true"
+                  >Add set</el-dropdown-item
+                >
+                <el-dropdown-item @click="addModuleInSet()"
+                  >Add module</el-dropdown-item
+                >
                 <el-dropdown-item
-                  @click="() => { useClassroom.store.delete = true; useClassroom.store.username = useClassroom.store.modules.slug }">Delete
-                  course</el-dropdown-item>
+                  @click="
+                    () => {
+                      useClassroom.store.delete = true;
+                      useClassroom.store.username =
+                        useClassroom.store.modules.slug;
+                    }
+                  "
+                  >Delete course</el-dropdown-item
+                >
               </el-dropdown-menu>
             </template>
           </el-dropdown>
         </div>
         <div class="mt-10">
-          <el-progress class="module_progress" :percentage="useClassroom.store.classroomReyting" />
+          <el-progress
+            class="module_progress"
+            :percentage="useClassroom.store.classroomReyting"
+          />
           <p class="text-xs mt-2">
             {{ useClassroom.store.classroomReyting }}% complete
           </p>
         </div>
       </div>
-      <aside v-loading="isLoading.isLoadingType('updatePosition')" v-if="useClassroom.store.modules?.set">
+      <aside
+        v-loading="isLoading.isLoadingType('updatePosition')"
+        v-if="useClassroom.store.modules?.set"
+      >
         <ul class="_c07 text-sm mt-5">
-          <draggable :list="useClassroom.store.modules?.set" @change="useClassroom.update_set_position" group="set"
-            :animation="200" class="grid">
-            <li v-for="(i, index) in useClassroom.store.modules?.set" :class="i.type == 'lesson' ? 'lesson_type' : ''">
+          <draggable
+            :list="useClassroom.store.modules?.set"
+            @change="useClassroom.update_set_position"
+            group="set"
+            :animation="200"
+            class="grid"
+          >
+            <li
+              v-for="(i, index) in useClassroom.store.modules?.set"
+              :class="i.type == 'lesson' ? 'lesson_type' : ''"
+            >
               <div class="flex items-center h-[44px] r_8 cursor-pointer">
-                <div @click="handleActive(i)" :class="useClassroom.local_store.activeName == i.id &&
-      useClassroom.store.activeTab == i.type
-      ? 'bg-transparent _c2a font-semibold'
-      : 'bg-white r_8'
-      " class="flex items-center justify-between h-full pr-5 w-full">
+                <div
+                  @click="handleActive(i)"
+                  :class="
+                    useClassroom.local_store.activeName == i.id &&
+                    useClassroom.store.activeTab == i.type
+                      ? 'bg-transparent _c2a font-semibold'
+                      : 'bg-white r_8'
+                  "
+                  class="flex items-center justify-between h-full pr-5 w-full"
+                >
                   <div class="flex items-center truncate max-w-[80%]">
-                    <p :class="useClassroom.local_store.activeName == i.id &&
-      useClassroom.store.activeTab == i.type
-      ? 'b_c2a'
-      : 'bg-transparent'
-      " class="mr-4 w-1 h-[44px]"></p>
+                    <p
+                      :class="
+                        useClassroom.local_store.activeName == i.id &&
+                        useClassroom.store.activeTab == i.type
+                          ? 'b_c2a'
+                          : 'bg-transparent'
+                      "
+                      class="mr-4 w-1 h-[44px]"
+                    ></p>
                     <span class="max-w-[90%] truncate">{{
-      i.type == "lesson"
-        ? (i.published ? "" : "(Draft) ") + i.title
-        : i.name
-    }}</span>
+                      i.type == "lesson"
+                        ? (i.published ? "" : "(Draft) ") + i.title
+                        : i.name
+                    }}</span>
                   </div>
                   <div class="flex items-center gap-[10px]">
-                    <el-dropdown v-if="i.type == 'lesson' && role_ac.includes(useGroup.store.group_by_username.type)"
-                      placement="bottom-end" class="dropdown">
-                      <img class="rotate-90 three_dot" src="@/assets/svg/three_dot.svg" alt="" />
+                    <el-dropdown
+                      v-if="
+                        i.type == 'lesson' &&
+                        role_ac.includes(useGroup.store.group_by_username.type)
+                      "
+                      placement="bottom-end"
+                      class="dropdown"
+                    >
+                      <img
+                        class="rotate-90 three_dot"
+                        src="@/assets/svg/three_dot.svg"
+                        alt=""
+                      />
                       <template #dropdown>
-                        <el-dropdown-menu class="community_dropdown min-w-[200px] dropdown_shadow">
-                          <el-dropdown-item @click="editModule(i)">Edit module</el-dropdown-item>
-                          <el-dropdown-item @click="useClassroom.publish_module(i.id)">{{
-      i.published ? "Revert to draft" : "Publish module"
-    }}</el-dropdown-item>
-                          <el-dropdown-item @click="changeFolder(i)">Change folder</el-dropdown-item>
-                          <el-dropdown-item @click="useClassroom.duplicate_module(i.id)">Duplicate</el-dropdown-item>
-                          <el-dropdown-item @click="dripModule(i)">Drip status:
-                            {{
-      i.day > 0 ? i.day : "Off"
-    }}</el-dropdown-item>
-                          <el-dropdown-item @click="deleteModal('module', i.id)">Delete module</el-dropdown-item>
+                        <el-dropdown-menu
+                          class="community_dropdown min-w-[200px] dropdown_shadow"
+                        >
+                          <el-dropdown-item @click="editModule(i)"
+                            >Edit module</el-dropdown-item
+                          >
+                          <el-dropdown-item
+                            @click="useClassroom.publish_module(i.id)"
+                            >{{
+                              i.published ? "Revert to draft" : "Publish module"
+                            }}</el-dropdown-item
+                          >
+                          <el-dropdown-item @click="changeFolder(i)"
+                            >Change folder</el-dropdown-item
+                          >
+                          <el-dropdown-item
+                            @click="useClassroom.duplicate_module(i.id)"
+                            >Duplicate</el-dropdown-item
+                          >
+                          <el-dropdown-item @click="dripModule(i)"
+                            >Drip status:
+                            {{ i.day > 0 ? i.day : "Off" }}</el-dropdown-item
+                          >
+                          <el-dropdown-item @click="deleteModal('module', i.id)"
+                            >Delete module</el-dropdown-item
+                          >
                         </el-dropdown-menu>
                       </template>
                     </el-dropdown>
-                    <el-dropdown v-else-if="role_ac.includes(useGroup.store.group_by_username.type)"
-                      placement="bottom-end" class="dropdown">
-                      <img class="rotate-90" src="@/assets/svg/three_dot.svg" alt="" />
+                    <el-dropdown
+                      v-else-if="
+                        role_ac.includes(useGroup.store.group_by_username.type)
+                      "
+                      placement="bottom-end"
+                      class="dropdown"
+                    >
+                      <img
+                        class="rotate-90"
+                        src="@/assets/svg/three_dot.svg"
+                        alt=""
+                      />
                       <template #dropdown>
-                        <el-dropdown-menu @click="useClassroom.local_store.activeEdit = ''"
-                          class="community_dropdown min-w-[200px] dropdown_shadow">
-                          <el-dropdown-item @click="editSet(i)">Edit set</el-dropdown-item>
-                          <el-dropdown-item @click="deleteModal('set', i.id)">Delete set</el-dropdown-item>
-                          <el-dropdown-item @click="addModuleInSet(i.id)">Add module in set</el-dropdown-item>
+                        <el-dropdown-menu
+                          @click="useClassroom.local_store.activeEdit = ''"
+                          class="community_dropdown min-w-[200px] dropdown_shadow"
+                        >
+                          <el-dropdown-item @click="editSet(i)"
+                            >Edit set</el-dropdown-item
+                          >
+                          <el-dropdown-item @click="deleteModal('set', i.id)"
+                            >Delete set</el-dropdown-item
+                          >
+                          <el-dropdown-item @click="addModuleInSet(i.id)"
+                            >Add module in set</el-dropdown-item
+                          >
                         </el-dropdown-menu>
                       </template>
                     </el-dropdown>
-                    <p v-if="i.completed && i.type == 'lesson'" class="full_flex rounded-full b_c2a h-5 w-5">
+                    <p
+                      v-if="i.completed && i.type == 'lesson'"
+                      class="full_flex rounded-full b_c2a h-5 w-5"
+                    >
                       <img class="w-3 h-3" src="@/assets/svg/true.svg" alt="" />
                     </p>
-                    <img :class="useClassroom.local_store.activeName == i.id &&
-      useClassroom.store.activeTab == i.type
-      ? 'rotate-180'
-      : ''
-      " class="duration-500 lesson_img" src="@/assets/svg/select_arrow.svg" alt="" />
+                    <img
+                      :class="
+                        useClassroom.local_store.activeName == i.id &&
+                        useClassroom.store.activeTab == i.type
+                          ? 'rotate-180'
+                          : ''
+                      "
+                      class="duration-500 lesson_img"
+                      src="@/assets/svg/select_arrow.svg"
+                      alt=""
+                    />
                   </div>
                 </div>
               </div>
-              <ul :class="useClassroom.local_store.activeName == i.id &&
-      useClassroom.store.activeTab == i.type
-      ? ''
-      : 'h-0 overflow-hidden'
-      " class="w-full duration-1000">
-                <draggable :list="useClassroom.store.modules?.set[index].lesson"
-                  @change="useClassroom.update_set_position" group="set" :animation="200" class="grid">
-                  <li @click="() => activeModule(lesson.id, m_index, index)" v-for="(lesson, m_index) in i.lesson"
-                    :class="useClassroom.local_store.moduleActiveId == lesson.id
-      ? 'b_cbc'
-      : ''
-      " class="flex items-center justify-between module_name text-xs pl-9 pr-2 h-8 r_8 cursor-pointer">
+              <ul
+                :class="
+                  useClassroom.local_store.activeName == i.id &&
+                  useClassroom.store.activeTab == i.type
+                    ? ''
+                    : 'h-0 overflow-hidden'
+                "
+                class="w-full duration-1000"
+              >
+                <draggable
+                  :list="useClassroom.store.modules?.set[index].lesson"
+                  @change="useClassroom.update_set_position"
+                  group="set"
+                  :animation="200"
+                  class="grid"
+                >
+                  <li
+                    @click="() => activeModule(lesson.id, m_index, index)"
+                    v-for="(lesson, m_index) in i.lesson"
+                    :class="
+                      useClassroom.local_store.moduleActiveId == lesson.id
+                        ? 'b_cbc'
+                        : ''
+                    "
+                    class="flex items-center justify-between module_name text-xs pl-9 pr-2 h-8 r_8 cursor-pointer"
+                  >
                     <p class="truncate">
                       {{ (lesson.published ? "" : "(Draft) ") + lesson.title }}
                     </p>
                     <div class="flex gap-2 items-center">
-                      <el-dropdown v-if="role_ac.includes(useGroup.store.group_by_username.type)" placement="bottom-end"
-                        class="dropdown">
-                        <img class="rotate-90 three_dot" src="@/assets/svg/three_dot.svg" alt="" />
+                      <el-dropdown
+                        v-if="
+                          role_ac.includes(
+                            useGroup.store.group_by_username.type
+                          )
+                        "
+                        placement="bottom-end"
+                        class="dropdown"
+                      >
+                        <img
+                          class="rotate-90 three_dot"
+                          src="@/assets/svg/three_dot.svg"
+                          alt=""
+                        />
                         <template #dropdown>
-                          <el-dropdown-menu class="community_dropdown min-w-[200px] dropdown_shadow">
-                            <el-dropdown-item @click="editModule(lesson)">Edit module</el-dropdown-item>
-                            <el-dropdown-item @click="useClassroom.publish_module(lesson.id)">{{
-      lesson.published
-        ? "Revert to draft"
-        : "Publish module"
-    }}</el-dropdown-item>
-                            <el-dropdown-item @click="changeFolder(lesson)">Change folder</el-dropdown-item>
+                          <el-dropdown-menu
+                            class="community_dropdown min-w-[200px] dropdown_shadow"
+                          >
+                            <el-dropdown-item @click="editModule(lesson)"
+                              >Edit module</el-dropdown-item
+                            >
                             <el-dropdown-item
-                              @click="useClassroom.duplicate_module(lesson.id)">Duplicate</el-dropdown-item>
-                            <el-dropdown-item @click="dripModule(lesson)">Drip status:
+                              @click="useClassroom.publish_module(lesson.id)"
+                              >{{
+                                lesson.published
+                                  ? "Revert to draft"
+                                  : "Publish module"
+                              }}</el-dropdown-item
+                            >
+                            <el-dropdown-item @click="changeFolder(lesson)"
+                              >Change folder</el-dropdown-item
+                            >
+                            <el-dropdown-item
+                              @click="useClassroom.duplicate_module(lesson.id)"
+                              >Duplicate</el-dropdown-item
+                            >
+                            <el-dropdown-item @click="dripModule(lesson)"
+                              >Drip status:
                               {{
-      lesson.day > 0 ? lesson.day : "Off"
-    }}</el-dropdown-item>
-                            <el-dropdown-item @click="deleteModal('module', lesson.id)">Delete module</el-dropdown-item>
+                                lesson.day > 0 ? lesson.day : "Off"
+                              }}</el-dropdown-item
+                            >
+                            <el-dropdown-item
+                              @click="deleteModal('module', lesson.id)"
+                              >Delete module</el-dropdown-item
+                            >
                           </el-dropdown-menu>
                         </template>
                       </el-dropdown>
-                      <p v-if="lesson.completed && lesson.type == 'lesson'"
-                        class="full_flex rounded-full b_c2a h-5 w-5">
-                        <img class="w-3 h-3" src="@/assets/svg/true.svg" alt="" />
+                      <p
+                        v-if="lesson.completed && lesson.type == 'lesson'"
+                        class="full_flex rounded-full b_c2a h-5 w-5"
+                      >
+                        <img
+                          class="w-3 h-3"
+                          src="@/assets/svg/true.svg"
+                          alt=""
+                        />
                       </p>
                     </div>
                   </li>
@@ -145,65 +286,116 @@
         </ul>
       </aside>
     </section>
-    <section v-if="useClassroom.local_store.moduleData.title" class="w-full"
-      :class="store.is_open ? '' : 'md:block hidden'">
-      <div @click="store.is_open = false" class="md:hidden flex items-center mb-[45px] gap-3 cursor-pointer">
+    <section
+      v-if="useClassroom.local_store.moduleData.title"
+      class="w-full"
+      :class="store.is_open ? '' : 'md:block hidden'"
+    >
+      <div
+        @click="store.is_open = false"
+        class="md:hidden flex items-center mb-[45px] gap-3 cursor-pointer"
+      >
         <img src="@/assets/svg/icon/back.svg" alt="" />
         <p>Back to the course</p>
       </div>
-      <div class="bg-white r_16 overflow-hidden whitespace-nowrap" v-if="!useClassroom.local_store.edit_card">
-        <div v-if="useClassroom.local_store.moduleIndex ||
-      useClassroom.local_store.moduleIndex == 0
-      ">
-          <div class="flex items-center justify-between border-b border-[#E0E0E0] w-full h-16 px-5 bg-white">
+      <div
+        class="bg-white r_16 overflow-hidden whitespace-nowrap"
+        v-if="!useClassroom.local_store.edit_card"
+      >
+        <div
+          v-if="
+            useClassroom.local_store.moduleIndex ||
+            useClassroom.local_store.moduleIndex == 0
+          "
+        >
+          <div
+            class="flex items-center justify-between border-b border-[#E0E0E0] w-full h-16 px-5 bg-white"
+          >
             <h1 class="text-xl font-semibold truncate max-w-[250px]">
               {{ useClassroom.local_store.moduleData?.title }}
             </h1>
             <div class="full_flex gap-4">
-              <button v-if="useClassroom.local_store.moduleData?.completed"
-                v-loading="isLoading.isLoadingType('markAsCompleted')" @click="useClassroom.update_completed()"
-                class="full_flex gap-1 r_8 _c07 bg-[#BCFFC7] h-9 px-3">
+              <button
+                v-if="useClassroom.local_store.moduleData?.completed"
+                v-loading="isLoading.isLoadingType('markAsCompleted')"
+                @click="useClassroom.update_completed()"
+                class="full_flex gap-1 r_8 _c07 bg-[#BCFFC7] h-9 px-3"
+              >
                 <img src="@/assets/svg/mark_as_read_black.svg" alt="" />
                 <p class="lg:block hidden">Marked</p>
               </button>
-              <button v-else v-loading="isLoading.isLoadingType('markAsCompleted')"
+              <button
+                v-else
+                v-loading="isLoading.isLoadingType('markAsCompleted')"
                 @click="useClassroom.update_completed()"
-                class="full_flex gap-1 border border-[#BCDEFF] r_8 _c2a h-9 px-3">
+                class="full_flex gap-1 border border-[#BCDEFF] r_8 _c2a h-9 px-3"
+              >
                 <img src="@/assets/svg/mark_as_read.svg" alt="" />
                 <p class="lg:block hidden">Mark as done</p>
               </button>
-              <button v-if="role_ac.includes(useGroup.store.group_by_username.type)"
+              <button
+                v-if="role_ac.includes(useGroup.store.group_by_username.type)"
                 @click="editModule(useClassroom.local_store.moduleData)"
-                class="full_flex gap-1 border border-[#BCDEFF] r_8 _c2a h-9 px-3">
+                class="full_flex gap-1 border border-[#BCDEFF] r_8 _c2a h-9 px-3"
+              >
                 <img src="@/assets/svg/edit.svg" alt="" />
                 <p class="lg:block hidden">Edit</p>
               </button>
             </div>
           </div>
           <div
-            v-if="checkDates(useClassroom.local_store.moduleData.drip) && !role_ac.includes(useGroup.store.group_by_username.type)"
-            class="full_flex flex-col gap-2 b_cf2 m-5 r_8 h-[250px]">
-            <img class="h-7 w-7" src="@/assets/svg/clock.svg" alt="">
+            v-if="
+              checkDates(useClassroom.local_store.moduleData.drip) &&
+              !role_ac.includes(useGroup.store.group_by_username.type)
+            "
+            class="full_flex flex-col gap-2 b_cf2 m-5 r_8 h-[250px]"
+          >
+            <img class="h-7 w-7" src="@/assets/svg/clock.svg" alt="" />
             <p>Unlock in {{ useClassroom.local_store.moduleData.day }} days</p>
           </div>
           <div v-else class="space-y-5 p-5">
-            <div v-if="isLoading.isURL(useClassroom.local_store.moduleData?.link)"
-              class="rounded-xl bg-[#0000004D] md:h-[400px] h-[200px] r_8 overflow-hidden">
-              <iframe class="md:h-[400px] h-[200px] w-full object-contain object-center"
-                :src="useClassroom.local_store.moduleData?.link" title="YouTube video player" frameborder="0"
+            <div
+              v-if="isLoading.isURL(useClassroom.local_store.moduleData?.link)"
+              class="rounded-xl bg-[#0000004D] md:h-[400px] h-[200px] r_8 overflow-hidden"
+            >
+              <iframe
+                class="md:h-[400px] h-[200px] w-full object-contain object-center"
+                :src="useClassroom.local_store.moduleData?.link"
+                title="YouTube video player"
+                frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen
+              ></iframe>
             </div>
-            <p v-if="useClassroom.local_store.moduleData?.description?.length"
-              v-html="useClassroom.local_store.moduleData?.description"></p>
+            <p
+              v-if="useClassroom.local_store.moduleData?.description?.length"
+              v-html="useClassroom.local_store.moduleData?.description"
+            ></p>
             <div v-if="useClassroom.local_store.moduleData.media?.length">
               <p class="font-semibold">Resources</p>
               <ul class="max-w-fit text-sm space-y-1 mt-2 mb-4">
-                <li v-for="(media, index) in useClassroom.local_store.moduleData
-      .media" class="full_flex !justify-start gap-2 _c2a hover:underline cursor-pointer">
-                  <img v-if="media.type == 'link'" class="w-5 h-5 p-0.5" src="@/assets/svg/href.svg" alt="" />
-                  <img v-else class="w-5 h-5" src="@/assets/svg/file.svg" alt="" />
-                  <p>{{ media.name }}</p>
+                <li
+                  v-for="(media, index) in useClassroom.local_store.moduleData
+                    .media"
+                  class="full_flex !justify-start gap-2 _c2a hover:underline cursor-pointer"
+                >
+                  <img
+                    v-if="media.type == 'link'"
+                    class="w-5 h-5 p-0.5"
+                    src="@/assets/svg/href.svg"
+                    alt=""
+                  />
+                  <img
+                    v-else
+                    class="w-5 h-5"
+                    src="@/assets/svg/file.svg"
+                    alt=""
+                  />
+                  <p v-if="media.type == 'link'">
+                    <a :href="media.url" target="_blank">{{ media.name }}</a>
+                  </p>
+                  <p v-else @click="handleMediaShow(useClassroom.local_store.moduleData.media, media.id)">{{ media.name }}</p>
                 </li>
               </ul>
             </div>
@@ -214,67 +406,122 @@
       <!-- edit card -->
       <form @submit.prevent="handleSubmit" v-else class="bg-white p-6 r_16">
         <div>
-          <input @input="handleInput('input')" v-model="useClassroom.module.title" type="text" placeholder="Title"
-            class="text-xl h-12 font-semibold" required />
+          <input
+            @input="handleInput('input')"
+            v-model="useClassroom.module.title"
+            type="text"
+            placeholder="Title"
+            class="text-xl h-12 font-semibold"
+            required
+          />
           <p class="text-end mt-2 _ca1 text-sm">
             {{ useClassroom.module.title?.length }}/50
           </p>
         </div>
-        <div v-if="!useClassroom.module.video" @click="() => {
-      useClassroom.local_store.addVideoModal = true;
-      addVideo.store.files = [];
-    }
-      " class="full_flex flex-col cursor-pointer gap-1 md:h-[400px] h-[184px] r_8 mt-5 b_cf2">
+        <div
+          v-if="!useClassroom.module.video"
+          @click="
+            () => {
+              useClassroom.local_store.addVideoModal = true;
+              addVideo.store.files = [];
+            }
+          "
+          class="full_flex flex-col cursor-pointer gap-1 md:h-[400px] h-[184px] r_8 mt-5 b_cf2"
+        >
           <img src="@/assets/svg/add_video.svg" alt="" />
           <p class="font-medium _c2a">Add video</p>
         </div>
-        <div v-else
-          class="relative full_flex imagelabel video_upload flex-col cursor-pointer overflow-hidden gap-1 md:h-[400px] h-[200px] r_8 mt-5 b_cf2">
-          <button @click="deleteImage" type="button"
-            class="absolute deleteimage !hidden top-5 right-5 rounded-full w-10 h-10 full_flex border bg-white">
+        <div
+          v-else
+          class="relative full_flex imagelabel video_upload flex-col cursor-pointer overflow-hidden gap-1 md:h-[400px] h-[200px] r_8 mt-5 b_cf2"
+        >
+          <button
+            @click="deleteImage"
+            type="button"
+            class="absolute deleteimage !hidden top-5 right-5 rounded-full w-10 h-10 full_flex border bg-white"
+          >
             <img class="m-auto" src="@/assets/svg/x.svg" alt="" />
           </button>
           <div class="w-full h-full" v-for="(i, index) in addVideo.store.files">
-            <img v-if="i.type == 'image'" class="w-full h-full rounded-xl object-cover" :src="i.url" alt="" />
+            <img
+              v-if="i.type == 'image'"
+              class="w-full h-full rounded-xl object-cover"
+              :src="i.url"
+              alt=""
+            />
             <div v-else-if="i.type == 'video'">
-              <video class="w-full h-full border rounded-xl object-cover" controls>
+              <video
+                class="w-full h-full border rounded-xl object-cover"
+                controls
+              >
                 <source :src="i.url" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>
-            <iframe v-else-if="i.type == 'youtube' ||
-      i.type == 'wistia' ||
-      i.type == 'vimeo' ||
-      i.type == 'loom'
-      " class="w-full h-full rounded-xl object-cover text-[#0000]" :src="i.url"></iframe>
+            <iframe
+              v-else-if="
+                i.type == 'youtube' ||
+                i.type == 'wistia' ||
+                i.type == 'vimeo' ||
+                i.type == 'loom'
+              "
+              class="w-full h-full rounded-xl object-cover text-[#0000]"
+              :src="i.url"
+            ></iframe>
           </div>
-          <!-- <iframe disabled class="md:h-[400px] h-[200px] w-full object-contain object-center pointer-events-none"
-            :src="useClassroom.module.video" title="YouTube video player" frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> -->
         </div>
         <Editor />
         <div v-if="useClassroom.store.files?.length">
           <p class="font-semibold">Resources</p>
           <ul class="max-w-fit text-sm space-y-1 mt-2 mb-4">
-            <li v-for="(i, index) in useClassroom.store.files" v-show="i.is_new != 'deleted'"
-              class="full_flex !justify-start gap-2 _c2a hover:underline cursor-pointer">
-              <img v-if="i.type == 'link'" class="w-5 h-5 p-0.5" src="@/assets/svg/href.svg" alt="" />
+            <li
+              v-for="(i, index) in useClassroom.store.files"
+              v-show="i.is_new != 'deleted'"
+              class="full_flex !justify-start gap-2 _c2a hover:underline cursor-pointer"
+            >
+              <img
+                v-if="i.type == 'link'"
+                class="w-5 h-5 p-0.5"
+                src="@/assets/svg/href.svg"
+                alt=""
+              />
               <img v-else class="w-5 h-5" src="@/assets/svg/file.svg" alt="" />
               <p>{{ i.name }}</p>
-              <el-dropdown v-if="role_ac.includes(useGroup.store.group_by_username.type)" placement="bottom-end"
-                class="dropdown ml-4">
-                <img class="rotate-90 three_dot" src="@/assets/svg/three_dot.svg" alt="" />
+              <el-dropdown
+                v-if="role_ac.includes(useGroup.store.group_by_username.type)"
+                placement="bottom-end"
+                class="dropdown ml-4"
+              >
+                <img
+                  class="rotate-90 three_dot"
+                  src="@/assets/svg/three_dot.svg"
+                  alt=""
+                />
                 <template #dropdown>
-                  <el-dropdown-menu class="community_dropdown min-w-[200px] dropdown_shadow">
-                    <el-dropdown-item @click="editModuleFile(index)">Edit</el-dropdown-item>
-                    <el-dropdown-item><span :class="index == 0 ? '_ca1' : ''">Move up</span></el-dropdown-item>
-                    <el-dropdown-item>
-                      <span :class="index == useClassroom.store.files?.length - 1
-      ? '_ca1'
-      : ''
-      ">Move down</span></el-dropdown-item>
-                    <el-dropdown-item @click="deleteModal('media', index)"><span>Delete</span></el-dropdown-item>
+                  <el-dropdown-menu
+                    class="community_dropdown min-w-[200px] dropdown_shadow"
+                  >
+                    <el-dropdown-item @click="editModuleFile(index)"
+                      >Edit</el-dropdown-item
+                    >
+                    <el-dropdown-item @click="movefile('up', index)"
+                      ><span :class="index == 0 ? '_ca1' : ''"
+                        >Move up</span
+                      ></el-dropdown-item
+                    >
+                    <el-dropdown-item @click="movefile('down', index)">
+                      <span
+                        :class="
+                          index == useClassroom.store.files?.length - 1
+                            ? '_ca1'
+                            : ''
+                        "
+                        >Move down</span
+                      ></el-dropdown-item
+                    >
+                    <el-dropdown-item @click="deleteModal('media', index)"
+                      ><span>Delete</span></el-dropdown-item
+                    >
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
@@ -282,41 +529,69 @@
           </ul>
         </div>
 
-        <div class="lg:flex lg:items-center lg:justify-between lg:space-y-0 space-y-4">
-          <div class="flex items-center lg:justify-center justify-between gap-6 _c07">
-            <el-dropdown placement="bottom-start" class="dropdown border border-[#E0E0E0] px-3 min-w-fit rounded-[4px]">
+        <div
+          class="lg:flex lg:items-center lg:justify-between lg:space-y-0 space-y-4"
+        >
+          <div
+            class="flex items-center lg:justify-center justify-between gap-6 _c07"
+          >
+            <el-dropdown
+              placement="bottom-start"
+              class="dropdown border border-[#E0E0E0] px-3 min-w-fit rounded-[4px]"
+            >
               <button type="button" class="full_flex gap-2 text-sm">
                 Add<img src="@/assets/svg/select_arrow.svg" alt="" />
               </button>
               <template #dropdown>
-                <el-dropdown-menu class="community_dropdown !-ml-3 min-w-[200px] dropdown_shadow">
-                  <el-dropdown-item @click="handleLikeUpload">Add resource link</el-dropdown-item>
+                <el-dropdown-menu
+                  class="community_dropdown !-ml-3 min-w-[200px] dropdown_shadow"
+                >
+                  <el-dropdown-item @click="handleLikeUpload"
+                    >Add resource link</el-dropdown-item
+                  >
                   <label for="upload_file">
                     <el-dropdown-item>
                       Add resource file
-                      <input @change="handleFileUpload" type="file" id="upload_file"
-                        class="block w-0 h-0 !p-0 overflow-hidden !border-none" />
+                      <input
+                        @change="handleFileUpload"
+                        type="file"
+                        id="upload_file"
+                        class="block w-0 h-0 !p-0 overflow-hidden !border-none"
+                      />
                     </el-dropdown-item>
                   </label>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
             <div class="flex items-center gap-6">
-              <p v-if="useClassroom.module.published" class="text-[16px] font-medium">
+              <p
+                v-if="useClassroom.module.published"
+                class="text-[16px] font-medium"
+              >
                 Published
               </p>
               <p v-else class="text-[16px] font-medium">Draft</p>
               <el-switch v-model="useClassroom.module.published" class="ml-2" />
             </div>
           </div>
-          <div class="flex lg:justify-start justify-end w-full gap-3 text-sm font-semibold">
-            <button @click="useClassroom.local_store.edit_card = false" type="button"
-              class="uppercase h-10 px-6 rounded-lg _ca1">
+          <div
+            class="flex lg:justify-start justify-end w-full gap-3 text-sm font-semibold"
+          >
+            <button
+              @click="useClassroom.local_store.edit_card = false"
+              type="button"
+              class="uppercase h-10 px-6 rounded-lg _ca1"
+            >
               cancel
             </button>
-            <button :type="isLoading.isLoadingType('createModule') ? 'button' : 'submit'
-      " :class="useClassroom.module.title ? 'b_cbc _c07' : 'b_ce0 _ca1'" class="uppercase h-10 px-6 rounded-lg"
-              v-loading="isLoading.isLoadingType('createModule')">
+            <button
+              :type="
+                isLoading.isLoadingType('createModule') ? 'button' : 'submit'
+              "
+              :class="useClassroom.module.title ? 'b_cbc _c07' : 'b_ce0 _ca1'"
+              class="uppercase h-10 px-6 rounded-lg"
+              v-loading="isLoading.isLoadingType('createModule')"
+            >
               save
             </button>
           </div>
@@ -328,31 +603,58 @@
     <ModalAddVideo />
 
     <!-- Change folder -->
-    <el-dialog v-model="useClassroom.store.change_category" width="400" align-center
-      class="!rounded-xl overflow-hidden px-6 py-7">
+    <el-dialog
+      v-model="useClassroom.store.change_category"
+      width="400"
+      align-center
+      class="!rounded-xl overflow-hidden px-6 py-7"
+    >
       <div class="space-y-7">
         <h1 class="text-2xl font-semibold">Change folder</h1>
-        <el-select class="block w-full mt-2" v-model="useClassroom.store.current_category" placeholder="Select">
+        <el-select
+          class="block w-full mt-2"
+          v-model="useClassroom.store.current_category"
+          placeholder="Select"
+        >
           <el-option :key="'None'" :label="'None'" :value="null">
             <div class="flex items-center gap-2">
               None
-              <img v-if="useClassroom.store.current_category == null" src="@/assets/svg/checked.svg" alt="" />
+              <img
+                v-if="useClassroom.store.current_category == null"
+                src="@/assets/svg/checked.svg"
+                alt=""
+              />
             </div>
           </el-option>
-          <el-option v-for="item in useClassroom.store.modules.set" :key="item.name" :label="item.name" :value="item.id"
-            v-show="item.type == 'set'">
+          <el-option
+            v-for="item in useClassroom.store.modules.set"
+            :key="item.name"
+            :label="item.name"
+            :value="item.id"
+            v-show="item.type == 'set'"
+          >
             <div class="flex items-center gap-2">
               {{ item.name }}
-              <img v-if="useClassroom.store.current_category == item.id" src="@/assets/svg/checked.svg" alt="" />
+              <img
+                v-if="useClassroom.store.current_category == item.id"
+                src="@/assets/svg/checked.svg"
+                alt=""
+              />
             </div>
           </el-option>
         </el-select>
         <div class="flex justify-end gap-3 text-sm font-semibold">
-          <button @click="useClassroom.store.change_category = false" class="uppercase h-10 px-6 rounded-lg _ca1">
+          <button
+            @click="useClassroom.store.change_category = false"
+            class="uppercase h-10 px-6 rounded-lg _ca1"
+          >
             cancel
           </button>
-          <button @click="useClassroom.change_folder" v-loading="isLoading.isLoadingType('changeFolder')"
-            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg">
+          <button
+            @click="useClassroom.change_folder"
+            v-loading="isLoading.isLoadingType('changeFolder')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
             save
           </button>
         </div>
@@ -360,32 +662,54 @@
     </el-dialog>
 
     <!-- add set -->
-    <el-dialog v-model="useClassroom.store.setModal" align-center width="440"
-      class="bg-opacity-50 !rounded-lg py-7 px-6">
+    <el-dialog
+      v-model="useClassroom.store.setModal"
+      align-center
+      width="440"
+      class="bg-opacity-50 !rounded-lg py-7 px-6"
+    >
       <form @submit.prevent="useClassroom.create_set">
-        <h1 v-if="useClassroom.store.setEdit" class="text-2xl mb-7 font-semibold">
+        <h1
+          v-if="useClassroom.store.setEdit"
+          class="text-2xl mb-7 font-semibold"
+        >
           Edit set
         </h1>
         <h1 v-else class="text-2xl mb-7 font-semibold">Add set</h1>
-        <input v-model="useClassroom.set.name" class="text-sm" type="text" placeholder="Creating a set" required />
+        <input
+          v-model="useClassroom.set.name"
+          class="text-sm"
+          type="text"
+          placeholder="Creating a set"
+          required
+        />
         <p class="text-end mt-2 _ca1 text-sm">
           {{ useClassroom.set.name?.length }}/50
         </p>
         <div class="flex justify-between gap-3 mt-7 text-sm font-semibold">
           <div class="flex items-center gap-6">
-            <p v-if="useClassroom.set.published" class="text-[16px] font-medium _c07">
+            <p
+              v-if="useClassroom.set.published"
+              class="text-[16px] font-medium _c07"
+            >
               Published
             </p>
             <p v-else class="text-[16px] font-medium">Draft</p>
             <el-switch v-model="useClassroom.set.published" class="ml-2" />
           </div>
           <div class="flex items-center gap-">
-            <button @click="useClassroom.store.setModal = false" type="button"
-              class="uppercase h-10 px-6 rounded-lg _ca1">
+            <button
+              @click="useClassroom.store.setModal = false"
+              type="button"
+              class="uppercase h-10 px-6 rounded-lg _ca1"
+            >
               cancel
             </button>
-            <button :class="useClassroom.set.name ? 'b_cbc _c07' : 'b_ce0 _ca1'" class="uppercase h-10 px-6 rounded-lg"
-              v-loading="isLoading.isLoadingType('createSet')">
+            <button
+              :class="useClassroom.set.name ? 'b_cbc _c07' : 'b_ce0 _ca1'"
+              class="uppercase h-10 px-6 rounded-lg"
+              v-loading="isLoading.isLoadingType('createSet')"
+            >
               save
             </button>
           </div>
@@ -394,34 +718,58 @@
     </el-dialog>
 
     <!-- drip off -->
-    <el-dialog v-model="useClassroom.store.dripModal" align-center width="440"
-      class="bg-opacity-50 !rounded-lg py-7 px-6">
+    <el-dialog
+      v-model="useClassroom.store.dripModal"
+      align-center
+      width="440"
+      class="bg-opacity-50 !rounded-lg py-7 px-6"
+    >
       <form @submit.prevent="useClassroom.update_drip">
         <h1 class="text-2xl mb-7 font-semibold">Edit drip</h1>
         <div class="flex items-center gap-6">
-          <p v-if="useClassroom.store.is_drip" class="text-[16px] font-medium _c07">
+          <p
+            v-if="useClassroom.store.is_drip"
+            class="text-[16px] font-medium _c07"
+          >
             Drip ON
           </p>
           <p v-else class="text-[16px] font-medium">Drip OFF</p>
           <el-switch v-model="useClassroom.store.is_drip" class="ml-2" />
         </div>
-        <div v-if="useClassroom.store.is_drip" class="whitespace-nowrap _c07 flex items-center gap-2 mt-4">
+        <div
+          v-if="useClassroom.store.is_drip"
+          class="whitespace-nowrap _c07 flex items-center gap-2 mt-4"
+        >
           <p>Release page</p>
-          <input @input="handleInput('day')" v-model="useClassroom.store.drip_day" max="999" min="1" type="number"
-            class="w-14" />
+          <input
+            @input="handleInput('day')"
+            v-model="useClassroom.store.drip_day"
+            max="999"
+            min="1"
+            type="number"
+            class="w-14"
+          />
           <p>days after members join</p>
         </div>
         <div class="flex items-center justify-end gap-2 mt-4">
-          <button @click="useClassroom.store.dripModal = false" type="button"
-            class="uppercase h-10 px-6 rounded-lg _ca1">
+          <button
+            @click="useClassroom.store.dripModal = false"
+            type="button"
+            class="uppercase h-10 px-6 rounded-lg _ca1"
+          >
             cancel
           </button>
-          <button :class="useClassroom.store.is_drip
-      ? useClassroom.store.drip_day
-        ? 'b_cbc _c07'
-        : 'b_ce0 _ca1 pointer-events-none'
-      : 'b_cbc _c07'
-      " class="uppercase h-10 px-6 rounded-lg" v-loading="isLoading.isLoadingType('updateDrip')">
+          <button
+            :class="
+              useClassroom.store.is_drip
+                ? useClassroom.store.drip_day
+                  ? 'b_cbc _c07'
+                  : 'b_ce0 _ca1 pointer-events-none'
+                : 'b_cbc _c07'
+            "
+            class="uppercase h-10 px-6 rounded-lg"
+            v-loading="isLoading.isLoadingType('updateDrip')"
+          >
             save
           </button>
         </div>
@@ -429,39 +777,68 @@
     </el-dialog>
 
     <!-- add label for file -->
-    <el-dialog v-model="useClassroom.store.add_file" width="400" align-center
-      class="bg-opacity-50 !rounded-lg py-7 px-6">
+    <el-dialog
+      v-model="useClassroom.store.add_file"
+      width="400"
+      align-center
+      class="bg-opacity-50 !rounded-lg py-7 px-6"
+    >
       <form @submit.prevent="handleAddFile">
         <h1 class="text-2xl font-semibold mb-4">
           Add {{ useClassroom.store.file_type }}
         </h1>
-        <div v-if="useClassroom.store.file_type != 'link'"
-          class="flex gap-2 _c2a mt-3 mb-4 hover:underline cursor-pointer">
+        <div
+          v-if="useClassroom.store.file_type != 'link'"
+          class="flex gap-2 _c2a mt-3 mb-4 hover:underline cursor-pointer"
+        >
           <img class="w-5 h-5" src="@/assets/svg/file.svg" alt="" />
           <p class="truncate">{{ useClassroom.store.file.file.name }}</p>
         </div>
-        <input @input="handleInput('label')" v-model="useClassroom.store.file.name" class="text-sm" type="text"
-          placeholder="Label" required />
+        <input
+          @input="handleInput('label')"
+          v-model="useClassroom.store.file.name"
+          class="text-sm"
+          type="text"
+          placeholder="Label"
+          required
+        />
         <p class="text-end mt-2 _ca1 md:text-sm text-xs">
           {{ useClassroom.store.file.name?.length }}/34
         </p>
-        <input v-if="useClassroom.store.file_type == 'link'" v-model="useClassroom.store.file.file" class="text-sm mt-4"
-          type="url" placeholder="Enter a URL" required />
-        <p v-if="useClassroom.local_store.is_url" class="leading-4 text-red-600 -mb-6 mt-2 vip">
+        <input
+          v-if="useClassroom.store.file_type == 'link'"
+          v-model="useClassroom.store.file.file"
+          class="text-sm mt-4"
+          type="url"
+          placeholder="Enter a URL"
+          required
+        />
+        <p
+          v-if="useClassroom.local_store.is_url"
+          class="leading-4 text-red-600 -mb-6 mt-2 vip"
+        >
           Invalid link
         </p>
         <div class="flex justify-end gap-3 mt-7 text-sm font-semibold">
-          <button @click="useClassroom.store.add_file = false" type="button"
-            class="uppercase h-10 px-6 rounded-lg _ca1">
+          <button
+            @click="useClassroom.store.add_file = false"
+            type="button"
+            class="uppercase h-10 px-6 rounded-lg _ca1"
+          >
             cancel
           </button>
-          <button :class="useClassroom.store.file_type == 'link'
-      ? useClassroom.store.file.name?.length &&
-      useClassroom.store.file.file?.length
-      : useClassroom.store.file.name?.length
-        ? 'b_cbc _c07'
-        : 'b_ce0 _ca1 pointer-events-none'
-      " class="uppercase h-10 px-6 rounded-lg" v-loading="isLoading.isLoadingType('createModule')">
+          <button
+            :class="
+              useClassroom.store.file_type == 'link'
+                ? useClassroom.store.file.name?.length &&
+                  useClassroom.store.file.file?.length
+                : useClassroom.store.file.name?.length
+                ? 'b_cbc _c07'
+                : 'b_ce0 _ca1 pointer-events-none'
+            "
+            class="uppercase h-10 px-6 rounded-lg"
+            v-loading="isLoading.isLoadingType('createModule')"
+          >
             <span v-if="useClassroom.file_edit.edit">
               <span v-if="useClassroom.store.file_type == 'link'">Link</span>
               <span v-else>Save</span>
@@ -474,35 +851,111 @@
     </el-dialog>
 
     <!-- Delete -->
-    <el-dialog v-model="useClassroom.file_edit.delete" width="400" align-center
-      class="!rounded-xl overflow-hidden px-6 py-7">
+    <el-dialog
+      v-model="useClassroom.file_edit.delete"
+      width="400"
+      align-center
+      class="!rounded-xl overflow-hidden px-6 py-7"
+    >
       <div class="space-y-7">
         <h1 class="text-2xl font-semibold">
           {{ store.delete_data.title }}
         </h1>
         <p class="text-lg">{{ store.delete_data.description }}</p>
         <div class="flex justify-end gap-3 text-sm font-semibold">
-          <button @click="useClassroom.file_edit.delete = false" class="uppercase h-10 px-6 rounded-lg _ca1">
+          <button
+            @click="useClassroom.file_edit.delete = false"
+            class="uppercase h-10 px-6 rounded-lg _ca1"
+          >
             cancel
           </button>
-          <button v-if="store.deleteType == 'media'" @click="handleDeleteMedia"
-            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg">
+          <button
+            v-if="store.deleteType == 'media'"
+            @click="handleDeleteMedia"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
             delete
           </button>
-          <button v-else-if="store.deleteType == 'set'" v-loading="isLoading.isLoadingType('deleteSet')"
-            @click="useClassroom.delete_set()" class="uppercase h-10 px-6 b_cbc _c07 rounded-lg">
+          <button
+            v-else-if="store.deleteType == 'set'"
+            v-loading="isLoading.isLoadingType('deleteSet')"
+            @click="useClassroom.delete_set()"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
             delete
           </button>
-          <button v-loading="isLoading.isLoadingType('deleteModule')" v-else-if="store.deleteType == 'module'"
-            @click="useClassroom.delete_module()" class="uppercase h-10 px-6 b_cbc _c07 rounded-lg">
+          <button
+            v-loading="isLoading.isLoadingType('deleteModule')"
+            v-else-if="store.deleteType == 'module'"
+            @click="useClassroom.delete_module()"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
             delete
           </button>
-          <button v-else-if="isLoading.membersModal.modalType == 'link'" @click="useLink.deleteLink"
-            v-loading="isLoading.isLoadingType('deleteLink')" class="uppercase h-10 px-6 b_cbc _c07 rounded-lg">
+          <button
+            v-else-if="isLoading.membersModal.modalType == 'link'"
+            @click="useLink.deleteLink"
+            v-loading="isLoading.isLoadingType('deleteLink')"
+            class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
+          >
             delete
           </button>
         </div>
       </div>
+    </el-dialog>
+
+    <!-- post media modal -->
+    <el-dialog v-model="store.postMediaModal"
+      class="!p-0 !bg-transparent w-full fixed top-0 !shadow-none bg-black bg-opacity-10 full_flex" style="width: 100%;"
+      align-center>
+      <!-- {{store.postMediaList}} -->
+      <div class="min-w-[80vw] md:min-h-[80vh] full_flex overflow-hidden md:max-h-[80vh] md:max-w-[80vw]">
+        <div class="postmainSlider bg-black bg-opacity-10 max-w-[80vw] duration-500 flex items-center w-full">
+          <div class="full_flex min-w-[100%] min-h-full" v-for="(media, index) in store.postMediaList">
+            <div class="relative w-full imagelabel full_flex">
+              <img v-if="media.type == 'image'" class="full_flex" :src="media.url" alt="" />
+              <div v-else-if="media.type == 'video'">
+                <video class="md:max-h-[80vh] max-w-[80vw] min-w-full md:min-h-[80vh] min-h-[50vh]" controls>
+                  <source :src="media.url" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div class="w-full full_flex">
+              <iframe v-else-if="media.type == 'youtube' ||
+    media.type == 'wistia' ||
+    media.type == 'vimeo' ||
+    media.type == 'loom'
+    " class="md:max-h-[80vh] max-w-[80vw] min-w-full md:min-h-[80vh] min-h-[50vh]" :src="media.url"></iframe>
+            <iframe
+              v-else-if="media.url?.includes('pdf')"
+              class="w-full rounded-xl object-cover text-[#0000] h-[80vh]"
+              :src="media.url"
+            ></iframe>
+            <div v-else class="text-center routerlinks _c07 bg-white p-7 r_8 max-w-[500px]">
+              <p class="font-bold text-lg">No preview available</p>
+              <p class="mb-4 mt-2">for {{media.url}}</p>
+              <a :href="media.url" download>  <button type="button" class="b_cbc r_8 px-6 py-2 !h-auto _c07 w-full">
+            Download
+          </button>
+        </a>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- buttons -->
+      <button @click="() => handleMediaSlide('plus')"
+        class="bg-black z-50 bg-opacity-20 backdrop-blur-lg absolute sm:right-5 right-3 top-0 bottom-0 my-auto full_flex rounded-full w-12 h-12 border border-white">
+        <img src="@/assets/svg/slide_arrow.svg" alt="" />
+      </button>
+      <button @click="() => handleMediaSlide('minus')"
+        class="bg-black z-50 bg-opacity-20 backdrop-blur-lg absolute sm:left-5 left-3 top-0 bottom-0 my-auto full_flex rotate-180 rounded-full w-12 h-12 border border-white">
+        <img src="@/assets/svg/slide_arrow.svg" alt="" />
+      </button>
+      <button @click="store.postMediaModal = false"
+        class="bg-black z-50 bg-opacity-20 backdrop-blur-lg absolute sm:right-5 right-3 sm:top-5 top-3 my-auto full_flex rotate-180 rounded-full w-12 h-12 border border-white">
+        <img src="@/assets/svg/slide_x.svg" alt="" />
+      </button>
     </el-dialog>
   </main>
 </template>
@@ -512,7 +965,12 @@ definePageMeta({
   layout: "community",
 });
 
-import { useLoadingStore, useClassroomStore, useAddVideoStore, useGroupStore } from "@/store";
+import {
+  useLoadingStore,
+  useClassroomStore,
+  useAddVideoStore,
+  useGroupStore,
+} from "@/store";
 import { VueDraggableNext as draggable } from "vue-draggable-next";
 import { role_ac } from "@/composables";
 
@@ -522,19 +980,32 @@ const useGroup = useGroupStore();
 const router = useRouter();
 const addVideo = useAddVideoStore();
 useSeoMeta({
-  title: computed(() => `${useClassroom.store.modules.title} · ${useGroup.store.group_by_username.name}`),
-  ogTitle: computed(() => `Classroom · ${useGroup.store.group_by_username.name}`),
-  description: computed(() => `Classroom · ${useGroup.store.group_by_username.description}`),
-  ogDescription: computed(() => `Classroom · ${useGroup.store.group_by_username.description}`),
+  title: computed(
+    () =>
+      `${useClassroom.store.modules.title} · ${useGroup.store.group_by_username.name}`
+  ),
+  ogTitle: computed(
+    () => `Classroom · ${useGroup.store.group_by_username.name}`
+  ),
+  description: computed(
+    () => `Classroom · ${useGroup.store.group_by_username.description}`
+  ),
+  ogDescription: computed(
+    () => `Classroom · ${useGroup.store.group_by_username.description}`
+  ),
   ogImage: computed(() => `${useGroup.store.group_by_username.image}`),
   twitterCard: computed(() => `${useGroup.store.group_by_username.icon}`),
-})
+});
 
 addVideo.store.files = [];
 const store = reactive({
   is_open: false,
   deleteType: "",
   delete_data: {},
+  postMediaModal: false,
+  postMediaList: [],
+  slideStep: 0,
+  isPreview: false,
 });
 
 const deleteMediaFile = {
@@ -551,6 +1022,72 @@ const deleteModule = {
   title: "Delete module?",
   description: "Are you sure you want to delete this module",
 };
+
+function handleMediaSlide(type) {
+  if (type == "plus") {
+        if (store.slideStep < store.postMediaList?.length - 1) {
+          store.slideStep += 1;
+        }
+      } else {
+        if (store.slideStep > 0) {
+          store.slideStep -= 1;
+        }
+      }
+}
+
+function onIframeLoad(e) {
+  store.isPreview = true;
+  console.log(e)
+}
+
+function onIframeError(e, id) {
+          const iframe = document.getElementById(`iframe${id}`);
+  console.log(e)
+  setTimeout(() => {
+        try {
+          const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+          if (!iframeDocument.body.innerHTML) {
+  store.isPreview = true;
+          }
+        } catch (e) {
+  store.isPreview = false;
+        }
+      }, 1000);
+}
+
+function handleMediaShow(media, media_id) {
+  console.log(media);
+  store.postMediaList = [];
+  let t = 0;
+  for (let i of media) {
+    if (i.type != 'link') {
+      store.postMediaList.push(i);
+      t++;
+    }
+    if (i.id == media_id) {
+      store.slideStep = t - 1;
+    }
+  }
+  store.postMediaModal = true;
+  setTimeout(() => {
+    const image = document.querySelector(".postmainSlider");
+    image.style.transform = `translateX(-${store.slideStep * 100}%)`;
+  }, 100)
+}
+
+function movefile(type, index) {
+  if (type == "up") {
+    [useClassroom.store.files[index - 1], useClassroom.store.files[index]] = [
+      useClassroom.store.files[index],
+      useClassroom.store.files[index - 1],
+    ];
+  } else {
+    [useClassroom.store.files[index + 1], useClassroom.store.files[index]] = [
+      useClassroom.store.files[index],
+      useClassroom.store.files[index + 1],
+    ];
+  }
+}
 
 function deleteModal(type, index, data) {
   store.deleteType = type;
@@ -580,7 +1117,7 @@ function dripModule(data) {
 
 function checkDates(date) {
   date = new Date(date).getTime();
-  const now_date = new Date().getTime()
+  const now_date = new Date().getTime();
   return now_date > date;
 }
 
@@ -804,8 +1341,36 @@ watch(
   }
 );
 
+watch(
+  () => store.slideStep,
+  () => {
+    try {
+      const image = document.querySelector(".postmainSlider");
+      image.style.transform = `translateX(-${store.slideStep * 100}%)`;
+    } catch (error) { }
+  }
+);
+
 onBeforeMount(() => {
   useClassroom.get_module();
+  document.addEventListener("keydown", function (event) {
+    // Check if Ctrl key is pressed and the key pressed along with it
+    if (store.postMediaModal) {
+      if (event.key == "ArrowRight") {
+        if (store.slideStep < store.postMediaList?.length - 1) {
+          store.slideStep += 1;
+        }
+      } else if (event.key == "ArrowLeft") {
+        if (store.slideStep > 0) {
+          store.slideStep -= 1;
+        }
+      }
+    }else {
+      if (usePost.store.writingModal && event.key == "Enter") {
+        event.preventDefault();
+      }
+    }
+  });
 });
 </script>
 

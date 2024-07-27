@@ -44,7 +44,7 @@
               <p
                 v-if="$router.currentRoute.value.name.indexOf('community') == 0"
                 class="sm:text-lg !text-black tr text-sm font-semibold whitespace-nowrap max-w-[150px] truncate"
-                style="text-decoration: underline white !important;"
+                style="text-decoration: underline white !important"
               >
                 {{ useGroup.store.group_by_username.name }}
               </p>
@@ -63,7 +63,7 @@
           "
           class="md:text-lg !text-black text-sm whitespace-nowrap font-semibold"
           to="/"
-          style="text-decoration: underline white !important;"
+          style="text-decoration: underline white !important"
           >Skool community</router-link
         >
         <el-dropdown placement="bottom-end" class="dropdown" trigger="click">
@@ -90,7 +90,7 @@
                   placeholder="Search"
                 />
               </div>
-              <el-dropdown-item @click="$router.push('/create_community')">
+              <el-dropdown-item @click="$router.push('/signup')">
                 <div class="flex items-center gap-3">
                   <img src="@/assets/svg/create_community.svg" alt="" />
                   <p>{{ $t("nav.create_community") }}</p>
@@ -241,7 +241,7 @@
                 <p class="px-4 py-3 border-b border-[]">
                   {{ isLoading.user.email }}
                 </p>
-                <el-dropdown-item @click="$router.push('/profile')"
+                <el-dropdown-item @click="$router.push(`/profile/${isLoading.user.username}`)"
                   >Profile</el-dropdown-item
                 >
                 <el-dropdown-item @click="$router.push('/settings')"
@@ -308,7 +308,7 @@
                   />
                   <p>{{ isLoading.user.email }}</p>
                 </el-dropdown-item>
-                <el-dropdown-item @click="$router.push('/profile')">
+                <el-dropdown-item @click="$router.push(`/profile/${isLoading.user.username}`)">
                   <img src="@/assets/svg/menu/profile.svg" alt="" />
                   <p>My Profile</p>
                 </el-dropdown-item>
@@ -356,67 +356,7 @@
     </el-dialog>
 
     <!-- Verification -->
-    <el-dialog
-      v-model="useAuth.modal.verification"
-      width="400"
-      align-center
-      class="bg-opacity-50 !rounded-lg"
-    >
-      <section class="space-y-8 bg-white rounded-lg p-6 text-center _c07">
-        <h1 class="_c07 text-2xl font-semibold">We sent you a code</h1>
-        <p class="!mt-4">
-          Enter it below to verify {{ useAuth.verification.email }}
-        </p>
-        <form @submit.prevent="useAuth.authVerify" class="space-y-5">
-          <input
-            v-model="useAuth.verification.verify_code"
-            autofocus
-            type="number"
-            placeholder="Verification code"
-            required
-          />
-          <button
-            :type="isLoading.isLoadingType('activate') ? 'button' : 'submit'"
-            v-loading="isLoading.isLoadingType('activate')"
-            class="font-semibold w-full rounded-[4px]"
-            :class="
-              useAuth.verification.verify_code ? 'b_cbc _c07' : 'b_ce0 _ca1'
-            "
-          >
-            Verify
-          </button>
-          <!-- store.errorMessage -->
-          <p class="text-start text-red-600 font-medium">
-            {{ useAuth.store.errorMessage }}
-          </p>
-        </form>
-        <div class="space-y-5">
-          <p class="text-xs">
-            Didn't get the email?
-            <button
-              type="button"
-              @click="useAuth.authResend"
-              class="_c2a font-medium hover:underline"
-            >
-              Resend it
-            </button>
-            or
-            <button
-              type="button"
-              @click="
-                () => {
-                  useAuth.modal.verification = false;
-                  useAuth.modal.register = true;
-                }
-              "
-              class="_c2a font-medium hover:underline"
-            >
-              Use a different email
-            </button>
-          </p>
-        </div>
-      </section>
-    </el-dialog>
+    <Verification v-if="useAuth.modal.verification" />
 
     <!-- Forgot -->
     <el-dialog
@@ -488,61 +428,62 @@
     <!-- complete -->
     <el-dialog
       v-model="useAuth.modal.complete"
-      width="400"
       align-center
-      class="bg-opacity-50 !rounded-lg"
+      class="bg-opacity-50 full_flex !rounded-lg !min-w-[100vw] !p-0 !-m-5 !bg-transparent"
     >
-      <section class="space-y-8 bg-white rounded-lg p-6 text-center _c07">
-        <h1 class="_c07 text-2xl font-semibold">Complete your profile</h1>
-        <p class="!mt-4 text-[12.5px]">
-          Communities feel weird without faces and names. Profiles build trust
-          and spark connection with others.
-        </p>
-        <label
-          v-if="!useAuth.store.userImage"
-          for="add_photo"
-          class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 font-medium text-sm h-[150px] w-[150px] mx-auto rounded-full"
-        >
-          <img src="@/assets/svg/add_photo.svg" alt="" />
-          <p>Add a photo</p>
-        </label>
-        <img
-          v-else
-          :src="useAuth.store.userImage"
-          alt=""
-          class="h-[150px] w-[150px] mx-auto rounded-full object-cover no-repeat"
-        />
-        <p class="text-xs flex gap-1">
-          <span>Upload a photo or</span>
-          <button
-            type="button"
-            @click="register"
-            class="_c2a !h-4 font-medium hover:underline"
+      <div class="max-w-[400px]">
+        <section class="space-y-8 bg-white rounded-lg p-6 text-center _c07">
+          <h1 class="_c07 text-2xl font-semibold">Complete your profile</h1>
+          <p class="!mt-4 text-[12.5px]">
+            Communities feel weird without faces and names. Profiles build trust
+            and spark connection with others.
+          </p>
+          <label
+            v-if="!useAuth.store.userImage"
+            for="add_photo"
+            class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 font-medium text-sm h-[150px] w-[150px] mx-auto rounded-full"
           >
-            use your Facebook profile pic.
+            <img src="@/assets/svg/add_photo.svg" alt="" />
+            <p>Add a photo</p>
+          </label>
+          <img
+            v-else
+            :src="useAuth.store.userImage"
+            alt=""
+            class="h-[150px] w-[150px] mx-auto rounded-full object-cover no-repeat"
+          />
+          <p class="text-xs flex gap-1">
+            <span>Upload a photo or</span>
+            <button
+              type="button"
+              @click="register"
+              class="_c2a !h-4 font-medium hover:underline"
+            >
+              use your Facebook profile pic.
+            </button>
+          </p>
+          <el-input
+            v-model="useAuth.complete.bio"
+            @input="handleInput"
+            class="w-full"
+            :autosize="{ minRows: 3, maxRows: 5 }"
+            type="textarea"
+            placeholder="Add your bio"
+          />
+          <button
+            @click="useAuth.authComplete"
+            v-loading="isLoading.isLoadingType('complete')"
+            class="font-semibold w-full rounded-[4px]"
+            :class="
+              useAuth.store.userImage && useAuth.complete.bio
+                ? 'b_cbc _c07'
+                : 'b_ce0 _ca1'
+            "
+          >
+            COMPLETE
           </button>
-        </p>
-        <el-input
-          v-model="useAuth.store.bio"
-          @input="handleInput"
-          class="w-full"
-          :autosize="{ minRows: 3, maxRows: 5 }"
-          type="textarea"
-          placeholder="Add your bio"
-        />
-        <button
-          @click="useAuth.authComplete"
-          v-loading="isLoading.isLoadingType('activate')"
-          class="font-semibold w-full rounded-[4px]"
-          :class="
-            useAuth.store.userImage && useAuth.store.bio
-              ? 'b_cbc _c07'
-              : 'b_ce0 _ca1'
-          "
-        >
-          COMPLETE
-        </button>
-      </section>
+        </section>
+      </div>
     </el-dialog>
 
     <input
@@ -831,8 +772,22 @@ const useGroup = useGroupStore();
 const isLoading = useLoadingStore();
 const useChat = useChatStore();
 isLoading.addLoading("getByUsername");
-const search_bar = ["index", "settings", "community-about", "affiliate-program", "careers", "legal", "pricing"];
-const skool_logo = ["index", "affiliate-program", "careers", "legal", "pricing"];
+const search_bar = [
+  "index",
+  "settings",
+  "community-about",
+  "affiliate-program",
+  "careers",
+  "legal",
+  "pricing",
+];
+const skool_logo = [
+  "index",
+  "affiliate-program",
+  "careers",
+  "legal",
+  "pricing",
+];
 
 const store = reactive({
   lang: {
@@ -880,6 +835,7 @@ function logOut() {
 
 function handleAddedPhoto(e) {
   const file = e.target.files[0];
+  useAuth.complete.image = file;
   useAuth.store.userImage = URL.createObjectURL(file);
 }
 
@@ -921,6 +877,19 @@ watch(
   () => {
     if (useAuth.modal.forgot_modal) {
       useAuth.verification.email = "";
+    }
+  }
+);
+
+watch(
+  () => useAuth.modal.complete,
+  () => {
+    console.log(!isLoading.user.image || !isLoading.user.bio);
+    if (
+      !useAuth.modal.complete &&
+      (!isLoading.user.image || !isLoading.user.bio)
+    ) {
+      useAuth.modal.complete = true;
     }
   }
 );

@@ -180,9 +180,9 @@
       <p class="py-6 _c07">
         <span
           v-if="
-            useMembers.store.activities.data_7?.length ||
-            useMembers.store.activities.data_30?.length ||
-            useMembers.store.activities.data_all?.length
+            useMembers.store.activities?.data_7?.length ||
+            useMembers.store.activities?.data_30?.length ||
+            useMembers.store.activities?.data_all?.length
           "
         >
           Last updated:
@@ -194,7 +194,7 @@
           >Leaderboards will be updated when there is more activity</span
         >
       </p>
-      <div class="grid md:grid-cols-3 gap-5">
+      <div v-if="useMembers.store.activities" class="grid md:grid-cols-3 gap-5">
         <div v-for="i in activity_step" class="bg-white r_8 text-center">
           <h1 class="font-semibold py-5">Leaderboard ({{ i[0] }})</h1>
           <hr class="border_ce0" />

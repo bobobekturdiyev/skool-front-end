@@ -1,5 +1,6 @@
 <template>
   <div>
+    <NuxtLoadingIndicator height="4" color="#2a85ff" />
     <main
       v-if="!isLoading.store.isLogin"
       class="flex items-center justify-center overflow-hidden overflow-y-auto min-h-screen max-h-screen"
