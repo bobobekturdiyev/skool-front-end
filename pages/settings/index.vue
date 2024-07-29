@@ -381,14 +381,14 @@
                     <div class="space-y-6 r_8">
                         <h1 class="text-xl font-semibold">Earn 40% of recurring revenue for life!</h1>
                         <p>
-                            Refer people to Skool and earn 40% of monthly recurring revenue for life. If you have a
+                            Refer people to Learnify and earn 40% of monthly recurring revenue for life. If you have a
                             group and one of your members creates a group - we'll attribute the referral to you
                             automatically. <span class="_c2a">Learn more.</span>
                         </p>
                         <div class="space-y-2">
                             <p class="font-semibold">Your referral link</p>
                             <div class="flex gap-3">
-                                <input type="text" value="https://www.skool.com/refer?ref=cde862ce8b034a82bba2c588c29f1b09" disabled>
+                                <input type="text" value="https://www.learnify.com/refer?ref=cde862ce8b034a82bba2c588c29f1b09" disabled>
                                 <button class="b_cbc px-6 uppercase font-semibold r_8">copy</button>
                             </div>
                         </div>

@@ -186,7 +186,7 @@
         <h2
           class="mb-4 md:mt-8 mt-6 md:text-2xl text-lg font-semibold md:w-full"
         >
-          Introducing "The Skool Games"
+          Introducing "The Learnify Games"
         </h2>
         <pre
           class="text-sm line-clamp-[11] float-left w-full whitespace-pre-line"

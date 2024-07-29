@@ -113,7 +113,7 @@
         </router-link>
       </div>
       <div class="mt-[54px] _c91 text-sm">
-        <div>Skool has the cheapest transaction fees.</div>
+        <div>Learnify has the cheapest transaction fees.</div>
         <div class="flex flex-wrap justify-center gap-6 mt-4">
           <div
             class="styled__BoxWrapper-sc-z75ylc-0 bbCnni Column-sc-1kucbtm-0 jGQVBY"
@@ -148,7 +148,7 @@
           <div
             class="styled__BoxWrapper-sc-z75ylc-0 bbCnni Column-sc-1kucbtm-0 jGQVBY"
           >
-            <div>Skool</div>
+            <div>Learnify</div>
             <div>2.9%</div>
           </div>
         </div>

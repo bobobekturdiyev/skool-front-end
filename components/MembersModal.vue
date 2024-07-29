@@ -182,7 +182,7 @@
                       Zapier integration
                     </h2>
                     <p class="text-xs">
-                      Invite members by connecting Skool to over 500 tools using
+                      Invite members by connecting Learnify to over 500 tools using
                       Zapier.
                     </p>
                   </div>
@@ -700,7 +700,7 @@
             <!-- <h1 class="font-semibold _C00 mb-2">Referrals</h1>
             <p class="md:mb-7 mb-4">
               If somebody creates a group from your group, we’ll automatically
-              pay you 40% every month. This way Skool becomes an income stream,
+              pay you 40% every month. This way Learnify becomes an income stream,
               not a cost. Earnings will go to this admin:
             </p>
             <div class="flex items-center gap-4">
@@ -713,7 +713,7 @@
               {{ isLoading.user_update_checker.name }}'s referral link
             </h1>
             <div class="flex gap-3">
-              <input type="text" value="https://www.skool.com/digital-marketer-3698/about" />
+              <input type="text" value="https://www.learnify.com/digital-marketer-3698/about" />
               <button class="b_cbc px-6 uppercase font-semibold r_8">
                 copy
               </button>

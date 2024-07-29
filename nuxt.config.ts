@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   ssr: true,
   app: {
     head: {
-      title: "skool",
+      title: "learnify",
       link: [
         {
           rel: "icon",

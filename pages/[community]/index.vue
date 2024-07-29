@@ -23,7 +23,7 @@
             class="relative flex md:flex-row flex-wrap gap-3 category_wrap w-full md:h-auto h-[80px] overflow-hidden">
             <button @click="handleCategory()" :class="usePost.store.filter.category_id != 'all' ? 'bg-white' : 'b_cbc'
     " class="py-2 px-3 rounded-full md:h-9 h-8 hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700">
-              All
+                        {{$t('nav.all')}}
             </button>
             <LoadingDiv v-if="isLoading.isLoadingType('getPostCategories')" v-for="i in 10"
               class="flex items-center md:h-9 h-8 w-28 animate-pulse hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full bg-gray-900" />
@@ -41,12 +41,12 @@
               src="@/assets/svg/shadow_hidden.svg" alt="" />
             <button @click="store.is_show = false" v-if="store.is_show && usePost.store.categories?.length"
               class="py-2 px-3 md:h-9 h-8 md:block hidden rounded-full min-w-fit bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700">
-              Less...
+              {{$t('nav.less')}}...
             </button>
           </div>
           <button v-if="!store.is_show && usePost.store.categories?.length" @click="store.is_show = true"
             class="py-2 px-3 md:h-9 h-8 md:block hidden rounded-full min-w-fit bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700">
-            More...
+                      {{$t('nav.more')}}
           </button>
           <div class="min-w-fit text-end">
             <el-dropdown placement="bottom-start" trigger="click" :hide-on-click="false" class="min-w-fit filter_btn">
@@ -56,7 +56,9 @@
               <template #dropdown>
                 <el-dropdown-menu class="flex min-w-[328px] filter_dropdown dropdown_shadow 2xl:!-ml-[60px]">
                   <div class="w-[150px] border-r border-[#E0E0E0]">
-                    <h1 class="text-sm font-medium px-8 mb-2">Filter</h1>
+                    <h1 class="text-sm font-medium px-8 mb-2 capitalize">
+          {{$t('nav.filter')}}
+                    </h1>
                     <label @click="handleCategory(i.type, 'filter')" :for="i.type" v-for="i in filter_filter">
                       <el-dropdown-item class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs">
                         <input :id="i.type" class="rounded-full" type="radio" name="filter" :checked="usePost.store.filter.filter == i.type ? true : false
@@ -80,7 +82,7 @@
             </el-dropdown>
             <button v-if="usePost.store.categories?.length" @click="store.drawer = true"
               class="py-2 px-3 md:h-9 h-8 mt-3 ml-auto md:hidden block rounded-full min-w-fit bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700">
-              More...
+                        {{$t('nav.more')}}...
             </button>
           </div>
         </div>
@@ -91,7 +93,7 @@
         <el-collapse v-model="store.activeCollapse" class="space-y-6 !w-full">
           <el-collapse-item name="open">
             <template #title>
-              <p class="_c07 font-semibold">Set up your group</p>
+              <p class="_c07 font-semibold">{{$t("community.setup")}}</p>
               <img src="@/assets/svg/select_arrow.svg" alt="">
             </template>
             <div class="space-y-6 px-1">
@@ -103,7 +105,8 @@
                     <img class="w-3 h-3" src="@/assets/svg/true.svg" alt="" />
                   </p>
                   <p class="hover:underline cursor-pointer">
-                    {{ i[0] }}
+                    <!-- {{ i[0] }} -->
+                    {{$t(`community.${i[0]}`)}}
                   </p>
                 </li>
               </ul>
@@ -117,7 +120,7 @@
         <LoadingDiv v-if="isLoading.isLoadingType('getPosts')" v-for="i in 10"
           class="min-h-[250px] w-full r_16 overflow-hidden" />
         <div v-else-if="!usePost.store.posts?.length" class="min-h-[30vh] full_flex col-span-4">
-          No data
+          {{$t("no_data")}}
         </div>
         <article @click="(e) => handleClick(e, i.id)" v-else v-for="i in usePost.store.posts" data-aos="zoom-in"
           class="relative cursor-pointer md:flex r_16 overflow-hidden bg-white">
@@ -382,8 +385,9 @@
           <pre v-html="usePost.store.postData.description" class="text-sm float-left w-full whitespace-pre-line"
             :class="store.see_more ? '' : 'line-clamp-[11]'"></pre>
           <button @click="store.see_more = true" :class="usePost.store.postData.description && !store.see_more ? '':'!h-0 p-0 overflow-hidden'"
-            class="text-sm _c2a h-4">See
-            more</button>
+            class="text-sm _c2a h-4">
+            {{$t("course.seemore")}}
+          </button>
         </div>
         <div class="border border-transparent">
           <div class="mt-8 text-sm space-y-3">
@@ -436,7 +440,7 @@
           class="flex items-center md:px-5 px-3 bg-white r_16 md:h-[72px] h-[52px] gap-[14px]">
           <img class="md:h-10 md:w-10 h-7 w-7 object-cover rounded-full" :src="isLoading.user.image" alt="" />
           <button class="!border-0 placeholder-black md:text-xl font-semibold">
-            Write something...
+            {{$t("community.write")}}...
           </button>
         </div>
         <form @submit.prevent="addVideo.handleSubmit"
@@ -445,8 +449,9 @@
             <img class="h-5 w-5 object-cover rounded-full" :src="isLoading.user.image" alt="" />
             <p class="text-sm flex flex-wrap items-start gap-1 leading-4">
               <span class="font-semibold">Xayot Sharapov</span>
-              <span class="_ca1">posting in</span>
+              <span class="_ca1" v-if="$t('nav.uz') == 'en' || $t('nav.uz') == 'ru'">{{$t("course.postingin")}}</span>
               <span class="font-semibold _c2a md:w-auto w-full">{{ usePost.store.postData.category_name }}</span>
+              <span class="_ca1" v-if="$t('nav.uz') != 'en' || $t('nav.uz') != 'ru'">{{$t("course.postingin")}}</span>
             </p>
           </div>
           <div class="md:p-5 p-3 space-y-5 bg-white">
@@ -577,11 +582,11 @@
               </el-dropdown>
               <div class="flex gap-3 font-semibold md:text-[16px] text-sm">
                 <button type="button" @click="usePost.modal.edit = false" class="uppercase h-10 px-6 rounded-lg _ca1">
-                  cancel
+                  {{$t('cancel')}}
                 </button>
                 <button v-loading="isLoading.isLoadingType('writePost')" :type="isLoading.isLoadingType('writePost') ? 'button' : 'submit'
     " class="uppercase h-10 px-6 rounded-lg" :class="usePost.create.title ? 'b_cbc _c07' : 'b_ce0 _ca1'">
-                  Post
+                                    {{$t('post')}}
                 </button>
               </div>
             </div>
@@ -593,7 +598,7 @@
         <p class="full_flex gap-1" @click="usePost.setLike(usePost.store.postData.id)">
           <img v-show="usePost.store.postData.is_liked" src="@/assets/svg/like_active.svg" alt="" />
           <img v-show="!usePost.store.postData.is_liked" src="@/assets/svg/community/like.svg" alt="" />
-          Like <span class="_cf0f pb-0.5">|</span>
+          {{$t("like")}} <span class="_cf0f pb-0.5">|</span>
         </p>
         <span @click="handleLikeModal('Likes', usePost.store.postData)">
           {{ usePost.store.postData.like_count }}
@@ -601,7 +606,7 @@
         </p>
         <p class="full_flex h-8 gap-1">
           <img src="@/assets/svg/community/message.svg" alt="" />
-          {{ usePost.store.postData.comment_count }} comments
+          {{ usePost.store.postData.comment_count }} {{$t("comment")}}
         </p>
       </div>
       <!-- comment -->
@@ -689,7 +694,7 @@
     usePost.inline_comment.files = [];
                 }"
                   class="_ca1 font-semibold">
-                  Reply
+                  {{$t("reply")}}
                 </button>
               </div>
               <div v-if="usePost.store.comment_id[0] == comment.id &&
@@ -858,7 +863,7 @@
     usePost.inline_comment.files = [];
                       }"
                       class="_ca1 font-semibold">
-                      Reply
+                      {{$t("reply")}}
                     </button>
                   </div>
                   <div v-if="usePost.store.comment_id[0] == comment.id &&
@@ -948,7 +953,8 @@
               </div>
               <div class="flex gap-3 font-semibold">
                 <button @click="usePost.store.card_info = false" class="uppercase h-10 px-6 rounded-lg _ca1">
-                  cancel
+                  {{$t('cancel')}}
+
                 </button>
                 <button @click="() => {
     usePost.store.writecomment_type = 'comment';
@@ -960,7 +966,7 @@
     ? 'b_cbc _c07'
     : 'b_ce0 _ca1'
     ">
-                  Post
+                                    {{$t('post')}}
                 </button>
               </div>
             </div>
@@ -982,10 +988,10 @@
         </p>
         <div class="flex justify-end gap-3 text-sm font-semibold">
           <button @click="store.reportAdmin = false" class="uppercase h-10 px-6 rounded-lg _ca1">
-            cancel
+            {{$t('cancel')}}
           </button>
           <button @click="reposrtToAdmins" class="uppercase h-10 px-6 b_cbc _c07 rounded-lg">
-            yes
+            {{$t('yes')}}
           </button>
         </div>
       </div>
@@ -1000,27 +1006,28 @@
         <p class="text-lg">{{ usePost.store.changeVoteData.description }}</p>
         <div class="flex justify-end gap-3 text-sm font-semibold">
           <button @click="usePost.modal.delete = false" class="uppercase h-10 px-6 rounded-lg _ca1">
-            cancel
+            {{$t('cancel')}}
+
           </button>
           <button v-if="usePost.store.modalType == 'delete'" @click="usePost.deletePost"
             v-loading="isLoading.isLoadingType('deletePost')" class="uppercase h-10 px-6 b_cbc _c07 rounded-lg">
-            delete
+            {{$t('delete')}}
           </button>
           <button v-else-if="usePost.store.modalType == 'changeVote'" @click="usePost.setUserVote"
             v-loading="isLoading.isLoadingType('setUserVote')" class="uppercase h-10 px-6 b_cbc _c07 rounded-lg">
-            confirm
+            {{$t('confirm')}}
           </button>
           <button v-else-if="usePost.store.modalType == 'media'" @click="() => addVideo.deleteImage(store.media_index)"
             v-loading="isLoading.isLoadingType('deleteMedia')" class="uppercase h-10 px-6 b_cbc _c07 rounded-lg">
-            confirm
+            {{$t('confirm')}}
           </button>
           <button v-else-if="usePost.store.modalType == 'poll'" @click="() => usePost.removePoll()"
             v-loading="isLoading.isLoadingType('removePoll')" class="uppercase h-10 px-6 b_cbc _c07 rounded-lg">
-            confirm
+            {{$t('confirm')}}
           </button>
           <button v-else-if="usePost.store.modalType == 'reply'" @click="() => usePost.deleteComment()"
             v-loading="isLoading.isLoadingType('deleteComment')" class="uppercase h-10 px-6 b_cbc _c07 rounded-lg">
-            confirm
+            {{$t('confirm')}}
           </button>
         </div>
       </div>
@@ -1042,11 +1049,11 @@
         </el-select>
         <div class="flex justify-end gap-3 text-sm font-semibold">
           <button @click="usePost.modal.change_category = false" class="uppercase h-10 px-6 rounded-lg _ca1">
-            cancel
+            {{$t('cancel')}}
           </button>
           <button @click="addVideo.handleSubmit" v-loading="isLoading.isLoadingType('writePost')"
             class="uppercase h-10 px-6 b_cbc _c07 rounded-lg">
-            change
+            {{$t('change')}}
           </button>
         </div>
       </div>
@@ -1121,7 +1128,7 @@
       <div class="flex gap-3 whitespace-nowrap flex-wrap items-center">
         <button @click="handleCategory('all')" :class="usePost.store.filter.category_id != 'all' ? 'bg-[#F0F5FA]' : 'b_cbc'
     " class="px-3 rounded-full md:h-9 h-8 hover:bg-[#F0F5FA] hover:bg-opacity-30 duration-700">
-          All
+          {{$t('nav.all')}}
         </button>
         <button @click="handleCategory(i.id)" store.drawer="false" v-for="i in usePost.store.categories" :class="usePost.store.filter.category_id == i.id ? 'b_cbc' : 'bg-[#F0F5FA]'
     " class="flex items-center md:h-9 h-8 hover:bg-opacity-30 duration-700 gap-1 py-2 px-3 rounded-full">
@@ -1249,10 +1256,10 @@ usePost.store.filter.sort = router.currentRoute.value.query.sort;
 usePost.store.filter.category_id = router.currentRoute.value.query.category_id;
 
 const setupgroup = {
-  "invite": ["Invite 3 people", () => isLoading.openDrawer(2), "is_three_member"],
-  "description": ["Add group description", () => isLoading.openDrawer(3), "is_description"],
-  "cover": ["Set cover image", () => isLoading.openDrawer(3), "is_image"],
-  "post": ["Write your first post", () => {
+  "invite": ["invite", () => isLoading.openDrawer(2), "is_three_member"],
+  "description": ["addgd", () => isLoading.openDrawer(3), "is_description"],
+  "cover": ["cover", () => isLoading.openDrawer(3), "is_image"],
+  "post": ["write_post", () => {
     // window.scrollTop();
     usePost.store.writingModal = true
   }, "is_post"],
@@ -1430,11 +1437,11 @@ function reposrtToAdmins() {
 }
 
 const text_dropdown = [
-  ["Product Feedback", "Share your general feedback about Skool here"],
+  ["Product Feedback", "Share your general feedback about Learnify here"],
   ["Product Question", "Ask a question about the product, or search above"],
   [
     "Feature Requests",
-    "Want a feature Skool doesn't have? Ask for it, or search above",
+    "Want a feature Learnify doesn't have? Ask for it, or search above",
   ],
   ["Bug Reports", "Found a bug? Report it here and we'll fix it"],
 ];

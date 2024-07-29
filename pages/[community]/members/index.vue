@@ -90,7 +90,7 @@
         <LoadingDiv v-for="i in 5" class="h-[200px] w-full bg-gray-700 animate-pulse rounded-xl"></LoadingDiv>
       </section>
       <section v-else-if="!useMembers.store.members.data?.length" class="min-h-[30vh] full_flex col-span-4">
-        No data
+        {{$t("no_data")}}
       </section>
       <section class="space-y-3 mt-5 w-full" v-else>
         <article v-for="member in useMembers.store.members.data" data-aos="zoom-in"

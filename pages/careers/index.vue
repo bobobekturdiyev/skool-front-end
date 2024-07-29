@@ -5,13 +5,13 @@
         <div
           class="md:text-[45px] mb-4 sm:text-[40px] text-[36px] font-semibold"
         >
-          Work for Skool
+          Work for Learnify
         </div>
         <div
           class="styled__CareersDescription-sc-1d41ihj-2 bBRmXw"
           style="margin-bottom: 16px"
         >
-          Skool is home to a diverse group of engineers and designers — gamers
+          Learnify is home to a diverse group of engineers and designers — gamers
           and geeks.
         </div>
         <div class="styled__CareersDescription-sc-1d41ihj-2 bBRmXw">
@@ -27,13 +27,13 @@
           <div
             class="r_8 bg-no-repeat bg-cover h-[200px] min-w-full sm:min-w-[400px]"
             style="
-              background-image: url('https://assets.skool.com/skool/18c49c9ab25e41ccb98bcb04f6253c3f.png');
+              background-image: url('https://assets.learnify.com/learnify/18c49c9ab25e41ccb98bcb04f6253c3f.png');
             "
           ></div>
           <div
             class="full_flex r_8 bg-no-repeat bg-cover h-[200px] min-w-full sm:min-w-[400px]"
             style="
-              background-image: url('https://assets.skool.com/skool/3f2dd9549bc74c7e80f83d84a087663e.png');
+              background-image: url('https://assets.learnify.com/learnify/3f2dd9549bc74c7e80f83d84a087663e.png');
             "
           >
             <div class="styled__VideoMeta-sc-1d41ihj-10 llqubJ">
@@ -74,7 +74,7 @@
           <div
             class="r_8 bg-no-repeat bg-cover h-[200px] min-w-full sm:min-w-[400px]"
             style="
-              background-image: url('https://assets.skool.com/skool/6cbd14a64dd5491bb429b5a264f67881.png');
+              background-image: url('https://assets.learnify.com/learnify/6cbd14a64dd5491bb429b5a264f67881.png');
             "
           ></div>
         </div>
@@ -95,7 +95,7 @@
         We're growing fast
       </div>
       <img
-        src="https://assets.skool.com/skool/84223b4aee834fe0a334202a77c8e561.png"
+        src="https://assets.learnify.com/learnify/84223b4aee834fe0a334202a77c8e561.png"
         class="lg:px-40"
       />
       <div class="mb-4 text-2xl mt-16 font-semibold text-center">
@@ -103,11 +103,11 @@
       </div>
       <div class="grid lg:grid-cols-2 gap-8">
         <div class="bg-white p-4 r_8">
-          “As an ex-faang engineer, I know that it will be faangs (s for skool)
+          “As an ex-faang engineer, I know that it will be faangs (s for learnify)
           in the upcoming years”.
         </div>
         <div class="bg-white p-4 r_8">
-          “Skool is startup culture at its best. You'll be surrounded by some of
+          “Learnify is startup culture at its best. You'll be surrounded by some of
           the best engineers in the industry. It's all the best pieces of more
           established companies, but with none of the unnecessary”.
         </div>
@@ -124,21 +124,21 @@
           personal friend than a coworker I'm forced to collaborate with”.
         </div>
         <div class="bg-white p-4 r_8">
-          “Skool is a very special place for me. Everything that we do feels
+          “Learnify is a very special place for me. Everything that we do feels
           meaningful, intentional, and most importantly fulfilling. There is a
           sense that things always fall in the right place as if it's meant to
           be. I believe miracles like that only happen when good people come
           together to build something awesome and put their heart and soul into
-          it. Which is what working at Skool feels like. We are here because we
+          it. Which is what working at Learnify feels like. We are here because we
           genuinely want to be here, not for any other superficial reason. I
           have huge respect for the leadership team for facilitating this
-          environment. It was a bit of a culture shock coming into Skool and
+          environment. It was a bit of a culture shock coming into Learnify and
           seeing how effective the team is. There is very little noise. Only
-          signal. And I absolutely love that about Skool”.
+          signal. And I absolutely love that about Learnify”.
         </div>
         <div class="bg-white p-4 r_8">
           “From an engineer's perspective, my favorite thing about working at
-          Skool is how the product team does such a great job finding out what
+          Learnify is how the product team does such a great job finding out what
           our customers need so everything we build is impactful and our efforts
           are well-spent”.
         </div>
@@ -159,14 +159,14 @@
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://help.skool.com/"
+            href="https://help.learnify.com/"
             >Help center</a
           >
           <router-link to="/legal?t=privacy">Privacy</router-link
           ><a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://skoolmerch.com/"
+            href="https://learnifymerch.com/"
             >Merch</a
           >
         </div>

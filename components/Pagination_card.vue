@@ -1,6 +1,6 @@
 <template>
   <footer v-show="isLoading.store.pagination.total" class="flex md:flex-wrap-reverse md:flex-row flex-col-reverse md:items-center justify-between">
-    <div class="flex items-center gap-[14px]">
+    <div class="flex items-center gap-[14px] capitalize">
       <p
         @click="changePage('dec')"
         :class="
@@ -11,7 +11,7 @@
         class="flex items-center c_pointer text-sm gap-2"
       >
         <img src="@/assets/svg/page_arrow.svg" alt="" />
-        Prev
+        {{$t("nav.prev")}}
       </p>
       <el-pagination
         v-model:current-page="isLoading.store.pagination.current_page"
@@ -35,7 +35,7 @@
         "
         class="flex items-center c_pointer text-sm gap-2"
       >
-        Next
+        {{$t("nav.next")}}
         <img class="rotate-180" src="@/assets/svg/page_arrow.svg" alt="" />
       </p>
     </div>

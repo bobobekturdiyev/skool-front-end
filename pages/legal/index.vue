@@ -46,26 +46,26 @@
               class="styled__CardWrapper-sc-jrheml-0 hesuCC styled__TabContentWrapper-sc-19crpt3-0 BWXAE"
             >
               <div class="space-y-4">
-                <h1>Skool rules</h1>
+                <h1>Learnify rules</h1>
                 <p>
                   This policy is a "living" document, and subject to refinement
                   and expansion in the future.
                 </p>
                 <p>
-                  Skool is dedicated to providing a harassment-free experience
+                  Learnify is dedicated to providing a harassment-free experience
                   for everyone, regardless of gender, gender identity and
                   expression, sexual orientation, disability, physical
                   appearance, body size, age, race, or religion. We do not
                   tolerate harassment of members in any form.
                 </p>
                 <p>
-                  This code of conduct applies to all Skool groups, including
+                  This code of conduct applies to all Learnify groups, including
                   our community, both online and off. Anyone who violates this
                   code of conduct may be sanctioned or expelled from these
-                  groups at the discretion of the Skool team.
+                  groups at the discretion of the Learnify team.
                 </p>
                 <p>
-                  Some Skool groups may have additional rules in place, which
+                  Some Learnify groups may have additional rules in place, which
                   will be made clearly available to members. Members are
                   responsible for knowing and abiding by these rules.
                 </p>
@@ -124,8 +124,8 @@
                   </li>
                   <li>Publication of non-harassing private communication.</li>
                   <li>
-                    Skool prioritizes marginalized people’s safety over
-                    privileged people’s comfort. The Skool team reserves the
+                    Learnify prioritizes marginalized people’s safety over
+                    privileged people’s comfort. The Learnify team reserves the
                     right not to act on complaints regarding:
                   </li>
                   <li>
@@ -144,23 +144,23 @@
                 </ul>
                 <h2>Reporting</h2>
                 <p>
-                  If you are being harassed by a member of Skool, notice that
+                  If you are being harassed by a member of Learnify, notice that
                   someone else is being harassed, or have any other concerns,
-                  please contact the Skool team at help@skool.com. If the person
+                  please contact the Learnify team at help@learnify.com. If the person
                   who is harassing you is on the team, they will recuse
                   themselves from handling your incident. We will respond as
                   promptly as we can.
                 </p>
                 <p>
-                  This code of conduct applies to Skool spaces, but if you are
-                  being harassed by a member of Skool outside our spaces, we
+                  This code of conduct applies to Learnify spaces, but if you are
+                  being harassed by a member of Learnify outside our spaces, we
                   still want to know about it. We will take all good-faith
-                  reports of harassment by Skool members seriously. This
+                  reports of harassment by Learnify members seriously. This
                   includes harassment outside our spaces and harassment that
                   took place at any point in time. The abuse team reserves the
-                  right to exclude people from Skool based on their past
-                  behavior, including behavior outside Skool spaces and behavior
-                  towards people who are not in Skool.
+                  right to exclude people from Learnify based on their past
+                  behavior, including behavior outside Learnify spaces and behavior
+                  towards people who are not in Learnify.
                 </p>
                 <p>
                   In order to protect volunteers from abuse and burnout, we
@@ -173,7 +173,7 @@
                   protecting victims of abuse. At our discretion, we may
                   publicly name a person about whom we’ve received harassment
                   complaints, or privately warn third parties about them, if we
-                  believe that doing so will increase the safety of Skool
+                  believe that doing so will increase the safety of Learnify
                   members or the general public. We will not name harassment
                   victims without their affirmative consent.
                 </p>
@@ -183,15 +183,15 @@
                   comply immediately.
                 </p>
                 <p>
-                  If a participant engages in harassing behavior, the Skool team
+                  If a participant engages in harassing behavior, the Learnify team
                   may take any action they deem appropriate, up to and including
-                  expulsion from all Skool groups and identification of the
-                  participant as a harasser to other Skool members or the
+                  expulsion from all Learnify groups and identification of the
+                  participant as a harasser to other Learnify members or the
                   general public.
                 </p>
                 <h2>Diversity</h2>
                 <p>
-                  Skool welcomes and encourages participation by everyone. No
+                  Learnify welcomes and encourages participation by everyone. No
                   matter how you identify yourself or how others perceive you:
                   we welcome you. We welcome contributions from everyone as long
                   as they interact constructively with our communities.
@@ -206,7 +206,7 @@
               class="styled__CardWrapper-sc-jrheml-0 hesuCC styled__TabContentWrapper-sc-19crpt3-0 BWXAE"
             >
               <div class="space-y-4">
-                <h1>Skool Privacy Policy</h1>
+                <h1>Learnify Privacy Policy</h1>
                 <p>Last Updated: September 29, 2021</p>
                 <p>
                   This Privacy Policy (“Privacy Policy") explains our privacy
@@ -217,7 +217,7 @@
                   and choices regarding your Personal Data.
                 </p>
                 <p>
-                  A reference to “Skool,” “we,” “us” or the “Company” is a
+                  A reference to “Learnify,” “we,” “us” or the “Company” is a
                   reference to SKOOL.COM, INC. and its relevant affiliates
                   involved in the collection, use, sharing, or other processing
                   of Personal Data.
@@ -286,7 +286,7 @@
                 >
                   <h2>1. Responsible Entity</h2>
                   <p>
-                    Skool is the controller of your Personal Data as described
+                    Learnify is the controller of your Personal Data as described
                     in this Privacy Policy, unless specified otherwise.
                   </p>
                   <p>
@@ -298,8 +298,8 @@
                     use, share or process Personal Data.
                   </p>
                   <p>
-                    For detailed privacy information related to a Skool customer
-                    or a customer affiliate who uses the Skool software
+                    For detailed privacy information related to a Learnify customer
+                    or a customer affiliate who uses the Learnify software
                     products, platforms, and services as the controller, please
                     contact our customer directly. We are not responsible for
                     the privacy or data security practices of our customers,
@@ -460,7 +460,7 @@
                     of the services, to review compliance with applicable usage
                     terms, to identify future opportunities for development of
                     the services, to assess capacity requirements, to identify
-                    customer opportunities, and for the security of Skool
+                    customer opportunities, and for the security of Learnify
                     generally (in addition to the security of our products and
                     services). Some of the device and usage data collected by
                     the services, whether alone or in conjunction with other
@@ -686,8 +686,8 @@
                   </ul>
                   <p>
                     We may also share anonymous or de-identified usage data with
-                    Skool’s service providers for the purpose of helping Skool
-                    in such analysis and improvements. Additionally, Skool may
+                    Learnify’s service providers for the purpose of helping Learnify
+                    in such analysis and improvements. Additionally, Learnify may
                     share such anonymous or de-identified usage data on an
                     aggregate basis in the normal course of operating our
                     business; for example, we may share information publicly to
@@ -1000,12 +1000,12 @@
                     control over the privacy and data security practices of our
                     customers, which may differ from those explained in this
                     Privacy Policy. If your data has been submitted to us by or
-                    on behalf of a Skool customer and you wish to exercise any
+                    on behalf of a Learnify customer and you wish to exercise any
                     rights you may have under applicable data protection laws,
                     please inquire with them directly. Because we may only
                     access a customer’s data upon their instructions, if you
                     wish to make your request directly to us, please provide us
-                    the name of the Skool customer who submitted your data to
+                    the name of the Learnify customer who submitted your data to
                     us. We will refer your request to that customer, and will
                     support them as needed in responding to your request within
                     a reasonable timeframe.
@@ -1060,9 +1060,9 @@
                     If you wish to contact us or have any questions about or
                     complaints in relation to this Privacy Policy, please
                     contact us at the following contact details:<a
-                      href="mailto:help@skool.com"
+                      href="mailto:help@learnify.com"
                     >
-                      help@skool.com
+                      help@learnify.com
                     </a>
                   </p>
                 </section>
@@ -1076,7 +1076,7 @@
               class="styled__CardWrapper-sc-jrheml-0 hesuCC styled__TabContentWrapper-sc-19crpt3-0 BWXAE"
             >
               <div class="styled__LegalContentWrapper-sc-dw1jdk-1 iyTwjP">
-                <h1>Skool Terms and Conditions</h1>
+                <h1>Learnify Terms and Conditions</h1>
                 <p>Effective: July 1, 2023</p>
                 <p>
                   PLEASE READ THE TERMS AND CONDITIONS CAREFULLY. THE TERMS AND
@@ -1103,10 +1103,10 @@
                 </p>
                 <h2>1. Purpose</h2>
                 <p>
-                  SKOOL.COM, INC. (“Skool,” “we,” “us,” or “our”) provides a
+                  SKOOL.COM, INC. (“Learnify,” “we,” “us,” or “our”) provides a
                   platform which allows people to host communities with which
                   they can share education content and course materials. By
-                  using the Skool website and any of the information and
+                  using the Learnify website and any of the information and
                   services offered through the application (“Services”), you
                   agree to be bound by this Agreement. The success of the
                   Services, however, depends on the adherence to the terms of
@@ -1304,12 +1304,12 @@
                   <span style="text-decoration: underline"
                     >On-Time Payment.</span
                   >
-                  Admin hereby authorizes Skool to charge Admin's payment method
+                  Admin hereby authorizes Learnify to charge Admin's payment method
                   (as specified below), in advance, for the amount of Admin's
                   regular subscription fees, inclusive of any and all Services
                   that Admin has signed up for (collectively, “Subscription
                   Fees”), for each agreed term of the Admin's selected
-                  subscription term. Admin hereby authorizes Skool to modify the
+                  subscription term. Admin hereby authorizes Learnify to modify the
                   Subscription Fees charged for a selected subscription term
                   upon thirty (30) days’ notice to Admin sent by e-mail to the
                   address provided on registration. The Subscription Fees, when
@@ -1317,18 +1317,18 @@
                   term or successive renewal term until canceled, regardless of
                   whether or not the Admin actually uses the Site or the
                   Services. Various Services on the Site, whether offered by
-                  Skool, third-party service providers or others, may require
+                  Learnify, third-party service providers or others, may require
                   additional fees or charges not included within a subscription.
                 </p>
                 <p>
                   Admin is required to pay all charges on time and agrees to
                   submit an accompanying payment authorization in connection
-                  with these charges when requested by Skool. Skool may
+                  with these charges when requested by Learnify. Learnify may
                   terminate or disable Admin's subscription if Admin fails to
-                  pay fully and in a timely manner all amounts due to Skool. If
+                  pay fully and in a timely manner all amounts due to Learnify. If
                   Admin's payment method expires or is otherwise declined for
                   payment, access to the Services and the Site may be modified,
-                  suspended or cancelled, in Skool's sole discretion and without
+                  suspended or cancelled, in Learnify's sole discretion and without
                   notice to Admin. All fees are quoted and payable in United
                   States Dollars. Admin is also responsible for paying all
                   applicable taxes for Services and/or Content, and any other
@@ -1344,7 +1344,7 @@
                     >Privacy Policy</a
                   >
                   when providing any necessary personal information for the
-                  purposes of processing payment for a Skool subscription. Skool
+                  purposes of processing payment for a Learnify subscription. Learnify
                   may use third-party service providers for payment processing.
                   In such cases, the third-party payment processor’s terms and
                   conditions apply. Please review these third-party terms and
@@ -1356,10 +1356,10 @@
                   >
                   Subscriptions are normally assessed on a monthly or annual
                   basis, but other Services and their respective billing
-                  arrangements may be made available to Admins at Skool's sole
+                  arrangements may be made available to Admins at Learnify's sole
                   discretion. The Subscription Fees are calculated from the day
                   upon which Admin's paid Subscription commences. From time to
-                  time and at its sole discretion, Skool may offer different
+                  time and at its sole discretion, Learnify may offer different
                   subscription terms on its Site, and the fees for such
                   subscriptions may vary. The term of Admin's access to the
                   Site, Services and Content is based upon Admin's express
@@ -1367,24 +1367,24 @@
                   paid subscription and/or other fees.<strong>
                     Admin's subscription to the Site shall be for the initial
                     term (e.g., monthly or annually) as may be agreed by Admin
-                    and Skool through online registration and shall
+                    and Learnify through online registration and shall
                     automatically renew for indefinite successive renewal terms
                     for the same period as the initial term, unless terminated
-                    by Admin or Skool in accordance with the provisions of these
+                    by Admin or Learnify in accordance with the provisions of these
                     Terms.</strong
                   >
                 </p>
                 <p>
                   <span style="text-decoration: underline">Cancellation.</span>
-                  Either Skool or Admin may cancel Admin’s Subscription at any
+                  Either Learnify or Admin may cancel Admin’s Subscription at any
                   time for any reason (unless otherwise stated in an applicable
-                  promotional offer). In the event of cancellation by Skool or
-                  by Admin, all fees due to Skool up to the end of the
+                  promotional offer). In the event of cancellation by Learnify or
+                  by Admin, all fees due to Learnify up to the end of the
                   then-current term billing cycle at time of cancellation shall
-                  remain payable to Skool. No refunds will be provided for
+                  remain payable to Learnify. No refunds will be provided for
                   partial billing periods, unless otherwise specifically stated
                   in an applicable promotional offer. Upon cancellation, Admin
-                  will retain access to Skool through the end of Admin’s billing
+                  will retain access to Learnify through the end of Admin’s billing
                   period. After the end of such billing period, Admin’s group
                   will be archived, whereas then-current content will be
                   available on a read-only basis, and no new content may be
@@ -1396,22 +1396,22 @@
                 </p>
                 <ul>
                   <li>
-                    Sign into Admin’s Skool account, click on “Settings” and
+                    Sign into Admin’s Learnify account, click on “Settings” and
                     click on “Billing” then “Cancel Subscription”; or
                   </li>
                   <li>
                     Send a cancellation request via email to
-                    <a href="mailto:help@skool.com">help@skool.com</a>
+                    <a href="mailto:help@learnify.com">help@learnify.com</a>
                   </li>
                 </ul>
                 <p>
-                  If at any time Skool believes, in its sole discretion, that an
-                  Admin has violated any provision of these Terms, Skool may
+                  If at any time Learnify believes, in its sole discretion, that an
+                  Admin has violated any provision of these Terms, Learnify may
                   immediately terminate that Admin’s Subscription and all other
                   Services without any refund or other remedy, and all fees due
-                  to Skool up to the end of the then-current billing cycle at
-                  the time of such termination shall remain payable to Skool.
-                  Such termination will not limit any other right by Skool under
+                  to Learnify up to the end of the then-current billing cycle at
+                  the time of such termination shall remain payable to Learnify.
+                  Such termination will not limit any other right by Learnify under
                   contract, tort or any other legal theory to pursue any claim
                   or cause of action against the Admin for violating these
                   Terms, including without limitation, monetary damages,
@@ -1421,13 +1421,13 @@
                   <span style="text-decoration: underline"
                     >Account Discrepancies.</span
                   >
-                  Admin may contact Skool by e-mail at
-                  <a href="mailto:help@skool.com">help@skool.com</a> concerning
+                  Admin may contact Learnify by e-mail at
+                  <a href="mailto:help@learnify.com">help@learnify.com</a> concerning
                   charges or other questions regarding the status of Admin's
                   account. However, if Admin's account-related questions are not
                   satisfactorily resolved within fifteen (15) business days of
-                  Admin's first calling or sending an e-mail to Skool Support
-                  regarding such questions, Admin must write to Skool at:
+                  Admin's first calling or sending an e-mail to Learnify Support
+                  regarding such questions, Admin must write to Learnify at:
                   SKOOL.COM, Inc., 111 Main St. El Segundo, CA 90245, delivered
                   by United States mail.
                 </p>
@@ -1482,14 +1482,14 @@
                     and Admins, subject to the Transaction Terms between Admins
                     and Members and any additional terms agreed upon between
                     Admins and Members. Although we facilitate Admin/Member
-                    Transactions by providing the Skool platform and storing
+                    Transactions by providing the Learnify platform and storing
                     Admin content, we are not a party to the Transaction Terms
                     between Admins and Members or any other contract which may
                     exist between a Member and Admin, and we are not responsible
                     for any Admin/Member Transaction.
                   </li>
                   <li>
-                    When you receive confirmation from Skool, either in your
+                    When you receive confirmation from Learnify, either in your
                     Admin account or by email, that the Admin/Member Transaction
                     has been confirmed, you must perform your part of such
                     Admin/Member Transaction (e.g., by allowing the Member to
@@ -1511,17 +1511,17 @@
                     Your Admin account will be updated within a reasonable time
                     with your earnings from your Admin communities (“Admin
                     Earnings”). Your Admin Earnings will become available for
-                    withdrawal by you from your Skool account once such Admin
-                    Earnings appear in your Skool account.
+                    withdrawal by you from your Learnify account once such Admin
+                    Earnings appear in your Learnify account.
                   </li>
                   <li>
-                    To make a withdrawal of your Admin Earnings from your Skool
+                    To make a withdrawal of your Admin Earnings from your Learnify
                     account, you must have at least the minimum payout amount in
                     your Admin account.
                   </li>
                   <li>
                     The amount that you see in your 'current balance' in your
-                    Skool account is your Creator Earnings at the relevant time.
+                    Learnify account is your Creator Earnings at the relevant time.
                     All Creator Earnings are transacted in USD only. Your bank
                     may charge you currency conversion or transfer fees for
                     access the money.
@@ -1671,9 +1671,9 @@
                     or otherwise objectionable, or which constitutes child
                     pornography, we ask you to flag the post to our attention,
                     or promptly notify us by email at the following address:<a
-                      href="mailto:help@skool.com"
+                      href="mailto:help@learnify.com"
                     >
-                      help@skool.com. </a
+                      help@learnify.com. </a
                     >You must use this address if you want to ensure that your
                     complaint is actually received by the appropriate person
                     charged with responding to such communications.
@@ -1768,7 +1768,7 @@
                   infringer.If you are a copyright owner or the legal agent of a
                   copyright owner, and you believe that any User Content
                   infringes on your copyrights, you may submit a notification
-                  pursuant to the Skool Digital Millennium CopyrightAct (DMCA)
+                  pursuant to the Learnify Digital Millennium CopyrightAct (DMCA)
                   Notice. Please see our
                   <a href="#dmca" target="_blank" rel="noreferrer"
                     >DMCA Policy</a
@@ -1810,7 +1810,7 @@
                 </p>
                 <h2>13. Indemnification</h2>
                 <p>
-                  You agree to indemnify and hold harmless Skool and its
+                  You agree to indemnify and hold harmless Learnify and its
                   officers, directors, employees, agents and affiliates (each,
                   an “Indemnified Party”), from and against any losses, claims,
                   actions, costs, damages, penalties, fines and expenses,
@@ -1915,7 +1915,7 @@
                     except that (1) you may assert claims in small claims court
                     if your claims qualify, so long as the matter remains in
                     such court and advances only on an individual (non-class,
-                    non-representative) basis; and (2) you or Skool may seek
+                    non-representative) basis; and (2) you or Learnify may seek
                     equitable relief in court for infringement or other misuse
                     of intellectual property rights (such as trademarks, trade
                     dress, domain names, trade secrets, copyrights, and
@@ -1934,10 +1934,10 @@
                     <span style="text-decoration: underline"
                       >Informal Resolution.</span
                     >
-                    You and Skool agree that good-faith informal efforts to
+                    You and Learnify agree that good-faith informal efforts to
                     resolve disputes often can result in a prompt, low-cost and
-                    mutually beneficial outcome.You and Skool therefore agree
-                    that, before either you or Skool demands arbitration against
+                    mutually beneficial outcome.You and Learnify therefore agree
+                    that, before either you or Learnify demands arbitration against
                     the other, we will personally meet and confer, via telephone
                     or video conference, in a good-faith effort to resolve
                     informally any claim covered by this mutual Arbitration
@@ -1949,10 +1949,10 @@
                     resolution conference, which shall occur within 60 days
                     after the other party receives such notice, unless an
                     extension is mutually agreed upon by the parties. To notify
-                    Skool that you intend to initiate an informal dispute
-                    resolution conference, email help@skool.com, providing your
-                    username associated with your Skool account (if any), the
-                    email address associated with your Skool account (if any),
+                    Learnify that you intend to initiate an informal dispute
+                    resolution conference, email help@learnify.com, providing your
+                    username associated with your Learnify account (if any), the
+                    email address associated with your Learnify account (if any),
                     and a description of your claim. In the interval between the
                     party receiving such notice and the informal dispute
                     resolution conference, the parties shall be free to attempt
@@ -2013,7 +2013,7 @@
                     including, but not limited to any claim that all or any part
                     of this Arbitration Agreement is void or voidable. The
                     arbitration will decide the rights and liabilities, if any,
-                    of you and Skool. The arbitration proceeding will not be
+                    of you and Learnify. The arbitration proceeding will not be
                     consolidated with any other matters or joined with any other
                     proceedings or parties. The arbitrator will have the
                     authority to grant motions dispositive of all or part of any
@@ -2029,14 +2029,14 @@
                     applicable law. The arbitrator has the same authority to
                     award relief on an individual basis that a judge in a court
                     of law would have. The arbitrator’s decision is final and
-                    binding on you and Skool.
+                    binding on you and Learnify.
                   </li>
                   <li>
                     <span style="text-decoration: underline"
                       >Waiver of Jury Trial.</span
                     >YOU AND SKOOL WAIVE ANY CONSTITUTIONAL AND STATUTORY RIGHTS
                     TO SUE IN COURT AND RECEIVE A JUDGE OR JURY TRIAL. You and
-                    Skool are instead electing to have claims and disputes
+                    Learnify are instead electing to have claims and disputes
                     resolved by arbitration, except as specified in Section
                     16(a) above. There is no judge or jury in arbitration, and
                     court review of an arbitration award is limited.
@@ -2054,7 +2054,7 @@
                     OF ANY OTHER CUSTOMER OR USER. If, however, this waiver of
                     class or consolidated actions is deemed invalid or
                     unenforceable with respect to a particular claim or dispute,
-                    neither you nor Skool is entitled to arbitration of such
+                    neither you nor Learnify is entitled to arbitration of such
                     claim or dispute. Instead, all such claims and disputes will
                     then be resolved in a court as set forth in Section 17.
                   </li>
@@ -2062,7 +2062,7 @@
                     <span style="text-decoration: underline"
                       >Batch Arbitrations.</span
                     >To increase efficiency of resolution, in the event 100 or
-                    more similar arbitration demands against Skool, presented by
+                    more similar arbitration demands against Learnify, presented by
                     or with the assistance of the same law firm or organization,
                     are submitted to an arbitration provider selected in
                     accordance with the rules described above within a 30-day
@@ -2074,22 +2074,22 @@
                     and (ii) provide for resolution of each batch as a single
                     arbitration with one set of filing and administrative fees
                     and one arbitrator assigned per batch. You agree to
-                    cooperate in good faith with Skool and the arbitration
+                    cooperate in good faith with Learnify and the arbitration
                     provider to implement such a batch approach to resolution
                     and fees.
                   </li>
                   <li>
                     <span style="text-decoration: underline">Opt Out.</span> You
                     may opt out of this Arbitration Agreement. If you do so,
-                    neither you nor Skool can force the other to arbitrate as a
-                    result of this Agreement. To opt out, you must notify Skool
+                    neither you nor Learnify can force the other to arbitrate as a
+                    result of this Agreement. To opt out, you must notify Learnify
                     in writing no later than 30 days after first becoming
                     subject to this Arbitration Agreement. Your notice must
                     include your name and address, your email address (if you
                     have one), anda CLEAR statement that you want to opt out of
                     this Arbitration Agreement. You must send your opt-out
                     notice to:
-                    <a href="mailto:help@skool.com"> help@skool.com </a>. If you
+                    <a href="mailto:help@learnify.com"> help@learnify.com </a>. If you
                     opt out of this Arbitration Agreement, all other parts of
                     this Agreement will continue to apply to you. Opting out of
                     this Arbitration Agreement has no effect on any other
@@ -2113,7 +2113,7 @@
                 <h2>17. Exclusive Venue</h2>
                 <p>
                   To the extent the parties are permitted under this Agreement
-                  to initiate litigation in a court, both you and Skool agree
+                  to initiate litigation in a court, both you and Learnify agree
                   that all claims and disputes arising out of or relating to the
                   Agreement will be litigated exclusively within the State of
                   Delaware for courts situated in Kent County, Delaware, or in
@@ -2141,7 +2141,7 @@
                       >No Joint Venture or Partnership.</span
                     >
                     No joint venture, partnership, employment, or agency
-                    relationship exists between you, Skool or any third-party
+                    relationship exists between you, Learnify or any third-party
                     provider as a result of this Agreement or use of the
                     Services.
                   </li>
@@ -2188,7 +2188,7 @@
                 </ul>
                 <h2>20. Contact Information</h2>
                 <p>111 Main St. El Segundo, CA 90245</p>
-                <p><a href="mailto:help@skool.com"> help@skool.com </a></p>
+                <p><a href="mailto:help@learnify.com"> help@learnify.com </a></p>
                 <section id="dmca" style="scroll-margin-top: 64px">
                   <h1>SKOOL DMCA POLICY</h1>
                   <p>
@@ -2267,7 +2267,7 @@
                     Submit your notice to our designated DMCA agent by mail or
                     email as set forth below:
                   </p>
-                  <p><a href="mailto:help@skool.com"> help@skool.com</a></p>
+                  <p><a href="mailto:help@learnify.com"> help@learnify.com</a></p>
                   <p>
                     Please note that you may be liable for damages, including
                     court costs and attorney's fees, if you materially
@@ -2368,7 +2368,7 @@
                   to keep re-entering them whenever you come back to the site or
                   browse from one page to another.
                 </p>
-                <h2>Cookies on www.skool.com</h2>
+                <h2>Cookies on www.learnify.com</h2>
                 <p>
                   The following table sets out the different categories of
                   cookies that our site uses, and why we use them. The lists of
@@ -2392,7 +2392,7 @@
                     </td>
                     <td>
                       <ul>
-                        <li><a href="https://skool.com">Skool.com</a></li>
+                        <li><a href="https://learnify.com">Learnify.com</a></li>
                         <li>
                           <a href="https://aws.amazon.com/legal/cookies/"
                             >Amazon Web Services</a
@@ -2479,33 +2479,33 @@
               class="styled__CardWrapper-sc-jrheml-0 hesuCC styled__TabContentWrapper-sc-19crpt3-0 BWXAE"
             >
               <div class="styled__LegalContentWrapper-sc-dw1jdk-1 iyTwjP">
-                <h1>Skool Transaction Terms</h1>
+                <h1>Learnify Transaction Terms</h1>
                 <p>
                   <strong>1.</strong> <strong>Introduction: </strong>These
                   Transaction Terms between Admins and Members ("<strong
                     >Transaction Terms</strong
                   >") set out the terms which govern each transaction between an
-                  Admin and a Member (as defined below) on Skool.
+                  Admin and a Member (as defined below) on Learnify.
                 </p>
                 <p>
                   <strong>2. Applicability of Transaction Terms: </strong>Each
                   time an Admin/Member Transaction (as defined below) is
-                  initiated on Skool, these Transaction Terms will apply to the
+                  initiated on Learnify, these Transaction Terms will apply to the
                   exclusion of any other terms which the Admin or Member may
                   propose to each other, and these Transaction Terms will
                   legally bind the Admin and Member participating in the
-                  Admin/Member Transaction. All terms set forth in Skool's
+                  Admin/Member Transaction. All terms set forth in Learnify's
                   <a
                     target="_blank"
                     rel="noreferrer"
-                    href="https://www.skool.com/legal?t=privacy"
+                    href="https://www.learnify.com/legal?t=privacy"
                     >Privacy Policy</a
                   >
                   and
                   <a
                     target="_blank"
                     rel="noreferrer"
-                    href="https://www.skool.com/legal?t=terms"
+                    href="https://www.learnify.com/legal?t=terms"
                     >Terms and Conditions</a
                   >
                   are hereby incorporated by reference with the same force and
@@ -2517,10 +2517,10 @@
                 <p>
                   <strong>3. Parties: </strong>The only parties to these
                   Transaction Terms are the Admin and Member participating in
-                  the Admin/Member Transaction. Neither Skool.Com, Inc., nor any
+                  the Admin/Member Transaction. Neither Learnify.Com, Inc., nor any
                   of its subsidiaries or affiliates grant any rights in respect
                   of, nor participate in, any Admin/Member Transaction, except
-                  that Skool.Com, Inc., or any of its subsidiaries or affiliates
+                  that Learnify.Com, Inc., or any of its subsidiaries or affiliates
                   may act as a payment intermediary in accordance with the
                   Admin's or Member's instructions set out in Section 5 of these
                   Transaction Terms.
@@ -2530,16 +2530,16 @@
                   Terms, defined terms have the following meanings:
                 </p>
                 <p>
-                  <strong>a. "Skool" </strong>means the website, applications,
+                  <strong>a. "Learnify" </strong>means the website, applications,
                   and subdomains;
                 </p>
                 <p>
                   <strong>b. "Content" </strong>means any material uploaded to
-                  Skool by any User (as defined in Skool's
+                  Learnify by any User (as defined in Learnify's
                   <a
                     target="_blank"
                     rel="noreferrer"
-                    href="https://www.skool.com/legal?t=terms"
+                    href="https://www.learnify.com/legal?t=terms"
                     >Terms and Conditions</a
                   >, whether an Admin or a Member, including any photos, videos,
                   audio (e.g., music and other sounds), livestream material,
@@ -2549,7 +2549,7 @@
                 </p>
                 <p>
                   <strong>c. "Admin" </strong>means a User who has set up their
-                  Skool account as a creator account to post Content on Skool to
+                  Learnify account as a creator account to post Content on Learnify to
                   be viewed by other Users;
                 </p>
                 <p>
@@ -2558,7 +2558,7 @@
                 </p>
                 <p>
                   <strong>e. "Admin/Member Transaction"</strong> means any
-                  transaction between an Admin and a Member on Skool by which
+                  transaction between an Admin and a Member on Learnify by which
                   access is granted to the Admin's Content, including a
                   Subscription;
                 </p>
@@ -2583,14 +2583,14 @@
                   applicable to the relevant Admin/Member Transaction in
                   accordance with the pricing published on the communities'
                   respective about page. The Member and the Admin participating
-                  in the Admin/Member Transaction authorize Skool.Com, Inc., or
+                  in the Admin/Member Transaction authorize Learnify.Com, Inc., or
                   any of its subsidiaries or affiliates to act as a payment
                   intermediary and to collect, hold, and process the Member
                   Payment, and to pay out the sums due to Admins.
                 </p>
                 <p>
                   <strong>b. </strong>Admins are solely responsible for
-                  determining (within the parameters for pricing on Skool) the
+                  determining (within the parameters for pricing on Learnify) the
                   pricing applicable to the Admin/Member Transaction and the
                   Content to which a Member may be given access.
                 </p>
@@ -2603,7 +2603,7 @@
                 </p>
                 <p>
                   <strong>e.</strong> By entering into these Transaction Terms,
-                  the Member authorizes Skool.Com, Inc., and any of its
+                  the Member authorizes Learnify.Com, Inc., and any of its
                   subsidiaries or affiliates to supply the Member's payment card
                   details to a third-party payment provider, including Stripe,
                   Inc., for the purpose of processing the Member Payment. These
@@ -2626,9 +2626,9 @@
                   >
                   . All Member Payments will be charged in USD. The Member's
                   payment card provider may charge the Member currency
-                  conversion fees. Skool.Com, Inc., has no control over currency
+                  conversion fees. Learnify.Com, Inc., has no control over currency
                   exchange rates or charges imposed by the Member's payment card
-                  provider or ban, and Skool.Com, Inc., and its subsidiary or
+                  provider or ban, and Learnify.Com, Inc., and its subsidiary or
                   affiliate companies will not be responsible for paying any
                   charges or fees imposed by the Member's payment card provider
                   or bank.
@@ -2658,10 +2658,10 @@
                   subscription.
                 </p>
                 <p>
-                  <strong>i. <u>Cancellation. </u></strong>Either Skool or Admin
+                  <strong>i. <u>Cancellation. </u></strong>Either Learnify or Admin
                   may cancel a Member's Subscription at any time for any reason
                   (unless otherwise stated in an applicable promotional offer).
-                  In the event of cancellation by Skool or by Admin, all fees
+                  In the event of cancellation by Learnify or by Admin, all fees
                   due to Admin up to the end of the then-current term renewal
                   period at the time of cancellation shall remain payable to
                   Admin. No refunds will be provided for partial billing
@@ -2686,8 +2686,8 @@
                   <a
                     target="_blank"
                     rel="noreferrer"
-                    href="mailto:help@skool.com"
-                    >help@skool.com</a
+                    href="mailto:help@learnify.com"
+                    >help@learnify.com</a
                   ><u>.</u>
                 </p>
                 <p>
@@ -2703,8 +2703,8 @@
                   <a
                     target="_blank"
                     rel="noreferrer"
-                    href="mailto:help@skool.com"
-                    >help@skool.com</a
+                    href="mailto:help@learnify.com"
+                    >help@learnify.com</a
                   >
                   For free-trial Subscriptions, unless the Member cancels their
                   Subscription for the Admin's community before the free trial
@@ -2746,11 +2746,11 @@
                   copy of such Content only to the extent that this is an
                   incidental and technical process forming part of the Member's
                   accessing the Content (i.e., caching)), in accordance with
-                  Skool's
+                  Learnify's
                   <a
                     target="_blank"
                     rel="noreferrer"
-                    href="https://www.google.com/url?q=https://www.skool.com/legal?t%3Dterms&amp;sa=D&amp;source=docs&amp;ust=1689124927144460&amp;usg=AOvVaw21gWJdw7RFIjRBGYzUyrvr"
+                    href="https://www.google.com/url?q=https://www.learnify.com/legal?t%3Dterms&amp;sa=D&amp;source=docs&amp;ust=1689124927144460&amp;usg=AOvVaw21gWJdw7RFIjRBGYzUyrvr"
                     >Acceptable Use Policy</a
                   >.
                 </p>
@@ -2783,11 +2783,11 @@
                   or terminated for any reason;
                 </p>
                 <p>
-                  <strong>d.</strong> if the Member acts in breach of Skool's
+                  <strong>d.</strong> if the Member acts in breach of Learnify's
                   <a
                     target="_blank"
                     rel="noreferrer"
-                    href="https://www.skool.com/legal?t=terms"
+                    href="https://www.learnify.com/legal?t=terms"
                     >Acceptable Use Policy</a
                   >
                   (whether in relation to the Relevant Content or at all);
@@ -2797,17 +2797,17 @@
                   community; and
                 </p>
                 <p>
-                  <strong>f.</strong> if the Member closes their Skool User
+                  <strong>f.</strong> if the Member closes their Learnify User
                   account.
                 </p>
                 <p>
-                  <strong>9. Cancellation and Refunds: </strong>Skool's policy
-                  is to not provide refunds. Skool lets Creators offer refunds
+                  <strong>9. Cancellation and Refunds: </strong>Learnify's policy
+                  is to not provide refunds. Learnify lets Creators offer refunds
                   to Members at their discretion. If you want a refund, you need
                   to contact the Creator you purchased from directly, their
-                  support email should be on your receipt. Skool reserves the
+                  support email should be on your receipt. Learnify reserves the
                   right to issue refunds, at its discretion, depending on
-                  circumstances. In most cases, Skool will not refund on behalf
+                  circumstances. In most cases, Learnify will not refund on behalf
                   of Creators.
                 </p>
                 <p>
@@ -2817,11 +2817,11 @@
                 <p>
                   <strong>a. </strong>the Admin and the Member participating in
                   the Admin/Member Transaction agree to comply at all times with
-                  the Skool
+                  the Learnify
                   <a
                     target="_blank"
                     rel="noreferrer"
-                    href="https://www.skool.com/legal?t=terms"
+                    href="https://www.learnify.com/legal?t=terms"
                     >Acceptable Use Policy</a
                   >
                   in relation to the Relevant Content, including when accessing,
@@ -2881,7 +2881,7 @@
                 </p>
                 <p>
                   <strong>c. </strong>if the availability of all or any part of
-                  the Skool site is suspended or inaccessible; or
+                  the Learnify site is suspended or inaccessible; or
                 </p>
                 <p>
                   <strong>d.</strong>if the Admin is unable to create or upload
@@ -2891,7 +2891,7 @@
                   <strong>12. Terms Relating to Disputes:</strong>If there is a
                   dispute between an Admin and a Member relating to an
                   Admin/Member Transaction or these Transaction Terms, the Admin
-                  and Member agree that Skool.Com, Inc., is under no obligation
+                  and Member agree that Learnify.Com, Inc., is under no obligation
                   to become involved and that we will not be held liable for any
                   such dispute. We are not liable for the relationship between
                   the Admin and the Member, and we will not provide legal advice
@@ -2903,7 +2903,7 @@
           <section
             class="h-[calc(100vh_-140px)] animate-left overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full"
           >
-            <div class="styled__CardWrapper-sc-jrheml-0 hesuCC styled__TabContentWrapper-sc-19crpt3-0 BWXAE"><div class="styled__LegalContentWrapper-sc-dw1jdk-1 iyTwjP"><h1>Acceptable use policy</h1><p>We do not allow any activity or content that promotes or encourages discrimination based on race, sex, religion, nationality, disability, sexual orientation, or age. To provide specific examples (though by no means an exhaustive list), you cannot: <ul><li>Threaten any specific individual</li><li>Incite violence against a specific person, place, or group</li><li>Share private information about a citizen without their permission</li></ul></p><h2>Prohibited businesses (for Skool payments)</h2><p>The following products and activities are not allowed to be monetized using Skool's payments system. This is almost always because they violate U.S. federal law, they are prohibited by card network rules, or they are restricted by our payment processing partners. If you are unsure whether your content is prohibited on Skool, please contact us at<a href="mailto:help@skool.com"> help@skool.com </a>with a description or example of the content.<ol><li>Unlicensed proprietary content</li><li>Food products and ingredients (including consumer packaged goods, livestock, plants, and seeds)</li><li>Airlines</li><li>Bail bonds</li><li>Bankruptcy lawyers</li><li>Bidding fee or penny auctions</li><li>Age or legally restricted products or services</li><li> Sexually-oriented or pornographic content (including but not limited to adult books or video, adult telephone conversations or audio, membership to adult websites or content, companion or escort services, dating services, mail-order brides, massage parlors and prostitution, or content of any format that features characters who are minors, are depicted as minors, or are suggested to be minors in any sexual or sensual context)</li><li>Cell phones/pagers</li><li>Centralized reservation services</li><li>Collection agencies</li><li>Chain letters</li><li>Check cashing</li><li>Counterfeit goods/replicas</li><li>Currency exchange (including physical, digital or cryptographic currency exchange)</li><li>Consulting firms</li><li>Services (including, but not limited to, "get rich quick" schemes, business opportunities, investment opportunities, mortgage consulting, real estate purchases, mortgage reduction services and credit repair and protection)</li><li>Billing services (including, but not limited to, accepting payment for services rendered and billing for services to be performed in the future)</li><li>Credit card and identity theft protection</li><li>Cruise lines</li><li>Flea markets</li><li>Drug paraphernalia</li><li>Essay mills/paper mills</li><li>Extended warranties</li><li>Fortune tellers</li><li> Gambling (including legal gambling where the cardholder is not present when the bet is made, lotteries, illegal gambling, internet gambling, sports forecasting and odds making)</li><li>Illegal products or services</li><li>Marijuana dispensaries and related businesses</li><li>Money transmission</li><li>Money service businesses</li><li>Multi-level marketing or pyramid schemes</li><li>Wire transfers or money orders</li><li>Pharmacies or internet pharmacies</li><li> Pseudo pharmaceuticals (including anti-aging pills, sexual stimulants, weight loss pills, diet pills)</li><li>Quasi-cash or stores of value</li><li>Security brokerage</li><li>Door-to-door sales</li><li> Offering substantial rebates or special incentives that are awarded to the cardholder subsequent to the original purchase</li><li>Negative response marketing techniques</li><li>Deceptive marketing practices</li><li>Reselling private label rights products</li><li>Shipping/forwarding brokers</li><li>Substances designed to mimic illegal drugs</li><li>Telemarketing</li><li>Timeshares</li><li>Tobacco products</li><li>Weapons or ammunition</li><li>Jewelry or beauty products</li></ol></p><p>This list is maintained separately from Skool's <a target="_blank" rel="noreferrer" href="https://www.skool.com/legal?t=terms">Terms and conditions</a> Skool makes every effort to keep this list as current as possible. However, because of the unpredictable nature of card network rules, legislation and payment processor relationships, this list may change abruptly and without notice. Changes to this list take effect immediately.</p></div></div>
+            <div class="styled__CardWrapper-sc-jrheml-0 hesuCC styled__TabContentWrapper-sc-19crpt3-0 BWXAE"><div class="styled__LegalContentWrapper-sc-dw1jdk-1 iyTwjP"><h1>Acceptable use policy</h1><p>We do not allow any activity or content that promotes or encourages discrimination based on race, sex, religion, nationality, disability, sexual orientation, or age. To provide specific examples (though by no means an exhaustive list), you cannot: <ul><li>Threaten any specific individual</li><li>Incite violence against a specific person, place, or group</li><li>Share private information about a citizen without their permission</li></ul></p><h2>Prohibited businesses (for Learnify payments)</h2><p>The following products and activities are not allowed to be monetized using Learnify's payments system. This is almost always because they violate U.S. federal law, they are prohibited by card network rules, or they are restricted by our payment processing partners. If you are unsure whether your content is prohibited on Learnify, please contact us at<a href="mailto:help@learnify.com"> help@learnify.com </a>with a description or example of the content.<ol><li>Unlicensed proprietary content</li><li>Food products and ingredients (including consumer packaged goods, livestock, plants, and seeds)</li><li>Airlines</li><li>Bail bonds</li><li>Bankruptcy lawyers</li><li>Bidding fee or penny auctions</li><li>Age or legally restricted products or services</li><li> Sexually-oriented or pornographic content (including but not limited to adult books or video, adult telephone conversations or audio, membership to adult websites or content, companion or escort services, dating services, mail-order brides, massage parlors and prostitution, or content of any format that features characters who are minors, are depicted as minors, or are suggested to be minors in any sexual or sensual context)</li><li>Cell phones/pagers</li><li>Centralized reservation services</li><li>Collection agencies</li><li>Chain letters</li><li>Check cashing</li><li>Counterfeit goods/replicas</li><li>Currency exchange (including physical, digital or cryptographic currency exchange)</li><li>Consulting firms</li><li>Services (including, but not limited to, "get rich quick" schemes, business opportunities, investment opportunities, mortgage consulting, real estate purchases, mortgage reduction services and credit repair and protection)</li><li>Billing services (including, but not limited to, accepting payment for services rendered and billing for services to be performed in the future)</li><li>Credit card and identity theft protection</li><li>Cruise lines</li><li>Flea markets</li><li>Drug paraphernalia</li><li>Essay mills/paper mills</li><li>Extended warranties</li><li>Fortune tellers</li><li> Gambling (including legal gambling where the cardholder is not present when the bet is made, lotteries, illegal gambling, internet gambling, sports forecasting and odds making)</li><li>Illegal products or services</li><li>Marijuana dispensaries and related businesses</li><li>Money transmission</li><li>Money service businesses</li><li>Multi-level marketing or pyramid schemes</li><li>Wire transfers or money orders</li><li>Pharmacies or internet pharmacies</li><li> Pseudo pharmaceuticals (including anti-aging pills, sexual stimulants, weight loss pills, diet pills)</li><li>Quasi-cash or stores of value</li><li>Security brokerage</li><li>Door-to-door sales</li><li> Offering substantial rebates or special incentives that are awarded to the cardholder subsequent to the original purchase</li><li>Negative response marketing techniques</li><li>Deceptive marketing practices</li><li>Reselling private label rights products</li><li>Shipping/forwarding brokers</li><li>Substances designed to mimic illegal drugs</li><li>Telemarketing</li><li>Timeshares</li><li>Tobacco products</li><li>Weapons or ammunition</li><li>Jewelry or beauty products</li></ol></p><p>This list is maintained separately from Learnify's <a target="_blank" rel="noreferrer" href="https://www.learnify.com/legal?t=terms">Terms and conditions</a> Learnify makes every effort to keep this list as current as possible. However, because of the unpredictable nature of card network rules, legislation and payment processor relationships, this list may change abruptly and without notice. Changes to this list take effect immediately.</p></div></div>
           </section>
         </div>
       </div>

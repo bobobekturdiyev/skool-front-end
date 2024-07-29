@@ -9,11 +9,13 @@
       <div
         class="md:space-y-5 space-y-3 text-center md:mt-[72px] mt-8 font-semibold text-xl"
       >
-        <h1 class="md:text-[45px] text-2xl">Discover communities</h1>
+        <h1 class="md:text-[45px] text-2xl">{{ $t("nav.discover") }}</h1>
         <p>
-          or
-          <router-link to="/signup" class="_c2a cursor-pointer hover:opacity-70"
-            >create your own</router-link
+          {{ $t("nav.or") }}
+          <router-link
+            to="/signup"
+            class="_c2a cursor-pointer hover:opacity-70"
+            >{{ $t("nav.create_your_own") }}</router-link
           >
         </p>
       </div>
@@ -43,7 +45,7 @@
               : ''
           "
           type="text"
-          placeholder="Search all reports"
+          :placeholder="$t('nav.search')"
         />
       </div>
     </section>
@@ -60,7 +62,7 @@
             :class="useGroup.store.filter.category_id ? 'bg-white' : 'b_cbc'"
             class="py-2 px-3 rounded-full md:h-9 h-8 hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
           >
-            All
+            {{ $t("nav.all") }}
           </button>
           <LoadingDiv
             v-if="isLoading.isLoadingType('groupCategories')"
@@ -89,7 +91,7 @@
             v-if="store.is_show && useCategory.store.categories?.length"
             class="py-2 px-3 md:h-9 h-8 md:block hidden rounded-full min-w-fit bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
           >
-            Less...
+            {{ $t("nav.less") }}...
           </button>
         </div>
         <button
@@ -97,7 +99,7 @@
           @click="store.is_show = true"
           class="py-2 px-3 md:h-9 h-8 md:block hidden rounded-full min-w-fit bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
         >
-          More...
+          {{ $t("nav.more") }}...
         </button>
         <div class="min-w-fit text-end">
           <el-dropdown
@@ -114,14 +116,14 @@
                 src="@/assets/svg/filter.svg"
                 alt=""
               />
-              <p class="sm:block hidden">Filter</p>
+              <p class="sm:block hidden">{{$t("nav.filter")}}</p>
             </button>
             <template #dropdown>
               <el-dropdown-menu
                 class="flex min-w-[328px] filter_dropdown dropdown_shadow 2xl:!-ml-[60px]"
               >
-                <div class="w-[150px] border-r border-[#E0E0E0]">
-                  <h1 class="text-sm font-medium px-8 mb-2">Type</h1>
+                <div class="w-[150px] border-r border-[#E0E0E0] capitalize">
+                  <h1 class="text-sm font-medium px-8 mb-2">{{$t("nav.type")}}</h1>
                   <label :for="`${i.type}`" v-for="i in filter_type">
                     <el-dropdown-item
                       class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
@@ -133,12 +135,12 @@
                         type="radio"
                         name="type"
                       />
-                      {{ i.title }}
+                      {{ $t(`nav.${i.title.toLowerCase()}`) }}
                     </el-dropdown-item>
                   </label>
                 </div>
-                <div class="w-[150px]">
-                  <h1 class="text-sm font-medium px-8 mb-2">Price</h1>
+                <div class="w-[150px] capitalize">
+                  <h1 class="text-sm font-medium px-8 mb-2">{{$t("nav.price")}}</h1>
                   <label :for="`price_${i.type}`" v-for="i in filter_price">
                     <el-dropdown-item
                       class="flex items-center _c07 !px-8 font-medium gap-3 h-[44px] !text-xs"
@@ -150,7 +152,8 @@
                         type="radio"
                         name="price"
                       />
-                      {{ i.title }}
+                      <!-- {{ i.title }} -->
+                      {{ $t(`nav.${i.title.toLowerCase()}`) }}
                     </el-dropdown-item>
                   </label>
                 </div>
@@ -162,7 +165,7 @@
             @click="store.drawer = true"
             class="py-2 px-3 md:h-9 h-8 mt-3 ml-auto md:hidden block rounded-full min-w-fit bg-white hover:bg-[#BCDEFF] hover:bg-opacity-30 duration-700"
           >
-            More...
+            {{$t("nav.more")}}...
           </button>
         </div>
       </div>
@@ -198,7 +201,7 @@
           :class="useGroup.store.filter.category_id ? 'bg-[#F0F5FA]' : 'b_cbc'"
           class="px-3 rounded-full md:h-9 h-8 hover:bg-[#F0F5FA] hover:bg-opacity-30 duration-700"
         >
-          All
+          {{$t("nav.all")}}
         </button>
         <button
           @click="handleCategory(i.id)"
@@ -220,10 +223,10 @@
 import { useLoadingStore, useCategoryStore, useGroupStore } from "@/store";
 
 useSeoMeta({
-  title: "Skool: Discover Communities or Create your own",
-  ogTitle: "Skool: Discover Communities or Create your own",
-  description: "Skool: Discover Communities or Create your own",
-  ogDescription: "Skool: Discover Communities or Create your own",
+  title: "Learnify: Discover Communities or Create your own",
+  ogTitle: "Learnify: Discover Communities or Create your own",
+  description: "Learnify: Discover Communities or Create your own",
+  ogDescription: "Learnify: Discover Communities or Create your own",
   ogImage: "/logo.svg",
   twitterCard: "/logo.svg",
 });
@@ -248,7 +251,7 @@ for (let i in currentQueries) {
 }
 start();
 await useAsyncData(
-  "skool",
+  "learnify",
   async () => {
     await useGroup.filterGroups();
     await useCategory.getCategories();

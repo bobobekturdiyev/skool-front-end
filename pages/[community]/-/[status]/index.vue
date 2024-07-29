@@ -16,7 +16,7 @@
           v-else-if="!useMembers.store.member_requests.length"
           class="min-h-[30vh] full_flex col-span-4"
         >
-          No data
+          {{$t("no_data")}}
         </div>
         <article
           v-else

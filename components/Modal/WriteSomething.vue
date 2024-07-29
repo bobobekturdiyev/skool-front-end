@@ -10,7 +10,7 @@
         alt=""
       />
       <button class="!border-0 placeholder-black md:text-xl font-semibold">
-        Write something...
+        {{ $t("community.write") }}...
       </button>
     </div>
 
@@ -37,10 +37,20 @@
             >{{ isLoading.user_update_checker.name }}
             {{ isLoading.user_update_checker.surname }}</span
           >
-          <span class="_ca1">posting in</span>
-          <span class="font-semibold _c2a md:w-auto w-full">{{
-            useGroup.store.group_by_username.name
-          }}</span>
+          <span
+            class="_ca1"
+            v-if="$t('nav.uz') == 'en' || $t('nav.uz') == 'ru'"
+            >{{ $t("course.postingin") }}</span
+          >
+
+          <span class="font-semibold _c2a md:w-auto w-full"
+            >{{ useGroup.store.group_by_username.name }}
+            <span
+              class="_ca1"
+              v-if="$t('nav.uz') != 'en' || $t('nav.uz') != 'ru'"
+              >{{ $t("course.postingin") }}</span
+            >
+          </span>
         </p>
       </div>
       <div class="md:p-5 p-3 space-y-5 bg-white">
@@ -48,7 +58,7 @@
           v-model="usePost.create.title"
           class="h-10 !rounded-none"
           type="text"
-          placeholder="Title"
+          :placeholder="$t('title')"
           required
         />
         <div class="community_editor border h-[120px] whitespace-pre-wrap">
@@ -59,12 +69,14 @@
           class="border_ce0 rounded-lg p-4"
         >
           <div class="flex items-center justify-between">
-            <p class="font-medium">Poll</p>
+            <p class="font-medium">
+            {{$t("course.poll")}}
+            </p>
             <p
               @click="usePost.store.polls = {}"
               class="font-medium cursor-pointer hover:underline text-sm _ca1"
             >
-              Remove
+            {{$t("course.remove")}}
             </p>
           </div>
           <ul class="space-y-2 mt-2">
@@ -75,7 +87,7 @@
               <input
                 v-model="usePost.store.polls[i]"
                 type="text"
-                :placeholder="`Option ${index + 1}`"
+                :placeholder="`${$t('course.option')} ${index + 1}`"
               />
               <img
                 v-if="Object.keys(usePost.store.polls).length > 2"
@@ -94,7 +106,7 @@
               Object.keys(usePost.store.polls).length >= 10 ? 'b_ce0 _ca1' : ''
             "
           >
-            Add option
+          {{$t("course.addoption")}}
           </button>
         </div>
         <ul
@@ -233,7 +245,7 @@
                   {{
                     usePost.store.category_id
                       ? usePost.store.category_id.name
-                      : "Select category"
+                      : $t("course.select_category")
                   }}
                 </p>
                 <img src="@/assets/svg/textarea/select_arrow.svg" alt="" />
@@ -260,7 +272,7 @@
             @click="usePost.store.writingModal = false"
             class="uppercase h-10 px-6 rounded-lg _ca1"
           >
-            cancel
+            {{ $t("cancel") }}
           </button>
           <button
             v-loading="isLoading.isLoadingType('writePost')"
@@ -268,7 +280,7 @@
             class="uppercase h-10 px-6 rounded-lg"
             :class="usePost.create.title ? 'b_cbc _c07' : 'b_ce0 _ca1'"
           >
-            Post
+            {{ $t("post") }}
           </button>
         </div>
       </div>

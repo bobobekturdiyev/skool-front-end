@@ -141,7 +141,7 @@ export const useGroupStore = defineStore("group", () => {
       })
       .catch((err) => {
         console.log(err);
-        isLoading.showMessage(err.response.data.message.errors[0]);
+        isLoading.showMessage(err.response.data.errors[0]);
         isLoading.removeLoading("createMedia");
       });
   }
@@ -198,7 +198,7 @@ export const useGroupStore = defineStore("group", () => {
       })
       .catch((err) => {
         console.log(err);
-        isLoading.showMessage(err.response.data.message.errors[0]);
+        isLoading.showMessage(err.response.data.message[0]);
         isLoading.removeLoading("changeGroupDescription");
       });
   }

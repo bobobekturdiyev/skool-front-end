@@ -22,7 +22,7 @@
           class="full_flex hover:underline cursor-pointer w-full h-[150px] text-white"
           :style="`background: ${useGroup.store.group_by_username?.color}`"
         >
-          Upload cover photo
+          {{ $t("about.coverphoto") }}
         </div>
         <div
           v-else
@@ -33,15 +33,15 @@
           <h1 class="font-medium text-lg">
             {{ useGroup.store.group_by_username?.name }}
           </h1>
-          <p class="flex items-center _ca1 gap-1">
+          <p class="flex items-center _ca1 gap-1 capitalize">
             <img src="@/assets/svg/community/grey_private.svg" alt="" />
-            {{
-              useGroup.store.group_by_username?.group_type == "private"
-                ? "Private group"
-                : "Public group"
-            }}
+            {{ $t(`nav.${useGroup.store.group_by_username?.group_type}`) }}
+            <span class="lowercase">{{ $t("about.pg") }}</span>
           </p>
-          <pre class="text-sm leading-[21px] whitespace-pre-line" v-html="useGroup.store.group_by_username?.excerpt"></pre>
+          <pre
+            class="text-sm leading-[21px] whitespace-pre-line"
+            v-html="useGroup.store.group_by_username?.excerpt"
+          ></pre>
           <ul
             v-if="
               useGroup.store.showLinksPublic &&
@@ -76,7 +76,7 @@
               <p class="_c2a text-lg">
                 {{ useGroup.store.group_by_username.members_count }}
               </p>
-              <p class="_ca1">Members</p>
+              <p class="_ca1">{{ $t("nav.members") }}</p>
             </div>
             <!-- <div>
               <p class="_c2a text-lg">
@@ -88,56 +88,60 @@
               <p class="_c2a text-lg">
                 {{ useGroup.store.group_by_username.admin_count }}
               </p>
-              <p class="_ca1">Admins</p>
+              <p class="_ca1">{{ $t("about.admins") }}</p>
             </div>
           </div>
           <!-- <div class="flex -space-x-[5px]">
             <img v-for="(i, index) in 7" class="h-[26px] w-[26px] object-cover rounded-full" :src="isLoading.user.image"
               alt="" :style="`z-index: ${7 - index}`" />
           </div> -->
-          <div v-if="useGroup.store.group_by_username.status == 'pending'">
+          <div>
+            <div v-if="useGroup.store.group_by_username.status == 'pending'">
+              <button
+                class="b_cf2 rounded-lg pointer-events-none w-full font-semibold text-sm uppercase"
+              >
+              {{$t("about.membership_pending")}}
+              </button>
+              <button
+                @click="useMember.joinToGroup"
+                v-loading="isLoading.isLoadingType('joinGroup')"
+                class="_ca1 hover:underline text-[10px] text-center w-full uppercase"
+              >
+              {{$t("about.cancel_membership")}}
+              </button>
+            </div>
             <button
-              class="b_cf2 rounded-lg pointer-events-none w-full font-semibold text-sm"
+              v-else-if="useGroup.store.group_by_username.status == 'active'"
+              @click="isLoading.store.inviteModal = true"
+              class="border border-[#f2f2f2] _ca1 rounded-lg w-full font-semibold text-sm uppercase"
             >
-              MEMBERSHIP PENDING
+              {{ $t("nav.settings") }}
             </button>
+            <div
+              v-else-if="useGroup.store.group_by_username.status == 'banned'"
+            >
+              <button
+                class="b_cf2 _ca1 rounded-lg pointer-events-none w-full font-semibold text-sm uppercase"
+              >
+              {{$t("about.banned")}}
+              </button>
+              <p class="_ca1 text-[10px] my-2">
+                {{$t("about.sorry_banned")}}
+              </p>
+            </div>
             <button
-              @click="useMember.joinToGroup"
+              v-else
+              @click="joinToGroup"
               v-loading="isLoading.isLoadingType('joinGroup')"
-              class="_ca1 hover:underline text-[10px] text-center w-full"
+              class="b_cbc rounded-lg w-full font-semibold text-sm uppercase"
             >
-              Cancel membership request
+              {{
+                useGroup.store.group_by_username.group_price == "free"
+                  ? $t("about.join")
+                  : `JOIN $${useGroup.store.group_by_username.price} /month`
+              }}
             </button>
           </div>
-          <button
-            v-else-if="useGroup.store.group_by_username.status == 'active'"
-            @click="isLoading.store.inviteModal = true"
-            class="border border-[#f2f2f2] _ca1 rounded-lg w-full font-semibold text-sm"
-          >
-            SETTINGS
-          </button>
-          <div v-else-if="useGroup.store.group_by_username.status == 'banned'">
-            <button
-              class="b_cf2 _ca1 rounded-lg pointer-events-none w-full font-semibold text-sm"
-            >
-              BANNED
-            </button>
-            <p class="_ca1 text-[10px] my-2">
-              Sorry, you've been banned from this group.
-            </p>
-          </div>
-          <button
-            v-else
-            @click="joinToGroup"
-            v-loading="isLoading.isLoadingType('joinGroup')"
-            class="b_cbc rounded-lg w-full font-semibold text-sm"
-          >
-            {{
-              useGroup.store.group_by_username.group_price == "free"
-                ? "JOIN GROUP"
-                : `JOIN $${useGroup.store.group_by_username.price} /month`
-            }}
-          </button>
         </div>
       </div>
       <div
@@ -186,11 +190,16 @@
         >
       </div>
       <div
-        v-if="$router.currentRoute.value.name == 'community-about'"
-        class="full_flex mt-8 gap-2 leading-[18px]"
+        v-if="$router.currentRoute.value?.name == 'community-about'"
+        class="full_flex flex-wrap mt-8 gap-2 leading-[18px]"
       >
-        <p>Powered by</p>
-        <img class="h-3 mt-0.5" src="/logo.svg" alt="" />
+        <span v-if="$t('nav.uz') == 'en' || $t('nav.uz') == 'ru'">{{
+          $t("about.poweredby")
+        }}</span>
+        <img class="mt-0.5" src="/logo.svg" alt="" />
+        <span v-if="$t('nav.uz') != 'en' && $t('nav.uz') != 'ru'">{{
+          $t("about.poweredby")
+        }}</span>
       </div>
     </section>
 
@@ -202,10 +211,9 @@
       class="!rounded-xl overflow-hidden px-6 py-7"
     >
       <div class="space-y-7 _c07 text-center">
-        <h1 class="text-2xl font-semibold">Membership pending</h1>
+        <h1 class="text-2xl font-semibold">{{ $t("about.membership_pending") }}</h1>
         <p class="text-lg">
-          The 4D Copywriting Community admins are reviewing your request. You'll
-          get an email when you're approved.
+          {{$t("about.modal_title")}}
         </p>
         <div class="flex justify-end gap-3 text-sm font-semibold">
           <button
@@ -213,7 +221,7 @@
             v-loading="isLoading.isLoadingType('deletePost')"
             class="uppercase h-10 px-6 b_cbc _c07 rounded-lg w-full"
           >
-            GOT IT
+            {{$t("about.gotit")}}
           </button>
         </div>
       </div>

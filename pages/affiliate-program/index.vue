@@ -5,7 +5,7 @@
         <div class="text-center">
           <div class="md:text-[45px] sm:text-[40px] text-[36px] font-semibold">Earn 40% of recurring revenue</div>
           <div class="mb-8 mt-5">
-            Refer people to Skool and earn 40% of monthly recurring revenue for
+            Refer people to Learnify and earn 40% of monthly recurring revenue for
             life. <br />If somebody creates a group from your group, we
             attribute it to you automatically.
           </div>
@@ -18,7 +18,7 @@
         <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-8 mt-16">
           <div>
             <img class="shadow_card r_8"
-              src="https://assets.skool.com/skool/5ea4e763f8994996ad6de15fa77ca28d.png"
+              src="https://assets.learnify.com/learnify/5ea4e763f8994996ad6de15fa77ca28d.png"
             />
             <p class="text-xl font-semibold my-2">1. Share your link</p>
             <div>
@@ -28,17 +28,17 @@
           </div>
           <div>
             <img class="shadow_card r_8"
-              src="https://assets.skool.com/skool/a2d59380be544502af6e90db30390964.png"
+              src="https://assets.learnify.com/learnify/a2d59380be544502af6e90db30390964.png"
             />
             <p class="text-xl font-semibold my-2">2. Somebody signs up</p>
             <div>
-              When your friend signs up for Skool, they will be attributed to
+              When your friend signs up for Learnify, they will be attributed to
               you.
             </div>
           </div>
           <div>
             <img class="shadow_card r_8"
-              src="https://assets.skool.com/skool/97bfca1dc3af4166a3b15f45547c4348.png"
+              src="https://assets.learnify.com/learnify/97bfca1dc3af4166a3b15f45547c4348.png"
             />
             <p class="text-xl font-semibold my-2">3. Earn 40% commission</p>
             <div>
@@ -54,7 +54,7 @@
             <div>
               If you have a group and one of your members creates a group
               —&nbsp;we'll attribute the referral to you automatically. This
-              makes Skool an income stream, not a cost.
+              makes Learnify an income stream, not a cost.
             </div>
           </div>
           <div class="styled__InfoBlockWrapper-sc-11s56ls-4 wBlpa">
@@ -73,7 +73,7 @@
             </div>
             <div>
               Don't know where to begin? Learn best practices for promoting
-              Skool and making money. We share the best methods we know so you
+              Learnify and making money. We share the best methods we know so you
               can get up to speed fast!
             </div>
           </div>

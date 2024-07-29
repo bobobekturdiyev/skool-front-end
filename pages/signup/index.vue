@@ -39,9 +39,9 @@
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="mailto:help@skool.com"
+            href="mailto:help@learnify.com"
             class="_ca1 text-sm mt-9 block hover:underline"
-            >help@skool.com</a
+            >help@learnify.com</a
           >
         </section>
         <section class="w-[500px] bg-white p-8 rounded-xl">

@@ -3,7 +3,7 @@
     <div
       class="flex justify-between items-center h-[64px] mx-auto xl:px-[200px] lg:px-[100px] md:px-[100px] sm:px-[50px] px-5 max-w-[1536px]"
     >
-      <div class="flex items-center sm:gap-5 gap-3 cursor-pointer">
+      <div class="flex items-center gap-3 cursor-pointer">
         <router-link
           :to="
             $router.currentRoute.value.params.community
@@ -12,7 +12,7 @@
           "
         >
           <img
-            v-if="skool_logo.includes($router.currentRoute.value.name)"
+            v-if="learnify_logo.includes($router.currentRoute.value.name)"
             src="/logo.svg"
             alt=""
           />
@@ -64,7 +64,7 @@
           class="md:text-lg !text-black text-sm whitespace-nowrap font-semibold"
           to="/"
           style="text-decoration: underline white !important"
-          >Skool community</router-link
+          >Learnify community</router-link
         >
         <el-dropdown placement="bottom-end" class="dropdown" trigger="click">
           <p
@@ -165,7 +165,7 @@
           autofocus
           class="md:h-[40px] h-12 !pl-[60px] b_none font-semibold w-full !rounded-lg bg-[#F0F5FA] placeholder-[#9CCDFE]"
           type="text"
-          placeholder="Search all reports"
+          :placeholder="$t('nav.search')"
         />
       </div>
       <div class="flex items-center md:gap-10 gap-6">
@@ -407,7 +407,7 @@
       <section class="space-y-8 bg-white rounded-lg p-6 text-center _c07">
         <h1 class="_c07 text-2xl font-semibold">Please check your email</h1>
         <p class="!mt-4">
-          We sent you an email, which contains a link to reset your Skool
+          We sent you an email, which contains a link to reset your Learnify
           password.
         </p>
         <button
@@ -781,7 +781,7 @@ const search_bar = [
   "legal",
   "pricing",
 ];
-const skool_logo = [
+const learnify_logo = [
   "index",
   "affiliate-program",
   "careers",

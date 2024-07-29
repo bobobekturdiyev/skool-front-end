@@ -20,13 +20,12 @@
                     @click="useGroup.store.slideStep = index" :src="post.link" />
                 </div>
                 <div v-else-if="post.type == 'video'">
-                    <video
-                    class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] w-full min-w-[100%] object-cover">
-                      controls>
-                      <source :src="post.link" type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                  </div>
+                  <video class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] w-full min-w-[100%] object-cover">
+                    controls>
+                    <source :src="post.link" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
                 <div v-else @click="useGroup.store.slideStep = index" class="relative">
                   <iframe class="lg:h-[290px] md:h-[240px] sm:h-[200px] h-[180px] min-w-full" :src="post.link">
                   </iframe>
@@ -74,7 +73,7 @@
       post.type == 'loom'
       " @click="useGroup.store.slideStep = index" class="relative">
                     <iframe :src="post.link"
-                    class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px] cursor-pointer object-cover rounded-xl"></iframe>
+                      class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px] cursor-pointer object-cover rounded-xl"></iframe>
                     <div
                       class="absolute top-0 min-w-full h-full cursor-pointer bg-black bg-opacity-30 rounded-xl full_flex">
                       <img src="@/assets/svg/video_btn.svg" alt="" />
@@ -90,27 +89,29 @@
               <img class="w-1/3" src="@/assets/svg/add_photo.svg" alt="" />
             </div>
           </div>
-          <div class="flex flex-wrap gap-4 text-sm font-medium whitespace-nowrap">
+          <div class="flex flex-wrap gap-4 text-sm font-medium whitespace-nowrap capitalize">
             <p class="full_flex h-9 px-3 gap-1 rounded-lg bg-[#F2F2F2]">
               <img v-if="useGroup.store.group_by_username.group_type == 'private'"
                 src="@/assets/svg/community/private.svg" alt="" />
               <img v-else src="@/assets/svg/members/public.svg" alt="" />
-              {{ useGroup.store.group_by_username.group_type == "private" ? "Private group" : "Public group" }}
+              <!-- {{ useGroup.store.group_by_username.group_type == "private" ? "Private group" : "Public group" }} -->
+              {{ $t(`nav.${useGroup.store.group_by_username?.group_type}`) }}
+              <span class="lowercase">{{ $t("about.pg") }}</span>
             </p>
             <p class="full_flex h-9 px-3 gap-1 rounded-lg bg-[#F2F2F2]">
               <img src="@/assets/svg/community/members.svg" alt="" />
-              {{ useGroup.store.group_by_username.members_count }} members
+              {{ useGroup.store.group_by_username.members_count }} {{$t("nav.members")}}
             </p>
-            <p class="full_flex h-9 px-3 gap-1 rounded-lg bg-[#F2F2F2]">
+            <p class="full_flex h-9 px-3 gap-1 rounded-lg bg-[#F2F2F2] capitalize">
               <img src="@/assets/svg/community/paid.svg" alt="" />
-              {{ useGroup.store.group_by_username.group_price == "free" ? "Free" : "Paid" }}
+              {{$t(`nav.${useGroup.store.group_by_username.group_price}`)}}
             </p>
             <p class="full_flex h-9 px-3 gap-1 rounded-lg bg-[#F2F2F2]">
               <img v-if="useGroup.store.group_by_username.user?.image"
                 class="h-5 w-5 rounded-full bg_loading object-cover" :src="useGroup.store.group_by_username.user?.image"
                 alt="" />
             <p v-else class="h-5 w-5 rounded-full bg_loading"></p>
-            By {{ useGroup.store.group_by_username.user.name }} {{ useGroup.store.group_by_username.user.surname }}
+            <span v-if="$t('nav.uz') == 'en'">By</span> {{ useGroup.store.group_by_username.user.name }} {{ useGroup.store.group_by_username.user.surname }}
             </p>
           </div>
           <pre v-if="role_ac.includes(useGroup.store.group_by_username.type) && !useGroup.store.description_modal"
@@ -121,7 +122,7 @@
     }}</pre>
           <div v-else-if="role_ac.includes(useGroup.store.group_by_username.type)" class="md:mt-8 mt-4">
             <el-input v-model="useGroup.store.description" @input="handleInput" class="w-full"
-              :autosize="{ minRows: 2, maxRows: 20 }" type="textarea" placeholder="Add a description ..." />
+              :autosize="{ minRows: 2, maxRows: 20 }" type="textarea" :placeholder="$t('about.description') + '...'" />
             <p class="text-end mt-2 _ca1 md:text-sm text-xs">
               {{ useGroup.store.description?.length }}/1000
             </p>
@@ -129,11 +130,11 @@
               <button type="button"
                 @click="() => { useGroup.store.description_modal = false; useGroup.store.description = '' }"
                 class="_ca1 font-semibold px-6 r_8 uppercase">
-                cancel
+                {{$t("cancel")}}
               </button>
               <button v-loading="isLoading.isLoadingType('changeGroupDescription')"
                 class="_c07 b_cbc font-semibold px-6 r_8 uppercase" @click="useGroup.updateGroupDescription">
-                Save
+                {{$t("save")}}
               </button>
             </div>
           </div>
@@ -152,26 +153,24 @@
           <div class="full_flex min-w-[100%] min-h-full"
             v-for="(post, index) in useGroup.store.group_by_username.medias">
             <div v-if="post.type == 'image'">
-                    <img @click="useGroup.store.slideStep = index"
-                    class="full_flex"
-                    :src="post.link" />
-                  </div>
-                  <div v-else-if="post.type == 'video'">
-                    <video
-                      class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px] cursor-pointer object-cover rounded-xl"
-                      controls>
-                      <source :src="post.link" type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                  </div>
-                  <div v-else-if="post.type == 'youtube' ||
+              <img @click="useGroup.store.slideStep = index" class="full_flex" :src="post.link" />
+            </div>
+            <div v-else-if="post.type == 'video'">
+              <video
+                class="md:min-w-[90px] md:h-[90px] min-w-[56px] max-w-[56px]  h-[56px] cursor-pointer object-cover rounded-xl"
+                controls>
+                <source :src="post.link" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div v-else-if="post.type == 'youtube' ||
       post.type == 'wistia' ||
       post.type == 'vimeo' ||
       post.type == 'loom'
       " @click="useGroup.store.slideStep = index" class="relative h-full w-full">
-                    <iframe
-                    class="md:max-h-[80vh] max-w-[80vw] min-w-full md:min-h-[80vh] min-h-[50vh]" :src="post.link"></iframe>
-                </div>
+              <iframe class="md:max-h-[80vh] max-w-[80vw] min-w-full md:min-h-[80vh] min-h-[50vh]"
+                :src="post.link"></iframe>
+            </div>
           </div>
         </div>
       </div>
@@ -226,8 +225,12 @@
         </div>
         <div class="flex justify-end mt-4">
           <button type="button" @click="usePayment.store.joinToGroupModal = false"
-            class="_ca1 font-semibold px-6 r_8 uppercase">cancel</button>
-          <button class="_ca1 font-semibold b_ce0 px-6 r_8 uppercase">ADD</button>
+            class="_ca1 font-semibold px-6 r_8 uppercase">
+            {{$t("cancel")}}
+</button>
+          <button class="_ca1 font-semibold b_ce0 px-6 r_8 uppercase">
+            {{$t("add")}}
+          </button>
         </div>
       </form>
       <form v-else-if="usePayment.store.join_step == 2" @submit.prevent="usePayment.paymentConfirmData">
@@ -251,17 +254,19 @@
     <el-dialog v-model="useGroup.store.delete_media" width="400" align-center
       class="!rounded-xl overflow-hidden px-6 py-7">
       <div class="space-y-7">
-        <h1 class="text-2xl font-semibold">Delete media?</h1>
+        <h1 class="text-2xl font-semibold">
+          {{$t("about.delete")}}
+        </h1>
         <p class="text-lg">
-          Are you sure you want to delete? You can't undo this.
+          {{$t("about.deleteaccept")}}
         </p>
         <div class="flex justify-end gap-3 text-sm font-semibold">
           <button @click="useGroup.store.delete_media = false" class="uppercase h-10 px-6 rounded-lg _ca1">
-            cancel
+            {{$t("cancel")}}
           </button>
           <button @click="useGroup.delete_media" v-loading="isLoading.isLoadingType('deleteMedia')"
             class="uppercase h-10 px-6 b_cbc _c07 rounded-lg">
-            delete
+            {{$t("delete")}}
           </button>
         </div>
       </div>
@@ -270,30 +275,32 @@
     <!-- add media -->
     <el-dialog v-model="useGroup.store.add_media" width="400" align-center class="bg-opacity-50 !rounded-lg py-7 px-6">
       <form @submit.prevent="handleVideoLink">
-        <h1 class="text-2xl font-semibold">Add media</h1>
+        <h1 class="text-2xl font-semibold">
+          {{$t("about.addmedia")}}
+        </h1>
         <p class="mt-6 font-medium">
-          Upload an image (1400 x 790 recommended).
+          {{$t("about.uploadredommend")}}
         </p>
         <label for="add_image"
           class="_ca1 font-semibold border_ce0 h-10 inline-block full_flex max-w-fit px-6 r_8 mt-4 uppercase">
-          UPLOAD IMAGE
+          {{$t("about.upload_image")}}
         </label>
         <input @change="handleMediaUpload" type="file" id="add_image" accept="image/*"
           class="h-0 w-0 overflow-hidden !p-0" />
         <p class="mt-6 mb-4 font-medium">
-          Or, add a YouTube, Vimeo, Loom, or Wistia video link.
+          {{$t("about.upload_list")}}
         </p>
-        <input v-model="useGroup.media.link" class="text-sm" type="url" placeholder="Link" />
+        <input v-model="useGroup.media.link" class="text-sm" type="url" :placeholder="$t('about.link')" />
         <p v-if="useGroup.store.is_url" class="leading-4 text-red-600 -mb-6 mt-2 vip">
-          Invalid video link
+          {{$t("about.invalid")}}
         </p>
         <div class="flex justify-end gap-3 mt-7 text-sm font-semibold">
           <button @click="useGroup.store.add_media = false" type="button" class="uppercase h-10 px-6 rounded-lg _ca1">
-            cancel
+          {{$t("cancel")}}
           </button>
           <button :class="useGroup.media.link ? 'b_cbc _c07' : 'b_ce0 _ca1'
       " class="uppercase h-10 px-6 rounded-lg" v-loading="isLoading.isLoadingType('createMedia')">
-            add
+                      {{$t("add")}}
           </button>
         </div>
       </form>
@@ -364,6 +371,7 @@ function deleteMedia(id) {
 function handleMediaUpload(e) {
   console.log("Hi");
   useGroup.media.image = e.target.files[0];
+  useGroup.media.type = "image";
   useGroup.create_media();
   document.querySelector('#add_image').value = "";
 }
@@ -400,7 +408,7 @@ async function handleVideoLink() {
     );
     console.log(useGroup.store.is_url)
     if (!useGroup.store.is_url) {
-      useGroup.media.type =  store.video_type;
+      useGroup.media.type = store.video_type;
       useGroup.media.link = file_urls[store.video_type] + store.video_id
       useGroup.create_media();
     }

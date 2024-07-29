@@ -87,14 +87,14 @@ const member = [
   ["Accounts", "Profile, name, password, etc.", "6 articles"],
   ["Payments", "Manage, update, cancel, refund", "5 articles"],
   ["Support", "How to contact a group admin", "1 article"],
-  ["How Skool Works", "How to use all the features", "3 articles"],
-  ["Skool Guidelines", "Policies to keep Skool fair and fun", "4 articles"],
+  ["How Learnify Works", "How to use all the features", "3 articles"],
+  ["Learnify Guidelines", "Policies to keep Learnify fair and fun", "4 articles"],
   ["Finding Communities", "Discovering your interests and people", "1 article"],
 ];
 
 const admin = [
   ["Group basics", "Name, artwork, URL, public/private", "5 articles"],
-  ["Skool payments", "Charge for membership, payouts, fees", "10 articles"],
+  ["Learnify payments", "Charge for membership, payouts, fees", "10 articles"],
   ["Group subscription", "Updating, canceling, invoices", "5 articles"],
   ["Members", "Invite, remove, manage access, ban", "3 articles"],
   ["Admins", "Admins, mods, billing managers", "3 articles"],

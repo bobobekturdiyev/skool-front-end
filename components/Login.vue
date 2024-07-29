@@ -3,7 +3,7 @@
     <router-link class="flex justify-center" to="/">
       <img src="/logo.svg" alt="" />
     </router-link>
-    <h1 class="_c07 text-2xl font-semibold">Log in to Skool</h1>
+    <h1 class="_c07 text-2xl font-semibold">Log in to Learnify</h1>
     <form @submit.prevent="useAuth.authLogin" class="space-y-5">
       <input v-model="useAuth.login.email" autofocus type="email" placeholder="Email" required />
       <input v-model="useAuth.login.password" type="password" placeholder="Password" required />

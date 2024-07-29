@@ -18,7 +18,7 @@ export const membership_settings = [
 ];
 
 export const legal_tabs = [
-  ["Skool rules", "rules"],
+  ["Learnify rules", "rules"],
   ["Privacy policy", "privacy"],
   ["Terms and conditions", "terms"],
   ["Cookie policy", "cookies"],

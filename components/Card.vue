@@ -26,7 +26,7 @@
     v-else-if="!useGroup.store.groups.length"
     class="min-h-[30vh] full_flex col-span-4"
   >
-    No data
+    {{$t("no_data")}}
   </div>
   <div
     v-else
@@ -82,18 +82,19 @@
       <div
         class="flex flex-wrap items-center whitespace-nowrap gap-2 _c07 font-bold md:text-sm text-[10px]"
       >
-        <p class="px-2 py-1 r_8 bg-[#F2F2F2]">
-          {{ i.group_type == "private" ? "Private" : "Public" }}
+        <p class="px-2 py-1 r_8 bg-[#F2F2F2] capitalize">
+          {{$t(`nav.${i.group_type}`)}}
         </p>
         {{ i.members_count }}
         <p class="md:block hidden px-2 py-1 r_8 bg-[#F2F2F2]">
-          {{ i.members }} Members
+          {{ i.members }} {{$t("nav.members")}}
         </p>
-        <p class="px-2 py-1 r_8 bg-[#F2F2F2]">
-          {{ i.group_price == "free" ? "Free" : "Paid" }}
+        <p class="px-2 py-1 r_8 bg-[#F2F2F2] capitalize">
+          <!-- {{ i.group_price == "free" ? "Free" : "Paid" }} -->
+          {{$t(`nav.${i.group_price}`)}}
         </p>
         <p class="md:hidden block px-2 py-1 r_8 bg-[#F2F2F2]">
-          {{ i.members }} Members
+          {{ i.members }} {{ $t("nav.members") }}
         </p>
       </div>
     </div>

@@ -3,7 +3,7 @@
     <router-link class="flex justify-center" to="/">
       <img src="/logo.svg" alt="" />
     </router-link>
-    <h1 class="_c07 text-2xl font-semibold">Create your Skool account</h1>
+    <h1 class="_c07 text-2xl font-semibold">Create your Learnify account</h1>
     <form class="space-y-5" @submit.prevent="useAuth.authRegister">
       <input v-model="useAuth.register.name" type="text" placeholder="First name" required />
       <input v-model="useAuth.register.surname" type="text" placeholder="Last name" required />

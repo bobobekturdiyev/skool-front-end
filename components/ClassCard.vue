@@ -12,16 +12,16 @@
             <img @click="store.activeEdit = i.id" class="w-5 h-5 relative" src="@/assets/svg/three_dot.svg" alt="" />
             <template #dropdown>
               <el-dropdown-menu @click="store.activeEdit = ''" class="community_dropdown min-w-[200px] dropdown_shadow">
-                <el-dropdown-item @click="handleEditCourse(i)">Edit course</el-dropdown-item>
+                <el-dropdown-item @click="handleEditCourse(i)">{{ $t("course.edit") }}</el-dropdown-item>
                 <el-dropdown-item @click="useClassroom.update_course_position(i.id, 'up')"
-                  :class="index == 0 ? 'opacity-50 pointer-events-none' : ''">Move ←</el-dropdown-item>
+                  :class="index == 0 ? 'opacity-50 pointer-events-none' : ''">{{ $t("move") }} ←</el-dropdown-item>
                 <el-dropdown-item @click="useClassroom.update_course_position(i.id, 'down')" :class="isLoading.store.pagination.total == index + 1
         ? 'opacity-50 pointer-events-none'
         : ''
-        ">Move →</el-dropdown-item>
+        ">{{ $t("move") }} →</el-dropdown-item>
                 <el-dropdown-item
-                  @click="() => { useClassroom.store.delete = true; useClassroom.store.username = i.slug }">Delete
-                  course</el-dropdown-item>
+                  @click="() => { useClassroom.store.delete = true; useClassroom.store.username = i.slug }">
+                  {{ $t("course.delete") }}</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -49,19 +49,19 @@
           </p>
           <el-progress class="class_progress" :percentage="i.percentage" />
           <p class="sm:text-xs text-[10px] mt-2">
-            {{ i.percentage }}% complete
+            {{ i.percentage }}% {{ $t("course.complete") }}
           </p>
         </div>
         <router-link :to="`/${$router.currentRoute.value.params.community}/classroom/${i.slug}`">
           <button
             class="sm:text-[16px] text-sm full_flex w-full border-t class_btn duration-700 border-[#BCDEFF] sm:h-[50px] h-[31px] _c59 font-medium uppercase">
-            open
+            {{ $t("course.open") }}
           </button></router-link>
       </div>
       <div v-if="role_ac.includes(useGroup.store.group_by_username.type)" @click="useClassroom.store.add_course = true"
         class="relative border-2 border-dashed md:h-[409px] sm:h-[356px] h-[275px] border-[#BCDEFF] cursor-pointer text-[#59ACFF] full_flex flex-col gap-[10px] font-semibold overflow-hidden r_16">
         <img src="@/assets/svg/add_course.svg" alt="" />
-        <p class="md:text-[16px] text-[10px]">Add new cource</p>
+        <p class="md:text-[16px] text-[10px]">{{ $t("course.addnew") }}</p>
       </div>
     </div>
   </section>
