@@ -44,11 +44,11 @@
           <button
             class="my-5 mb-3 _c2a font-semibold text-xs b_cd9 h-8 px-[10px] rounded-full"
           >
-            Level {{ isLoading.user.level }} - {{ isLoading.user.level_name }}
+            {{$t("leaderboard.level")}} {{ isLoading.user.level }} {{ isLoading.user.level_name ? `- ${isLoading.user.level_name}` : "" }}
           </button>
           <div class="flex items-center gap-1 text-xs">
             <p class="_c2a">{{ isLoading.user.points }}</p>
-            <p class="_c07">points to level up</p>
+            <p class="_c07">{{$t("leaderboard.levelup")}}</p>
             <img src="@/assets/svg/members/pending.svg" alt="" />
           </div>
         </div>
@@ -81,14 +81,14 @@
                 </p>
                 <div class="_c07 space-y-1">
                   <p class="font-semibold leading-[19px]">
-                    Level {{ index + 1 }} {{ i.level ? `- ${i.level}` : "" }}
+                    {{$t("leaderboard.level")}} {{ index + 1 }} {{ i.level ? `- ${i.level}` : "" }}
                   </p>
                   <div class="text-xs leading-[14px] line-clamp-2">
                     <div
                       class="flex gap-1 flex-wrap line-clamp-1"
                       v-if="i.courses?.length"
                     >
-                      <p>Unlock</p>
+                      <p>{{$t("leaderboard.unlock")}}</p>
                       <div>
                         <a
                           target="_blank"
@@ -104,7 +104,7 @@
                         >
                       </div>
                     </div>
-                    {{ i.members }}% of members
+                    {{ i.members }}% {{$t("leaderboard.members")}}
                   </div>
                 </div>
               </div>
@@ -151,7 +151,7 @@
                   </p>
                   <div class="text-xs leading-[14px] line-clamp-2">
                     <div class="flex gap-1 flex-wrap" v-if="i.courses?.length">
-                      <p>Unlock</p>
+                      <p>{{$t("leaderboard.unlock")}}</p>
                       <div>
                         <a
                           target="_blank"
@@ -167,7 +167,7 @@
                         >
                       </div>
                     </div>
-                    {{ i.members }}% of members
+                    {{ i.members }}% {{$t("leaderboard.members")}}
                   </div>
                 </div>
               </div>
@@ -191,7 +191,7 @@
           }}</span
         >
         <span v-else
-          >Leaderboards will be updated when there is more activity</span
+          >{{$t("leaderboard.dateinfo")}}</span
         >
       </p>
       <div v-if="useMembers.store.activities" class="grid md:grid-cols-3 gap-5">

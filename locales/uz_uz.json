@@ -4,14 +4,20 @@
   "add": "Qo'shish",
   "save": "Saqlash",
   "post": "Yuborish",
+  "edit": "O'zgartirish",
   "move": "Ko'chirish",
   "confirm": "Tasdiqlayman",
   "yes": "Ha",
   "title": "Sarlavha",
   "no_data": "Ma'lumotlar yo'q",
+  "description": "Tavsif",
+  "name": "Nomi",
+  "reply": "Javob bering",
   "like": "Layklar",
   "comment": "Izohlar",
-  "reply": "Javob bering",
+  "online": "Onlayn",
+  "moveup": "Yuqoriga ko'chirish",
+  "movedown": "Pastga siljitish",
   "tabs": {
     "community": "Jamoa",
     "classroom": "Sinfxona",
@@ -27,6 +33,9 @@
     "profile": "Profil",
     "settings": "Sozlamalar",
     "logout": "Chiqish",
+    "myprofile": "Mening profilim",
+    "notifications": "Ogohlantirishlar",
+    "chats": "Chatlar",
     "create_community": "Jamoa yaratish",
     "discover": "Jamoalarni kashf etish",
     "or": "yoki",
@@ -38,6 +47,7 @@
     "more": "Ko'proq",
     "less": "Kamroq",
     "filter": "filtr",
+    "filters": "Filtrlar",
     "private": "shaxsiy",
     "public": "ommaviy",
     "members": "A'zolar",
@@ -74,7 +84,7 @@
     "upload_list": "Yoki YouTube, Vimeo, Loom yoki Wistia video havolasini qo'shing.",
     "link": "Link",
     "delete": "Media oʻchirilsinmi?",
-    "deleteaccept": "Haqiqatan ham oʻchirib tashlamoqchimisiz? Buni bekor qila olmaysiz.",
+    "deleteaccept": "Haqiqatan ham oʻchirib tashlamoqchimisiz?",
     "invalid": "Video havolasi yaroqsiz"
   },
   "community": {
@@ -110,5 +120,214 @@
     "remove": "O'chirish",
     "postingin": "da e'lon joylamoqda",
     "seemore": "Batafsil"
+  },
+  "calendar": {
+    "today": "Bugun",
+    "mon": "Du",
+    "tue": "Se",
+    "wed": "Chor",
+    "thu": "Pay",
+    "fri": "Ju",
+    "sat": "Sha",
+    "sun": "Yak",
+    "noevent": "Voqealar yo'q",
+    "event": "Voqea",
+    "time": "Vaqt",
+    "duration": "Davomiyligi",
+    "enterurl": "Link kiriting",
+    "remind": "1 kun oldin a'zolarga e-pochta orqali eslating",
+    "delete": "Voqeani o'chirish",
+    "access": "Ushbu voqeada kim qatnashishi mumkin",
+    "all": "Barcha a'zolar",
+    "level": "Bir darajadagi a'zolar",
+    "course": "Kurs a'zolari",
+    "levelstart": "Kirish darajasidan boshlanadi",
+    "addtocalendar": "Taqvimga qo'shish"
+  },
+  "members": {
+    "active": "Faol",
+    "cancelling": "Bekor qilinmoqda",
+    "churned": "Chiqib ketgan",
+    "banned": "Taqiqlangan",
+    "member": "A'zo",
+    "admin": "Admin",
+    "access": "Bir umrlik kirish",
+    "status": "Holat",
+    "sort": "Saralash",
+    "courses": "Kurslar",
+    "export": "Eksport",
+    "invite": "Taklif qilish",
+    "newest": "Eng yangi",
+    "last": "Oxirgi faol",
+    "most": "Eng ko'p ball",
+    "apply": "Filterlash"
+  },
+  "leaderboard": {
+    "unlock": "Qulfni ochish",
+    "members": "A'zolar",
+    "levelup": "daraja ko'tarilishi uchun",
+    "dateinfo": "Ko'proq faollik bo'lsa, peshqadamlar ro'yxati yangilanadi",
+    "level": "Daraja"
+  },
+  "membersmodal": {
+    "gsettings": "Guruh sozlamalari",
+    "msettings": "A'zolik sozlamalari",
+    "Dashboard": "Boshqaruv paneli",
+    "Payouts": "To'lovlar",
+    "Invite": "Taklif qilish",
+    "General": "Umumiy",
+    "Subscriptions": "Obuna",
+    "Categories": "Kategoriyalar",
+    "Metrics": "Ko'rsatkichlar",
+    "Gamification": "Gamifikatsiya",
+    "Discovery": "Kashfiyot",
+    "Links": "Havolalar",
+    "Billing & referrals": "To'lov & tavsiyalar",
+    "subinfo": "Hamjamiyatingizga kirish uchun oylik obuna to'lash orqali pul ishlang.",
+    "happy": "Hayrli",
+    "paid": "To'langan a'zolar",
+    "currentprice": "Joriy narx",
+    "addprice": "Narx qo'shish",
+    "payouts": {
+      "payouts": "To'lovlar",
+      "nextpay": ["Keyingi toʻlov", "ichida", "boʻladi"],
+      "pending": "Qutlanmoqda",
+      "paymenth": "To'lov tarixi",
+      "nopay": "Toʻlov tarixi yoʻq."
+    },
+    "invite": {
+      "share": "Guruh havolasini baham ko'ring",
+      "shareinfo": "Bu odamlarni guruhingizning haqida sahifasiga olib boradi, u yerda ular xarid qilishlari yoki a'zolikni so'rashlari mumkin.",
+      "shareinfo2": "Ushbu taklif usullari a'zolikni xarid qilmasdan yoki so'ramasdan darhol kirish imkonini beradi.",
+      "shareinfo3": "Ushbu a'zo kirish huquqiga ega bo'ladi",
+      "importinfo": "E-pochta manzillarining .CSV faylini yuklash orqali a'zolarni ommaviy ravishda taklif qiling.",
+      "integrateinfo": "Learnify-ni Zapier yordamida 500 dan ortiq vositalarga ulash orqali a'zolarni taklif qiling.",
+      "copy": "Copy",
+      "send": "Yuborish",
+      "import": "import",
+      "integrate": "Integratsiya"
+    },
+    "general": {
+      "recommended": "Tavsiya etiladi",
+      "groupname": "Guruh nomi",
+      "url": "havola",
+      "urlinfo": "Siz URL manzilingizni pulli hisob bilan o'zgartirishingiz mumkin.",
+      "groupdesc": "Guruh tavsifi",
+      "initials": "Bosh harflar",
+      "color": "rang",
+      "privateinfo": "Faqat a'zolar guruhda kim borligini va ular nima yozayotganini ko'ra oladi. Kontent qidiruv tizimlaridan berkitilgan.",
+      "publicinfo": "Har kim guruhda kim borligini va nima yozayotganini ko'ra oladi. Kontentni qidiruv tizimlari ko'rishi mumkin.",
+      "updatesettings": "Sozlamalarni yangilash"
+    },
+    "category": {
+      "permissions": "Ruxsatlar",
+      "all": "Har kim yozishi mumkin, har kim ko'rishi mumkin",
+      "only": "Faqat adminlar/modlar yozishi mumkin, hamma ko'rishi mumkin",
+      "addcategory": "Kategoriya qo'shish",
+      "category": "Kategoriya"
+    },
+    "metrics": {
+      "total": "Jami a'zolar",
+      "active": "Faol a'zolar",
+      "daily": "Kundalik faoliyat"
+    },
+    "gamification": {
+      "info": "Guruhingizni qiziqarli qiling! Darajalaringizni nomlash orqali guruhingizni shaxsiylashtiring. A'zolar yuqori darajaga yetganda kurslarni ochish orqali faollikni rag'batlantiring.",
+      "nounlock": "Kurslar qulfdan chiqarilmaydi",
+      "edit": "Darajani o' Edit",
+      "nounlockinfo": "Ushbu darajada hech qanday kurs ochilmagan.",
+      "unlockinfo": "Siz kurs sozlamalari menyusidan turli darajadagi a'zolar uchun kurslarni ochishingiz mumkin."
+    },
+    "discovery": {
+      "info": "Millionlab faol foydalanuvchilar tomonidan kashf qiling.",
+      "no": "Yo'q",
+      "none": "Yo'q",
+      "rank": "Daraja",
+      "info1": [
+        "Kashfiyotda ko'rsatilmoqda",
+        "Guruhingiz kashfiyotda ko'rsatilishi uchun a'zolar, postlar va faoliyatning minimal chegarasiga javob berishi kerak. Shuningdek, sizga yaxshi guruh tavsifi, sahifa tavsifi, guruh muqova rasmi va haqida sahifangizdagi ba'zi fotosuratlar/videolar kerak."
+      ],
+      "info2": [
+        "Kashfiyot darajasi",
+        "Guruhlar a'zolar sonining o'sishi, a'zolar faolligi, postlar, sharhlar va yoqtirishlarni ko'rib chiqadigan algoritmdan foydalangan holda ishtirok etish bo'yicha tartiblanadi. Guruhingiz qanchalik faol bo'lsa, sizning darajangiz shunchalik yuqori bo'ladi."
+      ],
+      "support": "Agar sizning toifangiz noto'g'ri bo'lsa, iltimos, qo'llab-quvvatlash xizmatiga murojaat qiling."
+    },
+    "links": {
+      "info": "Havolalar qo'shish orqali muhim manbalarni a'zolaringiz bilan baham ko'ring.",
+      "addlink": "Havola qo'shish",
+      "label": "yorliq",
+      "private": "Shaxsiy (faqat a'zolar ko'ra oladi)",
+      "public": "Ommaviy (hamma ko'ra oladi)"
+    },
+    "billing": {
+      "billing": "Billing",
+      "update": "To'lov ma'lumotlarini yangilash",
+      "invoice": "Invoice tarixi"
+    }
+  },
+  "settings": {
+    "Profile": "Profil",
+    "Account": "Hisob",
+    "Password": "Parol",
+    "Communities": "Jamiyatlar",
+    "Payment methods": "To'lov usullari",
+    "Payment history": "To'lov tarixi",
+    "profile": {
+      "changephoto": "PROFIL FOTOSINI O'ZGARTIRISH",
+      "nameinfo": "Siz ismingizni faqat bir marta o'zgartirishingiz mumkin va siz haqiqiy ismingizdan foydalanishingiz kerak.",
+      "changename": "Nomini o'zgartirish.",
+      "only": "Ismingizni faqat bir marta o'zgartirishingiz mumkin",
+      "urlinfo": "90 ta hissa, 30 ta obunachiga ega bo'lganingiz va undan 90 kun davomida foydalanayotganingizdan keyin URL manzilingizni o'zgartirishingiz mumkin.",
+      "bio": "bio",
+      "location": "Joylashuv",
+      "social": "Ijtimoiy havolalar",
+      "visibility": "A'zolik ko'rinishi",
+      "control": "Profilingizda qaysi guruhlar ko'rsatilishini boshqaring.",
+      "creator": "Yaratuvchi",
+      "membership": "A'zo",
+      "update": "Profilni yangilash"
+    },
+    "account": {
+      "changeemail": "Elektron pochtani o'zgartirish",
+      "timezone": "Vaqt mintaqasi",
+      "update": "Hisobni yangilash",
+      "sessions": "sessiyalar",
+      "logout": "HAMMA YERDAN CHIQISH"
+    },
+    "password": {
+      "change": "Parolni o'zgartirish",
+      "old": "Eski parol",
+      "new": "Yangi parol",
+      "confirm": "Yangi parolni tasdiqlang"
+    },
+    "communities": {
+      "info": "Hamjamiyatlaringizni qayta tartiblash uchun sudrab olib tashlang. Bu yerdagi oʻzgarishlar almashtirgichingizda aks etadi."
+    },
+    "methods": {
+      "info": [
+        "Guruh a'zolari uchun kartalar bu yerda ko'rsatiladi. Siz egalik qilgan guruhlar uchun kartalar",
+        "Bu yerga."
+      ],
+      "nodata": "Faylda hech qanday kartangiz yo'q",
+      "add": "KARTA QO'SHISH"
+    },
+    "history": {
+      "info": [
+        "Guruh aʼzoligi uchun kvitantsiyalar shu yerda koʻrsatiladi. Guruhlar uchun kvitansiyalar sizga tegishli",
+        "Bu yerga."
+      ],
+      "nodata": "Sizda hech qanday to'lov yo'q."
+    }
+  },
+  "profile": {
+    "activity": "Faoliyat",
+    "what": "Bu nima?",
+    "createdby": "Yaratgan",
+    "contributions": "Hissalar",
+    "select": "Hissalarni ko'rish uchun guruhni tanlang",
+    "followers": "Kuzatuvchilar",
+    "following": "Kuzatish",
+    "update": "Profilni yangilash"
   }
 }

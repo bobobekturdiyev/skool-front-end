@@ -2,7 +2,7 @@
   <main class="flex md:flex-row flex-col-reverse gap-5">
     <div class="space-y-5 w-full overflow-hidden">
       <section class="bg-white px-4 py-6 rounded-xl">
-        <h1 class="text-sm font-semibold mb-[20px]">Activity</h1>
+        <h1 class="text-sm font-semibold mb-[20px]">{{ $t("profile.activity") }}</h1>
         <div>
           <div class="flex gap-6">
             <div class="text-xs mt-[30px] space-y-[18px] leading-[14px] whitespace-">
@@ -50,9 +50,9 @@
             </div>
           </div>
           <div class="flex items-center justify-between ml-[44px] mt-4">
-            <p class="_ca1">What is this?</p>
+            <p class="_ca1">{{ $t("profile.what") }}</p>
             <ul class="flex gap-1 items-center">
-              <li class="pr-1">Less</li>
+              <li class="pr-1">{{ $t("nav.less") }}</li>
               <li>
                 <p class="h-3 w-3 rounded-[1px] b_ce0"></p>
               </li>
@@ -68,14 +68,14 @@
               <li>
                 <p class="h-3 w-3 rounded-[1px] b_c2a"></p>
               </li>
-              <li class="pl-1">More</li>
+              <li class="pl-1">{{ $t("nav.more") }}</li>
             </ul>
           </div>
         </div>
       </section>
 
       <section class="bg-white px-4 py-6 rounded-xl">
-        <h1 class="font-semibold text-sm mb-7">Created by Xayot</h1>
+        <h1 class="font-semibold text-sm mb-7">{{ $t("profile.createdby") }} Xayot</h1>
         <div class="flex items-center justify-between h-10">
           <div class="full_flex gap-4">
             <div

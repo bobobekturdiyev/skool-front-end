@@ -245,21 +245,21 @@
       class="!rounded-xl overflow-hidden px-6 py-7"
     >
       <div class="space-y-7">
-        <h1 class="text-2xl font-semibold">Delete course?</h1>
-        <p class="text-lg">Are you sure you want to delete this course?</p>
+        <h1 class="text-2xl font-semibold">{{ $t("course.delete") }}</h1>
+        <p class="text-lg">{{ $t("about.deleteaccept") }}</p>
         <div class="flex justify-end gap-3 text-sm font-semibold">
           <button
             @click="useClassroom.store.delete = false"
             class="uppercase h-10 px-6 rounded-lg _ca1"
           >
-            cancel
+            {{$t("cancel")}}
           </button>
           <button
             @click="useClassroom.delete_course"
             v-loading="isLoading.isLoadingType('deleteCourse')"
             class="uppercase h-10 px-6 b_cbc _c07 rounded-lg"
           >
-            delete
+          {{$t("delete")}}
           </button>
         </div>
       </div>

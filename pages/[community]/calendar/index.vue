@@ -24,7 +24,7 @@
             />
           </div>
           <button @click="getToday('today')" class="_c2a font-medium">
-            Today
+            {{$t("calendar.today")}}
           </button>
         </div>
         <div class="full_flex gap-4">
@@ -54,7 +54,7 @@
                 : ''
             "
           >
-            {{ i }}
+            {{ $t(`calendar.${i}`) }}
           </div>
         </section>
         <section class="-mt-[1px]">
@@ -209,7 +209,11 @@
                 alt=""
               />
               <div v-else class="h-[140px] w-[260px] b_cf2 full_flex">
-                <img src="@/assets/svg/calendar/calendar_img.svg" alt="" class="w-14" />
+                <img
+                  src="@/assets/svg/calendar/calendar_img.svg"
+                  alt=""
+                  class="w-14"
+                />
               </div>
               <div class="space-y-4">
                 <p class="leading-4" v-for="i in formatCalendarDate(e, true)">
@@ -227,7 +231,9 @@
               </div>
             </div>
           </div>
-          <div v-else>No events</div>
+          <div v-else>
+            {{$t("calendar.noevent")}}
+          </div>
         </div>
         <Pagination_card class="mt-7" />
       </div>
@@ -311,7 +317,7 @@
           <button
             class="!text-sm font-semibold b_cbc _c07 w-full r_8 uppercase full_flex gap-[10px]"
           >
-            Add to calendar
+            {{$t("calendar.addtocalendar")}}
             <img class="w-4" src="@/assets/svg/select_arrow.svg" alt="" />
           </button>
 
@@ -352,14 +358,21 @@
     >
       <form @submit.prevent="handleSubmit" class="space-y-5">
         <h1 class="text-2xl pb-2 font-semibold _c07">
-          <span v-if="useEvent.store.editEventModal">Edit</span>
-          <span v-else>Add</span> event
+          <span v-if="$t('nav.uz') == 'en' || $t('nav.uz') == 'ru'">
+            <span v-if="useEvent.store.editEventModal"> {{ $t("edit") }}</span>
+            <span v-else> {{ $t("add") }}</span>
+          </span>
+          {{ $t("calendar.event") }}
+          <span class="lowercase" v-if="$t('nav.uz') != 'en' || $t('nav.uz') != 'ru'">
+            <span v-if="useEvent.store.editEventModal"> {{ $t("edit") }}</span>
+            <span v-else> {{ $t("add") }}</span>
+          </span>
         </h1>
         <div>
           <FloatingInput
             v-model="useEvent.create.title"
             @input="handleInput('input')"
-            label="Title"
+            :label="$t('title')"
             required
           />
           <p class="text-end mt-1 _ca1 text-sm">
@@ -385,7 +398,7 @@
             />
           </div>
           <div class="w-full">
-            <el-select v-model="useEvent.create.time" placeholder="Time">
+            <el-select v-model="useEvent.create.time" :placeholder="$t('calendar.time')">
               <el-option
                 v-for="item in time_list"
                 :key="item"
@@ -407,7 +420,7 @@
             <el-select
               @change="checkIsActive"
               v-model="useEvent.create.duration"
-              placeholder="Duration"
+              :placeholder="$t('calendar.duration')"
             >
               <el-option
                 v-for="item in 48"
@@ -556,7 +569,7 @@
               v-model="useEvent.create.location_value"
               type="text"
               class="!font-[400]"
-              placeholder="Enter a url"
+              :placeholder="$t('calendar.enterurl')"
             />
           </div>
         </div>
@@ -566,7 +579,7 @@
             id="write_message"
             v-model="useEvent.create.description"
             class="h-[90px] text-sm w-full rounded-[4px]"
-            placeholder="Description"
+            :placeholder="$t('description')"
           ></textarea>
           <p class="text-end mt-2 _ca1 text-sm">
             {{ useEvent.create.description?.length }}/300
@@ -579,7 +592,7 @@
             class="full_flex flex-col gap-1 cursor-pointer _c2a b_cf2 rounded-xl font-medium text-sm sm:h-[188px] h-[164px] w-[366px] max-w-full"
           >
             <img src="@/assets/svg/add_photo.svg" alt="" />
-            <p>Upload cover image</p>
+            <p>{{ $t("about.coverphoto") }}</p>
             <p class="_ca1 text-xs font-medium">1460 x 752 px</p>
           </label>
           <label class="relative imagelabel" v-else for="add_photo_event">
@@ -599,7 +612,7 @@
           <div class="py-5 space-y-5">
             <div>
               <label class="_ca1 text-xs" for="access"
-                >Who can attend this event</label
+                >{{ $t("calendar.access") }}</label
               >
               <el-select
                 class="block w-full mt-2"
@@ -609,12 +622,12 @@
                 <el-option
                   v-for="item in access_list"
                   :key="item.value"
-                  :label="item.label"
+                  :label="$t(`calendar.${item.label}`)"
                   :value="item.value"
                   :disabled="item.disabled"
                 >
                   <div class="flex items-center gap-2">
-                    {{ item.label }}
+                    {{ $t(`calendar.${item.label}`) }}
                     <img
                       v-if="useEvent.create.access == item.value"
                       src="@/assets/svg/checked.svg"
@@ -626,7 +639,7 @@
             </div>
             <div v-if="useEvent.create.access == 'level'">
               <label class="_ca1 text-xs" for="access"
-                >Access starts at level</label
+                >{{$t("calendar.levelstart")}}</label
               >
               <el-select
                 class="block w-full mt-2 el_select"
@@ -652,7 +665,7 @@
             </div>
             <el-checkbox
               v-model="useEvent.create.remind"
-              label="Remind members by email 1 day before"
+              :label="$t('calendar.remind')"
             />
           </div>
           <input
@@ -672,7 +685,7 @@
             @click="useEvent.delete_event"
             class="uppercase h-10 px-6 rounded-lg _ceb"
           >
-            Delete event
+            {{ $t("calendar.delete") }}
           </button>
           <div class="flex justify-end w-full gap-3">
             <button
@@ -680,7 +693,7 @@
               @click="useEvent.store.add_event = false"
               class="uppercase h-10 px-6 rounded-lg _ca1"
             >
-              cancel
+              {{ $t("cancel") }}
             </button>
             <button
               :type="isLoading.isLoadingType('addEvents') ? 'button' : 'submit'"
@@ -689,8 +702,10 @@
               class="uppercase h-10 px-6 rounded-lg"
               v-loading="isLoading.isLoadingType('addEvents')"
             >
-              <span v-if="useEvent.store.editEventModal">save</span>
-              <span v-else>add</span>
+              <span v-if="useEvent.store.editEventModal">
+                {{ $t("save") }}</span
+              >
+              <span v-else> {{ $t("add") }}</span>
             </button>
           </div>
         </div>
@@ -793,7 +808,7 @@ useSeoMeta({
 });
 
 const cal = new Calendar(1);
-const weeks = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const weeks = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 const timeZones = moment.tz.names().map((name) => {
   const offset = moment.tz(name).format("Z");
   return `(GMT${offset}) ${name}`;
@@ -820,15 +835,15 @@ const store = reactive({
 
 const access_list = [
   {
-    label: "All members",
+    label: "all",
     value: "all",
   },
   {
-    label: "Members at a level",
+    label: "level",
     value: "level",
   },
   {
-    label: "Members in a course",
+    label: "course",
     value: "course",
   },
 ];
@@ -1011,13 +1026,13 @@ function editEvent(id) {
           break;
         }
       }
-    } else if (i == 'image'){
-      isLoading.store.croppedImage = useEvent.store.eventInfo.image
+    } else if (i == "image") {
+      isLoading.store.croppedImage = useEvent.store.eventInfo.image;
     } else {
       useEvent.create[i] = useEvent.store.eventInfo[i];
     }
   }
-  checkIsActive()
+  checkIsActive();
   useEvent.store.eventId = id;
   useEvent.store.eventModal = false;
   useEvent.store.add_event = true;
@@ -1198,29 +1213,38 @@ watch(
   () => store.table,
   () => {
     if (!store.table) {
-      router.push("?")
+      router.push("?");
     }
   }
 );
 
-watch(() => useEvent.store.eventModal, () => {
-  if (!useEvent.store.eventModal) {
-    router.push("?")
+watch(
+  () => useEvent.store.eventModal,
+  () => {
+    if (!useEvent.store.eventModal) {
+      router.push("?");
+    }
   }
-})
+);
 
-watch(() => useEvent.store.editEventModal, () => {
-  if (!useEvent.store.editEventModal) {
-    useEvent.clearData();
+watch(
+  () => useEvent.store.editEventModal,
+  () => {
+    if (!useEvent.store.editEventModal) {
+      useEvent.clearData();
+    }
   }
-})
+);
 
-watch(() => useEvent.store.add_event, () => {
-  checkIsActive();
-  if (!useEvent.store.add_event) {
-    useEvent.clearData();
+watch(
+  () => useEvent.store.add_event,
+  () => {
+    checkIsActive();
+    if (!useEvent.store.add_event) {
+      useEvent.clearData();
+    }
   }
-})
+);
 
 watch(
   () => store.table,

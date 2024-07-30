@@ -5,10 +5,19 @@
   "save": "save",
   "yes": "Yes",
   "post": "post",
+  "edit": "Edit",
   "move": "Move",
   "confirm": "Confirm",
   "no_data": "No data",
   "title": "Title",
+  "description": "Description",
+  "name": "Name",
+  "reply": "Reply",
+  "like": "Like",
+  "comment": "comment",
+  "online": "Online",
+  "moveup": "Move up",
+  "movedown": "Move down",
   "tabs": {
     "community": "Community",
     "classroom": "Classroom",
@@ -23,6 +32,9 @@
     "login": "LOG IN",
     "profile": "Profile",
     "settings": "Settings",
+    "myprofile": "My profile",
+    "notifications": "Notifications",
+    "chats": "Chats",
     "logout": "Log out",
     "create_community": "Create a community",
     "discover": "Discover communities",
@@ -35,6 +47,7 @@
     "more": "More",
     "less": "Less",
     "filter": "filter",
+    "filters": "Filters",
     "private": "private",
     "public": "public",
     "members": "Members",
@@ -71,7 +84,7 @@
     "upload_list": "Or, add a YouTube, Vimeo, Loom, or Wistia video link.",
     "link": "Link",
     "delete": "Delete media?",
-    "deleteaccept": "Are you sure you want to delete? You can't undo this.",
+    "deleteaccept": "Are you sure you want to delete?",
     "invalid": "Invalid video link"
   },
   "community": {
@@ -107,5 +120,215 @@
     "remove": "Remove",
     "postingin": "posting in",
     "seemore": "See more"
+  },
+  "calendar": {
+    "today": "Bugun",
+    "mon": "Du",
+    "tue": "Se",
+    "wed": "Chor",
+    "thu": "Pay",
+    "fri": "Ju",
+    "sat": "Sha",
+    "sun": "Yak",
+    "noevent": "No events",
+    "event": "Voqea",
+    "time": "Vaqt",
+    "duration": "Davomiyligi",
+    "enterurl": "Link kiriting",
+    "remind": "Remind members by email 1 day before",
+    "delete": "Voqeani o'chirish",
+    "access": "Who can attend this event",
+    "all": "All members",
+    "level": "Members at a level",
+    "course": "Members in a course",
+    "levelstart": "Access starts at level",
+    "addtocalendar": "Add to calendar"
+  },
+  "members": {
+    "active": "Active",
+    "cancelling": "Cancelling",
+    "churned": "Churned",
+    "banned": "Banned",
+    "member": "Member",
+    "admin": "Admin",
+    "access": "Lifetime access",
+    "status": "Status",
+    "sort": "Sort",
+    "courses": "Courses",
+    "export": "Export",
+    "invite": "Invite",
+    "newest": "Newest",
+    "last": "Last active",
+    "most": "Most points",
+    "apply": "Apply"
+  },
+  "leaderboard": {
+    "unlock": "Qulfni ochish",
+    "members": "a'zolar",
+    "levelup": "daraja ko'tarilishi uchun",
+    "dateinfo": "Ko'proq faollik bo'lsa, peshqadamlar ro'yxati yangilanadi",
+    "level": "Daraja"
+  },
+  "membersmodal": {
+    "gsettings": "Group settings",
+    "msettings": "Membership settings",
+    "Dashboard": "Dashboard",
+    "Payouts": "Payouts",
+    "Invite": "Invite",
+    "General": "General",
+    "Subscriptions": "Subscriptions",
+    "Categories": "Categories",
+    "Metrics": "Metrics",
+    "Gamification": "Gamification",
+    "Discovery": "Discovery",
+    "Links": "Links",
+    "Billing & referrals": "Billing & referrals",
+    "subinfo": "Make money by charging a monthly subscription for access to your community.",
+    "happy": "Hayrli",
+    "paid": "Paid members",
+    "currentprice": "Current price",
+    "addprice": "Add price",
+    "payouts": {
+      "payouts": "To'lovlar",
+      "nextpay": ["Keyingi toʻlov", "ichida", "boʻladi"],
+      "pending": "Kutilmoqda",
+      "paymenth": "To'lov tarixi",
+      "nopay": "Toʻlov tarixi yoʻq."
+    },
+    "invite": {
+      "share": "Share your group link",
+      "shareinfo": "This will take people to your group’s About page where they can purchase or request membership.",
+      "shareinfo2": "These invite methods will grant instant access without purchasing or requesting membership.",
+      "shareinfo3": "This member will have access to",
+      "importinfo": "Invite members in bulk by uploading a .CSV file of email addresses.",
+      "integrateinfo": "Invite members by connecting Learnify to over 500 tools using Zapier.",
+      "copy": "Copy",
+      "send": "Send",
+      "import": "Import",
+      "integrate": "Integrate"
+    },
+    "general": {
+      "recommended": "Recommended",
+      "groupname": "Group name",
+      "url": "Link",
+      "urlinfo": "You can change your URL with a paid account.",
+      "groupdesc": "Group description",
+      "initials": "Initials",
+      "color": "Color",
+      "privateinfo": "Only members can see who's in the group and what they post. Content is hidden from search engines.",
+      "publicinfo": "Anyone can see who's in the group and what they post. Content is discoverable by search engines.",
+      "updatesettings": "Update settings"
+    },
+    "category": {
+      "permissions": "Permissions",
+      "all": "Anyone can post, anyone can view",
+      "only": "Only admins/mods can post, anyone can view",
+      "addcategory": "Add category",
+      "category": "Category"
+    },
+    "metrics": {
+      "total": "Total members",
+      "active": "Active members",
+      "daily": "Daily activity"
+    },
+    "gamification": {
+      "info": "Make your group fun! Personalize your group by naming your levels. Incentivize engagement by unlocking courses when members reach a higher level.",
+      "nounlock": "No courses unlock",
+      "edit": "Darajani o'zgartirish",
+      "nounlockinfo": "No courses unlock at this level.",
+      "unlockinfo": "You can unlock courses for members at different levels from the course settings menu."
+    },
+    "discovery": {
+      "info": "Get discovered by millions of active users.",
+      "no": "No",
+      "none": "None",
+      "rank": "Rank",
+      "info1": [
+        "Showing in discovery",
+        "Your group needs to meet a minimum threshold of members, posts, and activity to show in discovery. You also need a good group description, about page description, group cover image, and some photos/videos on your about page."
+      ],
+      "info2": [
+        "Discovery rank",
+        "Groups are ranked by engagement using an algorithm that looks at member growth, member activity, posts, comments, and likes. The more engaged your group is, the higher your rank."
+      ],
+      "support": "If your category is wrong, please contact support."
+    },
+    "links": {
+      "info": "Share important resources with your members by adding links.",
+      "addlink": "Add link",
+      "label": "Label",
+      "private": "Private (only members can see)",
+      "public": "Public (everybody can see)"
+    },
+    "billing": {
+      "billing": "Billing",
+      "update": "Update payment info",
+      "invoice": "Invoice history"
+    }
+  },
+  "settings": {
+    "Profile": "Profile",
+    "Account": "Account",
+    "Password": "Password",
+    "Communities": "Communities",
+    "Payment methods": "Payment methods",
+    "Payment history": "Payment history",
+    "profile": {
+      "changephoto": "CHANGE PROFILE PHOTO",
+      "nameinfo": "You can only change your name once, and you must use your real name.",
+      "changename": "Change name.",
+      "only": "You can only change your name once",
+      "urlinfo": "You can change your URL once you’ve got 90 contributions, 30 followers, and been using it for 90 days.",
+      "bio": "Bio",
+      "location": "Location",
+      "social": "Social links",
+      "visibility": "Membership visibility",
+      "control": "Control what groups show on your profile.",
+      "creator": "Creator of",
+      "membership": "Member of",
+      "update": "Update profile"
+    },
+    "account": {
+      "email": "Email",
+      "changeemail": "Change email",
+      "timezone": "Timezone",
+      "update": "Update account",
+      "sessions": "Sessions",
+      "logout": "LOG OUT EVERYWHERE"
+    },
+    "password": {
+      "change": "Change password ",
+      "old": "Old password",
+      "new": "New password",
+      "confirm": "Confirm new password"
+    },
+    "communities": {
+      "info": "Drag and drop to reorder your communities. Changes here will reflect in your switcher."
+    },
+    "methods": {
+      "info": [
+        "Cards for group memberships show here. Cards for groups you own",
+        "here."
+      ],
+      "nodata": "You don't have any cards on file",
+      "add": "ADD CARD"
+    },
+    "history": {
+      "info": [
+        "Receipts for group memberships show here. Receipts for groups you own are",
+        "here."
+      ],
+      "nodata": "You have no payments."
+    }
+  },
+  "profile": {
+    "activity": "Activity",
+    "what": "What is this?",
+    "createdby": "Created by",
+    "contributions": "Contributions",
+    "select": "Select a group to see contributions",
+    "followers": "Followers",
+    "following": "Followering",
+    "update": "Update profile"
   }
 }

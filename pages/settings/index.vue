@@ -16,7 +16,7 @@
                         class="flex gap-4 items-center cursor-pointer r_8 overflow-hidden"
                         v-for="(i, index) in settings_sidebar">
                         <p :class="store.slideStep == index ? 'b_c2a' : ''" class="w-1 h-[44px]"></p>
-                        <p>{{ i }}</p>
+                        <p>{{ $t(`settings.${i}`) }}</p>
                     </li>
                 </ul>
             </aside>
@@ -25,16 +25,15 @@
                 <div class="mainSlider h-[calc(100vh_-140px)] duration-700">
                     <form @submit.prevent="useSettings.updateUserData()"
                         class="h-[calc(100vh_-140px)] overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full">
-                        <h1 class="text-xl font-semibold">Profile</h1>
+                        <h1 class="text-xl font-semibold">{{$t("settings.Profile")}}</h1>
                         <div class="space-y-6">
                             <div v-loading="isLoading.isLoadingType('updateUserData') || isLoading.isLoadingType('getUserData')"
                                 class="flex items-center md:gap-8 gap-4 mt-6">
                                 <img class="h-[100px] w-[100px] rounded-full object-cover" :src="isLoading.user.image"
                                     alt="">
                                 <label for="profile_img"
-                                    class="md:text-[16px] text-sm border_cbc lg:px-4 sm:px-2 px-4 md:py-3 py-2 _c2a r_8 font-semibold text-center uppercase block full_flex">change
-                                    profile
-                                    photo
+                                    class="md:text-[16px] text-sm border_cbc lg:px-4 sm:px-2 px-4 md:py-3 py-2 _c2a r_8 font-semibold text-center uppercase block full_flex">
+                                    {{$t("settings.profile.changephoto")}}
                                 </label>
                                 <input @change="handlePhotoImage" type="file" id="profile_img"
                                     class="h-0 w-0 overflow-hidden !p-0">
@@ -48,40 +47,34 @@
                                 </div>
                                 <p v-if="isLoading.user.is_change == 1" class="mt-1 _ca1 text-xs">You can only change
                                     your name once.</p>
-                                <p v-else class="mt-1 _ca1 text-xs">You can only change your name once, and you must use
-                                    your
-                                    real
-                                    name. <span @click="changeName()" class="_c2a hover:underline cursor-pointer">Change
-                                        name.</span></p>
+                                <p v-else class="mt-1 _ca1 text-xs space-x-1">{{$t("settings.profile.nameinfo")}}<span @click="changeName()" class="_c2a hover:underline cursor-pointer">{{$t("settings.profile.changename")}}</span></p>
                             </div>
                             <div>
-                                <label class="block _ca1 text-xs mb-2" for="url">URL</label>
+                                <label class="block _ca1 text-xs mb-2" for="url">{{$t("membersmodal.general.url")}}</label>
                                 <!-- {{isLoading.user_update_checker}} -->
                                 <input @input="listeneerUserData" v-model="isLoading.user_update_checker.username"
                                     id="url" :disabled="isLoading.user_update_checker.is_change_username ? false : true"
                                     class="text-sm"
                                     :class="isLoading.user_update_checker.is_change_username ? '' : '_ca1 placeholder-[#A1A1A1]'"
                                     type="text">
-                                <p v-if="!isLoading.user_update_checker.is_change_username" class="mt-1 _ca1 text-xs">You
-                                    can change your URL once you’ve got 90 contributions,
-                                    30 followers, and been using it for 90 days.</p>
+                                <p v-if="!isLoading.user_update_checker.is_change_username" class="mt-1 _ca1 text-xs">{{$t("settings.profile.urlinfo")}}</p>
                             </div>
                             <div>
-                                <label class="block _ca1 text-xs mb-2" for="bio">Bio</label>
+                                <label class="block _ca1 text-xs mb-2" for="bio">{{$t("settings.profile.bio")}}</label>
                                 <textarea @input="listeneerUserData" v-model="isLoading.user_update_checker.bio"
                                     id="bio" class="h-[100px] w-full rounded-[4px] text-sm _c07 placeholder-[#A1A1A1]"
-                                    placeholder="Description"></textarea>
+                                    :placeholder="$t('settings.profile.bio')"></textarea>
                                 <p class="text-end mt-2 _ca1 text-sm">
                                     15/150
                                 </p>
                             </div>
                             <div class="grid grid-cols-2 gap-6">
                                 <div>
-                                    <label class="block _ca1 text-xs mb-2" for="location">Location</label>
+                                    <label class="block _ca1 text-xs mb-2" for="location">{{$t("settings.profile.location")}}</label>
                                     <input @input="listeneerUserData" v-model="isLoading.user_update_checker.location"
                                         id="location" class="text-sm _c07 placeholder-[#A1A1A1]" type="text">
                                 </div>
-                                <div>
+                                <!-- <div>
                                     <label class="block _ca1 text-xs mb-2" for="griggs">Myers Briggs</label>
                                     <el-select @change="listeneerUserData"
                                         v-model="isLoading.user_update_checker.myers_briggs" class="w-full">
@@ -93,12 +86,12 @@
                                             </div>
                                         </el-option>
                                     </el-select>
-                                </div>
+                                </div> -->
                             </div>
                             <el-collapse accordion class="space-y-6">
                                 <el-collapse-item name="1">
                                     <template #title>
-                                        <p class="_c07 font-semibold">Social links</p>
+                                        <p class="_c07 font-semibold">{{$t("settings.profile.social")}}</p>
                                         <img src="@/assets/svg/select_arrow.svg" alt="">
                                     </template>
                                     <div class="space-y-6 mt-6">
@@ -110,13 +103,13 @@
                                 </el-collapse-item>
                                 <el-collapse-item title="Feedback" name="2">
                                     <template #title>
-                                        <p class="_c07 font-semibold">Membership visibility</p>
+                                        <p class="_c07 font-semibold">{{$t("settings.profile.visibility")}}</p>
                                         <img src="@/assets/svg/select_arrow.svg" alt="">
                                     </template>
                                     <div class="space-y-6 mt-6">
-                                        <h1 class="_c07">Control what groups show on your profile.</h1>
+                                        <h1 class="_c07">{{$t("settings.profile.control")}}.</h1>
                                         <div>
-                                            <p class="_c07 font-semibold">Creator of</p>
+                                            <p class="_c07 font-semibold">{{$t("settings.profile.creator")}}</p>
                                         </div>
                                         <div class="space-y-10 mt-6">
                                             <div v-for="i in isLoading.user.creator"
@@ -132,7 +125,7 @@
                                                     <img v-else src="@/assets/image/picture.png" alt="">
                                                     <div>
                                                         <h1 class="font-semibold">{{ i.name }}</h1>
-                                                        <p><span class="capitalize">{{ i.group_type }}</span> • 1 member
+                                                        <p><span class="capitalize">{{ $t(`nav.${i.group_type}`) }}</span class="!lowercase"> • 1 {{$t("members.member")}}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -140,7 +133,7 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <p class="_c07 font-semibold">Member of</p>
+                                            <p class="_c07 font-semibold">{{$t("settings.profile.membership")}}</p>
                                         </div>
                                         <div class="space-y-10 mt-6">
                                             <div v-for="i in isLoading.user.member"
@@ -157,7 +150,7 @@
                                                     <img v-else src="@/assets/image/picture.png" alt="">
                                                     <div>
                                                         <h1 class="font-semibold">{{ i.name }}</h1>
-                                                        <p><span class="capitalize">{{ i.group_type }}</span> • 1 member
+                                                        <p><span class="capitalize">{{ $t(`nav.${i.group_type}`) }}</span class="!lowercase"> • 1 {{$t("members.member")}}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -170,24 +163,25 @@
                             <button v-loading="isLoading.isLoadingType('updateUserData')"
                                 :type="useSettings.store.is_update ? 'submit' : 'button'"
                                 :class="useSettings.store.is_update ? 'b_cbc _c07' : 'b_ce0 _ca1'"
-                                class="font-semibold px-6 r_8 mt-6 uppercase">update profile</button>
+                                class="font-semibold px-6 r_8 mt-6 uppercase">
+                                {{$t("settings.profile.update")}}</button>
                         </div>
                     </form @submit.prevent="useSettings.updateUserData()">
                     <section
                         class="h-[calc(100vh_-140px)] overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full space-y-6">
-                        <h1 class="text-xl font-semibold">Email</h1>
+                        <h1 class="text-xl font-semibold">{{$t("settings.account.email")}}</h1>
                         <div class="space-y-2">
-                            <label for="change_email" class="block _ca1 text-xs">Email</label>
+                            <label for="change_email" class="block _ca1 text-xs">{{$t("settings.account.email")}}</label>
                             <div class="flex gap-4">
                                 <input v-model="isLoading.user_update_checker.email" id="change_email" type="email"
                                     disabled>
                                 <button
                                     class="full_flex gap-1 border border_cbc r_8 _c2a px-4 h-10 uppercase whitespace-nowrap font-semibold">
-                                    change email
+                                    {{$t("settings.account.changeemail")}}
                                 </button>
                             </div>
                         </div>
-                        <h1 class="text-xl font-semibold">Timezone</h1>
+                        <h1 class="text-xl font-semibold">{{$t("settings.account.timezone")}}</h1>
                         <div class="w-full timezone">
                             <el-select @change="changedTimeZone" v-model="isLoading.user_update_checker.location"
                                 filterable class="!w-full" placeholder="(GMT +05:00) Asia/Tashkent">
@@ -202,37 +196,34 @@
                         </div>
                         <button v-loading="isLoading.isLoadingType('updateUserData')" @click="updateTimeZone"
                             :class="store.updateTimeZone ? '_c07 b_cbc' : '_ca1 b_ce0'"
-                            class=" font-semibold px-6 r_8 mt-6 uppercase">update
-                            account</button>
-                        <h1 class="text-xl font-semibold">Sessions</h1>
+                            class=" font-semibold px-6 r_8 mt-6 uppercase">{{$t("settings.account.update")}}</button>
+                        <h1 class="text-xl font-semibold">{{$t("settings.account.sessions")}}</h1>
                         <button
-                            class="full_flex gap-1 border border_ce0 r_8 _ca1 px-4 h-10 uppercase whitespace-nowrap font-semibold">log
-                            out everywhere</button>
+                            class="full_flex gap-1 border border_ce0 r_8 _ca1 px-4 h-10 uppercase whitespace-nowrap font-semibold">{{$t("settings.account.logout")}}</button>
                     </section>
                     <form @submit.prevent="useSettings.changePassword"
                         class="h-[calc(100vh_-140px)] overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full space-y-6">
-                        <h1 class="text-xl font-semibold">Change password</h1>
+                        <h1 class="text-xl font-semibold">{{$t("settings.password.change")}}</h1>
                         <!-- <input @input="listenerChangePassword" v-model=""
                             type="password" placeholder="Old password"> -->
                         <FloatingInput id="old_password" type="password"
                             v-model="useSettings.changepassword.old_password" @input="listenerChangePassword"
-                            label="Old password" required />
+                            :label="$t('settings.password.old')" required />
 
                         <p v-if="useSettings.store.passwordError?.length && useSettings.store.passwordError[0] == 0"
                             class="_ceb !mt-1 !-mb-3">{{ useSettings.store.passwordError[1] }}</p>
                         <FloatingInput id="new_password" type="password" v-model="useSettings.changepassword.password"
-                            @input="listenerChangePassword" label="New password" required />
+                            @input="listenerChangePassword" :label="$t('settings.password.new')" required />
                         <p v-if="useSettings.store.passwordError?.length && useSettings.store.passwordError[0] == 1"
                             class="_ceb !mt-1 !-mb-3">{{ useSettings.store.passwordError[1] }}</p>
                         <FloatingInput id="confirm_new_password" type="password"
                             v-model="useSettings.changepassword.password_confirmation" @input="listenerChangePassword"
-                            label="Confirm new  password" required />
+                            :label="$t('settings.password.confirm')" required />
                         <p v-if="useSettings.store.passwordError?.length && useSettings.store.passwordError[0] == 2"
                             class="_ceb !mt-1 !-mb-3">{{ useSettings.store.passwordError[1] }}</p>
                         <button :type="useSettings.store.is_changepass ? 'submit' : 'button'"
                             :class="useSettings.store.is_changepass ? 'b_cbc _c07' : 'b_ce0 _ca1'"
-                            class=" font-semibold px-6 r_8 mt-6 uppercase">change
-                            password</button>
+                            class=" font-semibold px-6 r_8 mt-6 uppercase">{{$t("settings.password.change")}}</button>
                     </form>
                     <!-- <section class="h-[calc(100vh_-140px)] overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full space-y-6">
                     <h1 class="text-xl font-semibold">User notifications</h1>
@@ -328,9 +319,8 @@
                     <section
                         class="h-[calc(100vh_-140px)] animate-left overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full">
                         <div class="space-y-6 r_8">
-                            <h1 class="text-xl font-semibold">Communities</h1>
-                            <p>Drag and drop to reorder your communities. Changes here will reflect in your switcher.
-                            </p>
+                            <h1 class="text-xl font-semibold">{{$t("settings.Communities")}}</h1>
+                            <p>{{$t("settings.communities.info")}}</p>
                             <div class="space-y-6 pt-6" v-loading="isLoading.isLoadingType('positionGroup')">
                                 <draggable class="space-y-6" :list="useGroup.store.mygroups" group="grid"
                                     :animation="500" @change="useGroup.update_group_position">
@@ -345,9 +335,10 @@
                                                 </div>
                                                 <div>
                                                     <h1 class="font-semibold">{{ i.name }}</h1>
-                                                    <p><span class="capitalize">{{ i.group_type }}</span> • <span
+                                                    <p><span class="capitalize">{{ $t(`nav.${i.group_type}`) }}</span> • <span
                                                             class="capitalize">
-                                                            {{ i.group_price }}
+                                                            <!-- {{ i.group_price }} -->
+                                                            {{ $t(`nav.${i.group_price}`) }}
                                                         </span></p>
                                                 </div>
                                             </div>
@@ -420,31 +411,32 @@
                     <section
                         class="h-[calc(100vh_-140px)] animate-left overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full">
                         <div class="space-y-6 r_8">
-                            <h1 class="text-xl font-semibold">Payment methods</h1>
+                            <h1 class="text-xl font-semibold">{{$t("settings.Payment methods")}}</h1>
                             <p>
-                                Cards for group memberships show here. Cards for groups you own are <span
-                                    class="_c2a">here.</span>
+                                {{$t("settings.methods.info[0]")}} <span
+                                    class="_c2a">{{$t("settings.methods.info[1]")}}</span>
                             </p>
                             <div class="full_flex flex-col gap-4 _c07 h-[180px] r_8">
                                 <img src="@/assets/svg/settings/nocard.svg" alt="">
-                                You don't have any cards on file
+                                {{$t("settings.methods.nodata")}}
                             </div>
                         </div>
                         <button @click="useSettings.store.addCartModal = true"
-                            class="_c07 font-semibold px-6 r_8 mt-6 uppercase b_cbc">add
-                            card</button>
+                            class="_c07 font-semibold px-6 r_8 mt-6 uppercase b_cbc">
+                            {{$t("settings.methods.add")}}
+                        </button>
                     </section>
                     <section
                         class="h-[calc(100vh_-140px)] animate-left overflow-hidden overflow-y-auto text-sm _c07 p-5 w-full">
                         <div class="space-y-6 r_8">
-                            <h1 class="text-xl font-semibold">Payment history</h1>
+                            <h1 class="text-xl font-semibold">{{$t("settings.Payment history")}}</h1>
                             <p>
-                                Receipts for group memberships show here. Receipts for groups you own are <span
-                                    class="_c2a">here.</span>
+                                {{$t("settings.history.info[0]")}} <span
+                                    class="_c2a">{{$t("settings.history.info[1]")}}</span>
                             </p>
                             <div class="full_flex flex-col gap-4 _c07 h-[180px] r_8">
                                 <img src="@/assets/svg/settings/nocard.svg" alt="">
-                                You have no payments.
+                                {{$t("settings.history.nodata")}}
                             </div>
                         </div>
                     </section>

@@ -2,7 +2,7 @@
   <main class="flex md:flex-row flex-col-reverse gap-5">
     <div class="space-y-5 w-full overflow-hidden">
       <section class="bg-white px-4 py-6 rounded-xl">
-        <h1 class="text-sm font-semibold mb-[20px]">Activity</h1>
+        <h1 class="text-sm font-semibold mb-[20px]">{{ $t("profile.activity") }}</h1>
         <div>
           <div class="flex gap-6">
             <div
@@ -52,9 +52,9 @@
             </div>
           </div>
           <div class="flex items-center justify-between ml-[44px] mt-4">
-            <p class="_ca1">What is this?</p>
+            <p class="_ca1">{{ $t("profile.what") }}</p>
             <ul class="flex gap-1 items-center">
-              <li class="pr-1">Less</li>
+              <li class="pr-1">{{ $t("nav.less") }}</li>
               <li>
                 <p class="h-3 w-3 rounded-[1px] b_ce0"></p>
               </li>
@@ -70,7 +70,7 @@
               <li>
                 <p class="h-3 w-3 rounded-[1px] b_c2a"></p>
               </li>
-              <li class="pl-1">More</li>
+              <li class="pl-1">{{ $t("nav.more") }}</li>
             </ul>
           </div>
         </div>
@@ -81,7 +81,7 @@
         class="bg-white px-4 py-6 rounded-xl"
       >
         <h1 class="font-semibold text-sm mb-7">
-          Created by {{ useProfile.store.profile.user?.name }}
+          <span v-if="$t('nav.uz') == 'en' || $t('nav.uz') == 'ru'">{{ $t("profile.createdby") }}</span> {{ useProfile.store.profile.user?.name }} <span v-if="$t('nav.uz') != 'en' || $t('nav.uz') != 'ru'">{{ $t("profile.createdby") }}</span>
         </h1>
         <ul class="space-y-6">
           <li
@@ -181,7 +181,7 @@
             }}
             to {{ store.currentGroup.name }}
           </p>
-          <p v-else>Contributions</p>
+          <p v-else>{{ $t("profile.contributions") }}</p>
           <el-dropdown
             placement="bottom-end"
             class="dropdown"
@@ -197,7 +197,7 @@
                 }}</span
                 ><img src="@/assets/svg/profile_arrow.svg" alt="" />
               </p>
-              <p v-else>Select a group to see contributions</p>
+              <p v-else>{{ $t("profile.select") }}</p>
               <img src="@/assets/svg/filter_blue.svg" alt="" />
             </div>
             <template #dropdown>
@@ -890,26 +890,26 @@
               <p class="text-lg font-medium _c2a">
                 {{ useProfile.store.profile.user?.contributions }}
               </p>
-              <p class="_ca1 text-xs">Contributions</p>
+              <p class="_ca1 text-xs">{{ $t("profile.contributions") }}</p>
             </li>
             <li>
               <p class="text-lg font-medium _c2a">
                 {{ useProfile.store.profile.user?.followers }}
               </p>
-              <p class="_ca1 text-xs">Followers</p>
+              <p class="_ca1 text-xs">{{ $t("profile.followers") }}</p>
             </li>
             <li>
               <p class="text-lg font-medium _c2a">
                 {{ useProfile.store.profile.user?.following }}
               </p>
-              <p class="_ca1 text-xs">Following</p>
+              <p class="_ca1 text-xs">{{ $t("profile.following") }}</p>
             </li>
           </ul>
           <!-- :class="useSettings.store.is_update ? 'b_cbc _c07' : 'b_ce0 _ca1'" -->
           <button
             class="font-semibold px-6 r_8 w-full uppercase _c2a border_cbc mt-7"
           >
-            update profile
+          {{ $t("profile.update") }}
           </button>
         </div>
       </section>

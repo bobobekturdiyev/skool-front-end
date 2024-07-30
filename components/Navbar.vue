@@ -241,13 +241,16 @@
                 <p class="px-4 py-3 border-b border-[]">
                   {{ isLoading.user.email }}
                 </p>
-                <el-dropdown-item @click="$router.push(`/profile/${isLoading.user.username}`)"
-                  >Profile</el-dropdown-item
+                <el-dropdown-item
+                  @click="$router.push(`/profile/${isLoading.user.username}`)"
+                  >{{ $t("nav.profile") }}</el-dropdown-item
                 >
-                <el-dropdown-item @click="$router.push('/settings')"
-                  >Settings</el-dropdown-item
-                >
-                <el-dropdown-item @click="logOut">Log out</el-dropdown-item>
+                <el-dropdown-item @click="$router.push('/settings')">{{
+                  $t("nav.settings")
+                }}</el-dropdown-item>
+                <el-dropdown-item @click="logOut">{{
+                  $t("nav.logout")
+                }}</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -308,25 +311,27 @@
                   />
                   <p>{{ isLoading.user.email }}</p>
                 </el-dropdown-item>
-                <el-dropdown-item @click="$router.push(`/profile/${isLoading.user.username}`)">
+                <el-dropdown-item
+                  @click="$router.push(`/profile/${isLoading.user.username}`)"
+                >
                   <img src="@/assets/svg/menu/profile.svg" alt="" />
-                  <p>My Profile</p>
+                  <p>{{ $t("nav.myprofile") }}</p>
                 </el-dropdown-item>
                 <el-dropdown-item @click="$router.push('/settings')">
                   <img src="@/assets/svg/menu/settings.svg" alt="" />
-                  <p>Settings</p>
+                  <p>{{ $t("nav.settings") }}</p>
                 </el-dropdown-item>
                 <el-dropdown-item>
                   <img src="@/assets/svg/menu/notifications.svg" alt="" />
-                  <p>Notifications</p>
+                  <p>{{ $t("nav.notifications") }}</p>
                 </el-dropdown-item>
                 <el-dropdown-item @click="isLoading.store.chatDialog = true">
                   <img src="@/assets/svg/menu/chats.svg" alt="" />
-                  <p>Chats</p>
+                  <p>{{ $t("nav.chats") }}</p>
                 </el-dropdown-item>
                 <el-dropdown-item>
                   <img src="@/assets/svg/menu/logout.svg" alt="" />
-                  <p class="text-[#EB5757]">Log out</p>
+                  <p class="text-[#EB5757]">{{ $t("nav.logout") }}</p>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -794,10 +799,10 @@ const store = reactive({
     en: "EN - English",
     ru: "РУ - Русский",
     uz: "UZ - O’zbek (lotin)",
-    uz_ru: "УЗ - Ўзбек (кирилл)",
+    // uz_ru: "УЗ - Ўзбек (кирилл)",
   },
-  lang_type: ["en", "ru", "uz", "uz_ru"],
-  lang_icon: { en, ru, uz, uz_ru },
+  lang_type: ["en", "ru", "uz"],
+  lang_icon: { en, ru, uz },
   is_mount: false,
   isOpen: false,
   searched_data: [],

@@ -57,7 +57,7 @@
           <li @click="openData(index, i)" :class="isLoading.store.slideStep == index ? '_c2a font-medium bg-[#F0F5FA]' : ''
         " class="flex gap-4 items-center cursor-pointer" v-for="(i, index) in members_sidebar">
             <p :class="isLoading.store.slideStep == index ? 'b_c2a' : ''" class="w-1 h-[44px]"></p>
-            <p>{{ i }}</p>
+            <p>{{ $t(`membersmodal.${i}`) }}</p>
           </li>
         </ul>
         <ul v-else-if="useMembers.store.manageUserRole" class="_c07 text-sm">
@@ -87,11 +87,11 @@
         role_ac.includes(useGroup.store.group_by_username.type)
         " class="mainSlider h-[calc(100vh_-120px)] duration-700">
           <section class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full">
-            <h1 class="_c00 font-semibold text-xl">🎉 Happy Monday, {{ isLoading.user_update_checker.name }}</h1>
-            <p class="md:my-10 my-6 font-medium">Subscriptions</p>
+            <h1 class="_c00 font-semibold text-xl">🎉 {{ $t("membersmodal.happy") }} Monday, {{ isLoading.user_update_checker.name }}</h1>
+            <p class="md:my-10 my-6 font-medium">{{ $t("membersmodal.Subscriptions") }}</p>
             <div class="md:flex grid grid-cols-2 gap-8">
               <div class="full_flex flex-col space-y-3 h-20 border_cbc r_8 md:min-w-[150px]">
-                <h3 class="_ca1 text-xs font-medium">Paid members</h3>
+                <h3 class="_ca1 text-xs font-medium">{{ $t("membersmodal.paid") }}</h3>
                 <p class="font-semibold text-xl">523</p>
               </div>
               <div class="full_flex flex-col space-y-3 h-20 border_cbc r_8 md:min-w-[150px]">
@@ -103,7 +103,7 @@
             </div>
           </section>
           <section class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full">
-            <h1 class="_c00 font-semibold text-xl md:mb-10 mb-6">Payouts</h1>
+            <h1 class="_c00 font-semibold text-xl md:mb-10 mb-6">{{ $t("membersmodal.Payouts") }}</h1>
             <div class="flex md:gap-8 gap-5">
               <div class="full_flex flex-col space-y-3 h-20 border_cbc r_8 md:min-w-[150px] min-w-[132px]">
                 <h3 class="_ca1 text-xs font-medium">Balance</h3>
@@ -115,43 +115,41 @@
                 <h2 class="font-semibold leading-4">
                   Next payout will be $0 in 2 days
                 </h2>
-                <div class="flex gap-1 leading-4">
-                  $0 is pending<img src="@/assets/svg/members/pending.svg" alt="" />
+                <div class="flex gap-1 leading-4 lowercase">
+                  $0 {{ $t("membersmodal.payouts.pending") }}<img src="@/assets/svg/members/pending.svg" alt="" />
                 </div>
               </div>
             </div>
-            <h2 class="font-semibold mt-7">Payout history</h2>
+            <h2 class="font-semibold mt-7">{{ $t("membersmodal.payouts.paymenth") }}</h2>
             <hr class="w-full my-4" />
-            <p>No payout history.</p>
+            <p>{{ $t("membersmodal.payouts.nopay") }}</p>
           </section>
           <section
             class="md:text-[16px] text-sm h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto _c07 md:p-5 p-3 w-full">
-            <h1 class="text-xl font-semibold _c00">Share your group link</h1>
+            <h1 class="text-xl font-semibold _c00">{{ $t("membersmodal.invite.share") }}</h1>
             <p class="my-5">
-              This will take people to your group’s About page where they can
-              purchase or request membership.
+              {{ $t("membersmodal.invite.shareinfo") }}
             </p>
             <div class="flex gap-3">
               <p class="flex items-center w-full truncate h-10 rounded-[4px] px-3 border_ce0 _c2a font-medium text-sm">
                 <span class="truncate">{{ store.invite_link }}</span>
               </p>
               <button @click="isLoading.copyLink(store.invite_link)" class="b_cbc px-6 uppercase font-semibold r_8">
-                copy
+                {{ $t("membersmodal.invite.copy") }}
               </button>
             </div>
             <p class="md:mt-10 mt-6 mb-5">
-              These invite methods will grant instant access without purchasing
-              or requesting membership.
+              {{ $t("membersmodal.invite.shareinfo2") }}
             </p>
             <div class="flex gap-3">
               <input type="email" placeholder="Email adress" />
               <button class="b_cbc px-6 uppercase font-semibold r_8">
-                send
+                {{ $t("membersmodal.invite.send") }}
               </button>
             </div>
             <p class="mt-3 md:mb-10 mb-6">
-              This member will have access to
-              <span class="_c2a">(5/6 courses).</span>
+              {{ $t("membersmodal.invite.shareinfo3") }}
+              <span class="_c2a lowercase">(5/6 {{ $t("members.courses") }}).</span>
             </p>
 
             <div class="space-y-6">
@@ -163,13 +161,12 @@
                   <div class="space-y-1">
                     <h2 class="text-[16px] font-semibold">Import .CSV file</h2>
                     <p class="text-xs">
-                      Invite members in bulk by uploading a .CSV file of email
-                      addresses.
+                      {{ $t("membersmodal.invite.importinfo") }}
                     </p>
                   </div>
                 </div>
                 <button class="uppercase border_cbc px-3 r_8 _c2a md:ml-0 ml-[56px]">
-                  import
+                  {{ $t("membersmodal.invite.import") }}
                 </button>
               </div>
               <div class="flex md:flex-row flex-col md:gap-3 gap-3 md:items-center items-start justify-between">
@@ -182,13 +179,12 @@
                       Zapier integration
                     </h2>
                     <p class="text-xs">
-                      Invite members by connecting Learnify to over 500 tools using
-                      Zapier.
+                      {{ $t("membersmodal.invite.integrateinfo") }}
                     </p>
                   </div>
                 </div>
                 <button class="uppercase border_cbc px-3 r_8 _c2a md:ml-0 ml-[56px]">
-                  integrate
+                  {{ $t("membersmodal.invite.integrate") }}
                 </button>
               </div>
             </div>
@@ -208,10 +204,10 @@
                 <label for="upload_icon" v-else class="h-[60px] w-[60px] b_cf2 r_8"></label>
                 <div class="space-y-1">
                   <p class="font-semibold">Icon</p>
-                  <p class="text-xs">Recommended:</p>
+                  <p class="text-xs">{{ $t("membersmodal.general.recommended") }}:</p>
                   <p class="text-xs pb-2">128x128</p>
                   <label class="border_cbc px-3 _c2a r_8 uppercase h-10 block full_flex" for="upload_icon">
-                    change
+                    {{ $t("course.change") }}
                   </label>
                 </div>
                 <input @change="handleGeneralFile" type="file" id="upload_icon"
@@ -230,11 +226,11 @@
                 <label for="upload_cover" v-else
                   class="md:h-[144px] h-[105px] md:w-[271px] w-[195px] b_cf2 r_8"></label>
                 <div class="space-y-1">
-                  <p class="font-semibold">Cover</p>
-                  <p class="text-xs">Recommended:</p>
+                  <p class="font-semibold">{{ $t("course.cover") }}</p>
+                  <p class="text-xs">{{ $t("membersmodal.general.recommended") }}:</p>
                   <p class="text-xs pb-2">1084x576</p>
                   <label class="border_cbc px-3 _c2a r_8 uppercase h-10 block full_flex" for="upload_cover">
-                    change
+                    {{ $t("course.change") }}
                   </label>
                   <input @change="handleGeneralFile" type="file" id="upload_cover"
                     class="h-0 w-0 overflow-hidden block !p-0" />
@@ -243,29 +239,29 @@
             </div>
             <div class="space-y-5">
               <div class="space-y-2">
-                <label for="name" class="_ca1 text-xs">Group name</label>
+                <label for="name" class="_ca1 text-xs">{{ $t("membersmodal.general.groupname") }}</label>
                 <div>
                   <input id="name" v-model="useMembers.general.name" @input="handleInput('input')" type="text"
-                    placeholder="Group name" required />
+                    :placeholder="$t('membersmodal.general.recommended')" required />
                   <p class="text-end mt-1 _ca1">
                     {{ useMembers.general.name?.length }}/50
                   </p>
                 </div>
               </div>
               <div class="space-y-2 !mt-2">
-                <label for="url" class="_ca1 text-xs">URL</label>
+                <label for="url" class="_ca1 text-xs">{{ $t("membersmodal.general.url") }}</label>
                 <div>
                   <input class="_ca1" disabled id="url" v-model="useMembers.general.url" type="url" placeholder="Url"
                     required />
                   <p class="mt-1 _ca1 text-xs">
-                    You can change your URL with a paid account.
+                    {{ $t("membersmodal.general.urlinfo") }}
                   </p>
                 </div>
               </div>
-              <el-input v-model="useMembers.general.excerpt" autosize type="textarea" placeholder="Group description" />
+              <el-input v-model="useMembers.general.excerpt" autosize type="textarea" :placeholder="$t('membersmodal.general.groupdesc')" />
               <div class="grid md:grid-cols-2 md:gap-20 gap-4">
                 <div class="space-y-2">
-                  <label for="initials" class="_ca1 text-xs">Initials</label>
+                  <label for="initials" class="_ca1 text-xs">{{ $t("membersmodal.general.initials") }}</label>
                   <div>
                     <input @input="handleInput('initials')" type="text" class="_ca1" id="initials"
                       v-model="useMembers.general.initials" placeholder="initials" required />
@@ -274,7 +270,7 @@
                 <div class="flex gap-3 items-end">
                   <p class="h-10 min-w-[40px] r_8" :style="`background: ${useMembers.general.color}`"></p>
                   <div class="space-y-2 w-full">
-                    <label for="initials" class="_ca1 text-xs">Color</label>
+                    <label for="initials" class="_ca1 text-xs">{{ $t("membersmodal.general.color") }}</label>
                     <div>
                       <el-select class="block w-full" v-model="useMembers.general.color" placeholder="Select">
                         <ul class="color_list grid grid-cols-5 gap-2 max-auto !h-[108px] !p-3 !pt-2">
@@ -304,14 +300,13 @@
         ? true
         : false
         " id="private" class="rounded-full" type="radio" name="type" />
-                    <div class="full_flex gap-1">
+                    <div class="full_flex gap-1 capitalize">
                       <img src="@/assets/svg/members/private.svg" alt="" />
-                      Private
+                      {{$t("nav.private")}}
                     </div>
                   </div>
                   <p>
-                    Only members can see who's in the group and what they post.
-                    Content is hidden from search engines.
+                    {{ $t("membersmodal.general.privateinfo") }}
                   </p>
                 </label>
                 <label @click="useMembers.general.group_type = 'public'" class="space-y-3 r_8 p-5 cursor-pointer"
@@ -323,38 +318,36 @@
                     <input v-model="useMembers.general.group_type" :checked="useMembers.general.group_type == 'public' ? true : false
         " id="public" class="rounded-full" @focus="useMembers.general.group_type = 'public'" type="radio"
                       name="type" />
-                    <div class="full_flex gap-1">
+                    <div class="full_flex gap-1 capitalize">
                       <img src="@/assets/svg/members/public.svg" alt="" />
-                      Public
+                      {{ $t("nav.public") }}
                     </div>
                   </div>
                   <p>
-                    Anyone can see who's in the group and what they post.
-                    Content is discoverable by search engines.
+                    {{ $t("membersmodal.general.publicinfo") }}
                   </p>
                 </label>
               </div>
             </div>
             <button v-loading="isLoading.isLoadingType('updateSettings')" @click="useMembers.gereralSettings"
               class="px-6 r_8 md:mt-6 mt-4" :class="useMembers.general.name ? '_ca7 b_cbc' : '_ca1 b_ce0'">
-              UPDATE SETTINGS
+              {{ $t("membersmodal.general.updatesettings") }}
             </button>
           </section>
           <section class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full">
-            <h1 class="_c00 font-semibold text-xl">Subscriptions</h1>
+            <h1 class="_c00 font-semibold text-xl">{{ $t("membersmodal.Subscriptions") }}</h1>
             <p class="md:mt-5 mt-4 md:mb-8 mb-4 font-medium">
-              Make money by charging a monthly subscription for access to your
-              community.
+              {{ $t("membersmodal.subinfo") }}
             </p>
             <div class="flex md:items-center justify-between whitespace-nowrap border_cbc r_8 py-2 px-3 gap-3">
               <div class="flex flex-wrap items-center md:gap-10 gap-4">
                 <div class="full_flex gap-1 h-9">
                   <img src="@/assets/svg/free.svg" alt="" />
-                  <p class="font-medium">Free</p>
+                  <p class="font-medium capitalize">{{ $t("nav.free") }}</p>
                 </div>
-                <p class="_c2a">1 member</p>
+                <p class="_c2a lowercase">1 {{ $t("members.member") }}</p>
                 <button class="px-6 h-9 text-white b_c6f r_8 font-semibold">
-                  Current price
+                  {{ $t("membersmodal.currentprice") }}
                 </button>
               </div>
               <button class="h-9">
@@ -362,15 +355,15 @@
               </button>
             </div>
             <button class="px-6 b_cbc uppercase md:mt-7 mt-4 r_8 font-semibold">
-              add price
+              {{ $t("membersmodal.addprice") }}
             </button>
           </section>
           <section v-if="!usePost.modal.create"
             class="h-[calc(100vh_-120px)] animate-left overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full">
             <div class="flex items-center justify-between">
-              <h1 class="font-semibold text-xl">Categories</h1>
+              <h1 class="font-semibold text-xl">{{ $t("membersmodal.Categories") }}</h1>
               <button @click="usePost.modal.create = true" class="uppercase font-semibold text-sm b_cbc _c07 px-6 r_8">
-                add category
+                {{ $t("membersmodal.category.addcategory") }}
               </button>
             </div>
             <div v-for="(i, index) in usePost.store.categories" v-loading="isLoading.isLoadingType('getPostCategories')"
@@ -382,7 +375,7 @@
               <div class="flex gap-3">
                 <button @click="editPostCategory(i)" class="full_flex gap-1 border border_cbc r_8 _c2a px-3 h-9">
                   <img src="@/assets/svg/edit.svg" alt="" />
-                  <p>Edit</p>
+                  <p>{{ $t("edit") }}</p>
                 </button>
                 <div class="border_cbc r_8 w-9 h-9">
                   <el-dropdown placement="bottom-end" class="dropdown">
@@ -392,14 +385,14 @@
                     <template #dropdown>
                       <el-dropdown-menu class="community_dropdown min-w-[200px] dropdown_shadow">
                         <el-dropdown-item @click="usePost.updatePositionCategory(index, 'up')"><span
-                            :class="index == 0 ? '_ca1' : ''">Move up</span></el-dropdown-item>
+                            :class="index == 0 ? '_ca1' : ''">{{ $t("moveup") }}</span></el-dropdown-item>
                         <el-dropdown-item @click="usePost.updatePositionCategory(index, 'down')">
                           <span :class="index == usePost.store.categories.length - 1
         ? '_ca1'
         : ''
-        ">Move down</span></el-dropdown-item>
+        ">{{ $t("movedown") }}</span></el-dropdown-item>
                         <el-dropdown-item @click="deleteFunc('post', i)"><span :class="usePost.store.categories.length == 1 ? '_ca1' : ''
-        ">Delete</span></el-dropdown-item>
+        ">{{ $t("delete") }}</span></el-dropdown-item>
                       </el-dropdown-menu>
                     </template>
                   </el-dropdown>
@@ -410,12 +403,20 @@
           <section v-else
             class="h-[calc(100vh_-120px)] animate-right overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full">
             <form @submit.prevent="handleAddPostCategory" class="space-y-6">
-              <h1 class="md:text-2xl text-lg pb-2 font-semibold _c07">
-                <span v-if="usePost.modal.edit">Edit</span><span v-else>Add</span> category
+              <h1 class="md:text-2xl text-lg pb-2 font-semibold _c07 space-x-1">
+                <span v-if="$t('nav.uz') == 'en' || $t('nav.uz') == 'ru'">
+            <span v-if="usePost.modal.edit">{{$t("edit")}}</span
+            ><span v-else>{{$t("add")}}</span>
+          </span>
+           <span class="lowercase">{{ $t("membersmodal.category.category") }}</span> 
+           <span class="lowercase" v-if="$t('nav.uz') != 'en' || $t('nav.uz') != 'ru'">
+            <span v-if="usePost.modal.edit">{{$t("edit")}}</span
+            ><span v-else>{{$t("add")}}</span>
+          </span>
               </h1>
               <div>
                 <FloatingInput @input="handleInput('input')" id="old_password" type="text"
-                  v-model="usePost.create_category.name" label="Name" required />
+                  v-model="usePost.create_category.name" :label="$t('name')" required />
                 <p class="text-end mt-2 _ca1 md:text-sm text-xs">
                   {{ usePost.create_category.name?.length }}/30
                 </p>
@@ -423,18 +424,18 @@
               <div>
                 <textarea @input="handleInput('textarea')" id="write_message"
                   v-model="usePost.create_category.description" class="h-[90px] text-sm w-full rounded-[4px]"
-                  placeholder="Description"></textarea>
+                  :placeholder="$t('description')"></textarea>
                 <p class="text-end mt-2 _ca1 md:text-sm text-xs">
                   {{ usePost.create_category.description?.length }}/150
                 </p>
               </div>
               <div>
-                <label class="_ca1 text-xs" for="access">Permissions</label>
+                <label class="_ca1 text-xs" for="access">{{ $t("membersmodal.category.permissions") }}</label>
                 <el-select class="block w-full mt-2" v-model="usePost.create_category.permission" placeholder="Select">
-                  <el-option v-for="item in post_category_access" :key="item.value" :label="item.label"
+                  <el-option v-for="item in post_category_access" :key="item.value" :label="$t(`membersmodal.category.${item.label}`)"
                     :value="item.value" :disabled="item.disabled">
                     <div class="flex items-center gap-2">
-                      {{ item.label }}
+                      {{ $t(`membersmodal.category.${item.label}`) }}
                       <img v-if="usePost.create_category.permission == item.value" src="@/assets/svg/checked.svg"
                         alt="" />
                     </div>
@@ -445,10 +446,10 @@
                 <button :class="usePost.create_category.name ? 'b_cbc _c07' : 'b_ce0 _ca1'
         " @click="reposrtToAdmins" class="uppercase h-10 px-6 rounded-lg"
                   v-loading="isLoading.isLoadingType('createPostCategory')">
-                  <span v-if="!usePost.modal.edit">add</span><span v-else>save</span>
+                  <span v-if="!usePost.modal.edit">{{$t("add")}}</span><span v-else>{{$t("save")}}</span>
                 </button>
                 <button type="button" @click="usePost.clearData" class="uppercase h-10 px-6 rounded-lg _ca1">
-                  cancel
+                  {{$t("cancel")}}
                 </button>
               </div>
             </form>
@@ -462,12 +463,12 @@
             </h1>
             <div class="space-y-9 md:mt-10 mt-6">
               <div class="space-y-[30px]">
-                <h1 class="font-semibold">Total members</h1>
+                <h1 class="font-semibold">{{ $t("membersmodal.metrics.total") }}</h1>
                 <LineChart />
               </div>
               <div class="space-y-[30px]">
                 <div class="flex items-center justify-between">
-                  <h1 class="font-semibold">Active members</h1>
+                  <h1 class="font-semibold">{{ $t("membersmodal.metrics.active") }}</h1>
                   <el-dropdown placement="bottom-end" class="dropdown">
                     <div class="full_flex gap-1 _c2a text-xs font-semibold">
                       <p class="text-xs">Monthly active</p>
@@ -484,48 +485,46 @@
                 <div>developing ...</div>
               </div>
               <div class="space-y-[30px]">
-                <h1 class="font-semibold">Daily activity</h1>
+                <h1 class="font-semibold">{{ $t("membersmodal.metrics.daily") }}</h1>
                 <div>developing ...</div>
               </div>
             </div>
           </section>
           <section v-if="!useMembers.store.editGamification"
             class="h-[calc(100vh_-120px)] animate-left overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full">
-            <h1 class="font-semibold text-xl">Gamification</h1>
+            <h1 class="font-semibold text-xl">{{ $t("membersmodal.Gamification") }}</h1>
             <p class="md:mt-5 mt-4 md:mb-7 mb-6 md:text-[16px] text-sm">
-              Make your group fun! Personalize your group by naming your levels.
-              Incentivize engagement by unlocking courses when members reach a
-              higher level.
+              {{ $t("membersmodal.gamification.info") }}
             </p>
             <div class="space-y-7">
               <div v-for="(i, index) in useMembers.store.levels" v-if="!isLoading.isLoadingType('getLevels')"
                 class="flex items-center justify-between mt-9">
                 <div class="space-y-1">
                   <p class="font-semibold">
-                    Level {{ index + 1 }} {{ i.level ? `- ${i.level}` : '' }}
+                    {{ $t("leaderboard.level") }} {{ index + 1 }} {{ i.level ? `- ${i.level}` : '' }}
                   </p>
                   <div class="text-xs whitespace-pre-line">
-                    <span>{{ i.members }}% of members - </span>
+                    <span>{{ i.members }}% {{ $t("leaderboard.members") }} - </span>
                   <span v-if="i.courses?.length">
                     <a target="_blank" :href="getLink(course)" class="_c2a font-bold hover:underline"
                       v-for="(course, index) in i.courses">"{{ course.title }}"
-                      <span v-if="index < i.courses?.length - 1" class="_c07">,</span></a> unlocks
+                      <span v-if="index < i.courses?.length - 1" class="_c07">,</span></a> {{ $t("membersmodal.gamification.unlocks") }}
                   </span>
-                  <p v-else>No courses unlock</p>
+                  <p v-else>{{ $t("membersmodal.gamification.nounlock") }}</p>
                   </div>
                 </div>
                 <button @click="editLevel(i, index)" class="full_flex min-w-fit gap-1 border border_cbc r_8 _c2a px-3 h-9">
                   <img src="@/assets/svg/edit.svg" alt="" />
-                  <p>Edit</p>
+                  <p>{{ $t("edit") }}</p>
                 </button>
               </div>
             </div>
           </section>
           <section v-else
             class="h-[calc(100vh_-120px)] animate-right overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full">
-            <h1 class="text-xl font-semibold">Edit level</h1>
+            <h1 class="text-xl font-semibold">{{ $t("membersmodal.gamification.edit") }}</h1>
             <form @submit.prevent="useMembers.editLevel">
-              <label for="name" class="_ca1 mb-2 block md:mt-7 mt-4">Name</label>
+              <label for="name" class="_ca1 mb-2 block md:mt-7 mt-4">{{$t("name")}}</label>
               <div class="flex items-center px-3 whitespace-nowrap border_ce0 h-10 rounded-[4px]">
                 <p class="_ca1">{{ useMembers.level.name }}</p>
                 <p class="h-5 ml-2 w-0 !border-r-0 border_ce0"></p>
@@ -535,78 +534,70 @@
               <div class="md:mt-6">
                 <button v-loading="isLoading.isLoadingType('editLevels')"
                   class="_c07 font-semibold b_cbc px-6 r_8 uppercase">
-                  Save
+                  {{$t("save")}}
                 </button>
                 <button type="button" @click="useMembers.store.editGamification = false"
                   class="_ca1 font-semibold px-6 r_8 uppercase">
-                  cancel
+                  {{$t("cancel")}}
                 </button>
               </div>
               <p class="font-semibold md:mt-8 mt-4 mb-4">
-                No courses unlock at this level.
+                {{ $t("membersmodal.gamification.nounlockinfo") }}
               </p>
               <p class="_c07">
-                You can unlock courses for members at different levels from the
-                course settings menu.
+                {{ $t("membersmodal.gamification.unlockinfo") }}
               </p>
             </form>
           </section>
           <section class="h-[calc(100vh_-120px)] overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full">
-            <h1 class="font-semibold text-xl">Discovery</h1>
+            <h1 class="font-semibold text-xl">{{ $t("membersmodal.Discovery") }}</h1>
             <p class="md:mt-5 mt-4">
-              Get discovered by millions of active users.
+              {{ $t("membersmodal.discovery.info") }}
             </p>
             <div class="flex flex-wrap gap-5 md:my-5 my-4">
               <button class="md:w-auto w-full md:text-center text-start space-x-3 border_cbc px-6 _c2a r_8 text-[16px]">
-                <span class="_ca1 font-medium">Showing in discovery</span><span
-                  class="_ceb font-semibold uppercase">No</span>
+                <span class="_ca1 font-medium">{{ $t("membersmodal.discovery.info1[0]") }}</span><span
+                  class="_ceb font-semibold uppercase">{{ $t("membersmodal.discovery.no") }}</span>
               </button>
               <button class="md:w-auto w-full md:text-center text-start space-x-3 border_cbc px-6 _c2a r_8 text-[16px]">
-                <span class="_ca1 font-medium">Rank</span><span class="_ceb font-semibold uppercase">None</span>
+                <span class="_ca1 font-medium">{{ $t("membersmodal.discovery.rank") }}</span><span class="_ceb font-semibold uppercase">{{ $t("membersmodal.discovery.none") }}</span>
               </button>
               <button class="md:w-auto w-full md:text-center text-start space-x-3 border_cbc px-6 _c2a r_8 text-[16px]">
-                <span class="_ca1 font-medium">Category</span><span class="_ceb font-semibold uppercase">None</span>
+                <span class="_ca1 font-medium">{{ $t("membersmodal.category.category") }}</span><span class="_ceb font-semibold uppercase">{{ $t("membersmodal.discovery.none") }}</span>
               </button>
             </div>
             <div class="leading-4 space-y-4">
               <p>
-                <span class="font-[700]">Showing in discovery</span> — Your
-                group needs to meet a minimum threshold of members, posts, and
-                activity to show in discovery. You also need a good group
-                description, about page description, group cover image, and some
-                photos/videos on your about page.
+                <span class="font-[700]">{{ $t("membersmodal.discovery.info1[0]") }}</span> — {{ $t("membersmodal.discovery.info1[1]") }}
               </p>
               <p>
-                <span class="font-[700]">Discovery rank</span> — Groups are
-                ranked by engagement using an algorithm that looks at member
-                growth, member activity, posts, comments, and likes. The more
-                engaged your group is, the higher your rank.
+                <span class="font-[700]">{{ $t("membersmodal.discovery.info2[0]") }}</span> — {{ $t("membersmodal.discovery.info2[1]") }}
               </p>
-              <p>If your category is wrong, please contact support.</p>
+              <p>{{ $t("membersmodal.discovery.support") }}</p>
             </div>
           </section>
           <section v-if="!useLink.modal.create"
             class="h-[calc(100vh_-120px)] animate-left overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full">
             <div>
               <div class="flex items-center justify-between">
-                <h1 class="font-semibold text-xl">Links</h1>
+                <h1 class="font-semibold text-xl">{{ $t("membersmodal.Links") }}</h1>
                 <button @click="useLink.modal.create = true"
                   class="md:block hidden uppercase font-semibold text-sm px-6 r_8" :class="useLink.store.links.length != 3
         ? '_c07 b_cbc'
         : '_ca1 b_ce0 pointer-events-none'
         ">
-                  add link
+                  {{ $t("membersmodal.links.addlink") }}
                 </button>
               </div>
               <p class="mt-5">
-                Share important resources with your members by adding links.
+                {{ $t("membersmodal.links.info") }}
               </p>
               <button @click="useLink.modal.create = true"
                 class="md:hidden block mt-4 uppercase font-semibold text-sm px-6 r_8" :class="useLink.store.links.length != 3
         ? '_c07 b_cbc'
         : '_ca1 b_ce0 pointer-events-none'
         ">
-                add link
+                {{ $t("membersmodal.links.addlink") }}
               </button>
             </div>
             <div v-for="(i, index) in useLink.store.links" v-loading="isLoading.isLoadingType('getPostCategories')"
@@ -620,7 +611,7 @@
               <div class="flex gap-3">
                 <button @click="editLink(i)" class="full_flex gap-1 border min-w-fit border_cbc r_8 _c2a px-3 h-9">
                   <img src="@/assets/svg/edit.svg" alt="" />
-                  <p>Edit</p>
+                  <p>{{ $t("edit") }}</p>
                 </button>
                 <div class="border_cbc r_8 w-9 h-9">
                   <el-dropdown placement="bottom-end" class="dropdown">
@@ -630,13 +621,13 @@
                     <template #dropdown>
                       <el-dropdown-menu class="community_dropdown min-w-[200px] dropdown_shadow">
                         <el-dropdown-item @click="useLink.updatePosition(index, 'up')"><span
-                            :class="index == 0 ? '_ca1' : ''">Move up</span></el-dropdown-item>
+                            :class="index == 0 ? '_ca1' : ''">{{ $t("moveup") }}</span></el-dropdown-item>
                         <el-dropdown-item @click="useLink.updatePosition(index, 'down')">
                           <span :class="index == useLink.store.links.length - 1
         ? '_ca1'
         : ''
-        ">Move down</span></el-dropdown-item>
-                        <el-dropdown-item @click="deleteFunc('link', i)"><span>Delete</span></el-dropdown-item>
+        ">{{ $t("movedown") }}</span></el-dropdown-item>
+                        <el-dropdown-item @click="deleteFunc('link', i)"><span>{{ $t("delete") }}</span></el-dropdown-item>
                       </el-dropdown-menu>
                     </template>
                   </el-dropdown>
@@ -646,23 +637,23 @@
           </section>
           <section v-else
             class="h-[calc(100vh_-120px)] animate-right overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full">
-            <h1 class="text-xl font-semibold">Add link</h1>
+            <h1 class="text-xl font-semibold">{{ $t("membersmodal.links.addlink") }}</h1>
             <form @submit.prevent="useLink.createLink" class="md:space-y-5 space-y-4">
               <div>
-                <label for="name" class="_ca1 mb-2 block md:mt-7 mt-4">Label</label>
+                <label for="name" class="_ca1 mb-2 block md:mt-7 mt-4">{{ $t("membersmodal.links.label") }}</label>
                 <input v-model="useLink.create.label" class="" type="text" required />
                 <p class="_ca1 text-end mt-1">0/34</p>
               </div>
               <div>
-                <input v-model="useLink.create.url" type="url" placeholder="URL" required />
+                <input v-model="useLink.create.url" type="url" :placeholder="$t('membersmodal.general.url')" required />
               </div>
               <div>
-                <label for="name" class="_ca1 mb-2 block">Privacy</label>
+                <label for="name" class="_ca1 mb-2 block">{{ $t("nav.privacy") }}</label>
                 <el-select class="block w-full mt-2" v-model="useLink.create.is_public" placeholder="Select">
-                  <el-option v-for="item in access_list" :key="item.value" :label="item.label" :value="item.value"
+                  <el-option v-for="item in access_list" :key="item.value" :label="$t(`membersmodal.links.${item.label}`)" :value="item.value"
                     :disabled="item.disabled">
                     <div class="flex items-center gap-2">
-                      {{ item.label }}
+                      {{ $t(`membersmodal.links.${item.label}`) }}
                       <img v-if="useMembers.general.fjdkfjdf == item.value" src="@/assets/svg/checked.svg" alt="" />
                     </div>
                   </el-option>
@@ -673,28 +664,28 @@
         ? '_c07 b_cbc'
         : '_ca1 b_ce0'
         " class="font-semibold px-6 r_8 md:mt-6 uppercase">
-                  Save
+                  {{$t("save")}}
                 </button>
                 <button @click="() => {
         useLink.modal.create = false;
         useLink.modal.edit = false;
       }
         " class="_ca1 font-semibold px-6 r_8 uppercase">
-                  cancel
+                                    {{$t("cancel")}}
                 </button>
               </div>
             </form>
           </section>
           <section v-if="!store.updatePayment"
             class="h-[calc(100vh_-120px)] animate-left overflow-hidden overflow-y-auto text-sm _c07 md:p-5 p-3 w-full">
-            <h1 class="font-semibold text-xl">Billing</h1>
+            <h1 class="font-semibold text-xl">{{ $t("membersmodal.billing.billing") }}</h1>
             <div
               class="flex md:flex-row flex-col max-w-fit md:gap-[60px] gap-4 md:mt-7 mt-4 md:mb-10 mb-4 whitespace-nowrap">
               <button @click="store.updatePayment = true" class="border_cbc px-6 _c2a r_8 uppercase">
-                UPDATE PAYMENT INFO
+                {{ $t("membersmodal.billing.update") }}
               </button>
               <button class="md:px-3 _c2a r_8 md:text-center text-start">
-                Invoice history
+                {{ $t("membersmodal.billing.invoice") }}
               </button>
             </div>
             <!-- <h1 class="font-semibold _C00 mb-2">Referrals</h1>
@@ -1151,22 +1142,22 @@ const deleteLink = {
 
 const access_list = [
   {
-    label: "Private (only members can see)",
+    label: "private",
     value: "private",
   },
   {
-    label: "Public (everybody can see)",
+    label: "public",
     value: "public",
   },
 ];
 
 const post_category_access = [
   {
-    label: "Anyone can post, anyone can view",
+    label: "all",
     value: true,
   },
   {
-    label: "Only admins/mods can post, anyone can view",
+    label: "only",
     value: false,
   },
 ];
